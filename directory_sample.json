@@ -1,0 +1,230 @@
+[
+    {
+        "Name": ".github",
+        "Path": ".github",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": ".gitignore",
+        "Path": ".gitignore",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": ".readthedocs.yaml",
+        "Path": ".readthedocs.yaml",
+        "Type": "blob",
+        "Extension": ".yaml"
+    },
+    {
+        "Name": "CONTRIBUTING.md",
+        "Path": "CONTRIBUTING.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "LICENSE",
+        "Path": "LICENSE",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "README.md",
+        "Path": "README.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "docs",
+        "Path": "docs",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "examples",
+        "Path": "examples",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "justpyplot",
+        "Path": "justpyplot",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "pyproject.toml",
+        "Path": "pyproject.toml",
+        "Type": "blob",
+        "Extension": ".toml"
+    },
+    {
+        "Name": "resources",
+        "Path": "resources",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "tests",
+        "Path": "tests",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "funding.yaml",
+        "Path": ".github/funding.yaml",
+        "Type": "blob",
+        "Extension": ".yaml"
+    },
+    {
+        "Name": "workflows",
+        "Path": ".github/workflows",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "README.md",
+        "Path": "docs/README.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "conf.py",
+        "Path": "docs/conf.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "index.rst",
+        "Path": "docs/index.rst",
+        "Type": "blob",
+        "Extension": ".rst"
+    },
+    {
+        "Name": "requirements.txt",
+        "Path": "docs/requirements.txt",
+        "Type": "blob",
+        "Extension": ".txt"
+    },
+    {
+        "Name": "__init__.py",
+        "Path": "examples/__init__.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "mug_objectron",
+        "Path": "examples/mug_objectron",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "__init__.py",
+        "Path": "justpyplot/__init__.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "justpyplot.py",
+        "Path": "justpyplot/justpyplot.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "textrender.py",
+        "Path": "justpyplot/textrender.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "demo.gif",
+        "Path": "resources/demo.gif",
+        "Type": "blob",
+        "Extension": ".gif"
+    },
+    {
+        "Name": "jupyter_pil.png",
+        "Path": "resources/jupyter_pil.png",
+        "Type": "blob",
+        "Extension": ".png"
+    },
+    {
+        "Name": "sinus.gif",
+        "Path": "resources/sinus.gif",
+        "Type": "blob",
+        "Extension": ".gif"
+    },
+    {
+        "Name": "__init__.py",
+        "Path": "tests/__init__.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test.py",
+        "Path": "tests/test.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_basic.py",
+        "Path": "tests/test_basic.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_basic_plot.py",
+        "Path": "tests/test_basic_plot.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_plot.py",
+        "Path": "tests/test_plot.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_plot_components.py",
+        "Path": "tests/test_plot_components.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_standalone.ipynb",
+        "Path": "tests/test_standalone.ipynb",
+        "Type": "blob",
+        "Extension": ".ipynb"
+    },
+    {
+        "Name": "test_standalone.py",
+        "Path": "tests/test_standalone.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_textrender.py",
+        "Path": "tests/test_textrender.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "python-publish.yml",
+        "Path": ".github/workflows/python-publish.yml",
+        "Type": "blob",
+        "Extension": ".yml"
+    },
+    {
+        "Name": "__init__.py",
+        "Path": "examples/mug_objectron/__init__.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "demo.py",
+        "Path": "examples/mug_objectron/demo.py",
+        "Type": "blob",
+        "Extension": ".py"
+    }
+]
