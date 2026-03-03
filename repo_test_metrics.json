@@ -1,0 +1,13 @@
+{
+    "total_py_files": 15,
+    "test_file_count": 8,
+    "source_file_count": 7,
+    "test_file_ratio": 0.5333333333333333,
+    "test_to_source_fn_ratio": 0.0975609756097561,
+    "total_test_functions": 4,
+    "total_source_functions": 41,
+    "total_assertions": 2,
+    "assertion_density": 0.0032102728731942215,
+    "uses_pytest": false,
+    "uses_unittest": false
+}
