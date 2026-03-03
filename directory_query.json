@@ -12,22 +12,16 @@
         "Extension": ""
     },
     {
-        "Name": ".readthedocs.yaml",
-        "Path": ".readthedocs.yaml",
-        "Type": "blob",
-        "Extension": ".yaml"
-    },
-    {
-        "Name": "CONTRIBUTING.md",
-        "Path": "CONTRIBUTING.md",
+        "Name": "CHANGELOG.md",
+        "Path": "CHANGELOG.md",
         "Type": "blob",
         "Extension": ".md"
     },
     {
-        "Name": "LICENSE",
-        "Path": "LICENSE",
+        "Name": "LICENSE.md",
+        "Path": "LICENSE.md",
         "Type": "blob",
-        "Extension": ""
+        "Extension": ".md"
     },
     {
         "Name": "README.md",
@@ -42,16 +36,16 @@
         "Extension": ""
     },
     {
-        "Name": "examples",
-        "Path": "examples",
+        "Name": "httpx",
+        "Path": "httpx",
         "Type": "tree",
         "Extension": ""
     },
     {
-        "Name": "justpyplot",
-        "Path": "justpyplot",
-        "Type": "tree",
-        "Extension": ""
+        "Name": "mkdocs.yml",
+        "Path": "mkdocs.yml",
+        "Type": "blob",
+        "Extension": ".yml"
     },
     {
         "Name": "pyproject.toml",
@@ -60,8 +54,14 @@
         "Extension": ".toml"
     },
     {
-        "Name": "resources",
-        "Path": "resources",
+        "Name": "requirements.txt",
+        "Path": "requirements.txt",
+        "Type": "blob",
+        "Extension": ".txt"
+    },
+    {
+        "Name": "scripts",
+        "Path": "scripts",
         "Type": "tree",
         "Extension": ""
     },
@@ -72,10 +72,34 @@
         "Extension": ""
     },
     {
-        "Name": "funding.yaml",
-        "Path": ".github/funding.yaml",
+        "Name": "CONTRIBUTING.md",
+        "Path": ".github/CONTRIBUTING.md",
         "Type": "blob",
-        "Extension": ".yaml"
+        "Extension": ".md"
+    },
+    {
+        "Name": "FUNDING.yml",
+        "Path": ".github/FUNDING.yml",
+        "Type": "blob",
+        "Extension": ".yml"
+    },
+    {
+        "Name": "ISSUE_TEMPLATE",
+        "Path": ".github/ISSUE_TEMPLATE",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "PULL_REQUEST_TEMPLATE.md",
+        "Path": ".github/PULL_REQUEST_TEMPLATE.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "dependabot.yml",
+        "Path": ".github/dependabot.yml",
+        "Type": "blob",
+        "Extension": ".yml"
     },
     {
         "Name": "workflows",
@@ -84,76 +108,286 @@
         "Extension": ""
     },
     {
-        "Name": "README.md",
-        "Path": "docs/README.md",
+        "Name": "CNAME",
+        "Path": "docs/CNAME",
         "Type": "blob",
-        "Extension": ".md"
+        "Extension": ""
     },
     {
-        "Name": "conf.py",
-        "Path": "docs/conf.py",
-        "Type": "blob",
-        "Extension": ".py"
-    },
-    {
-        "Name": "index.rst",
-        "Path": "docs/index.rst",
-        "Type": "blob",
-        "Extension": ".rst"
-    },
-    {
-        "Name": "requirements.txt",
-        "Path": "docs/requirements.txt",
-        "Type": "blob",
-        "Extension": ".txt"
-    },
-    {
-        "Name": "__init__.py",
-        "Path": "examples/__init__.py",
-        "Type": "blob",
-        "Extension": ".py"
-    },
-    {
-        "Name": "mug_objectron",
-        "Path": "examples/mug_objectron",
+        "Name": "advanced",
+        "Path": "docs/advanced",
         "Type": "tree",
         "Extension": ""
     },
     {
+        "Name": "api.md",
+        "Path": "docs/api.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "async.md",
+        "Path": "docs/async.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "code_of_conduct.md",
+        "Path": "docs/code_of_conduct.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "compatibility.md",
+        "Path": "docs/compatibility.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "contributing.md",
+        "Path": "docs/contributing.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "css",
+        "Path": "docs/css",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "environment_variables.md",
+        "Path": "docs/environment_variables.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "exceptions.md",
+        "Path": "docs/exceptions.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "http2.md",
+        "Path": "docs/http2.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "img",
+        "Path": "docs/img",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "index.md",
+        "Path": "docs/index.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "logging.md",
+        "Path": "docs/logging.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "overrides",
+        "Path": "docs/overrides",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "quickstart.md",
+        "Path": "docs/quickstart.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "third_party_packages.md",
+        "Path": "docs/third_party_packages.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "troubleshooting.md",
+        "Path": "docs/troubleshooting.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
         "Name": "__init__.py",
-        "Path": "justpyplot/__init__.py",
+        "Path": "httpx/__init__.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "justpyplot.py",
-        "Path": "justpyplot/justpyplot.py",
+        "Name": "__version__.py",
+        "Path": "httpx/__version__.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "textrender.py",
-        "Path": "justpyplot/textrender.py",
+        "Name": "_api.py",
+        "Path": "httpx/_api.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "demo.gif",
-        "Path": "resources/demo.gif",
+        "Name": "_auth.py",
+        "Path": "httpx/_auth.py",
         "Type": "blob",
-        "Extension": ".gif"
+        "Extension": ".py"
     },
     {
-        "Name": "jupyter_pil.png",
-        "Path": "resources/jupyter_pil.png",
+        "Name": "_client.py",
+        "Path": "httpx/_client.py",
         "Type": "blob",
-        "Extension": ".png"
+        "Extension": ".py"
     },
     {
-        "Name": "sinus.gif",
-        "Path": "resources/sinus.gif",
+        "Name": "_config.py",
+        "Path": "httpx/_config.py",
         "Type": "blob",
-        "Extension": ".gif"
+        "Extension": ".py"
+    },
+    {
+        "Name": "_content.py",
+        "Path": "httpx/_content.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_decoders.py",
+        "Path": "httpx/_decoders.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_exceptions.py",
+        "Path": "httpx/_exceptions.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_main.py",
+        "Path": "httpx/_main.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_models.py",
+        "Path": "httpx/_models.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_multipart.py",
+        "Path": "httpx/_multipart.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_status_codes.py",
+        "Path": "httpx/_status_codes.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_transports",
+        "Path": "httpx/_transports",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "_types.py",
+        "Path": "httpx/_types.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_urlparse.py",
+        "Path": "httpx/_urlparse.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_urls.py",
+        "Path": "httpx/_urls.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "_utils.py",
+        "Path": "httpx/_utils.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "py.typed",
+        "Path": "httpx/py.typed",
+        "Type": "blob",
+        "Extension": ".typed"
+    },
+    {
+        "Name": "build",
+        "Path": "scripts/build",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "check",
+        "Path": "scripts/check",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "clean",
+        "Path": "scripts/clean",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "coverage",
+        "Path": "scripts/coverage",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "docs",
+        "Path": "scripts/docs",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "install",
+        "Path": "scripts/install",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "lint",
+        "Path": "scripts/lint",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "publish",
+        "Path": "scripts/publish",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "sync-version",
+        "Path": "scripts/sync-version",
+        "Type": "blob",
+        "Extension": ""
+    },
+    {
+        "Name": "test",
+        "Path": "scripts/test",
+        "Type": "blob",
+        "Extension": ""
     },
     {
         "Name": "__init__.py",
@@ -162,69 +396,207 @@
         "Extension": ".py"
     },
     {
-        "Name": "test.py",
-        "Path": "tests/test.py",
+        "Name": "client",
+        "Path": "tests/client",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "common.py",
+        "Path": "tests/common.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "test_basic.py",
-        "Path": "tests/test_basic.py",
+        "Name": "concurrency.py",
+        "Path": "tests/concurrency.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "test_basic_plot.py",
-        "Path": "tests/test_basic_plot.py",
+        "Name": "conftest.py",
+        "Path": "tests/conftest.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "test_plot.py",
-        "Path": "tests/test_plot.py",
+        "Name": "fixtures",
+        "Path": "tests/fixtures",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "models",
+        "Path": "tests/models",
+        "Type": "tree",
+        "Extension": ""
+    },
+    {
+        "Name": "test_api.py",
+        "Path": "tests/test_api.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "test_plot_components.py",
-        "Path": "tests/test_plot_components.py",
+        "Name": "test_asgi.py",
+        "Path": "tests/test_asgi.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "test_standalone.ipynb",
-        "Path": "tests/test_standalone.ipynb",
-        "Type": "blob",
-        "Extension": ".ipynb"
-    },
-    {
-        "Name": "test_standalone.py",
-        "Path": "tests/test_standalone.py",
+        "Name": "test_auth.py",
+        "Path": "tests/test_auth.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "test_textrender.py",
-        "Path": "tests/test_textrender.py",
+        "Name": "test_config.py",
+        "Path": "tests/test_config.py",
         "Type": "blob",
         "Extension": ".py"
     },
     {
-        "Name": "python-publish.yml",
-        "Path": ".github/workflows/python-publish.yml",
+        "Name": "test_content.py",
+        "Path": "tests/test_content.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_decoders.py",
+        "Path": "tests/test_decoders.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_exceptions.py",
+        "Path": "tests/test_exceptions.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_exported_members.py",
+        "Path": "tests/test_exported_members.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_main.py",
+        "Path": "tests/test_main.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_multipart.py",
+        "Path": "tests/test_multipart.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_status_codes.py",
+        "Path": "tests/test_status_codes.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_timeouts.py",
+        "Path": "tests/test_timeouts.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_utils.py",
+        "Path": "tests/test_utils.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "test_wsgi.py",
+        "Path": "tests/test_wsgi.py",
+        "Type": "blob",
+        "Extension": ".py"
+    },
+    {
+        "Name": "1-issue.md",
+        "Path": ".github/ISSUE_TEMPLATE/1-issue.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "config.yml",
+        "Path": ".github/ISSUE_TEMPLATE/config.yml",
         "Type": "blob",
         "Extension": ".yml"
     },
     {
-        "Name": "__init__.py",
-        "Path": "examples/mug_objectron/__init__.py",
+        "Name": "publish.yml",
+        "Path": ".github/workflows/publish.yml",
         "Type": "blob",
-        "Extension": ".py"
+        "Extension": ".yml"
     },
     {
-        "Name": "demo.py",
-        "Path": "examples/mug_objectron/demo.py",
+        "Name": "test-suite.yml",
+        "Path": ".github/workflows/test-suite.yml",
         "Type": "blob",
-        "Extension": ".py"
+        "Extension": ".yml"
+    },
+    {
+        "Name": "authentication.md",
+        "Path": "docs/advanced/authentication.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "clients.md",
+        "Path": "docs/advanced/clients.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "event-hooks.md",
+        "Path": "docs/advanced/event-hooks.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "extensions.md",
+        "Path": "docs/advanced/extensions.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "proxies.md",
+        "Path": "docs/advanced/proxies.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "resource-limits.md",
+        "Path": "docs/advanced/resource-limits.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "ssl.md",
+        "Path": "docs/advanced/ssl.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "text-encodings.md",
+        "Path": "docs/advanced/text-encodings.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "timeouts.md",
+        "Path": "docs/advanced/timeouts.md",
+        "Type": "blob",
+        "Extension": ".md"
+    },
+    {
+        "Name": "transports.md",
+        "Path": "docs/advanced/transports.md",
+        "Type": "blob",
+        "Extension": ".md"
     }
 ]
