@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_3116",
+  "repo": "encode/httpx",
+  "pr_number": 3116,
+  "title": "Fix client.send() timeout when used with a new Request instance",
+  "description": "# Summary\r\n\r\nDiscussion here https://github.com/encode/httpx/discussions/3110\r\n\r\nOn `httpx.client.send()`, now the timeout of the request is set if not set already.\r\nThis is for cases in which `httpx.client.send()` is used with `httpx.Request()` instead of `client.build_request()`\r\n\r\nI expected timeout tests for the non-async client too. But since there are only async tests I didn't create a non-async test.\r\n\r\nI didn't think a documentation change was needed since this is (for me) the expect behavior.\r\n\r\n# Checklist\r\n\r\n- [X] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [X] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/httpx/_client.py b/httpx/_client.py\nindex cf3b30626d..ba5decf85f 100644\n--- a/httpx/_client.py\n+++ b/httpx/_client.py\n@@ -562,6 +562,15 @@ def _redirect_stream(\n \n         return request.stream\n \n+    def _set_timeout(self, request: Request) -> None:\n+        if \"timeout\" not in request.extensions:\n+            timeout = (\n+                self.timeout\n+                if isinstance(self.timeout, UseClientDefault)\n+                else Timeout(self.timeout)\n+            )\n+            request.extensions = dict(**request.extensions, timeout=timeout.as_dict())\n+\n \n class Client(BaseClient):\n     \"\"\"\n@@ -911,6 +920,8 @@ def send(\n             else follow_redirects\n         )\n \n+        self._set_timeout(request)\n+\n         auth = self._build_request_auth(request, auth)\n \n         response = self._send_handling_auth(\n@@ -1658,6 +1669,8 @@ async def send(\n             else follow_redirects\n         )\n \n+        self._set_timeout(request)\n+\n         auth = self._build_request_auth(request, auth)\n \n         response = await self._send_handling_auth(\n",
+  "test_diff": "diff --git a/tests/test_timeouts.py b/tests/test_timeouts.py\nindex 09b25160e7..666cc8e376 100644\n--- a/tests/test_timeouts.py\n+++ b/tests/test_timeouts.py\n@@ -42,3 +42,14 @@ async def test_pool_timeout(server):\n         with pytest.raises(httpx.PoolTimeout):\n             async with client.stream(\"GET\", server.url):\n                 await client.get(server.url)\n+\n+\n+@pytest.mark.anyio\n+async def test_async_client_new_request_send_timeout(server):\n+    timeout = httpx.Timeout(1e-6)\n+\n+    async with httpx.AsyncClient(timeout=timeout) as client:\n+        with pytest.raises(httpx.TimeoutException):\n+            await client.send(\n+                httpx.Request(\"GET\", server.url.copy_with(path=\"/slow_response\"))\n+            )\n",
+  "files_changed": [
+    "httpx/_client.py",
+    "tests/test_timeouts.py"
+  ],
+  "source_files": [
+    "httpx/_client.py"
+  ],
+  "test_files": [
+    "tests/test_timeouts.py"
+  ],
+  "lines_added": 24,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "6d852d319acd5d97caf14037dff15ede04b37542",
+  "base_commit_sha": "df5345140e09ac6c2de0d9589bcd6f3e31c6aa3f",
+  "head_commit_sha": "4143ba206c526fea05c2eb53e60720874d541c44",
+  "merged_at": "2024-02-26T16:36:58Z"
+}

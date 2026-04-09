@@ -1,0 +1,32 @@
+{
+  "candidate_id": "cattrs_pr_66",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 66,
+  "title": "Fix master build",
+  "description": "Fix test_unmodified_generated_unstructuring test\r\n\r\n This was broken for 3.7 due to how `cattr.generation.make_dict_unstructure_fn`\r\nreaches directly into `converter._unstructure_func.dispatch` to get the\r\nconverter function passing the annotated type of the field. In 3.7 the\r\n`TypeError: Subscripted generics cannot be used with class and instance checks`\r\nissue causes the `dispatch` to be the fallback identity converter func.\r\n\r\nNormal usage (i.e. unstructure_attrs_asdict) passes in field_inst.__class__\r\nwhich would never hit the above `TypeError` so this issue is unique to\r\n`make_dict_unstructure_fn`",
+  "patch_diff": "diff --git a/CONTRIBUTING.rst b/CONTRIBUTING.rst\nindex 4373a8c8..21eea7ff 100644\n--- a/CONTRIBUTING.rst\n+++ b/CONTRIBUTING.rst\n@@ -68,7 +68,7 @@ Ready to contribute? Here's how to set up `cattrs` for local development.\n \n     $ mkvirtualenv cattrs\n     $ cd cattrs/\n-    $ pip install -e .\n+    $ pip install -e .\\[dev\\]\n \n 4. Create a branch for local development::\n \ndiff --git a/docs/structuring.rst b/docs/structuring.rst\nindex 5e5e5ad8..324b1cab 100644\n--- a/docs/structuring.rst\n+++ b/docs/structuring.rst\n@@ -155,7 +155,7 @@ These generic types are composable with all other converters.\n .. doctest::\n \n     >>> cattr.structure([[1, 2], [3, 4]], Set[FrozenSet[str]])\n-    {frozenset({'4', '3'}), frozenset({'1', '2'})}\n+    {frozenset({'1', '2'}), frozenset({'4', '3'})}\n \n Dictionaries\n ~~~~~~~~~~~~\ndiff --git a/src/cattr/_compat.py b/src/cattr/_compat.py\nindex 73d81d52..510766a9 100644\n--- a/src/cattr/_compat.py\n+++ b/src/cattr/_compat.py\n@@ -96,7 +96,11 @@ def is_mutable_set(type):\n         return issubclass(type, MutableSet)\n \n     def is_sequence(type):\n-        return issubclass(type, Sequence)\n+        if is_py2:\n+            is_string = issubclass(type, basestring)  # noqa:F821\n+        else:\n+            is_string = issubclass(type, str)\n+        return issubclass(type, Sequence) and not is_string\n \n     def is_tuple(type):\n         return issubclass(type, Tuple)\ndiff --git a/src/cattr/generation.py b/src/cattr/generation.py\nindex 11525522..18a106c1 100644\n--- a/src/cattr/generation.py\n+++ b/src/cattr/generation.py\n@@ -1,7 +1,8 @@\n-from typing import Any, Callable, Dict, Type, TypeVar\n+from typing import Any, Callable, Dict, Sequence, Type, TypeVar\n \n import attr\n \n+from ._compat import is_sequence\n from cattr.converters import Converter\n \n T = TypeVar(\"T\")\n@@ -20,7 +21,7 @@ def override(omit_if_default=False):\n \n \n def make_dict_unstructure_fn(cl, converter, **kwargs):\n-    # type: (Type[T], Converter, **AttributeOverride) -> Callable[[T], Dict[str, Any]]\n+    # type: (Type[T], Converter, **AttributeOverride) -> Callable[[T], Dict[str, Any]]  # noqa:E501\n     \"\"\"Generate a specialized dict unstructuring function for a class.\"\"\"\n     cl_name = cl.__name__\n     fn_name = \"unstructure_\" + cl_name\n@@ -81,6 +82,8 @@ def make_dict_unstructure_fn(cl, converter, **kwargs):\n         else:\n             # Do the dispatch here and now.\n             type = a.type\n+            if is_sequence(type):\n+                type = Sequence\n             conv_function = converter._unstructure_func.dispatch(type)\n             if d is not attr.NOTHING and override.omit_if_default:\n                 def_name = \"__cattr_def_{}\".format(attr_name)\n",
+  "test_diff": "diff --git a/tests/__init__.py b/tests/__init__.py\nindex 4aa5ecd9..4ca297a8 100644\n--- a/tests/__init__.py\n+++ b/tests/__init__.py\n@@ -24,7 +24,7 @@\n from hypothesis import strategies as st, settings, HealthCheck\n \n settings.register_profile(\n-    \"CI\", settings(suppress_health_check=[HealthCheck.too_slow])\n+    \"CI\", settings(suppress_health_check=[HealthCheck.too_slow]), deadline=None\n )\n \n if \"CI\" in os.environ:\ndiff --git a/tests/conftest.py b/tests/conftest.py\nindex ac270973..97a88b7d 100644\n--- a/tests/conftest.py\n+++ b/tests/conftest.py\n@@ -11,7 +11,7 @@ def converter():\n \n \n settings.register_profile(\n-    \"tests\", suppress_health_check=(HealthCheck.too_slow,)\n+    \"tests\", suppress_health_check=(HealthCheck.too_slow,), deadline=None\n )\n \n settings.load_profile(\"tests\")\n",
+  "files_changed": [
+    "CONTRIBUTING.rst",
+    "docs/structuring.rst",
+    "src/cattr/_compat.py",
+    "src/cattr/generation.py",
+    "tests/__init__.py",
+    "tests/conftest.py"
+  ],
+  "source_files": [
+    "src/cattr/_compat.py",
+    "src/cattr/generation.py"
+  ],
+  "test_files": [
+    "tests/__init__.py",
+    "tests/conftest.py"
+  ],
+  "lines_added": 14,
+  "lines_removed": 7,
+  "has_test_changes": true,
+  "merge_commit_sha": "7311176e15970cba50c7c435a4e6e353c00bfeaf",
+  "base_commit_sha": "d12f4c1369c624d64ac185f244424bc5c9a327c4",
+  "head_commit_sha": "93176be1c6c2bb4b85384fa2383c3ab96ea11db8",
+  "merged_at": "2019-09-01T23:09:51Z"
+}

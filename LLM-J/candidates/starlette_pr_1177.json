@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_1177",
+  "repo": "encode/starlette",
+  "pr_number": 1177,
+  "title": "Add better exception msg for duplicated param names",
+  "description": "Raise `ValueError` with information about duplicated names instead of `sre_constants.error`.\r\n\r\nFor instance:\r\n```py\r\napp = Starlette(\r\n    routes=[\r\n        Route(\"/api/users/{id}/groups/{id}\", route),\r\n    ]\r\n)\r\n```\r\n\r\nWill raise:\r\n```py\r\nValueError: Duplicated param name id at path /api/users/{id}/groups/{id}\r\n```\r\nInstead of:\r\n```\r\nsre_constants.error: redefinition of group name 'id' as group 2; was group 1 at position 42\r\n```",
+  "patch_diff": "diff --git a/starlette/routing.py b/starlette/routing.py\nindex 1e6ae0b55..2707bbf4a 100644\n--- a/starlette/routing.py\n+++ b/starlette/routing.py\n@@ -107,6 +107,7 @@ def compile_path(\n     \"\"\"\n     path_regex = \"^\"\n     path_format = \"\"\n+    duplicated_params = set()\n \n     idx = 0\n     param_convertors = {}\n@@ -124,10 +125,18 @@ def compile_path(\n         path_format += path[idx : match.start()]\n         path_format += \"{%s}\" % param_name\n \n+        if param_name in param_convertors:\n+            duplicated_params.add(param_name)\n+\n         param_convertors[param_name] = convertor\n \n         idx = match.end()\n \n+    if duplicated_params:\n+        names = \", \".join(sorted(duplicated_params))\n+        ending = \"s\" if len(duplicated_params) > 1 else \"\"\n+        raise ValueError(f\"Duplicated param name{ending} {names} at path {path}\")\n+\n     path_regex += re.escape(path[idx:]) + \"$\"\n     path_format += path[idx:]\n \n",
+  "test_diff": "diff --git a/tests/test_routing.py b/tests/test_routing.py\nindex 8927c60cd..fff3332db 100644\n--- a/tests/test_routing.py\n+++ b/tests/test_routing.py\n@@ -622,3 +622,17 @@ def test_partial_async_endpoint():\n     cls_method_response = test_client.get(\"/cls\")\n     assert cls_method_response.status_code == 200\n     assert cls_method_response.json() == {\"arg\": \"foo\"}\n+\n+\n+def test_duplicated_param_names():\n+    with pytest.raises(\n+        ValueError,\n+        match=\"Duplicated param name id at path /{id}/{id}\",\n+    ):\n+        Route(\"/{id}/{id}\", user)\n+\n+    with pytest.raises(\n+        ValueError,\n+        match=\"Duplicated param names id, name at path /{id}/{name}/{id}/{name}\",\n+    ):\n+        Route(\"/{id}/{name}/{id}/{name}\", user)\n",
+  "files_changed": [
+    "starlette/routing.py",
+    "tests/test_routing.py"
+  ],
+  "source_files": [
+    "starlette/routing.py"
+  ],
+  "test_files": [
+    "tests/test_routing.py"
+  ],
+  "lines_added": 23,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "b7aeae70fd24d568553d83b5acfa5b6c4cfbc179",
+  "base_commit_sha": "1a51dfabf7575278c89857de053447f2ca936efc",
+  "head_commit_sha": "efd7f01c292b8b99164bc7010c19da38cadb2d08",
+  "merged_at": "2021-05-04T09:36:17Z"
+}

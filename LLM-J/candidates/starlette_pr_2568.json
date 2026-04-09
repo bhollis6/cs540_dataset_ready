@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2568",
+  "repo": "encode/starlette",
+  "pr_number": 2568,
+  "title": "Fail fast on invalid Jinja2Template instantiation parameters",
+  "description": "# Summary\r\nCalling `Jinja2Template()` with both `directory` and `env` shouldn't be allowed. When both parameters were used, the passed `env` was silently ignored in favor of creating a new one with the provided `directory` and the deprecated `env_options`.\r\n\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/templating.py b/starlette/templating.py\nindex 2dc3a5930..01af5e9bb 100644\n--- a/starlette/templating.py\n+++ b/starlette/templating.py\n@@ -104,7 +104,9 @@ def __init__(\n                 DeprecationWarning,\n             )\n         assert jinja2 is not None, \"jinja2 must be installed to use Jinja2Templates\"\n-        assert directory or env, \"either 'directory' or 'env' arguments must be passed\"\n+        assert bool(directory) ^ bool(\n+            env\n+        ), \"either 'directory' or 'env' arguments must be passed\"\n         self.context_processors = context_processors or []\n         if directory is not None:\n             self.env = self._create_env(directory, **env_options)\n",
+  "test_diff": "diff --git a/tests/test_templates.py b/tests/test_templates.py\nindex 95e392ed5..10a1366bc 100644\n--- a/tests/test_templates.py\n+++ b/tests/test_templates.py\n@@ -143,6 +143,13 @@ def test_templates_require_directory_or_environment() -> None:\n         Jinja2Templates()  # type: ignore[call-overload]\n \n \n+def test_templates_require_directory_or_enviroment_not_both() -> None:\n+    with pytest.raises(\n+        AssertionError, match=\"either 'directory' or 'env' arguments must be passed\"\n+    ):\n+        Jinja2Templates(directory=\"dir\", env=jinja2.Environment())\n+\n+\n def test_templates_with_directory(tmpdir: Path) -> None:\n     path = os.path.join(tmpdir, \"index.html\")\n     with open(path, \"w\") as file:\n",
+  "files_changed": [
+    "starlette/templating.py",
+    "tests/test_templates.py"
+  ],
+  "source_files": [
+    "starlette/templating.py"
+  ],
+  "test_files": [
+    "tests/test_templates.py"
+  ],
+  "lines_added": 10,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "9cf26eebd190c54deadc2a2468ce300ba886ab18",
+  "base_commit_sha": "9bd1b817d49c02f10561e1f6028e83f2c8190850",
+  "head_commit_sha": "02e518d4344fa979d923cdc38af10825a287f014",
+  "merged_at": "2024-04-20T07:54:26Z"
+}

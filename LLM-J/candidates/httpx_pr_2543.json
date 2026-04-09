@@ -1,0 +1,28 @@
+{
+  "candidate_id": "httpx_pr_2543",
+  "repo": "encode/httpx",
+  "pr_number": 2543,
+  "title": "Use '%20' for encoding spaces in query parameters.",
+  "description": "Query parameter encoding switches from using `+` for spaces and `%2F` for forward slash, to instead using `%20` for spaces and treating forward slash as a safe, unescaped character.\r\n\r\nCloses https://github.com/encode/httpx/issues/2536.\r\n\r\n- [x] Add failing test.\r\n- [x] Fix behaviour.",
+  "patch_diff": "diff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex e16e812391..ac1c6271bc 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -433,3 +433,19 @@ def quote(string: str, safe: str = \"/\") -> str:\n     return \"\".join(\n         [char if char in NON_ESCAPED_CHARS else percent_encode(char) for char in string]\n     )\n+\n+\n+def urlencode(items: typing.List[typing.Tuple[str, str]]) -> str:\n+    # We can use a much simpler version of the stdlib urlencode here because\n+    # we don't need to handle a bunch of different typing cases, such as bytes vs str.\n+    #\n+    # https://github.com/python/cpython/blob/b2f7b2ef0b5421e01efb8c7bee2ef95d3bab77eb/Lib/urllib/parse.py#L926\n+    #\n+    # Note that we use '%20' encoding for spaces, and treat '/' as a safe\n+    # character. This means our query params have the same escaping as other\n+    # characters in the URL path. This is slightly different to `requests`,\n+    # but is the behaviour that browsers use.\n+    #\n+    # See https://github.com/encode/httpx/issues/2536 and\n+    # https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlencode\n+    return \"&\".join([quote(k) + \"=\" + quote(v) for k, v in items])\ndiff --git a/httpx/_urls.py b/httpx/_urls.py\nindex 1bcbc8b29a..6f5dc6a543 100644\n--- a/httpx/_urls.py\n+++ b/httpx/_urls.py\n@@ -1,10 +1,10 @@\n import typing\n-from urllib.parse import parse_qs, unquote, urlencode\n+from urllib.parse import parse_qs, unquote\n \n import idna\n \n from ._types import PrimitiveData, QueryParamTypes, RawURL, URLTypes\n-from ._urlparse import urlparse\n+from ._urlparse import urlencode, urlparse\n from ._utils import primitive_value_to_str\n \n \n@@ -616,6 +616,13 @@ def __eq__(self, other: typing.Any) -> bool:\n         return sorted(self.multi_items()) == sorted(other.multi_items())\n \n     def __str__(self) -> str:\n+        \"\"\"\n+        Note that we use '%20' encoding for spaces, and treat '/' as a safe\n+        character.\n+\n+        See https://github.com/encode/httpx/issues/2536 and\n+        https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlencode\n+        \"\"\"\n         return urlencode(self.multi_items())\n \n     def __repr__(self) -> str:\n",
+  "test_diff": "diff --git a/tests/models/test_url.py b/tests/models/test_url.py\nindex cbd8d64269..170066826a 100644\n--- a/tests/models/test_url.py\n+++ b/tests/models/test_url.py\n@@ -350,6 +350,22 @@ def test_url_with_empty_query():\n     assert url.raw_path == b\"/path?\"\n \n \n+def test_url_query_encoding():\n+    \"\"\"\n+    URL query parameters should use '%20' to encoding spaces,\n+    and should treat '/' as a safe character. This behaviour differs\n+    across clients, but we're matching browser behaviour here.\n+\n+    See https://github.com/encode/httpx/issues/2536\n+    and https://github.com/encode/httpx/discussions/2460\n+    \"\"\"\n+    url = httpx.URL(\"https://www.example.com/?a=b c&d=e/f\")\n+    assert url.raw_path == b\"/?a=b%20c&d=e/f\"\n+\n+    url = httpx.URL(\"https://www.example.com/\", params={\"a\": \"b c\", \"d\": \"e/f\"})\n+    assert url.raw_path == b\"/?a=b%20c&d=e/f\"\n+\n+\n def test_url_with_url_encoded_path():\n     url = httpx.URL(\"https://www.example.com/path%20to%20somewhere\")\n     assert url.path == \"/path to somewhere\"\n",
+  "files_changed": [
+    "httpx/_urlparse.py",
+    "httpx/_urls.py",
+    "tests/models/test_url.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py",
+    "httpx/_urls.py"
+  ],
+  "test_files": [
+    "tests/models/test_url.py"
+  ],
+  "lines_added": 41,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "a6af45edac51dce888e1e1f0ebf344f126a1c66c",
+  "base_commit_sha": "57daabf673705954afa94686c0002801c93d31f3",
+  "head_commit_sha": "f7171c007f0d066a41c27bac50bdd405eb5ff76f",
+  "merged_at": "2023-01-10T11:16:09Z"
+}

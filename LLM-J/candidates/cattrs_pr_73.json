@@ -1,0 +1,31 @@
+{
+  "candidate_id": "cattrs_pr_73",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 73,
+  "title": "Add support for python 3.8",
+  "description": "Adds support for python 3.8",
+  "patch_diff": "diff --git a/.travis.yml b/.travis.yml\nindex c24c1f9c..2be1dbac 100644\n--- a/.travis.yml\n+++ b/.travis.yml\n@@ -19,6 +19,8 @@ matrix:\n       env: TOXENV=py36\n     - python: \"3.7\"\n       env: TOXENV=py37\n+    - python: \"3.8\"\n+      env: TOXENV=py38\n       dist: xenial\n       sudo: true\n \ndiff --git a/HISTORY.rst b/HISTORY.rst\nindex 7c2c577e..d8710c36 100644\n--- a/HISTORY.rst\n+++ b/HISTORY.rst\n@@ -9,6 +9,10 @@ History\n * ``cattrs`` has improved type annotations for use with Mypy.\n * Unstructuring sets and frozensets now works properly.\n \n+0.9.1 (2019-10-26)\n+------------------\n+* Python 3.8 support.\n+\n 0.9.0 (2018-07-22)\n ------------------\n * Python 3.7 support.\ndiff --git a/setup.py b/setup.py\nindex f18cb2dd..4c9a7976 100644\n--- a/setup.py\n+++ b/setup.py\n@@ -55,5 +55,6 @@\n         \"Programming Language :: Python :: 3.5\",\n         \"Programming Language :: Python :: 3.6\",\n         \"Programming Language :: Python :: 3.7\",\n+        \"Programming Language :: Python :: 3.8\",\n     ],\n )\ndiff --git a/src/cattr/_compat.py b/src/cattr/_compat.py\nindex 510766a9..7cd4c540 100644\n--- a/src/cattr/_compat.py\n+++ b/src/cattr/_compat.py\n@@ -13,6 +13,7 @@\n is_py2 = version_info[0] == 2\n is_py3 = version_info[0] == 3\n is_py37 = version_info[:2] == (3, 7)\n+is_py38 = version_info[:2] == (3, 8)\n \n if is_py2:\n     from functools32 import lru_cache\n@@ -26,7 +27,7 @@\n     unicode = str\n     bytes = bytes\n \n-if is_py37:\n+if is_py37 or is_py38:\n     from typing import List, Union, _GenericAlias\n \n     def is_union_type(obj):\ndiff --git a/tox.ini b/tox.ini\nindex 51b305b5..937d97dc 100644\n--- a/tox.ini\n+++ b/tox.ini\n@@ -1,5 +1,5 @@\n [tox]\n-envlist = py27, pypy, py35, pypy3, py36, py37, lint\n+envlist = py27, pypy, py35, pypy3, py36, py37, py38, lint\n \n [testenv:lint]\n skip_install = true\n",
+  "test_diff": "diff --git a/tests/_compat.py b/tests/_compat.py\nindex ce2259ec..86e14ac5 100644\n--- a/tests/_compat.py\n+++ b/tests/_compat.py\n@@ -1,6 +1,10 @@\n-from cattr._compat import is_py37, is_bare\n+from cattr._compat import (\n+    is_py37,\n+    is_py38,\n+    is_bare\n+)\n \n-if is_py37:\n+if is_py37 or is_py38:\n \n     def change_type_param(cl, new_params):\n         if is_bare(cl):\n",
+  "files_changed": [
+    ".travis.yml",
+    "HISTORY.rst",
+    "setup.py",
+    "src/cattr/_compat.py",
+    "tests/_compat.py",
+    "tox.ini"
+  ],
+  "source_files": [
+    "setup.py",
+    "src/cattr/_compat.py"
+  ],
+  "test_files": [
+    "tests/_compat.py"
+  ],
+  "lines_added": 16,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "bb48897a7f389332d6111a239dcf3bf4a11b526f",
+  "base_commit_sha": "7311176e15970cba50c7c435a4e6e353c00bfeaf",
+  "head_commit_sha": "663605dec0895f57b7915fecd654cf5591d0736b",
+  "merged_at": "2019-11-04T15:40:50Z"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2846",
+  "repo": "encode/httpx",
+  "pr_number": 2846,
+  "title": "Add cookies to the retried request when performing digest authentication.",
+  "description": "<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\nAdding the cookies from the response in the first request into the follow up request. The server expects a cookie to be set. This is however not highlighted in the RFC. Supporting [SO answer](https://stackoverflow.com/a/25743837/4444629) and discussions by @robin-blanchard https://github.com/encode/httpx/issues/2788#issuecomment-1677015264.\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/httpx/_auth.py b/httpx/_auth.py\nindex 1d7385d573..27dc7f743b 100644\n--- a/httpx/_auth.py\n+++ b/httpx/_auth.py\n@@ -8,7 +8,7 @@\n from urllib.request import parse_http_list\n \n from ._exceptions import ProtocolError\n-from ._models import Request, Response\n+from ._models import Cookies, Request, Response\n from ._utils import to_bytes, to_str, unquote\n \n if typing.TYPE_CHECKING:  # pragma: no cover\n@@ -217,6 +217,8 @@ def auth_flow(self, request: Request) -> typing.Generator[Request, Response, Non\n         request.headers[\"Authorization\"] = self._build_auth_header(\n             request, self._last_challenge\n         )\n+        if response.cookies:\n+            Cookies(response.cookies).set_cookie_header(request=request)\n         yield request\n \n     def _parse_challenge(\n",
+  "test_diff": "diff --git a/tests/test_auth.py b/tests/test_auth.py\nindex a1997c2fe2..563256954d 100644\n--- a/tests/test_auth.py\n+++ b/tests/test_auth.py\n@@ -54,7 +54,7 @@ def test_digest_auth_with_401():\n         \"WWW-Authenticate\": 'Digest realm=\"...\", qop=\"auth\", nonce=\"...\", opaque=\"...\"'\n     }\n     response = httpx.Response(\n-        content=b\"Auth required\", status_code=401, headers=headers\n+        content=b\"Auth required\", status_code=401, headers=headers, request=request\n     )\n     request = flow.send(response)\n     assert request.headers[\"Authorization\"].startswith(\"Digest\")\n@@ -79,7 +79,7 @@ def test_digest_auth_with_401_nonce_counting():\n         \"WWW-Authenticate\": 'Digest realm=\"...\", qop=\"auth\", nonce=\"...\", opaque=\"...\"'\n     }\n     response = httpx.Response(\n-        content=b\"Auth required\", status_code=401, headers=headers\n+        content=b\"Auth required\", status_code=401, headers=headers, request=request\n     )\n     first_request = flow.send(response)\n     assert first_request.headers[\"Authorization\"].startswith(\"Digest\")\n@@ -101,3 +101,42 @@ def test_digest_auth_with_401_nonce_counting():\n     response = httpx.Response(content=b\"Hello, world!\", status_code=200)\n     with pytest.raises(StopIteration):\n         flow.send(response)\n+\n+\n+def set_cookies(request: httpx.Request) -> httpx.Response:\n+    headers = {\n+        \"Set-Cookie\": \"session=.session_value...\",\n+        \"WWW-Authenticate\": 'Digest realm=\"...\", qop=\"auth\", nonce=\"...\", opaque=\"...\"',\n+    }\n+    if request.url.path == \"/auth\":\n+        return httpx.Response(\n+            content=b\"Auth required\", status_code=401, headers=headers\n+        )\n+    else:\n+        raise NotImplementedError()  # pragma: no cover\n+\n+\n+def test_digest_auth_setting_cookie_in_request():\n+    url = \"https://www.example.com/auth\"\n+    client = httpx.Client(transport=httpx.MockTransport(set_cookies))\n+    request = client.build_request(\"GET\", url)\n+\n+    auth = httpx.DigestAuth(username=\"user\", password=\"pass\")\n+    flow = auth.sync_auth_flow(request)\n+    request = next(flow)\n+    assert \"Authorization\" not in request.headers\n+\n+    response = client.get(url)\n+    assert len(response.cookies) > 0\n+    assert response.cookies[\"session\"] == \".session_value...\"\n+\n+    request = flow.send(response)\n+    assert request.headers[\"Authorization\"].startswith(\"Digest\")\n+    assert request.headers[\"Cookie\"] == \"session=.session_value...\"\n+\n+    # No other requests are made.\n+    response = httpx.Response(\n+        content=b\"Hello, world!\", status_code=200, request=request\n+    )\n+    with pytest.raises(StopIteration):\n+        flow.send(response)\n",
+  "files_changed": [
+    "httpx/_auth.py",
+    "tests/test_auth.py"
+  ],
+  "source_files": [
+    "httpx/_auth.py"
+  ],
+  "test_files": [
+    "tests/test_auth.py"
+  ],
+  "lines_added": 44,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "88e84314378b31336027363af862619c519a4a3a",
+  "base_commit_sha": "c3585a5ccfa57bec653f3846b8625a27d11dcd5e",
+  "head_commit_sha": "fdfd9aa005eb82e390a5df379f2e3b826b11ac5a",
+  "merged_at": "2023-09-15T09:52:11Z"
+}

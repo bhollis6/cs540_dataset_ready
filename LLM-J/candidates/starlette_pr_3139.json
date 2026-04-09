@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_3139",
+  "repo": "encode/starlette",
+  "pr_number": 3139,
+  "title": "Handle null bytes in `StaticFiles` path",
+  "description": "A `%00` in the URL path gets decoded by uvicorn into a null byte, which causes `os.path.realpath()` to raise `ValueError` inside `lookup_path()`. This was unhandled, resulting in a 500. Now returns 404.",
+  "patch_diff": "diff --git a/starlette/staticfiles.py b/starlette/staticfiles.py\nindex a458fd7d8..883b0f769 100644\n--- a/starlette/staticfiles.py\n+++ b/starlette/staticfiles.py\n@@ -123,6 +123,9 @@ async def get_response(self, path: str, scope: Scope) -> Response:\n                 raise HTTPException(status_code=404)\n \n             raise exc\n+        except ValueError:\n+            # Null bytes or other invalid characters in the path.\n+            raise HTTPException(status_code=404)\n \n         if stat_result and stat.S_ISREG(stat_result.st_mode):\n             # We have a static file to serve.\n",
+  "test_diff": "diff --git a/tests/test_staticfiles.py b/tests/test_staticfiles.py\nindex 1bf53ff9c..cd12a69a3 100644\n--- a/tests/test_staticfiles.py\n+++ b/tests/test_staticfiles.py\n@@ -460,6 +460,15 @@ def test_staticfiles_access_file_as_dir_returns_404(tmpdir: Path, test_client_fa\n     assert response.text == \"Not Found\"\n \n \n+def test_staticfiles_null_byte_in_path(tmpdir: Path, test_client_factory: TestClientFactory) -> None:\n+    routes = [Mount(\"/\", app=StaticFiles(directory=tmpdir), name=\"static\")]\n+    app = Starlette(routes=routes)\n+    client = test_client_factory(app)\n+\n+    response = client.get(\"/example%00.txt\")\n+    assert response.status_code == 404\n+\n+\n def test_staticfiles_filename_too_long(tmpdir: Path, test_client_factory: TestClientFactory) -> None:\n     routes = [Mount(\"/\", app=StaticFiles(directory=tmpdir), name=\"static\")]\n     app = Starlette(routes=routes)\n",
+  "files_changed": [
+    "starlette/staticfiles.py",
+    "tests/test_staticfiles.py"
+  ],
+  "source_files": [
+    "starlette/staticfiles.py"
+  ],
+  "test_files": [
+    "tests/test_staticfiles.py"
+  ],
+  "lines_added": 12,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "51057d57449c35a9fa2814266cda60dc51bf3435",
+  "base_commit_sha": "361dfb2573a7dd2d091f6b84ce38bd211ad7d699",
+  "head_commit_sha": "90c712d8ae0d1414767bc3b10de15857451cc645",
+  "merged_at": "2026-02-14T11:05:17Z"
+}

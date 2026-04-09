@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_3142",
+  "repo": "encode/starlette",
+  "pr_number": 3142,
+  "title": "Set `Content-Type` instead of `Content-Range` on multi-range responses",
+  "description": "Set `Content-Type` to `multipart/byteranges; boundary=...` and leave `Content-Range` unset on multi-range responses per [RFC 9110 \u00a714.6](https://httpwg.org/specs/rfc9110.html#partial.multipart).\n\nExtracted from #3105.\n\nCo-authored-by: Victor Westerhuis <victor.westerhuis@alliander.com>",
+  "patch_diff": "diff --git a/starlette/responses.py b/starlette/responses.py\nindex 61c914b03..5f35fc434 100644\n--- a/starlette/responses.py\n+++ b/starlette/responses.py\n@@ -425,7 +425,7 @@ async def _handle_multiple_ranges(\n         content_length, header_generator = self.generate_multipart(\n             ranges, boundary, file_size, self.headers[\"content-type\"]\n         )\n-        self.headers[\"content-range\"] = f\"multipart/byteranges; boundary={boundary}\"\n+        self.headers[\"content-type\"] = f\"multipart/byteranges; boundary={boundary}\"\n         self.headers[\"content-length\"] = str(content_length)\n         await send({\"type\": \"http.response.start\", \"status\": 206, \"headers\": self.raw_headers})\n         if send_header_only:\n",
+  "test_diff": "diff --git a/tests/test_responses.py b/tests/test_responses.py\nindex 8f17013a0..096f336d6 100644\n--- a/tests/test_responses.py\n+++ b/tests/test_responses.py\n@@ -711,14 +711,17 @@ def test_file_response_range_head(file_response_client: TestClient) -> None:\n def test_file_response_range_multi(file_response_client: TestClient) -> None:\n     response = file_response_client.get(\"/\", headers={\"Range\": \"bytes=0-100, 200-300\"})\n     assert response.status_code == 206\n-    assert response.headers[\"content-range\"].startswith(\"multipart/byteranges; boundary=\")\n+    assert \"content-range\" not in response.headers\n     assert response.headers[\"content-length\"] == \"439\"\n+    assert response.headers[\"content-type\"].startswith(\"multipart/byteranges; boundary=\")\n \n \n def test_file_response_range_multi_head(file_response_client: TestClient) -> None:\n     response = file_response_client.head(\"/\", headers={\"Range\": \"bytes=0-100, 200-300\"})\n     assert response.status_code == 206\n+    assert \"content-range\" not in response.headers\n     assert response.headers[\"content-length\"] == \"439\"\n+    assert response.headers[\"content-type\"].startswith(\"multipart/byteranges; boundary=\")\n     assert response.content == b\"\"\n \n     response = file_response_client.head(\n@@ -778,8 +781,9 @@ def test_file_response_insert_ranges(file_response_client: TestClient) -> None:\n     response = file_response_client.get(\"/\", headers={\"Range\": \"bytes=100-200, 0-50\"})\n \n     assert response.status_code == 206\n-    assert response.headers[\"content-range\"].startswith(\"multipart/byteranges; boundary=\")\n-    boundary = response.headers[\"content-range\"].split(\"boundary=\")[1]\n+    assert \"content-range\" not in response.headers\n+    assert response.headers[\"content-type\"].startswith(\"multipart/byteranges; boundary=\")\n+    boundary = response.headers[\"content-type\"].split(\"boundary=\")[1]\n     assert response.text.splitlines() == [\n         f\"--{boundary}\",\n         \"Content-Type: text/plain; charset=utf-8\",\n@@ -849,13 +853,13 @@ async def send(message: Message) -> None:\n     assert start_message[\"status\"] == 206\n \n     headers = Headers(raw=start_message[\"headers\"])\n-    assert headers.get(\"content-type\") == \"text/plain; charset=utf-8\"\n+    assert \"content-range\" not in headers\n     assert headers.get(\"accept-ranges\") == \"bytes\"\n     assert \"content-length\" in headers\n     assert \"last-modified\" in headers\n     assert \"etag\" in headers\n-    assert headers[\"content-range\"].startswith(\"multipart/byteranges; boundary=\")\n-    boundary = headers[\"content-range\"].split(\"boundary=\")[1]\n+    assert headers[\"content-type\"].startswith(\"multipart/byteranges; boundary=\")\n+    boundary = headers[\"content-type\"].split(\"boundary=\")[1]\n \n     assert received_chunks == [\n         # Send the part headers.\n",
+  "files_changed": [
+    "starlette/responses.py",
+    "tests/test_responses.py"
+  ],
+  "source_files": [
+    "starlette/responses.py"
+  ],
+  "test_files": [
+    "tests/test_responses.py"
+  ],
+  "lines_added": 11,
+  "lines_removed": 7,
+  "has_test_changes": true,
+  "merge_commit_sha": "90b805fda70db2316d79aa577f4c3eb670f9a8a1",
+  "base_commit_sha": "c011d1fcb27ab8b4759288479208315695ef3ca3",
+  "head_commit_sha": "c2d5e3d9341017f0adb16856370198531ba81f53",
+  "merged_at": "2026-02-14T13:00:30Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_467",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 467,
+  "title": "structure typing_extension.Literal to support old code",
+  "description": "...or libraries that still support Python 3.7\r\n\r\nwould close #460 ",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex 9029a3bd..e495db5b 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -8,6 +8,8 @@\n   ([#463](https://github.com/python-attrs/cattrs/pull/463))\n - More robust support for `Annotated` and `NotRequired` in TypedDicts.\n   ([#450](https://github.com/python-attrs/cattrs/pull/450))\n+- `typing_extensions.Literal` is now automatically structured, just like `typing.Literal`.\n+  ([#460](https://github.com/python-attrs/cattrs/issues/460) [#467](https://github.com/python-attrs/cattrs/pull/467))\n - [PEP 695](https://peps.python.org/pep-0695/) generics are now tested.\n   ([#452](https://github.com/python-attrs/cattrs/pull/452))\n - Imports are now sorted using Ruff.\ndiff --git a/src/cattrs/_compat.py b/src/cattrs/_compat.py\nindex 8f9c6e4e..bd3ed9e0 100644\n--- a/src/cattrs/_compat.py\n+++ b/src/cattrs/_compat.py\n@@ -48,7 +48,6 @@\n except ImportError:  # pragma: no cover\n     ExtensionsTypedDict = None\n \n-\n if sys.version_info >= (3, 11):\n     from builtins import ExceptionGroup\n else:\n@@ -66,6 +65,14 @@\n     assert sys.version_info >= (3, 11)\n     from typing import TypeAlias\n \n+LITERALS = {Literal}\n+try:\n+    from typing_extensions import Literal as teLiteral\n+\n+    LITERALS.add(teLiteral)\n+except ImportError:  # pragma: no cover\n+    pass\n+\n \n def is_typeddict(cls):\n     \"\"\"Thin wrapper around typing(_extensions).is_typeddict\"\"\"\n@@ -203,7 +210,12 @@ def get_final_base(type) -> Optional[type]:\n         from typing import _LiteralGenericAlias\n \n         def is_literal(type) -> bool:\n-            return type.__class__ is _LiteralGenericAlias\n+            return type in LITERALS or (\n+                isinstance(\n+                    type, (_GenericAlias, _LiteralGenericAlias, _SpecialGenericAlias)\n+                )\n+                and type.__origin__ in LITERALS\n+            )\n \n     except ImportError:  # pragma: no cover\n \n@@ -479,7 +491,9 @@ def is_counter(type):\n         )\n \n     def is_literal(type) -> bool:\n-        return type.__class__ is _GenericAlias and type.__origin__ is Literal\n+        return type in LITERALS or (\n+            isinstance(type, _GenericAlias) and type.__origin__ in LITERALS\n+        )\n \n     def is_generic(obj):\n         return isinstance(obj, _GenericAlias) or (\n",
+  "test_diff": "diff --git a/tests/test_structure_attrs.py b/tests/test_structure_attrs.py\nindex 3b7b8ae3..1ce16d2f 100644\n--- a/tests/test_structure_attrs.py\n+++ b/tests/test_structure_attrs.py\n@@ -150,6 +150,21 @@ class ClassWithLiteral:\n     ) == ClassWithLiteral(4)\n \n \n+@pytest.mark.parametrize(\"converter_cls\", [BaseConverter, Converter])\n+def test_structure_typing_extensions_literal(converter_cls):\n+    \"\"\"Structuring a class with a typing_extensions.Literal field works.\"\"\"\n+    converter = converter_cls()\n+    import typing_extensions\n+\n+    @define\n+    class ClassWithLiteral:\n+        literal_field: typing_extensions.Literal[8] = 8\n+\n+    assert converter.structure(\n+        {\"literal_field\": 8}, ClassWithLiteral\n+    ) == ClassWithLiteral(8)\n+\n+\n @pytest.mark.parametrize(\"converter_cls\", [BaseConverter, Converter])\n def test_structure_literal_enum(converter_cls):\n     \"\"\"Structuring a class with a literal field works.\"\"\"\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/_compat.py",
+    "tests/test_structure_attrs.py"
+  ],
+  "source_files": [
+    "src/cattrs/_compat.py"
+  ],
+  "test_files": [
+    "tests/test_structure_attrs.py"
+  ],
+  "lines_added": 34,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "3b6bdb7749b3855d0841cde1ff0a9e73b395d2af",
+  "base_commit_sha": "6d0a6d0c352185ba93efb3985f3ce09793a497fc",
+  "head_commit_sha": "70bb8fdb51a08b5784815036e9d7de8fba2778b4",
+  "merged_at": "2023-12-10T18:00:16Z"
+}

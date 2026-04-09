@@ -1,0 +1,332 @@
+[
+  {
+    "candidate_id": "httpx_pr_1574",
+    "repo": "encode/httpx",
+    "pr_number": 1574,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 21,
+    "recommendation": "ACCEPT",
+    "summary": "This is a high-quality candidate PR. It is tightly scoped around a single API deprecation decision, has excellent test coverage with a direct pass/fail signal via pytest.warns, touches real typed application code, and is clearly described. Complexity is moderate \u2014 an agent needs to understand the httpx request pipeline but the actual implementation is not deeply algorithmic. Strong candidate for the experiment.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR is entirely focused on a single coherent API change: deprecating per-request cookies. Every file touched (docs/compatibility.md, httpx/_api.py, httpx/_client.py, tests/client/test_cookies.py) directly relates to this one change. No unrelated cleanup or bundled features."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "A dedicated new test `test_set_per_request_cookie_is_deprecated()` is added that uses `pytest.warns(DeprecationWarning)` to directly verify the deprecation warning fires when cookies are passed per-request. This is an unambiguous pass/fail signal. Existing tests are also updated to use the new preferred API, reinforcing correctness on both sides of the change."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The changes touch core application code in httpx/_client.py and httpx/_api.py, both of which in the httpx codebase use type annotations extensively. The warning logic, parameter handling, and test assertions all involve typed Python code with descriptive naming. Not the deepest algorithmic logic, but firmly application-level code rather than boilerplate or config."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly states the change, provides explicit before/after Python code examples, and explains the rationale (ambiguous cookie persistence during redirects). The title is precise. An AI agent could understand the task from the description alone without needing to read the diff first. Slightly below 5 because there are no reproduction steps \u2014 it's an API design decision rather than a bug fix, so no error message or failing test exists prior to the PR."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The implementation requires understanding httpx's client architecture (where cookies flow through the request pipeline), knowing the Python warnings module, and recognizing two separate call sites in _api.py that both need the cookies parameter moved. Not a trivial one-liner, but also not deep \u2014 once the design is understood, the code changes are mechanical. Test changes are similarly moderate. Sits squarely in the desired 3-4 sweet spot."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2026",
+    "repo": "encode/httpx",
+    "pr_number": 2026,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 15,
+    "recommendation": "REVIEW",
+    "summary": "This PR is clean and well-described but is a poor candidate for the experiment. It is purely a code deletion (two `__del__` methods removed), making it trivial to re-implement (score 1 on complexity), leaving no new code to degrade via mutation (score 2 on mutation relevance), and providing no positive test signal \u2014 only test removal (score 2 on test coverage). The PR would not produce meaningful differentiation between clean and degraded codebase conditions.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely focused: removes `__del__` from exactly two related classes (`Client` and `AsyncClient`) for a single, well-articulated reason. No unrelated changes, no cleanup, no refactoring bundled in."
+      },
+      "test_coverage": {
+        "score": 2,
+        "reasoning": "The test diff only removes an existing test (`test_deleting_unclosed_async_client_causes_warning`) that verified the old warning behavior. There is no new test added to positively assert the new behavior (e.g., that deleting an unclosed client no longer raises warnings or errors). The change is deletion-aligned but provides no new pass/fail signal for the experiment."
+      },
+      "mutation_relevance": {
+        "score": 2,
+        "reasoning": "The PR touches `httpx/_client.py`, which is core application code with type hints and descriptive naming. However, the change is purely deletion \u2014 both the source and test diffs only remove code. No new code with type annotations, docstrings, or named variables is introduced, leaving very little content to degrade in a mutation experiment. The surrounding file has relevant properties, but the PR's diff itself has almost nothing to mutate."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The description is thorough: it references prior discussions (#1951, #2024), explains the old behavior for both sync and async clients, details why it's unreliable (atexit edge cases, stdlib unavailability, intenum access failures), and states the decision clearly. More than sufficient context to hand to an AI agent as a task prompt."
+      },
+      "complexity": {
+        "score": 1,
+        "reasoning": "This is a pure deletion PR \u2014 removing two short `__del__` method blocks. The motivation requires non-trivial understanding of Python runtime internals, but the implementation is trivially simple: delete the two methods and their corresponding test. An agent tasked with re-implementing this change would complete it in one step with no architectural reasoning required. This falls well below the useful complexity threshold for the experiment."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2423",
+    "repo": "encode/httpx",
+    "pr_number": 2423,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 22,
+    "recommendation": "ACCEPT",
+    "summary": "Strong experimental candidate. Tightly scoped rewrite of a single class with excellent test coverage directly validating the behavioral contract. Core application code rich in type annotations and descriptive naming makes it ideal for mutation degradation experiments. Complexity is in the sweet spot: requires real understanding of chunked line parsing edge cases without being overwhelming.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Single class (`LineDecoder`) modified in one source file (`httpx/_decoders.py`), with two test files updated purely to reflect the behavior change. No unrelated cleanup or side changes. Extremely tight scope."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "Test changes in `tests/test_decoders.py` directly exercise `LineDecoder` across all three line-ending styles (`\\n`, `\\r`, `\\r\\n`) including chunk-boundary edge cases. Tests in `tests/models/test_responses.py` validate the end-to-end `iter_lines()`/`aiter_lines()` behavior change. The before/after expected values serve as a clear pass/fail signal for the exact behavioral contract being changed."
+      },
+      "mutation_relevance": {
+        "score": 5,
+        "reasoning": "The modified code in `httpx/_decoders.py` is core application logic with explicit type annotations (`typing.List[str]`, `bool`, return types), descriptive variable names (`trailing_cr`, `trailing_newline`, `NEWLINE_CHARS`), a class docstring, and inline explanatory comments. Highly amenable to the planned degradations (removing type hints, renaming variables, removing docstrings)."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR title clearly states both the mechanism ('match stdlib splitlines') and the outcome ('significant speed up'). The body references issue #2422 and gives a concrete usage example (`Response(...).iter_lines()`). An AI agent could derive the task from title + test diffs alone, though a reproduction benchmark or explicit description of the old vs new behavior contract would push this to a 5."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The change is non-trivial: it requires understanding chunked streaming, the `\\r`-at-boundary edge case requiring the `trailing_cr` flag, buffering logic with `List[str]`, and how Python's `splitlines()` behaves vs the original loop. However, the core insight is contained (~25 lines) and the logic is self-contained within one class. Not trivially simple, but also not sprawling\u2014solidly in the target 3-4 range."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2523",
+    "repo": "encode/httpx",
+    "pr_number": 2523,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 21,
+    "recommendation": "ACCEPT",
+    "summary": "A beautifully clean, well-described, and well-tested PR that is almost too simple for this experiment. It scores perfectly on scope, test coverage, and clarity, but the core change is just a guard clause addition \u2014 a few lines with an obvious solution. An AI agent in almost any codebase condition would likely find and fix this correctly, reducing the experimental signal. The low complexity (score 2) is the primary concern; this PR may not produce meaningful differentiation across degraded conditions.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely focused: one source file changed (httpx/_utils.py, 5 lines), one test file changed (7 lines added). Single clear purpose: raise TypeError on invalid query param types instead of silently coercing. No unrelated cleanup or bundled changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test directly and precisely validates the fix \u2014 it constructs a QueryParams with a bytes value and asserts the exact TypeError message is raised. This is a clean pass/fail signal perfectly aligned with the behavior change. Could serve as the experiment's oracle with no ambiguity."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The changed function `primitive_value_to_str` uses a forward-reference type annotation (`'PrimitiveData'`), descriptive parameter naming, and is part of a well-structured utility module in a mature library. The fix itself uses isinstance checks with explicit type mentions. Good application code with type annotations, though the patch is small enough that there's limited surface area for degradation experiments."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The PR description is exemplary: it references the motivating issue, closes an older issue, and provides a concrete before/after code snippet showing the exact behavior change and the exact error message produced. An AI agent can be handed this description verbatim and know exactly what to implement."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "This is a simple but real fix \u2014 add a type guard to an existing utility function and raise a TypeError with a descriptive message. Once an agent locates `primitive_value_to_str`, the solution is immediately obvious. It requires minimal reasoning, no architectural decisions, and the diff is 5 lines. This sits at the low end of the desired 3-4 range, making it potentially too trivial to distinguish clean vs. degraded codebase performance."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2535",
+    "repo": "encode/httpx",
+    "pr_number": 2535,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 22,
+    "recommendation": "ACCEPT",
+    "summary": "This is a high-quality experimental candidate. The PR is tightly scoped, has excellent test coverage that provides clear pass/fail signals, touches core application code rich with type annotations and descriptive naming, has an exceptionally clear description, and sits at moderate complexity. It cleanly represents a real-world feature addition following established patterns \u2014 the kind of task where codebase quality degradations (poor naming, removed type hints, disrupted structure) would meaningfully affect agent performance.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR is laser-focused on a single coherent change: replacing implicitly baked-in netrc authentication with an explicit `NetRCAuth()` class. Every file touched \u2014 `_auth.py` (add class), `_utils.py` (remove old class), `_client.py` (remove implicit usage), `__init__.py` (export), docs, and tests \u2014 directly serves this one purpose. There is no unrelated cleanup or bundled features."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test changes are comprehensive and directly validate the new class: `test_netrc_auth_credentials_exist` covers the happy path, `test_netrc_auth_credentials_do_not_exist` covers missing host, `test_netrc_auth_nopassword` and `test_netrc_auth_nopassword_parse_error` cover the version-dependent edge case with no password. Each test has a docstring explaining what it validates, and together they provide unambiguous pass/fail signals for whether `NetRCAuth` behaves correctly."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The core change lives in `httpx/_auth.py`, which is application-level code with type annotations (`typing.Optional[str]`, `typing.Union[str, bytes]`, `typing.Generator[Request, Response, None]`), a class docstring, and descriptive variable names (`auth_info`, `userpass`, `token`). The removed `NetRCInfo` class in `_utils.py` also had type hints and structured logic. This is solid mutation target territory \u2014 type hints, naming, and structure are all present and degradable."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The PR description is exceptionally clear: it explains the existing behavior, the motivation for the change (alignment with curl behavior, explicit over implicit), provides 5+ concrete usage examples, and includes a checked TODO list. An AI agent could be handed this description almost verbatim as a task prompt and understand exactly what needs to be built."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The implementation requires navigating several files, understanding the existing `Auth` class hierarchy, knowing how Python's `netrc` module works, removing old logic from `_client.py` and `_utils.py`, and implementing the new class following established patterns. It's non-trivial but the solution is guided strongly by existing patterns (`BasicAuth` is nearly identical in structure). A capable AI agent should be able to complete this without it being too easy or too hard \u2014 solidly in the sweet spot's lower half."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2539",
+    "repo": "encode/httpx",
+    "pr_number": 2539,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 19,
+    "recommendation": "ACCEPT",
+    "summary": "This PR is extremely clean and well-scoped with perfect test coverage alignment, but it's too simple to be useful for the experiment. The actual code change is just 4 lines deleted and 1 line added \u2014 a revert of a trivial type guard. There's insufficient complexity to measure meaningful performance differences between clean and degraded codebase conditions. The mutation relevance is also limited since the touched code has minimal type annotations and structure to degrade.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "This PR does exactly one thing: reverts a single prior commit that added TypeError validation for query params. It touches exactly one source file and one test file, both tightly coupled to the single change being reverted."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test diff directly mirrors the code change \u2014 the test `test_invalid_query_params` that validated the TypeError behavior is removed alongside the code that raised it. The test change is a precise, 1-to-1 signal for the behavior change, making it an ideal pass/fail signal for an experiment."
+      },
+      "mutation_relevance": {
+        "score": 3,
+        "reasoning": "The source file `httpx/_utils.py` contains a typed utility function `primitive_value_to_str` with a `PrimitiveData` type annotation, which is relevant. However, the actual change is extremely minimal (removing a type guard and error raise), so there is limited surface area for meaningful degradation of type hints, naming, or docstrings."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly states what it does (reverts a prior PR), why (potentially breaking change), and when it might be reconsidered (0.24.0 release). There is a link to the discussion. However, an AI agent tasked with 're-solving' this would need to understand it's a revert of a revert \u2014 the task would be to re-introduce the TypeError behavior, which requires some inference about the original intent."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The change is trivially simple: remove a type check and an error raise (4 lines deleted, 1 line added). Even accounting for needing to understand the context, any competent agent would solve this in seconds. This is too simple for meaningful experimental differentiation between clean and degraded codebases."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2543",
+    "repo": "encode/httpx",
+    "pr_number": 2543,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 21,
+    "recommendation": "ACCEPT",
+    "summary": "A high-quality, tightly scoped PR fixing a specific URL encoding behavior. It has clear, directly validating tests, touches well-annotated core application code, and is described clearly enough to serve as an agent task prompt. Complexity sits in the ideal range for measuring degradation effects. Strong experimental candidate.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely focused change: replaces stdlib `urlencode` with a custom implementation to switch from `+` encoding for spaces to `%20`, and treat `/` as a safe character. Touches exactly 2 source files and 1 test file, all changes directly related to this single behavioral fix."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The added test `test_url_query_encoding()` directly validates the fix with two assertions: one for a raw URL string input and one for params-dict input. Both check the exact expected `raw_path` output (`%20` for spaces, `/` unescaped). The test has a docstring explaining the rationale and links to the issue. This is a clear pass/fail signal for an agent's solution."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The new `urlencode` function in `_urlparse.py` has type annotations (`typing.List[typing.Tuple[str, str]] -> str`), a detailed docstring explaining design decisions, and descriptive variable names. The `__str__` method in `_urls.py` also gains a docstring. This is core application logic with good annotation density \u2014 solid target for type-hint and naming degradations."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly states the behavioral change (from `+`/`%2F` to `%20`/unescaped `/`), references the linked issue for background, and includes a checklist confirming a failing test was added before the fix. The rationale (matching browser behavior, differing from `requests`) is documented in both the PR and inline comments. Sufficient to hand to an agent without extensive code reading."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "This is a moderate-complexity fix: it requires understanding URL encoding standards, recognizing why stdlib `urlencode` is unsuitable, and implementing a custom replacement that reuses the existing `quote` helper. The actual code change is small (~15 lines added), but getting there requires understanding the URL parsing module's structure and the encoding semantics. Well within the sweet spot \u2014 not trivially obvious, not overwhelmingly large."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2547",
+    "repo": "encode/httpx",
+    "pr_number": 2547,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 22,
+    "recommendation": "ACCEPT",
+    "summary": "Strong candidate for the experiment. This is a focused, well-documented logging refactor with excellent test coverage using caplog's exact record_tuple assertions as a clean pass/fail signal. The PR touches real application code with type hints and descriptive naming suitable for mutation, the task description is immediately actionable as an agent prompt, and the complexity is in the moderate sweet spot \u2014 requiring multi-file coordination and contextual understanding without being overwhelming.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR is laser-focused on a single coherent change: replacing httpx's custom logging infrastructure (custom TRACE level, get_logger function, HTTPX_LOG_LEVEL env var) with standard Python logging. All changed files \u2014 _client.py, _config.py, _utils.py, docs, tests \u2014 are directly part of this single migration. No unrelated cleanup or tangential changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test changes are thorough and directly validate the new behavior. Three new tests (test_logging_request, test_logging_redirect_chain, test_logging_ssl) use pytest's caplog fixture and assert exact record_tuples \u2014 checking logger name ('httpx'), log level (logging.INFO or logging.DEBUG), and message format with precision. These serve as an excellent binary pass/fail signal: an agent's implementation either produces the exact expected log records or it doesn't. The old tests relying on capsys and override_log_level are cleanly replaced."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The PR touches real application code in core modules. _utils.py contained a Logger class stub with type annotations (typing.Any, typing.Optional), a docstring on get_logger, and a complex global initialization pattern. _config.py and _client.py use type hints throughout and have descriptive naming. The code is real application logic (SSL context loading, HTTP request dispatching) not boilerplate. Slight deduction because the specific changed lines are mostly logging calls rather than business logic, limiting how much type hint / variable name degradation affects the key functionality."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The PR description is exceptional \u2014 it clearly states the goal (drop custom logging, use standard Python logging), provides before/after code examples with expected console output, explains the level changes (TRACE\u2192DEBUG for SSL, DEBUG\u2192INFO for requests), includes a TODO checklist, and references related issues. An AI agent could receive this description directly as a task prompt with full understanding of what to implement."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The task requires understanding the existing custom logging infrastructure (get_logger, _LOGGER_INITIALIZED global, Logger stub class, trace method injection), then making coordinated changes across three source files and the test suite. It's moderately complex \u2014 not a one-liner, but also not architecturally deep. The solution path is clear once you understand the existing setup: remove the custom helpers, swap in logging.getLogger('httpx'), update log levels, update tests to use caplog. This sits at the desired sweet spot for the experiment."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2572",
+    "repo": "encode/httpx",
+    "pr_number": 2572,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 15,
+    "recommendation": "REVIEW",
+    "summary": "This is a mechanical test-refactoring PR that replaces ~40 private `urlparse()` calls with the public `httpx.URL()` API. While it touches real application code and is clearly scoped, the task is essentially a bulk find-and-replace with minor value-type adjustments (str vs bytes). The complexity is too low (score 2) to produce meaningful experimental signal \u2014 an agent would likely succeed regardless of codebase quality degradation. The lack of a substantive 'fix' also makes test coverage weak as a pass/fail signal. Not a good candidate for the experiment.",
+    "scores": {
+      "scope": {
+        "score": 4,
+        "reasoning": "The PR has a single, coherent purpose: replacing private `urlparse()` imports in tests with the public `httpx.URL()` API. The source change in `_urlparse.py` (removing keyword validation) is directly related to this refactor since that validation moves to `httpx.URL()`. Minor scope expansion only in the form of expected-value adjustments (str vs bytes) necessitated by API differences."
+      },
+      "test_coverage": {
+        "score": 2,
+        "reasoning": "The test file changes are a refactoring of existing tests rather than new coverage for a bug fix. Tests are updated to call `httpx.URL()` instead of private `urlparse()`, with some value adjustments (e.g. `b''` instead of `''`). There is no newly introduced bug being caught; `test_urlparse_with_invalid_component` updated its expected error message but doesn't clearly validate any new fix. This is test maintenance, not test addition."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "`httpx/_urlparse.py` is core application code with type annotations (`typing.Optional[str]`), meaningful function/variable names, and structured logic. The test file is substantive application-level testing. Removing a validation block in a URL parsing function touches real logic. This is not config/boilerplate \u2014 it's core URL processing code with good naming and typing conventions that can be meaningfully degraded."
+      },
+      "clarity": {
+        "score": 3,
+        "reasoning": "The title 'Drop private imports from test_urlparse.py' is descriptive of the mechanical action but the description is sparse \u2014 it references issue #2492 without explaining the underlying motivation clearly, and notes one exception (`._uri_reference`) without explaining the broader context of the refactor. An AI agent would need to read the diff to understand what 'use httpx.URL()' entails in terms of API differences."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The change is predominantly a mechanical bulk find-and-replace of `urlparse(...)` with `httpx.URL(...)` across ~40 test sites, plus minor expected-value adjustments where the public API returns bytes vs. strings. The source change is a simple 12-line block deletion. While understanding the semantic differences between the private and public API adds a small amount of reasoning, this is a straightforward refactor that an agent could accomplish with simple pattern matching. Too simple to produce meaningful experimental signal."
+      }
+    }
+  },
+  {
+    "candidate_id": "httpx_pr_2648",
+    "repo": "encode/httpx",
+    "pr_number": 2648,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 10,
+    "recommendation": "REJECT",
+    "summary": "This PR is a poor candidate for the experiment. It is primarily a tooling/configuration migration (flake8 \u2192 ruff) with minimal application code changes. The 'test changes' are just linter suppression comments, not actual test logic. There is no clear behavioral fix being validated, the description provides no actionable task for an AI agent, and the code touched is mostly boilerplate configuration rather than core application logic with type hints and meaningful structure. This PR would not produce meaningful signal in an experiment studying how codebase quality affects agent performance.",
+    "scores": {
+      "scope": {
+        "score": 2,
+        "reasoning": "The PR bundles two distinct changes: (1) replacing flake8/autoflake/isort with ruff as the linting toolchain (a pure tooling/config change), and (2) making actual code changes driven by ruff's stricter checks \u2014 removing unused imports/variables in _urls.py and adding `# noqa: B018` comments plus a type annotation fix in test files. These are loosely related but represent different concerns: tooling migration vs. code correctness fixes."
+      },
+      "test_coverage": {
+        "score": 2,
+        "reasoning": "The test file changes are not adding new tests or verifying a fix \u2014 they are merely adding `# noqa: B018` suppression comments to silence a ruff linter warning about useless property access statements, and one minor type annotation fix (`server_port: str` \u2192 `server_port: typing.Optional[str] = None`). These changes don't verify any core behavioral fix; they are cosmetic adjustments to satisfy the new linter rules."
+      },
+      "mutation_relevance": {
+        "score": 2,
+        "reasoning": "The majority of the PR touches configuration files (pyproject.toml, setup.cfg, requirements.txt) and shell scripts (scripts/check, scripts/lint). The actual source code changes are minimal: two lines removed from _urls.py (one unused import, one unused variable annotation). The test changes are just noqa comments. There is very little application logic code with meaningful type hints, docstrings, or variable naming that could be meaningfully degraded."
+      },
+      "clarity": {
+        "score": 2,
+        "reasoning": "The description is extremely sparse \u2014 just 'Ref.: [discussion link]' with no explanation of what is being changed or why. Without reading the diff, it's impossible to understand what task an AI agent would need to perform. Even with the diff, an agent would need to understand the full context of the linting migration to reconstruct this PR correctly."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The changes are largely mechanical: swap tool references in config files and scripts, remove deprecated config sections, and clean up a few linter-flagged code issues. There's no algorithmic complexity or design reasoning required. The code changes in _urls.py are trivial (removing unused import and unused type annotation). This is a tooling migration that is straightforward to execute but doesn't require meaningful engineering judgment."
+      }
+    }
+  }
+]

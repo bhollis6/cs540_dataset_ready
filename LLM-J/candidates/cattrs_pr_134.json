@@ -1,0 +1,26 @@
+{
+  "candidate_id": "cattrs_pr_134",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 134,
+  "title": "Add smoke tests for nested attrs-dataclasses",
+  "description": "https://github.com/Tinche/cattrs/issues/43\r\n\r\nMinor fixes to converters.py for some basic conversion smoke tests.",
+  "patch_diff": "diff --git a/src/cattr/converters.py b/src/cattr/converters.py\nindex 75805b69..9ebd24ff 100644\n--- a/src/cattr/converters.py\n+++ b/src/cattr/converters.py\n@@ -207,7 +207,7 @@ def structure(self, obj: Any, cl: Type[T]) -> T:\n     # Classes to Python primitives.\n     def unstructure_attrs_asdict(self, obj) -> Dict[str, Any]:\n         \"\"\"Our version of `attrs.asdict`, so we can call back to us.\"\"\"\n-        attrs = obj.__class__.__attrs_attrs__\n+        attrs = fields(obj.__class__)\n         dispatch = self._unstructure_func.dispatch\n         rv = self._dict_factory()\n         for a in attrs:\n@@ -325,7 +325,7 @@ def structure_attrs_fromdict(\n \n         conv_obj = {}  # Start with a fresh dict, to ignore extra keys.\n         dispatch = self._structure_func.dispatch\n-        for a in cl.__attrs_attrs__:  # type: ignore\n+        for a in fields(cl):  # type: ignore\n             # We detect the type by metadata.\n             type_ = a.type\n             name = a.name\n@@ -460,7 +460,7 @@ def _get_dis_func(union):\n             )\n \n         if not all(\n-            hasattr(get_origin(e) or e, \"__attrs_attrs__\") for e in union_types\n+            has(get_origin(e) or e) for e in union_types\n         ):\n             raise ValueError(\n                 \"Only unions of attr classes supported \"\n",
+  "test_diff": "diff --git a/tests/test_dataclasses.py b/tests/test_dataclasses.py\nnew file mode 100644\nindex 00000000..b73cee71\n--- /dev/null\n+++ b/tests/test_dataclasses.py\n@@ -0,0 +1,64 @@\n+import dataclasses\n+from typing import List\n+\n+import attr\n+import pytest\n+\n+from cattr import Converter, GenConverter\n+\n+\n+@dataclasses.dataclass\n+class Foo:\n+    bar: str\n+\n+\n+@attr.define\n+class Container:\n+    foos: List[Foo]\n+\n+\n+@pytest.mark.parametrize(\"converter_cls\", [GenConverter, Converter])\n+def test_dataclasses_in_attrs(converter_cls):\n+    struct = Container(\n+        [\n+            Foo(\"bar\"),\n+        ]\n+    )\n+\n+    unstruct = {\n+        \"foos\": [\n+            {\"bar\": \"bar\"},\n+        ]\n+    }\n+\n+    converter = converter_cls()\n+    assert converter.unstructure(struct) == unstruct\n+    assert converter.structure(unstruct, Container) == struct\n+\n+\n+@pytest.mark.parametrize(\"converter_cls\", [GenConverter, Converter])\n+def test_dataclasses_in_container(converter_cls):\n+    struct = [\n+        Foo(\"bar\"),\n+        Foo(\"bat\"),\n+    ]\n+\n+    unstruct = [\n+        {\"bar\": \"bar\"},\n+        {\"bar\": \"bat\"},\n+    ]\n+\n+    converter = converter_cls()\n+    assert converter.unstructure(struct) == unstruct\n+    assert converter.structure(unstruct, List[Foo]) == struct\n+\n+\n+@pytest.mark.parametrize(\"converter_cls\", [GenConverter, Converter])\n+def test_dataclasses(converter_cls):\n+    struct = Foo(\"bar\")\n+\n+    unstruct = {\"bar\": \"bar\"}\n+\n+    converter = converter_cls()\n+    assert converter.unstructure(struct) == unstruct\n+    assert converter.structure(unstruct, Foo) == struct\n",
+  "files_changed": [
+    "src/cattr/converters.py",
+    "tests/test_dataclasses.py"
+  ],
+  "source_files": [
+    "src/cattr/converters.py"
+  ],
+  "test_files": [
+    "tests/test_dataclasses.py"
+  ],
+  "lines_added": 67,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "9ba20d4876f212c58fe6d9706b138c01ecd9316e",
+  "base_commit_sha": "97560f2fbcfff05dcd9a58f753fd3a95482e1022",
+  "head_commit_sha": "f798473ad571a9389cfb6b922a5e5af9ef9dd808",
+  "merged_at": "2021-03-18T23:14:15Z"
+}

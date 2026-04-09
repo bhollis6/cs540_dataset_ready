@@ -1,0 +1,28 @@
+{
+  "candidate_id": "httpx_pr_2911",
+  "repo": "encode/httpx",
+  "pr_number": 2911,
+  "title": "Cleanup `response.json()` method.",
+  "description": "The `Response.json()` method appears unnecessarily complicated, I think this is a historical appendix that can be surgically tidied up. The stdlib implementation of `json.loads` already includes the charset detection that we're currently providing with our internal `guess_json_utf()` function.\r\n\r\n* Switch `test_utils` to use a public API for testing JSON utf-8 encodings.\r\n* Remove the internal `guess_json_utf()` function.\r\n* Simpliy the `Response.json()` method.",
+  "patch_diff": "diff --git a/httpx/_models.py b/httpx/_models.py\nindex 8a6bda04bb..4e4162db1a 100644\n--- a/httpx/_models.py\n+++ b/httpx/_models.py\n@@ -43,7 +43,6 @@\n )\n from ._urls import URL\n from ._utils import (\n-    guess_json_utf,\n     is_known_encoding,\n     normalize_header_key,\n     normalize_header_value,\n@@ -759,11 +758,7 @@ def raise_for_status(self) -> \"Response\":\n         raise HTTPStatusError(message, request=request, response=self)\n \n     def json(self, **kwargs: typing.Any) -> typing.Any:\n-        if self.charset_encoding is None and self.content and len(self.content) > 3:\n-            encoding = guess_json_utf(self.content)\n-            if encoding is not None:\n-                return jsonlib.loads(self.content.decode(encoding), **kwargs)\n-        return jsonlib.loads(self.text, **kwargs)\n+        return jsonlib.loads(self.content, **kwargs)\n \n     @property\n     def cookies(self) -> \"Cookies\":\ndiff --git a/httpx/_utils.py b/httpx/_utils.py\nindex 1775b1a1ef..ba5807c048 100644\n--- a/httpx/_utils.py\n+++ b/httpx/_utils.py\n@@ -91,41 +91,6 @@ def replacer(match: typing.Match[str]) -> str:\n     return f'{name}=\"{value}\"'.encode()\n \n \n-# Null bytes; no need to recreate these on each call to guess_json_utf\n-_null = b\"\\x00\"\n-_null2 = _null * 2\n-_null3 = _null * 3\n-\n-\n-def guess_json_utf(data: bytes) -> typing.Optional[str]:\n-    # JSON always starts with two ASCII characters, so detection is as\n-    # easy as counting the nulls and from their location and count\n-    # determine the encoding. Also detect a BOM, if present.\n-    sample = data[:4]\n-    if sample in (codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE):\n-        return \"utf-32\"  # BOM included\n-    if sample[:3] == codecs.BOM_UTF8:\n-        return \"utf-8-sig\"  # BOM included, MS style (discouraged)\n-    if sample[:2] in (codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE):\n-        return \"utf-16\"  # BOM included\n-    nullcount = sample.count(_null)\n-    if nullcount == 0:\n-        return \"utf-8\"\n-    if nullcount == 2:\n-        if sample[::2] == _null2:  # 1st and 3rd are null\n-            return \"utf-16-be\"\n-        if sample[1::2] == _null2:  # 2nd and 4th are null\n-            return \"utf-16-le\"\n-        # Did not detect 2 valid UTF-16 ascii-range characters\n-    if nullcount == 3:\n-        if sample[:3] == _null3:\n-            return \"utf-32-be\"\n-        if sample[1:] == _null3:\n-            return \"utf-32-le\"\n-        # Did not detect a valid UTF-32 ascii-range character\n-    return None\n-\n-\n def get_ca_bundle_from_env() -> typing.Optional[str]:\n     if \"SSL_CERT_FILE\" in os.environ:\n         ssl_file = Path(os.environ[\"SSL_CERT_FILE\"])\n",
+  "test_diff": "diff --git a/tests/test_utils.py b/tests/test_utils.py\nindex ab0fcbecd9..dedb92f7f2 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -1,3 +1,4 @@\n+import json\n import logging\n import os\n import random\n@@ -10,7 +11,6 @@\n     URLPattern,\n     get_ca_bundle_from_env,\n     get_environment_proxies,\n-    guess_json_utf,\n     is_https_redirect,\n     obfuscate_sensitive_headers,\n     parse_header_links,\n@@ -34,12 +34,16 @@\n     ),\n )\n def test_encoded(encoding):\n-    data = \"{}\".encode(encoding)\n-    assert guess_json_utf(data) == encoding\n+    content = '{\"abc\": 123}'.encode(encoding)\n+    response = httpx.Response(200, content=content)\n+    assert response.json() == {\"abc\": 123}\n \n \n def test_bad_utf_like_encoding():\n-    assert guess_json_utf(b\"\\x00\\x00\\x00\\x00\") is None\n+    content = b\"\\x00\\x00\\x00\\x00\"\n+    response = httpx.Response(200, content=content)\n+    with pytest.raises(json.decoder.JSONDecodeError):\n+        response.json()\n \n \n @pytest.mark.parametrize(\n@@ -52,8 +56,9 @@ def test_bad_utf_like_encoding():\n     ),\n )\n def test_guess_by_bom(encoding, expected):\n-    data = \"\\ufeff{}\".encode(encoding)\n-    assert guess_json_utf(data) == expected\n+    content = '\\ufeff{\"abc\": 123}'.encode(encoding)\n+    response = httpx.Response(200, content=content)\n+    assert response.json() == {\"abc\": 123}\n \n \n @pytest.mark.parametrize(\n",
+  "files_changed": [
+    "httpx/_models.py",
+    "httpx/_utils.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "httpx/_models.py",
+    "httpx/_utils.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "lines_added": 12,
+  "lines_removed": 47,
+  "has_test_changes": true,
+  "merge_commit_sha": "1d73150c1f663757d63585aecfcb329d0ec00825",
+  "base_commit_sha": "5f2d62096a99ea8b111236557fd2c788c85908d2",
+  "head_commit_sha": "51c579ab242056940741f3e79160e103e6905354",
+  "merged_at": "2023-10-31T10:10:16Z"
+}

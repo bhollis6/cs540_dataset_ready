@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2886",
+  "repo": "encode/httpx",
+  "pr_number": 2886,
+  "title": "Fix encode host",
+  "description": "# Summary\r\n\r\nThe ``encode_host`` method used the regular expression in the variable IPv4_STYLE_HOSTNAME. This was before:\r\n``r\"^[0-9]+.[0-9]+.[0-9]+.[0-9]+$\"`` which wrongly allows hostnames like ``023b76x43144`` to pas as a ipv4 address. This is now fixed by changed the url to ``r\"^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$\"``\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.: Not applicable IMHO\r\n",
+  "patch_diff": "diff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex e1ba8dcdb7..8e060424e8 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -87,7 +87,7 @@\n \n # We use these simple regexs as a first pass before handing off to\n # the stdlib 'ipaddress' module for IP address validation.\n-IPv4_STYLE_HOSTNAME = re.compile(r\"^[0-9]+.[0-9]+.[0-9]+.[0-9]+$\")\n+IPv4_STYLE_HOSTNAME = re.compile(r\"^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$\")\n IPv6_STYLE_HOSTNAME = re.compile(r\"^\\[.*\\]$\")\n \n \n",
+  "test_diff": "diff --git a/tests/test_urlparse.py b/tests/test_urlparse.py\nindex 3ae9b04ce6..b03291b44f 100644\n--- a/tests/test_urlparse.py\n+++ b/tests/test_urlparse.py\n@@ -45,6 +45,12 @@ def test_urlparse_normalized_host():\n     assert url.host == \"example.com\"\n \n \n+def test_urlparse_ipv4_like_host():\n+    \"\"\"rare host names used to quality as IPv4\"\"\"\n+    url = httpx.URL(\"https://023b76x43144/\")\n+    assert url.host == \"023b76x43144\"\n+\n+\n def test_urlparse_valid_ipv4():\n     url = httpx.URL(\"https://1.2.3.4/\")\n     assert url.host == \"1.2.3.4\"\n",
+  "files_changed": [
+    "httpx/_urlparse.py",
+    "tests/test_urlparse.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/test_urlparse.py"
+  ],
+  "lines_added": 7,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "e63b6594f2863b7c8274eb0991ebc6cad63661f7",
+  "base_commit_sha": "3ba5fe0d7ac70222590e759c31442b1cab263791",
+  "head_commit_sha": "3d3f4d4ebd146b31084efac56e079d9dc3dc3c08",
+  "merged_at": "2023-10-10T11:03:48Z"
+}

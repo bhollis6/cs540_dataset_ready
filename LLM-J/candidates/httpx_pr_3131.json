@@ -1,0 +1,39 @@
+{
+  "candidate_id": "httpx_pr_3131",
+  "repo": "encode/httpx",
+  "pr_number": 3131,
+  "title": "Fix Ruff v0.3.0 violations",
+  "description": "Needed for https://github.com/encode/httpx/pull/3129",
+  "patch_diff": "diff --git a/httpx/_compat.py b/httpx/_compat.py\nindex 493e621087..27ccc68273 100644\n--- a/httpx/_compat.py\n+++ b/httpx/_compat.py\n@@ -2,6 +2,7 @@\n The _compat module is used for code which requires branching between different\n Python environments. It is excluded from the code coverage checks.\n \"\"\"\n+\n import ssl\n import sys\n \ndiff --git a/httpx/_decoders.py b/httpx/_decoders.py\nindex 31c72c7f7a..f9d3adbb5d 100644\n--- a/httpx/_decoders.py\n+++ b/httpx/_decoders.py\n@@ -3,6 +3,7 @@\n \n See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding\n \"\"\"\n+\n from __future__ import annotations\n \n import codecs\ndiff --git a/httpx/_exceptions.py b/httpx/_exceptions.py\nindex 18dfa2f2b7..77f45a6d39 100644\n--- a/httpx/_exceptions.py\n+++ b/httpx/_exceptions.py\n@@ -30,6 +30,7 @@\n   x ResponseNotRead\n   x RequestNotRead\n \"\"\"\n+\n from __future__ import annotations\n \n import contextlib\ndiff --git a/httpx/_transports/default.py b/httpx/_transports/default.py\nindex e82104e9d6..bcc8bf422b 100644\n--- a/httpx/_transports/default.py\n+++ b/httpx/_transports/default.py\n@@ -23,6 +23,7 @@\n transport = httpx.HTTPTransport(uds=\"socket.uds\")\n client = httpx.Client(transport=transport)\n \"\"\"\n+\n from __future__ import annotations\n \n import contextlib\ndiff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex 6a4b55b38c..232269ee4d 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -15,6 +15,7 @@\n validation, but this module provides a simpler alternative, with less indirection\n required.\n \"\"\"\n+\n from __future__ import annotations\n \n import ipaddress\ndiff --git a/pyproject.toml b/pyproject.toml\nindex 3fe24a14d6..9e6464c23a 100644\n--- a/pyproject.toml\n+++ b/pyproject.toml\n@@ -93,12 +93,11 @@ text = \"\\n---\\n\\n[Full changelog](https://github.com/encode/httpx/blob/master/CH\n pattern = 'src=\"(docs/img/.*?)\"'\n replacement = 'src=\"https://raw.githubusercontent.com/encode/httpx/master/\\1\"'\n \n-# https://beta.ruff.rs/docs/configuration/#using-rufftoml\n-[tool.ruff]\n+[tool.ruff.lint]\n select = [\"E\", \"F\", \"I\", \"B\", \"PIE\"]\n ignore = [\"B904\", \"B028\"]\n \n-[tool.ruff.isort]\n+[tool.ruff.lint.isort]\n combine-as-imports = true\n \n [tool.ruff.lint.per-file-ignores]\n",
+  "test_diff": "diff --git a/tests/client/test_auth.py b/tests/client/test_auth.py\nindex e6bac23dfc..5776fc33ba 100644\n--- a/tests/client/test_auth.py\n+++ b/tests/client/test_auth.py\n@@ -3,6 +3,7 @@\n \n Unit tests for auth classes also exist in tests/test_auth.py\n \"\"\"\n+\n import hashlib\n import netrc\n import os\ndiff --git a/tests/test_auth.py b/tests/test_auth.py\nindex 7bb45de566..6b6df922ea 100644\n--- a/tests/test_auth.py\n+++ b/tests/test_auth.py\n@@ -3,6 +3,7 @@\n \n Integration tests also exist in tests/client/test_auth.py\n \"\"\"\n+\n from urllib.request import parse_keqv_list\n \n import pytest\ndiff --git a/tests/test_multipart.py b/tests/test_multipart.py\nindex 5c4629152c..764f85a253 100644\n--- a/tests/test_multipart.py\n+++ b/tests/test_multipart.py\n@@ -462,8 +462,8 @@ def test_unicode_escape(self):\n         assert expected in request.read()\n \n     def test_unicode_with_control_character(self):\n-        filename = \"hello\\x1A\\x1B\\x1C\"\n-        expected = b'filename=\"hello%1A\\x1B%1C\"'\n+        filename = \"hello\\x1a\\x1b\\x1c\"\n+        expected = b'filename=\"hello%1A\\x1b%1C\"'\n         files = {\"upload\": (filename, b\"<file content>\")}\n         request = httpx.Request(\"GET\", \"https://www.example.com\", files=files)\n         assert expected in request.read()\n",
+  "files_changed": [
+    "httpx/_compat.py",
+    "httpx/_decoders.py",
+    "httpx/_exceptions.py",
+    "httpx/_transports/default.py",
+    "httpx/_urlparse.py",
+    "pyproject.toml",
+    "tests/client/test_auth.py",
+    "tests/test_auth.py",
+    "tests/test_multipart.py"
+  ],
+  "source_files": [
+    "httpx/_compat.py",
+    "httpx/_decoders.py",
+    "httpx/_exceptions.py",
+    "httpx/_transports/default.py",
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/client/test_auth.py",
+    "tests/test_auth.py",
+    "tests/test_multipart.py"
+  ],
+  "lines_added": 11,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "0006ed0547f8f8a3cbe2edf758e996c3c73b5e7d",
+  "base_commit_sha": "f3eb3c90fdd19d2e4c5239e19a3588d072ff53fb",
+  "head_commit_sha": "ac3674b39fc4f185dc5e520ee57399383059a4bb",
+  "merged_at": "2024-03-01T19:49:23Z"
+}

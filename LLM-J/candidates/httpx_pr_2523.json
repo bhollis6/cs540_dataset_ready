@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2523",
+  "repo": "encode/httpx",
+  "pr_number": 2523,
+  "title": "Raise `TypeError` on invalid query params.",
+  "description": "Prompted by #2515. (Doesn't presume any particular resolution to that case.)\r\n\r\nCloses #746 - we don't support bytes (or other unexpected types) as QueryParam values. Let's raise a clear error, rather than coercing an unexpected `str` value.\r\n\r\nBefore this change...\r\n\r\n```python\r\n>>> httpx.URL(\"http://www.example.com/\", params={\"query\": b\"abc\"})\r\nURL('http://www.example.com/?query=b%27abc%27')\r\n```\r\n\r\nAfter this change...\r\n\r\n```python\r\n>>> httpx.URL(\"http://www.example.com/\", params={\"query\": b\"abc\"})\r\nTypeError: Expected str, int, float, bool, or None. Got <class 'bytes'>.\r\n```",
+  "patch_diff": "diff --git a/httpx/_utils.py b/httpx/_utils.py\nindex 1f64deedcd..1e1570ee7f 100644\n--- a/httpx/_utils.py\n+++ b/httpx/_utils.py\n@@ -67,7 +67,11 @@ def primitive_value_to_str(value: \"PrimitiveData\") -> str:\n         return \"false\"\n     elif value is None:\n         return \"\"\n-    return str(value)\n+    elif isinstance(value, (str, float, int)):\n+        return str(value)\n+    raise TypeError(\n+        f\"Expected str, int, float, bool, or None. Got {type(value).__name__!r}.\"\n+    )\n \n \n def is_known_encoding(encoding: str) -> bool:\n",
+  "test_diff": "diff --git a/tests/models/test_queryparams.py b/tests/models/test_queryparams.py\nindex 29b2ca634d..cbb487bbc6 100644\n--- a/tests/models/test_queryparams.py\n+++ b/tests/models/test_queryparams.py\n@@ -87,6 +87,13 @@ def test_empty_query_params():\n     assert str(q) == \"a=\"\n \n \n+def test_invalid_query_params():\n+    with pytest.raises(\n+        TypeError, match=r\"Expected str, int, float, bool, or None. Got 'bytes'.\"\n+    ):\n+        httpx.QueryParams({\"a\": b\"bytes\"})\n+\n+\n def test_queryparam_update_is_hard_deprecated():\n     q = httpx.QueryParams(\"a=123\")\n     with pytest.raises(RuntimeError):\n",
+  "files_changed": [
+    "httpx/_utils.py",
+    "tests/models/test_queryparams.py"
+  ],
+  "source_files": [
+    "httpx/_utils.py"
+  ],
+  "test_files": [
+    "tests/models/test_queryparams.py"
+  ],
+  "lines_added": 12,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "4cbf13ece2e584b45b935df0a0c670e1863c4569",
+  "base_commit_sha": "10a3b68a71d6cb16b170dec4efe2ec1ae197d65f",
+  "head_commit_sha": "f52bfe8abce7604754b369738c6bf5dc5a4ccdeb",
+  "merged_at": "2022-12-30T20:56:48Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "starlette_pr_3132",
+  "repo": "encode/starlette",
+  "pr_number": 3132,
+  "title": "Add state generic to WebSocket",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nAdd generic state to websockets just like for requests\r\nhttps://github.com/Kludex/starlette/discussions/3131\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/docs/lifespan.md b/docs/lifespan.md\nindex 6411049b6..9ee1e4b54 100644\n--- a/docs/lifespan.md\n+++ b/docs/lifespan.md\n@@ -114,6 +114,20 @@ async def homepage(request: Request[State]) -> PlainTextResponse:\n app = Starlette(lifespan=lifespan, routes=[Route(\"/\", homepage)])\n ```\n \n+This also works with WebSockets:\n+\n+```python\n+async def websocket_endpoint(websocket: WebSocket[State]) -> None:\n+    await websocket.accept()\n+    client = websocket.state[\"http_client\"]\n+    response = await client.get(\"https://www.example.com\")\n+    await websocket.send_text(response.text)\n+    await websocket.close()\n+\n+\n+app = Starlette(lifespan=lifespan, routes=[WebSocketRoute(\"/ws\", websocket_endpoint)])\n+```\n+\n !!! note\n     There were many attempts to make this work with attribute-style access instead of\n     dictionary-style access, but none were satisfactory, given they would have been\ndiff --git a/starlette/websockets.py b/starlette/websockets.py\nindex fb76361c8..3ab709a30 100644\n--- a/starlette/websockets.py\n+++ b/starlette/websockets.py\n@@ -5,7 +5,7 @@\n from collections.abc import AsyncIterator, Iterable\n from typing import Any, cast\n \n-from starlette.requests import HTTPConnection\n+from starlette.requests import HTTPConnection, StateT\n from starlette.responses import Response\n from starlette.types import Message, Receive, Scope, Send\n \n@@ -23,7 +23,7 @@ def __init__(self, code: int = 1000, reason: str | None = None) -> None:\n         self.reason = reason or \"\"\n \n \n-class WebSocket(HTTPConnection):\n+class WebSocket(HTTPConnection[StateT]):\n     def __init__(self, scope: Scope, receive: Receive, send: Send) -> None:\n         super().__init__(scope)\n         assert scope[\"type\"] == \"websocket\"\n",
+  "test_diff": "diff --git a/tests/test_applications.py b/tests/test_applications.py\nindex 38b2ac2a5..765bbdd91 100644\n--- a/tests/test_applications.py\n+++ b/tests/test_applications.py\n@@ -91,6 +91,12 @@ async def websocket_raise_custom(websocket: WebSocket) -> None:\n     raise CustomWSException()\n \n \n+async def websocket_state(websocket: WebSocket[CustomState]) -> None:\n+    await websocket.accept()\n+    await websocket.send_json({\"count\": websocket.state[\"count\"]})\n+    await websocket.close()\n+\n+\n def custom_ws_exception_handler(websocket: WebSocket, exc: CustomWSException) -> None:\n     anyio.from_thread.run(websocket.close, status.WS_1013_TRY_AGAIN_LATER)\n \n@@ -141,6 +147,7 @@ async def state_count(request: Request[CustomState]) -> JSONResponse:\n         WebSocketRoute(\"/ws-raise-websocket\", endpoint=websocket_raise_websocket_exception),\n         WebSocketRoute(\"/ws-raise-http\", endpoint=websocket_raise_http_exception),\n         WebSocketRoute(\"/ws-raise-custom\", endpoint=websocket_raise_custom),\n+        WebSocketRoute(\"/ws-state\", endpoint=websocket_state),\n         Mount(\"/users\", app=users),\n         Host(\"{subdomain}.example.org\", app=subdomain),\n     ],\n@@ -247,6 +254,12 @@ def test_websocket_raise_websocket_exception(client: TestClient) -> None:\n         }\n \n \n+def test_websocket_state(client: TestClient) -> None:\n+    with client.websocket_connect(\"/ws-state\") as session:\n+        response = session.receive_json()\n+        assert response == {\"count\": 1}\n+\n+\n def test_websocket_raise_http_exception(client: TestClient) -> None:\n     with pytest.raises(WebSocketDenialResponse) as exc:\n         with client.websocket_connect(\"/ws-raise-http\"):\n@@ -283,6 +296,7 @@ def test_routes() -> None:\n         WebSocketRoute(\"/ws-raise-websocket\", endpoint=websocket_raise_websocket_exception),\n         WebSocketRoute(\"/ws-raise-http\", endpoint=websocket_raise_http_exception),\n         WebSocketRoute(\"/ws-raise-custom\", endpoint=websocket_raise_custom),\n+        WebSocketRoute(\"/ws-state\", endpoint=websocket_state),\n         Mount(\n             \"/users\",\n             app=Router(\n",
+  "files_changed": [
+    "docs/lifespan.md",
+    "starlette/websockets.py",
+    "tests/test_applications.py"
+  ],
+  "source_files": [
+    "starlette/websockets.py"
+  ],
+  "test_files": [
+    "tests/test_applications.py"
+  ],
+  "lines_added": 30,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "5668ce62872de48aa3f87c620eb9a7e25d40a782",
+  "base_commit_sha": "02b6ed7b18c741c00795010e9d716b58006af2c3",
+  "head_commit_sha": "84294c3f081fad6f0a0a8069aeffd9140d2438f4",
+  "merged_at": "2026-02-14T10:41:32Z"
+}

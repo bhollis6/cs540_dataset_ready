@@ -1,0 +1,186 @@
+{
+  "repo": "encode/httpx",
+  "selection_timestamp": "2026-03-25T05:51:56.780283+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 10,
+  "accepted": 7,
+  "review": 2,
+  "rejected": 1,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "httpx_pr_2423",
+      "pr_number": 2423,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong experimental candidate. Tightly scoped rewrite of a single class with excellent test coverage directly validating the behavioral contract. Core application code rich in type annotations and descriptive naming makes it ideal for mutation degradation experiments. Complexity is in the sweet spot: requires real understanding of chunked line parsing edge cases without being overwhelming.",
+      "merge_commit_sha": "85c5898d8e48011ab7b660fe8aac58910e45c84b",
+      "base_commit_sha": "e486fbceea7a933baa4b52852681f9c6ac80ac96",
+      "head_commit_sha": "f6685bdd12fb0c7da517f78e0322b8cd1955ce73",
+      "source_files": [
+        "httpx/_decoders.py"
+      ],
+      "test_files": [
+        "tests/models/test_responses.py",
+        "tests/test_decoders.py"
+      ]
+    },
+    {
+      "candidate_id": "httpx_pr_2535",
+      "pr_number": 2535,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality experimental candidate. The PR is tightly scoped, has excellent test coverage that provides clear pass/fail signals, touches core application code rich with type annotations and descriptive naming, has an exceptionally clear description, and sits at moderate complexity. It cleanly represents a real-world feature addition following established patterns \u2014 the kind of task where codebase quality degradations (poor naming, removed type hints, disrupted structure) would meaningfully affect agent performance.",
+      "merge_commit_sha": "59914c7690573d5f9b17bce4172405294cb08278",
+      "base_commit_sha": "7947b56076db933079ec0c33d1f81406e33008e7",
+      "head_commit_sha": "28ec479b89316d71a15c497db65964d1bfcf3d14",
+      "source_files": [
+        "httpx/__init__.py",
+        "httpx/_auth.py",
+        "httpx/_client.py",
+        "httpx/_utils.py"
+      ],
+      "test_files": [
+        "tests/client/test_auth.py",
+        "tests/client/test_properties.py",
+        "tests/fixtures/.netrc-nopassword",
+        "tests/test_utils.py"
+      ]
+    },
+    {
+      "candidate_id": "httpx_pr_2547",
+      "pr_number": 2547,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate for the experiment. This is a focused, well-documented logging refactor with excellent test coverage using caplog's exact record_tuple assertions as a clean pass/fail signal. The PR touches real application code with type hints and descriptive naming suitable for mutation, the task description is immediately actionable as an agent prompt, and the complexity is in the moderate sweet spot \u2014 requiring multi-file coordination and contextual understanding without being overwhelming.",
+      "merge_commit_sha": "f1157dbc4102ac8e227a0a0bb12a877f592eff58",
+      "base_commit_sha": "85c5898d8e48011ab7b660fe8aac58910e45c84b",
+      "head_commit_sha": "e4db10a13d561dfc032d3b030e382be548e36a10",
+      "source_files": [
+        "httpx/_client.py",
+        "httpx/_config.py",
+        "httpx/_utils.py"
+      ],
+      "test_files": [
+        "tests/test_utils.py",
+        "tests/utils.py"
+      ]
+    },
+    {
+      "candidate_id": "httpx_pr_1574",
+      "pr_number": 1574,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality candidate PR. It is tightly scoped around a single API deprecation decision, has excellent test coverage with a direct pass/fail signal via pytest.warns, touches real typed application code, and is clearly described. Complexity is moderate \u2014 an agent needs to understand the httpx request pipeline but the actual implementation is not deeply algorithmic. Strong candidate for the experiment.",
+      "merge_commit_sha": "6a99f6f2b3a638719f70200de9983f80d618ee1c",
+      "base_commit_sha": "966550b342b5fca28ab515016a77d31a5ab06c4c",
+      "head_commit_sha": "ada453fe6efdd9f25545ded81ef828cb600887f4",
+      "source_files": [
+        "httpx/_api.py",
+        "httpx/_client.py"
+      ],
+      "test_files": [
+        "tests/client/test_cookies.py"
+      ]
+    },
+    {
+      "candidate_id": "httpx_pr_2523",
+      "pr_number": 2523,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A beautifully clean, well-described, and well-tested PR that is almost too simple for this experiment. It scores perfectly on scope, test coverage, and clarity, but the core change is just a guard clause addition \u2014 a few lines with an obvious solution. An AI agent in almost any codebase condition would likely find and fix this correctly, reducing the experimental signal. The low complexity (score 2) is the primary concern; this PR may not produce meaningful differentiation across degraded conditions.",
+      "merge_commit_sha": "4cbf13ece2e584b45b935df0a0c670e1863c4569",
+      "base_commit_sha": "10a3b68a71d6cb16b170dec4efe2ec1ae197d65f",
+      "head_commit_sha": "f52bfe8abce7604754b369738c6bf5dc5a4ccdeb",
+      "source_files": [
+        "httpx/_utils.py"
+      ],
+      "test_files": [
+        "tests/models/test_queryparams.py"
+      ]
+    },
+    {
+      "candidate_id": "httpx_pr_2543",
+      "pr_number": 2543,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A high-quality, tightly scoped PR fixing a specific URL encoding behavior. It has clear, directly validating tests, touches well-annotated core application code, and is described clearly enough to serve as an agent task prompt. Complexity sits in the ideal range for measuring degradation effects. Strong experimental candidate.",
+      "merge_commit_sha": "a6af45edac51dce888e1e1f0ebf344f126a1c66c",
+      "base_commit_sha": "57daabf673705954afa94686c0002801c93d31f3",
+      "head_commit_sha": "f7171c007f0d066a41c27bac50bdd405eb5ff76f",
+      "source_files": [
+        "httpx/_urlparse.py",
+        "httpx/_urls.py"
+      ],
+      "test_files": [
+        "tests/models/test_url.py"
+      ]
+    },
+    {
+      "candidate_id": "httpx_pr_2539",
+      "pr_number": 2539,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is extremely clean and well-scoped with perfect test coverage alignment, but it's too simple to be useful for the experiment. The actual code change is just 4 lines deleted and 1 line added \u2014 a revert of a trivial type guard. There's insufficient complexity to measure meaningful performance differences between clean and degraded codebase conditions. The mutation relevance is also limited since the touched code has minimal type annotations and structure to degrade.",
+      "merge_commit_sha": "bddd774ce065f3442c1f46af1db5b85b1bfb7613",
+      "base_commit_sha": "e27d1b83330d0520f87a7d1da1818e4dcb2add02",
+      "head_commit_sha": "023e66344fbe50ed65bf7bb873c4662f484ae84c",
+      "source_files": [
+        "httpx/_utils.py"
+      ],
+      "test_files": [
+        "tests/models/test_queryparams.py"
+      ]
+    }
+  ]
+}

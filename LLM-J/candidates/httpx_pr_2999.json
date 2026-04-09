@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_2999",
+  "repo": "encode/httpx",
+  "pr_number": 2999,
+  "title": "Ensure that ASGI 'raw_path' does not include query component of URL.",
+  "description": "Closes #2810.\r\n\r\nUpdate the ASGI transport to ensure that `raw_path` does not include the query component.\r\n\r\nThe spec was originally a little ambiguous here, and it might(?) have made sense for it to include the query portion, since that way around it'd be a direct representation of the HTTP/1.1 target byte string that was received on the wire. But the spec's been clarified since, and we're not matching that correctly at the moment. Let's fix that! \u263a\ufe0f",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex cf47d0edf1..e682c63c74 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n ### Fixed\n \n * Allow URLs where username or password contains unescaped '@'. (#2986)\n+* Ensure ASGI `raw_path` does not include URL query component. (#2999)\n \n ## 0.25.2 (24th November, 2023)\n \ndiff --git a/httpx/_transports/asgi.py b/httpx/_transports/asgi.py\nindex f67f0fbd5b..08cd392f75 100644\n--- a/httpx/_transports/asgi.py\n+++ b/httpx/_transports/asgi.py\n@@ -103,7 +103,7 @@ async def handle_async_request(\n             \"headers\": [(k.lower(), v) for (k, v) in request.headers.raw],\n             \"scheme\": request.url.scheme,\n             \"path\": request.url.path,\n-            \"raw_path\": request.url.raw_path,\n+            \"raw_path\": request.url.raw_path.split(b\"?\")[0],\n             \"query_string\": request.url.query,\n             \"server\": (request.url.host, request.url.port),\n             \"client\": self.client,\n",
+  "test_diff": "diff --git a/tests/test_asgi.py b/tests/test_asgi.py\nindex 14d6df6ded..8bb6dcb7bc 100644\n--- a/tests/test_asgi.py\n+++ b/tests/test_asgi.py\n@@ -120,6 +120,19 @@ async def test_asgi_raw_path():\n     assert response.json() == {\"raw_path\": \"/user@example.org\"}\n \n \n+@pytest.mark.anyio\n+async def test_asgi_raw_path_should_not_include_querystring_portion():\n+    \"\"\"\n+    See https://github.com/encode/httpx/issues/2810\n+    \"\"\"\n+    async with httpx.AsyncClient(app=echo_raw_path) as client:\n+        url = httpx.URL(\"http://www.example.org/path?query\")\n+        response = await client.get(url)\n+\n+    assert response.status_code == 200\n+    assert response.json() == {\"raw_path\": \"/path\"}\n+\n+\n @pytest.mark.anyio\n async def test_asgi_upload():\n     async with httpx.AsyncClient(app=echo_body) as client:\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_transports/asgi.py",
+    "tests/test_asgi.py"
+  ],
+  "source_files": [
+    "httpx/_transports/asgi.py"
+  ],
+  "test_files": [
+    "tests/test_asgi.py"
+  ],
+  "lines_added": 15,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "90538a3b4610ba49ce16c997bcfdb9101f9503be",
+  "base_commit_sha": "f8981f3d124f9b8db9073fd5c8afa11acb55a738",
+  "head_commit_sha": "c3cfee340717349d2a59a6ea64b31dc01a15b10c",
+  "merged_at": "2023-12-11T15:45:20Z"
+}

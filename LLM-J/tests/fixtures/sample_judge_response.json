@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "score": 4,
+    "reasoning": "PR is focused on the OAuth2 middleware race condition. Only touches the security module and its tests."
+  },
+  "test_coverage": {
+    "score": 5,
+    "reasoning": "Adds 3 new test cases specifically for concurrent token refresh. Tests would fail without the fix."
+  },
+  "mutation_relevance": {
+    "score": 4,
+    "reasoning": "The changed code uses type annotations, descriptive function names, and sits in a well-structured module path."
+  },
+  "clarity": {
+    "score": 4,
+    "reasoning": "Description clearly explains the race condition and the fix approach."
+  },
+  "complexity": {
+    "score": 4,
+    "reasoning": "Requires understanding the middleware flow, async locking patterns, and token refresh cycle."
+  },
+  "summary": "Strong candidate. Well-scoped fix with clear tests, touches type-annotated code."
+}

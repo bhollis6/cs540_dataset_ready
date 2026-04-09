@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2485",
+  "repo": "encode/starlette",
+  "pr_number": 2485,
+  "title": "warn instead of raise for missing env file",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nAdresses #2422\r\n\r\nLet me know if you want a custom Warning and/ or any doc changes.\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/config.py b/starlette/config.py\nindex 75a097724..d222a0a62 100644\n--- a/starlette/config.py\n+++ b/starlette/config.py\n@@ -2,6 +2,7 @@\n \n import os\n import typing\n+import warnings\n from pathlib import Path\n \n \n@@ -62,8 +63,9 @@ def __init__(\n         self.file_values: typing.Dict[str, str] = {}\n         if env_file is not None:\n             if not os.path.isfile(env_file):\n-                raise FileNotFoundError(f\"Config file '{env_file}' not found.\")\n-            self.file_values = self._read_file(env_file)\n+                warnings.warn(f\"Config file '{env_file}' not found.\")\n+            else:\n+                self.file_values = self._read_file(env_file)\n \n     @typing.overload\n     def __call__(self, key: str, *, default: None) -> str | None:\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex 4974ffdb0..f37591007 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -108,7 +108,7 @@ def cast_to_int(v: typing.Any) -> int:\n def test_missing_env_file_raises(tmpdir: Path) -> None:\n     path = os.path.join(tmpdir, \".env\")\n \n-    with pytest.raises(FileNotFoundError, match=f\"Config file '{path}' not found.\"):\n+    with pytest.warns(UserWarning, match=f\"Config file '{path}' not found.\"):\n         Config(path)\n \n \n",
+  "files_changed": [
+    "starlette/config.py",
+    "tests/test_config.py"
+  ],
+  "source_files": [
+    "starlette/config.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "lines_added": 5,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "7ec763c48be6a321dbd465777d5fac4f33f2ac42",
+  "base_commit_sha": "0e4da0aea238f4a75b189c0b7f8dd2f7d310db71",
+  "head_commit_sha": "0de696720eb60d328c337ee0076631875be59388",
+  "merged_at": "2024-02-06T21:58:35Z"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2896",
+  "repo": "encode/starlette",
+  "pr_number": 2896,
+  "title": "Allow relative directory path when `follow_symlinks=True`",
+  "description": "\r\n# Summary\r\n\r\nFix for StaticFiles(follow_symlinks=True, directory=\"some relative path\") that stopped working with commit eee4cdc.\r\n\r\nWhen using StaticFiles with a relative path (e.g. a static folder included with the source code deployment) and follow_symlinks is set to True, the commit at eee4cdc removed the code that translates the relative folder into an absolute folder, and then the system call os.path.commonpath fails because it expects the arguments to either be all relative or all absolute.\r\n\r\nThis MR fixes this issue by using the same pattern as the full_path - os.abspath for follow_symlinks=True, and os.realpath when False. \r\n\r\n\r\n# Checklist\r\n\r\n- [X] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [X] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [-] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/staticfiles.py b/starlette/staticfiles.py\nindex 02848241e..637da6480 100644\n--- a/starlette/staticfiles.py\n+++ b/starlette/staticfiles.py\n@@ -153,6 +153,7 @@ def lookup_path(self, path: str) -> tuple[str, os.stat_result | None]:\n             joined_path = os.path.join(directory, path)\n             if self.follow_symlink:\n                 full_path = os.path.abspath(joined_path)\n+                directory = os.path.abspath(directory)\n             else:\n                 full_path = os.path.realpath(joined_path)\n                 directory = os.path.realpath(directory)\n",
+  "test_diff": "diff --git a/tests/test_staticfiles.py b/tests/test_staticfiles.py\nindex 2c5e7e2df..e11e3cb30 100644\n--- a/tests/test_staticfiles.py\n+++ b/tests/test_staticfiles.py\n@@ -593,3 +593,11 @@ def test_staticfiles_self_symlinks(tmp_path: Path, test_client_factory: TestClie\n     assert response.url == \"http://testserver/index.html\"\n     assert response.status_code == 200\n     assert response.text == \"<h1>Hello</h1>\"\n+\n+\n+def test_staticfiles_relative_directory_symlinks(test_client_factory: TestClientFactory) -> None:\n+    app = StaticFiles(directory=\"tests/statics\", follow_symlink=True)\n+    client = test_client_factory(app)\n+    response = client.get(\"/example.txt\")\n+    assert response.status_code == 200\n+    assert response.text == \"123\\n\"\n",
+  "files_changed": [
+    "starlette/staticfiles.py",
+    "tests/test_staticfiles.py"
+  ],
+  "source_files": [
+    "starlette/staticfiles.py"
+  ],
+  "test_files": [
+    "tests/test_staticfiles.py"
+  ],
+  "lines_added": 9,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "bc3b4002e241353d96e1ad18d8c6b5fc4f8463df",
+  "base_commit_sha": "49158732f8a96744889f5a7644a42ae08131bd15",
+  "head_commit_sha": "bc06e831f6400bebefa825adfd24e11ce8257b49",
+  "merged_at": "2025-03-08T07:59:24Z"
+}

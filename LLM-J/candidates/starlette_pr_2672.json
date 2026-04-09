@@ -1,0 +1,28 @@
+{
+  "candidate_id": "starlette_pr_2672",
+  "repo": "encode/starlette",
+  "pr_number": 2672,
+  "title": "Support `request.url_for` when only \"app\" scope is avaialable",
+  "description": "# Summary\r\n\r\nResolve the bug (or limitation) in [this related discussion](https://github.com/encode/starlette/discussions/2522) where `Request.url_for()` cannot be called in a middleware inheriting from `BaseHTTPMiddleware` before the `Router`/`call_next` is invoked.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/requests.py b/starlette/requests.py\nindex 08dbd84d4..9c6776f0c 100644\n--- a/starlette/requests.py\n+++ b/starlette/requests.py\n@@ -19,6 +19,7 @@\n \n \n if typing.TYPE_CHECKING:\n+    from starlette.applications import Starlette\n     from starlette.routing import Router\n \n \n@@ -175,8 +176,10 @@ def state(self) -> State:\n         return self._state\n \n     def url_for(self, name: str, /, **path_params: typing.Any) -> URL:\n-        router: Router = self.scope[\"router\"]\n-        url_path = router.url_path_for(name, **path_params)\n+        url_path_provider: Router | Starlette | None = self.scope.get(\"router\") or self.scope.get(\"app\")\n+        if url_path_provider is None:\n+            raise RuntimeError(\"The `url_for` method can only be used inside a Starlette application or with a router.\")\n+        url_path = url_path_provider.url_path_for(name, **path_params)\n         return url_path.make_absolute_url(base_url=self.base_url)\n \n \n",
+  "test_diff": "diff --git a/tests/middleware/test_base.py b/tests/middleware/test_base.py\nindex e2375a7b9..041cc7ce2 100644\n--- a/tests/middleware/test_base.py\n+++ b/tests/middleware/test_base.py\n@@ -2,12 +2,7 @@\n \n import contextvars\n from contextlib import AsyncExitStack\n-from typing import (\n-    Any,\n-    AsyncGenerator,\n-    AsyncIterator,\n-    Generator,\n-)\n+from typing import Any, AsyncGenerator, AsyncIterator, Generator\n \n import anyio\n import pytest\ndiff --git a/tests/test_requests.py b/tests/test_requests.py\nindex 2f173713e..f0494e751 100644\n--- a/tests/test_requests.py\n+++ b/tests/test_requests.py\n@@ -6,7 +6,7 @@\n import anyio\n import pytest\n \n-from starlette.datastructures import Address, State\n+from starlette.datastructures import URL, Address, State\n from starlette.requests import ClientDisconnect, Request\n from starlette.responses import JSONResponse, PlainTextResponse, Response\n from starlette.types import Message, Receive, Scope, Send\n@@ -592,3 +592,44 @@ async def rcv() -> Message:\n         assert await s2.__anext__()\n     with pytest.raises(StopAsyncIteration):\n         await s1.__anext__()\n+\n+\n+def test_request_url_outside_starlette_context(test_client_factory: TestClientFactory) -> None:\n+    async def app(scope: Scope, receive: Receive, send: Send) -> None:\n+        request = Request(scope, receive)\n+        request.url_for(\"index\")\n+\n+    client = test_client_factory(app)\n+    with pytest.raises(\n+        RuntimeError,\n+        match=\"The `url_for` method can only be used inside a Starlette application or with a router.\",\n+    ):\n+        client.get(\"/\")\n+\n+\n+def test_request_url_starlette_context(test_client_factory: TestClientFactory) -> None:\n+    from starlette.applications import Starlette\n+    from starlette.middleware import Middleware\n+    from starlette.routing import Route\n+    from starlette.types import ASGIApp\n+\n+    url_for = None\n+\n+    async def homepage(request: Request) -> Response:\n+        return PlainTextResponse(\"Hello, world!\")\n+\n+    class CustomMiddleware:\n+        def __init__(self, app: ASGIApp) -> None:\n+            self.app = app\n+\n+        async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:\n+            nonlocal url_for\n+            request = Request(scope, receive)\n+            url_for = request.url_for(\"homepage\")\n+            await self.app(scope, receive, send)\n+\n+    app = Starlette(routes=[Route(\"/home\", homepage)], middleware=[Middleware(CustomMiddleware)])\n+\n+    client = test_client_factory(app)\n+    client.get(\"/home\")\n+    assert url_for == URL(\"http://testserver/home\")\n",
+  "files_changed": [
+    "starlette/requests.py",
+    "tests/middleware/test_base.py",
+    "tests/test_requests.py"
+  ],
+  "source_files": [
+    "starlette/requests.py"
+  ],
+  "test_files": [
+    "tests/middleware/test_base.py",
+    "tests/test_requests.py"
+  ],
+  "lines_added": 48,
+  "lines_removed": 9,
+  "has_test_changes": true,
+  "merge_commit_sha": "fe46d99d92da17efe1827f96ad29d748aac870d2",
+  "base_commit_sha": "1a6018e08a994c78f5c169b8535408259af0f249",
+  "head_commit_sha": "515790eeafc3dee2916777372206c093e6fb30d3",
+  "merged_at": "2024-09-29T09:40:23Z"
+}

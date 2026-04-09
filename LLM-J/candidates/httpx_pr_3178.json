@@ -1,0 +1,29 @@
+{
+  "candidate_id": "httpx_pr_3178",
+  "repo": "encode/httpx",
+  "pr_number": 3178,
+  "title": "add socks5h proxy support",
+  "description": "In some case socks5h is needed to resolve the hostname.\r\n\r\n<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nadd socks5h proxy support.\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 1d32e53dc6..460e315422 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -16,6 +16,7 @@ This release introduces an `httpx.SSLContext()` class and `ssl_context` paramete\n * Ensure JSON request bodies are compact. (#3363)\n * Review URL percent escape sets, based on WHATWG spec. (#3371, #3373)\n * Ensure `certifi` and `httpcore` are only imported if required. (#3377)\n+* Treat `socks5h` as a valid proxy scheme. (#3178)\n \n ## 0.27.2 (27th August, 2024)\n \ndiff --git a/httpx/_config.py b/httpx/_config.py\nindex 5a1a98a024..3fd5e1ddce 100644\n--- a/httpx/_config.py\n+++ b/httpx/_config.py\n@@ -262,7 +262,7 @@ def __init__(\n         url = URL(url)\n         headers = Headers(headers)\n \n-        if url.scheme not in (\"http\", \"https\", \"socks5\"):\n+        if url.scheme not in (\"http\", \"https\", \"socks5\", \"socks5h\"):\n             raise ValueError(f\"Unknown scheme for proxy URL {url!r}\")\n \n         if url.username or url.password:\ndiff --git a/httpx/_transports/default.py b/httpx/_transports/default.py\nindex 50ff91055e..85d0f5f522 100644\n--- a/httpx/_transports/default.py\n+++ b/httpx/_transports/default.py\n@@ -189,7 +189,7 @@ def __init__(\n                 http2=http2,\n                 socket_options=socket_options,\n             )\n-        elif proxy.url.scheme == \"socks5\":\n+        elif proxy.url.scheme in (\"socks5\", \"socks5h\"):\n             try:\n                 import socksio  # noqa\n             except ImportError:  # pragma: no cover\n@@ -215,7 +215,7 @@ def __init__(\n             )\n         else:  # pragma: no cover\n             raise ValueError(\n-                \"Proxy protocol must be either 'http', 'https', or 'socks5',\"\n+                \"Proxy protocol must be either 'http', 'https', 'socks5', or 'socks5h',\"\n                 f\" but got {proxy.url.scheme!r}.\"\n             )\n \n@@ -338,7 +338,7 @@ def __init__(\n                 http2=http2,\n                 socket_options=socket_options,\n             )\n-        elif proxy.url.scheme == \"socks5\":\n+        elif proxy.url.scheme in (\"socks5\", \"socks5h\"):\n             try:\n                 import socksio  # noqa\n             except ImportError:  # pragma: no cover\n@@ -364,7 +364,7 @@ def __init__(\n             )\n         else:  # pragma: no cover\n             raise ValueError(\n-                \"Proxy protocol must be either 'http', 'https', or 'socks5',\"\n+                \"Proxy protocol must be either 'http', 'https', 'socks5', or 'socks5h',\"\n                 \" but got {proxy.url.scheme!r}.\"\n             )\n \n",
+  "test_diff": "diff --git a/tests/client/test_proxies.py b/tests/client/test_proxies.py\nindex 90a92f56bb..3e4090dcec 100644\n--- a/tests/client/test_proxies.py\n+++ b/tests/client/test_proxies.py\n@@ -16,15 +16,16 @@ def url_to_origin(url: str) -> httpcore.URL:\n def test_socks_proxy():\n     url = httpx.URL(\"http://www.example.com\")\n \n-    client = httpx.Client(proxy=\"socks5://localhost/\")\n-    transport = client._transport_for_url(url)\n-    assert isinstance(transport, httpx.HTTPTransport)\n-    assert isinstance(transport._pool, httpcore.SOCKSProxy)\n+    for proxy in (\"socks5://localhost/\", \"socks5h://localhost/\"):\n+        client = httpx.Client(proxy=proxy)\n+        transport = client._transport_for_url(url)\n+        assert isinstance(transport, httpx.HTTPTransport)\n+        assert isinstance(transport._pool, httpcore.SOCKSProxy)\n \n-    async_client = httpx.AsyncClient(proxy=\"socks5://localhost/\")\n-    async_transport = async_client._transport_for_url(url)\n-    assert isinstance(async_transport, httpx.AsyncHTTPTransport)\n-    assert isinstance(async_transport._pool, httpcore.AsyncSOCKSProxy)\n+        async_client = httpx.AsyncClient(proxy=proxy)\n+        async_transport = async_client._transport_for_url(url)\n+        assert isinstance(async_transport, httpx.AsyncHTTPTransport)\n+        assert isinstance(async_transport._pool, httpcore.AsyncSOCKSProxy)\n \n \n PROXY_URL = \"http://[::1]\"\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_config.py",
+    "httpx/_transports/default.py",
+    "tests/client/test_proxies.py"
+  ],
+  "source_files": [
+    "httpx/_config.py",
+    "httpx/_transports/default.py"
+  ],
+  "test_files": [
+    "tests/client/test_proxies.py"
+  ],
+  "lines_added": 15,
+  "lines_removed": 13,
+  "has_test_changes": true,
+  "merge_commit_sha": "12be5c44caa7a34bfe19f82eace5150ddeba2612",
+  "base_commit_sha": "e9cabc8e1deb6548c5c5e2f453e343d39a2a5321",
+  "head_commit_sha": "8b07286d060bf9c2980fc5003e0778bed82a4f4a",
+  "merged_at": "2024-10-29T14:10:33Z"
+}

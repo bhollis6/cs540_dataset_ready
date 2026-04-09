@@ -1,0 +1,28 @@
+{
+  "candidate_id": "httpx_pr_2723",
+  "repo": "encode/httpx",
+  "pr_number": 2723,
+  "title": "Always encode forward slashes as `%2F` in query parameters",
+  "description": "<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\nCloses https://github.com/encode/httpx/issues/2721\r\n\r\nEncodes `/` as `%2F` in query parameters for more robust behavior matching browser implementations. See issue for discussion.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex 69ff0b4b02..e1ba8dcdb7 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -260,8 +260,10 @@ def urlparse(url: str = \"\", **kwargs: typing.Optional[str]) -> ParseResult:\n     # For 'path' we need to drop ? and # from the GEN_DELIMS set.\n     parsed_path: str = quote(path, safe=SUB_DELIMS + \":/[]@\")\n     # For 'query' we need to drop '#' from the GEN_DELIMS set.\n+    # We also exclude '/' because it is more robust to replace it with a percent\n+    # encoding despite it not being a requirement of the spec.\n     parsed_query: typing.Optional[str] = (\n-        None if query is None else quote(query, safe=SUB_DELIMS + \":/?[]@\")\n+        None if query is None else quote(query, safe=SUB_DELIMS + \":?[]@\")\n     )\n     # For 'fragment' we can include all of the GEN_DELIMS set.\n     parsed_fragment: typing.Optional[str] = (\n@@ -452,11 +454,11 @@ def urlencode(items: typing.List[typing.Tuple[str, str]]) -> str:\n     #\n     # https://github.com/python/cpython/blob/b2f7b2ef0b5421e01efb8c7bee2ef95d3bab77eb/Lib/urllib/parse.py#L926\n     #\n-    # Note that we use '%20' encoding for spaces, and treat '/' as a safe\n-    # character. This means our query params have the same escaping as other\n-    # characters in the URL path. This is slightly different to `requests`,\n-    # but is the behaviour that browsers use.\n+    # Note that we use '%20' encoding for spaces. and '%2F  for '/'.\n+    # This is slightly different than `requests`, but is the behaviour that browsers use.\n     #\n-    # See https://github.com/encode/httpx/issues/2536 and\n-    # https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlencode\n-    return \"&\".join([quote(k) + \"=\" + quote(v) for k, v in items])\n+    # See\n+    # - https://github.com/encode/httpx/issues/2536\n+    # - https://github.com/encode/httpx/issues/2721\n+    # - https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urlencode\n+    return \"&\".join([quote(k, safe=\"\") + \"=\" + quote(v, safe=\"\") for k, v in items])\n",
+  "test_diff": "diff --git a/tests/models/test_url.py b/tests/models/test_url.py\nindex 170066826a..a47205f97d 100644\n--- a/tests/models/test_url.py\n+++ b/tests/models/test_url.py\n@@ -360,10 +360,10 @@ def test_url_query_encoding():\n     and https://github.com/encode/httpx/discussions/2460\n     \"\"\"\n     url = httpx.URL(\"https://www.example.com/?a=b c&d=e/f\")\n-    assert url.raw_path == b\"/?a=b%20c&d=e/f\"\n+    assert url.raw_path == b\"/?a=b%20c&d=e%2Ff\"\n \n     url = httpx.URL(\"https://www.example.com/\", params={\"a\": \"b c\", \"d\": \"e/f\"})\n-    assert url.raw_path == b\"/?a=b%20c&d=e/f\"\n+    assert url.raw_path == b\"/?a=b%20c&d=e%2Ff\"\n \n \n def test_url_with_url_encoded_path():\ndiff --git a/tests/test_urlparse.py b/tests/test_urlparse.py\nindex 0347d3124c..3ae9b04ce6 100644\n--- a/tests/test_urlparse.py\n+++ b/tests/test_urlparse.py\n@@ -141,7 +141,7 @@ def test_param_does_not_require_encoding():\n \n def test_param_with_existing_escape_requires_encoding():\n     url = httpx.URL(\"http://webservice\", params={\"u\": \"http://example.com?q=foo%2Fa\"})\n-    assert str(url) == \"http://webservice?u=http%3A//example.com%3Fq%3Dfoo%252Fa\"\n+    assert str(url) == \"http://webservice?u=http%3A%2F%2Fexample.com%3Fq%3Dfoo%252Fa\"\n \n \n # Tests for invalid URLs\n@@ -264,9 +264,9 @@ def test_path_percent_encoding():\n def test_query_percent_encoding():\n     # Test percent encoding for SUB_DELIMS ALPHA NUM and allowable GEN_DELIMS\n     url = httpx.URL(\"https://example.com/?!$&'()*+,;= abc ABC 123 :/[]@\" + \"?\")\n-    assert url.raw_path == b\"/?!$&'()*+,;=%20abc%20ABC%20123%20:/[]@?\"\n+    assert url.raw_path == b\"/?!$&'()*+,;=%20abc%20ABC%20123%20:%2F[]@?\"\n     assert url.path == \"/\"\n-    assert url.query == b\"!$&'()*+,;=%20abc%20ABC%20123%20:/[]@?\"\n+    assert url.query == b\"!$&'()*+,;=%20abc%20ABC%20123%20:%2F[]@?\"\n     assert url.fragment == \"\"\n \n \n",
+  "files_changed": [
+    "httpx/_urlparse.py",
+    "tests/models/test_url.py",
+    "tests/test_urlparse.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/models/test_url.py",
+    "tests/test_urlparse.py"
+  ],
+  "lines_added": 15,
+  "lines_removed": 13,
+  "has_test_changes": true,
+  "merge_commit_sha": "920333ea98118e9cf617f246905d7b202510941c",
+  "base_commit_sha": "301b8fb03a81447c5b5ab1ca991202e10826fbda",
+  "head_commit_sha": "8c7d8d69ceed09887a671dab578916a8b4f1eaaa",
+  "merged_at": "2023-06-09T09:06:57Z"
+}

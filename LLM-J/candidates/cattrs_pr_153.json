@@ -1,0 +1,38 @@
+{
+  "candidate_id": "cattrs_pr_153",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 153,
+  "title": "cleanup: run isort and add to tox linter check",
+  "description": "Changes:\r\n* Updated `tox -e lint` to run isort\r\n* Updated isort settings to use the \"black\" profile\r\n* Ran isort",
+  "patch_diff": "diff --git a/pyproject.toml b/pyproject.toml\nindex 468c7b93..21f1a41a 100644\n--- a/pyproject.toml\n+++ b/pyproject.toml\n@@ -2,10 +2,7 @@\n line-length = 79\n \n [tool.isort]\n-multi_line_output = 3\n-include_trailing_comma = true\n-force_grid_wrap = 0\n-use_parentheses = true\n+profile = \"black\"\n line_length = 79\n known_first_party = [\"cattr\"]\n \ndiff --git a/src/cattr/disambiguators.py b/src/cattr/disambiguators.py\nindex ecc2e233..af6972fd 100644\n--- a/src/cattr/disambiguators.py\n+++ b/src/cattr/disambiguators.py\n@@ -10,7 +10,7 @@\n     Type,\n )\n \n-from attr import fields, NOTHING\n+from attr import NOTHING, fields\n \n from cattr._compat import get_origin\n \ndiff --git a/src/cattr/gen.py b/src/cattr/gen.py\nindex 787927fc..72aaa274 100644\n--- a/src/cattr/gen.py\n+++ b/src/cattr/gen.py\n@@ -3,7 +3,7 @@\n import re\n import uuid\n from dataclasses import is_dataclass\n-from typing import Any, Optional, TYPE_CHECKING, Type, TypeVar\n+from typing import TYPE_CHECKING, Any, Optional, Type, TypeVar\n \n import attr\n from attr import NOTHING, resolve_types\ndiff --git a/tox.ini b/tox.ini\nindex 2ec69745..ccde74b6 100644\n--- a/tox.ini\n+++ b/tox.ini\n@@ -17,9 +17,11 @@ extras = tests\n deps =\n     flake8\n     black\n+    isort\n commands =\n     flake8 src tests docs/conf.py\n-    black --check --verbose src tests docs/conf.py\n+    black --check src tests docs/conf.py\n+    isort --check src tests docs/conf.py\n \n [testenv]\n whitelist_externals = poetry\n",
+  "test_diff": "diff --git a/tests/_compat.py b/tests/_compat.py\nindex a65d2251..92a00fcd 100644\n--- a/tests/_compat.py\n+++ b/tests/_compat.py\n@@ -1,4 +1,4 @@\n-from cattr._compat import is_py37, is_py38, is_bare\n+from cattr._compat import is_bare, is_py37, is_py38\n \n if is_py37 or is_py38:\n \ndiff --git a/tests/metadata/test_genconverter.py b/tests/metadata/test_genconverter.py\nindex a4ce4700..c6d408ed 100644\n--- a/tests/metadata/test_genconverter.py\n+++ b/tests/metadata/test_genconverter.py\n@@ -14,10 +14,11 @@\n import pytest\n from attr import Factory, fields, make_class\n from hypothesis import HealthCheck, assume, given, settings\n-from hypothesis.strategies import booleans, sampled_from, lists\n+from hypothesis.strategies import booleans, lists, sampled_from\n \n from cattr import GenConverter as Converter\n from cattr import UnstructureStrategy\n+from cattr._compat import is_py39_plus\n from cattr.gen import make_dict_structure_fn, override\n \n from . import (\n@@ -26,7 +27,6 @@\n     simple_typed_classes,\n     simple_typed_dataclasses,\n )\n-from cattr._compat import is_py39_plus\n \n unstructure_strats = sampled_from(list(UnstructureStrategy))\n \ndiff --git a/tests/test_dict_generation.py b/tests/test_dict_generation.py\nindex 65ea487d..e8b68d96 100644\n--- a/tests/test_dict_generation.py\n+++ b/tests/test_dict_generation.py\n@@ -5,12 +5,12 @@\n from hypothesis.strategies._internal.core import data, sampled_from\n \n from cattr import Converter\n+from cattr._compat import adapted_fields, fields\n from cattr.gen import (\n     make_dict_structure_fn,\n     make_dict_unstructure_fn,\n     override,\n )\n-from cattr._compat import fields, adapted_fields\n \n from . import nested_classes, simple_classes\n from .metadata import (\ndiff --git a/tests/test_disambigutors.py b/tests/test_disambigutors.py\nindex 4da1ca14..5f5fe142 100644\n--- a/tests/test_disambigutors.py\n+++ b/tests/test_disambigutors.py\n@@ -3,7 +3,6 @@\n \n import attr\n import pytest\n-\n from attr import NOTHING\n from hypothesis import HealthCheck, assume, given, settings\n \ndiff --git a/tests/test_unstructure_collections.py b/tests/test_unstructure_collections.py\nindex d9637ea8..55e202d2 100644\n--- a/tests/test_unstructure_collections.py\n+++ b/tests/test_unstructure_collections.py\n@@ -1,21 +1,21 @@\n-import pytest\n-\n-import attr\n-from cattr import GenConverter\n-from cattr.converters import is_mutable_set, is_sequence\n-from functools import partial\n-from cattr._compat import is_py39_plus\n-from immutables import Map\n-\n+from collections import Counter\n from collections.abc import (\n-    MutableSet,\n-    Set,\n-    Sequence,\n-    MutableSequence,\n     Mapping,\n     MutableMapping,\n+    MutableSequence,\n+    MutableSet,\n+    Sequence,\n+    Set,\n )\n-from collections import Counter\n+from functools import partial\n+\n+import attr\n+import pytest\n+from immutables import Map\n+\n+from cattr import GenConverter\n+from cattr._compat import is_py39_plus\n+from cattr.converters import is_mutable_set, is_sequence\n \n \n @pytest.mark.skipif(not is_py39_plus, reason=\"Requires Python 3.9+\")\n",
+  "files_changed": [
+    "pyproject.toml",
+    "src/cattr/disambiguators.py",
+    "src/cattr/gen.py",
+    "tests/_compat.py",
+    "tests/metadata/test_genconverter.py",
+    "tests/test_dict_generation.py",
+    "tests/test_disambigutors.py",
+    "tests/test_unstructure_collections.py",
+    "tox.ini"
+  ],
+  "source_files": [
+    "src/cattr/disambiguators.py",
+    "src/cattr/gen.py"
+  ],
+  "test_files": [
+    "tests/_compat.py",
+    "tests/metadata/test_genconverter.py",
+    "tests/test_dict_generation.py",
+    "tests/test_disambigutors.py",
+    "tests/test_unstructure_collections.py"
+  ],
+  "lines_added": 24,
+  "lines_removed": 26,
+  "has_test_changes": true,
+  "merge_commit_sha": "e09495ebf350d86fb18c586017a281e6b19b05ba",
+  "base_commit_sha": "9f53896379b1b8959de5a4572344c4e611d9ade7",
+  "head_commit_sha": "2d71fea61dbfc15fd6f481b6358a430d4cab073d",
+  "merged_at": "2021-06-18T23:35:49Z"
+}

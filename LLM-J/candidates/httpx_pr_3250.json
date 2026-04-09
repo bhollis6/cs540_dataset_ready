@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_3250",
+  "repo": "encode/httpx",
+  "pr_number": 3250,
+  "title": "Improve InvalidURL error message.",
+  "description": "Prompted by https://github.com/encode/httpx/discussions/3248.\r\n\r\n*before*...\r\n\r\n```python\r\n>>> import httpx\r\n>>> httpx.get(\"https://www.example.com\\n\")\r\nTraceback (most recent call last):\r\n  ...\r\n  File \"/Users/tomchristie/GitHub/encode/httpx/httpx/_urlparse.py\", line 163, in urlparse\r\n    raise InvalidURL(error)\r\nhttpx.InvalidURL: Invalid non-printable ASCII character in URL.\r\n```\r\n\r\n*after*...\r\n\r\n```python\r\n>>> import httpx\r\n>>> httpx.get(\"https://www.example.com\\n\")\r\nTraceback (most recent call last):\r\n  ...\r\n  File \"/Users/tomchristie/GitHub/encode/httpx/httpx/_urlparse.py\", line 168, in urlparse\r\n    raise InvalidURL(error)\r\nhttpx.InvalidURL: Invalid non-printable ASCII character in URL, '\\n' at position 23.\r\n```\r\n",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 18ded9d27f..d8c2ec7ccb 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n ### Fixed\n \n+* Improved error messaging for `InvalidURL` exceptions. (#3250)\n * Fix `app` type signature in `ASGITransport`. (#3109)\n \n ## 0.27.0 (21st February, 2024)\ndiff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex 215c5368f6..479c2ef8a1 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -160,7 +160,12 @@ def urlparse(url: str = \"\", **kwargs: str | None) -> ParseResult:\n     # If a URL includes any ASCII control characters including \\t, \\r, \\n,\n     # then treat it as invalid.\n     if any(char.isascii() and not char.isprintable() for char in url):\n-        raise InvalidURL(\"Invalid non-printable ASCII character in URL\")\n+        char = next(char for char in url if char.isascii() and not char.isprintable())\n+        idx = url.find(char)\n+        error = (\n+            f\"Invalid non-printable ASCII character in URL, {char!r} at position {idx}.\"\n+        )\n+        raise InvalidURL(error)\n \n     # Some keyword arguments require special handling.\n     # ------------------------------------------------\n@@ -205,9 +210,15 @@ def urlparse(url: str = \"\", **kwargs: str | None) -> ParseResult:\n             # If a component includes any ASCII control characters including \\t, \\r, \\n,\n             # then treat it as invalid.\n             if any(char.isascii() and not char.isprintable() for char in value):\n-                raise InvalidURL(\n-                    f\"Invalid non-printable ASCII character in URL component '{key}'\"\n+                char = next(\n+                    char for char in value if char.isascii() and not char.isprintable()\n+                )\n+                idx = value.find(char)\n+                error = (\n+                    f\"Invalid non-printable ASCII character in URL {key} component, \"\n+                    f\"{char!r} at position {idx}.\"\n                 )\n+                raise InvalidURL(error)\n \n             # Ensure that keyword arguments match as a valid regex.\n             if not COMPONENT_REGEX[key].fullmatch(value):\n",
+  "test_diff": "diff --git a/tests/models/test_url.py b/tests/models/test_url.py\nindex 48872be89f..523a89bf65 100644\n--- a/tests/models/test_url.py\n+++ b/tests/models/test_url.py\n@@ -367,15 +367,17 @@ def test_url_excessively_long_component():\n def test_url_non_printing_character_in_url():\n     with pytest.raises(httpx.InvalidURL) as exc:\n         httpx.URL(\"https://www.example.com/\\n\")\n-    assert str(exc.value) == \"Invalid non-printable ASCII character in URL\"\n+    assert str(exc.value) == (\n+        \"Invalid non-printable ASCII character in URL, '\\\\n' at position 24.\"\n+    )\n \n \n def test_url_non_printing_character_in_component():\n     with pytest.raises(httpx.InvalidURL) as exc:\n         httpx.URL(\"https://www.example.com\", path=\"/\\n\")\n-    assert (\n-        str(exc.value)\n-        == \"Invalid non-printable ASCII character in URL component 'path'\"\n+    assert str(exc.value) == (\n+        \"Invalid non-printable ASCII character in URL path component, \"\n+        \"'\\\\n' at position 1.\"\n     )\n \n \n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_urlparse.py",
+    "tests/models/test_url.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/models/test_url.py"
+  ],
+  "lines_added": 21,
+  "lines_removed": 7,
+  "has_test_changes": true,
+  "merge_commit_sha": "7c0cda153d301bde9a011e1dd7157d7e2b20889d",
+  "base_commit_sha": "beb501fc28cb24ef7cd584159bc6ac55d2244dea",
+  "head_commit_sha": "c6f51c73a67acc5ca664bb19285948921239f242",
+  "merged_at": "2024-07-26T08:36:03Z"
+}

@@ -1,0 +1,28 @@
+{
+  "candidate_id": "cattrs_pr_366",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 366,
+  "title": "Allows use of `typing_extensions.Annotated` when python version is less than `3.9`",
+  "description": "Currently, the use of `typing_extensions.Annotated` doesn't work. This PR adds support for the type when the version of Python is less that `3.9` (i.e., the user can't use `typing.Annotated`).",
+  "patch_diff": "diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md\nindex e8ebc7fa..78e37aaf 100644\n--- a/CONTRIBUTING.md\n+++ b/CONTRIBUTING.md\n@@ -59,7 +59,7 @@ $ git clone git@github.com:your_name_here/cattrs.git\n \n ```shell\n $ cd cattrs/\n-$ poetry install\n+$ poetry install --all-extras\n ```\n \n 4. Create a branch for local development::\ndiff --git a/HISTORY.md b/HISTORY.md\nindex b0a9b01b..743022a8 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -20,6 +20,7 @@\n   ([#350](https://github.com/python-attrs/cattrs/issues/350) [#353](https://github.com/python-attrs/cattrs/pull/353))\n - Subclasses structuring and unstructuring is now supported via a custom `include_subclasses` strategy.\n   ([#312](https://github.com/python-attrs/cattrs/pull/312))\n+- Add support for `typing_extensions.Annotated` when the python version is less than `3.9`. ([#366](https://github.com/python-attrs/cattrs/pull/366))\n - Add unstructuring and structuring support for the standard library `deque`.\n   ([#355](https://github.com/python-attrs/cattrs/pull/355))\n \ndiff --git a/src/cattrs/_compat.py b/src/cattrs/_compat.py\nindex fdeb61b4..ee8f0e20 100644\n--- a/src/cattrs/_compat.py\n+++ b/src/cattrs/_compat.py\n@@ -174,6 +174,8 @@ def get_final_base(type) -> Optional[type]:\n \n     from collections import Counter as ColCounter\n     from typing import Counter, Union, _GenericAlias\n+    from typing_extensions import Annotated, NotRequired, Required\n+    from typing_extensions import get_origin as te_get_origin\n \n     if is_py38:\n         from typing import TypedDict, _TypedDictMeta\n@@ -181,10 +183,8 @@ def get_final_base(type) -> Optional[type]:\n         _TypedDictMeta = None\n         TypedDict = ExtensionsTypedDict\n \n-    from typing_extensions import NotRequired, Required\n-\n-    def is_annotated(_):\n-        return False\n+    def is_annotated(type) -> bool:\n+        return te_get_origin(type) is Annotated\n \n     def is_tuple(type):\n         return type in (Tuple, tuple) or (\n",
+  "test_diff": "diff --git a/tests/test_converter.py b/tests/test_converter.py\nindex eeff70d5..e774d0bd 100644\n--- a/tests/test_converter.py\n+++ b/tests/test_converter.py\n@@ -653,3 +653,38 @@ class Outer:\n \n     structured = converter.structure(raw, Outer)\n     assert structured == Outer(Inner(2), [Inner(2)])\n+\n+\n+def test_annotated_with_typing_extensions_attrs():\n+    \"\"\"Annotation support works for attrs classes.\"\"\"\n+    from typing_extensions import Annotated\n+    from typing import List\n+\n+    converter = Converter()\n+\n+    @attr.define\n+    class Inner:\n+        a: int\n+\n+    @attr.define\n+    class Outer:\n+        i: Annotated[Inner, \"test\"]  # noqa\n+        j: List[Annotated[Inner, \"test\"]]  # noqa\n+\n+    orig = Outer(Inner(1), [Inner(1)])\n+    raw = converter.unstructure(orig)\n+\n+    assert raw == {\"i\": {\"a\": 1}, \"j\": [{\"a\": 1}]}\n+\n+    structured = converter.structure(raw, Outer)\n+    assert structured == orig\n+\n+    # Now register a hook and rerun the test.\n+    converter.register_unstructure_hook(Inner, lambda v: {\"a\": 2})\n+\n+    raw = converter.unstructure(Outer(Inner(1), [Inner(1)]))\n+\n+    assert raw == {\"i\": {\"a\": 2}, \"j\": [{\"a\": 2}]}\n+\n+    structured = converter.structure(raw, Outer)\n+    assert structured == Outer(Inner(2), [Inner(2)])\n",
+  "files_changed": [
+    "CONTRIBUTING.md",
+    "HISTORY.md",
+    "src/cattrs/_compat.py",
+    "tests/test_converter.py"
+  ],
+  "source_files": [
+    "src/cattrs/_compat.py"
+  ],
+  "test_files": [
+    "tests/test_converter.py"
+  ],
+  "lines_added": 41,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "67bc98e20049009d20cd4744f554eda85498f2d3",
+  "base_commit_sha": "dfa901ede4d3ee434d8f387dce7d6145ba2c1d1d",
+  "head_commit_sha": "cf97e3cae2294b128c2347e415977b394a17d2c7",
+  "merged_at": "2023-05-23T15:14:18Z"
+}

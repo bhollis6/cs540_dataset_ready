@@ -1,0 +1,9 @@
+{
+  "repo": "encode/httpx",
+  "verified_at": "2026-03-25T05:53:10.383842+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "stage1_candidates": 7,
+  "preflight_passed": 0,
+  "stage2_accepted": 0,
+  "verified_prs": []
+}

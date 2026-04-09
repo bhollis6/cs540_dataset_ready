@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_3057",
+  "repo": "encode/starlette",
+  "pr_number": 3057,
+  "title": "Ignore `if-modified-since` if `if-none-match` is present",
+  "description": "- Closes https://github.com/Kludex/starlette/pull/2891\r\n- Closes https://github.com/Kludex/starlette/issues/3052\r\n- Closes https://github.com/Kludex/starlette/pull/3053\r\n\r\nI've added both @Smixi-syn and @grindhold as co-authors. Thanks for the help!",
+  "patch_diff": "diff --git a/starlette/staticfiles.py b/starlette/staticfiles.py\nindex 7fba9aa95..a458fd7d8 100644\n--- a/starlette/staticfiles.py\n+++ b/starlette/staticfiles.py\n@@ -201,13 +201,10 @@ def is_not_modified(self, response_headers: Headers, request_headers: Headers) -\n         Given the request and response headers, return `True` if an HTTP\n         \"Not Modified\" response could be returned instead.\n         \"\"\"\n-        try:\n-            if_none_match = request_headers[\"if-none-match\"]\n+        if if_none_match := request_headers.get(\"if-none-match\"):\n+            # The \"etag\" header is added by FileResponse, so it's always present.\n             etag = response_headers[\"etag\"]\n-            if etag in [tag.strip(\" W/\") for tag in if_none_match.split(\",\")]:\n-                return True\n-        except KeyError:\n-            pass\n+            return etag in [tag.strip(\" W/\") for tag in if_none_match.split(\",\")]\n \n         try:\n             if_modified_since = parsedate(request_headers[\"if-modified-since\"])\n",
+  "test_diff": "diff --git a/tests/test_staticfiles.py b/tests/test_staticfiles.py\nindex dfeb09ebd..1bf53ff9c 100644\n--- a/tests/test_staticfiles.py\n+++ b/tests/test_staticfiles.py\n@@ -231,6 +231,24 @@ def test_staticfiles_200_with_etag_mismatch(tmpdir: Path, test_client_factory: T\n     assert second_resp.content == b\"<file content>\"\n \n \n+def test_staticfiles_200_with_etag_mismatch_and_timestamp_match(\n+    tmpdir: Path, test_client_factory: TestClientFactory\n+) -> None:\n+    path = tmpdir / \"example.txt\"\n+    path.write_text(\"<file content>\", encoding=\"utf-8\")\n+\n+    app = StaticFiles(directory=tmpdir)\n+    client = test_client_factory(app)\n+    first_resp = client.get(\"/example.txt\")\n+    assert first_resp.status_code == 200\n+    assert first_resp.headers[\"etag\"] != '\"123\"'\n+    last_modified = first_resp.headers[\"last-modified\"]\n+    # If `if-none-match` is present, `if-modified-since` is ignored.\n+    second_resp = client.get(\"/example.txt\", headers={\"if-none-match\": '\"123\"', \"if-modified-since\": last_modified})\n+    assert second_resp.status_code == 200\n+    assert second_resp.content == b\"<file content>\"\n+\n+\n def test_staticfiles_304_with_last_modified_compare_last_req(\n     tmpdir: Path, test_client_factory: TestClientFactory\n ) -> None:\n",
+  "files_changed": [
+    "starlette/staticfiles.py",
+    "tests/test_staticfiles.py"
+  ],
+  "source_files": [
+    "starlette/staticfiles.py"
+  ],
+  "test_files": [
+    "tests/test_staticfiles.py"
+  ],
+  "lines_added": 21,
+  "lines_removed": 6,
+  "has_test_changes": true,
+  "merge_commit_sha": "3d480dd7d5adf474d0736c67a2a3064e88226837",
+  "base_commit_sha": "da0605243010715356be69693a524f2300011948",
+  "head_commit_sha": "40b0f4117ef013820cd4f6cf9b68ed58afd92105",
+  "merged_at": "2025-11-01T11:17:34Z"
+}

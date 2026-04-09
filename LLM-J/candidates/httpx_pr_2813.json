@@ -1,0 +1,33 @@
+{
+  "candidate_id": "httpx_pr_2813",
+  "repo": "encode/httpx",
+  "pr_number": 2813,
+  "title": "Drop support for Python 3.7",
+  "description": "Have to open a new PR with changes from #2744, because it has been forcefully closed by GH (with no option to reopen).",
+  "patch_diff": "diff --git a/.github/workflows/publish.yml b/.github/workflows/publish.yml\nindex 053ad289cc..3cbd4a8a2d 100644\n--- a/.github/workflows/publish.yml\n+++ b/.github/workflows/publish.yml\n@@ -17,7 +17,7 @@ jobs:\n       - uses: \"actions/checkout@v3\"\n       - uses: \"actions/setup-python@v4\"\n         with:\n-          python-version: 3.7\n+          python-version: 3.8\n       - name: \"Install dependencies\"\n         run: \"scripts/install\"\n       - name: \"Build package & docs\"\ndiff --git a/.github/workflows/test-suite.yml b/.github/workflows/test-suite.yml\nindex f5ad75a4e2..eb1cc7e22e 100644\n--- a/.github/workflows/test-suite.yml\n+++ b/.github/workflows/test-suite.yml\n@@ -14,7 +14,7 @@ jobs:\n \n     strategy:\n       matrix:\n-        python-version: [\"3.7\", \"3.8\", \"3.9\", \"3.10\", \"3.11\"]\n+        python-version: [\"3.8\", \"3.9\", \"3.10\", \"3.11\"]\n \n     steps:\n       - uses: \"actions/checkout@v3\"\ndiff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 3d5ea6d2fe..a4f49c45d1 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n ## Unreleased\n \n+### Removed\n+\n+* Drop support for Python 3.7. (#2813)\n+\n ### Added\n \n * Add `socket_options` argument to `httpx.HTTPTransport` and `httpx.AsyncHTTPTransport` classes. (#2716)\ndiff --git a/README.md b/README.md\nindex 4d25491a6a..62fb295d17 100644\n--- a/README.md\n+++ b/README.md\n@@ -103,7 +103,7 @@ Or, to include the optional HTTP/2 support, use:\n $ pip install httpx[http2]\n ```\n \n-HTTPX requires Python 3.7+.\n+HTTPX requires Python 3.8+.\n \n ## Documentation\n \ndiff --git a/README_chinese.md b/README_chinese.md\nindex 0248768323..ad20c5a1bf 100644\n--- a/README_chinese.md\n+++ b/README_chinese.md\n@@ -101,7 +101,7 @@ $ pip install httpx\n $ pip install httpx[http2]\n ```\n \n-HTTPX \u8981\u6c42 Python 3.7+ \u7248\u672c\u3002\n+HTTPX \u8981\u6c42 Python 3.8+ \u7248\u672c\u3002\n \n ## \u6587\u6863\n \ndiff --git a/docs/index.md b/docs/index.md\nindex cd25ee6ca5..ec9746697d 100644\n--- a/docs/index.md\n+++ b/docs/index.md\n@@ -144,6 +144,6 @@ To include the optional brotli decoder support, use:\n $ pip install httpx[brotli]\n ```\n \n-HTTPX requires Python 3.7+\n+HTTPX requires Python 3.8+\n \n [sync-support]: https://github.com/encode/httpx/issues/572\ndiff --git a/httpx/_compat.py b/httpx/_compat.py\nindex a9b9c63072..a271c6b800 100644\n--- a/httpx/_compat.py\n+++ b/httpx/_compat.py\n@@ -17,7 +17,7 @@\n         brotli = None\n \n if sys.version_info >= (3, 10) or (\n-    sys.version_info >= (3, 7) and ssl.OPENSSL_VERSION_INFO >= (1, 1, 0, 7)\n+    sys.version_info >= (3, 8) and ssl.OPENSSL_VERSION_INFO >= (1, 1, 0, 7)\n ):\n \n     def set_minimum_tls_version_1_2(context: ssl.SSLContext) -> None:\ndiff --git a/pyproject.toml b/pyproject.toml\nindex 30228c120e..acd41baf3a 100644\n--- a/pyproject.toml\n+++ b/pyproject.toml\n@@ -6,7 +6,7 @@ build-backend = \"hatchling.build\"\n name = \"httpx\"\n description = \"The next generation HTTP client.\"\n license = \"BSD-3-Clause\"\n-requires-python = \">=3.7\"\n+requires-python = \">=3.8\"\n authors = [\n     { name = \"Tom Christie\", email = \"tom@tomchristie.com\" },\n ]\n@@ -20,7 +20,6 @@ classifiers = [\n     \"Operating System :: OS Independent\",\n     \"Programming Language :: Python :: 3\",\n     \"Programming Language :: Python :: 3 :: Only\",\n-    \"Programming Language :: Python :: 3.7\",\n     \"Programming Language :: Python :: 3.8\",\n     \"Programming Language :: Python :: 3.9\",\n     \"Programming Language :: Python :: 3.10\",\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex d496cd4a0e..00913b2c17 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -1,6 +1,5 @@\n import os\n import ssl\n-import sys\n from pathlib import Path\n \n import certifi\n@@ -176,28 +175,26 @@ def test_timeout_repr():\n     not hasattr(ssl.SSLContext, \"keylog_filename\"),\n     reason=\"requires OpenSSL 1.1.1 or higher\",\n )\n-@pytest.mark.skipif(sys.version_info < (3, 8), reason=\"requires python3.8 or higher\")\n def test_ssl_config_support_for_keylog_file(tmpdir, monkeypatch):  # pragma: no cover\n-    if sys.version_info > (3, 8):\n-        with monkeypatch.context() as m:\n-            m.delenv(\"SSLKEYLOGFILE\", raising=False)\n+    with monkeypatch.context() as m:\n+        m.delenv(\"SSLKEYLOGFILE\", raising=False)\n \n-            context = httpx.create_ssl_context(trust_env=True)\n+        context = httpx.create_ssl_context(trust_env=True)\n \n-            assert context.keylog_filename is None\n+        assert context.keylog_filename is None\n \n-        filename = str(tmpdir.join(\"test.log\"))\n+    filename = str(tmpdir.join(\"test.log\"))\n \n-        with monkeypatch.context() as m:\n-            m.setenv(\"SSLKEYLOGFILE\", filename)\n+    with monkeypatch.context() as m:\n+        m.setenv(\"SSLKEYLOGFILE\", filename)\n \n-            context = httpx.create_ssl_context(trust_env=True)\n+        context = httpx.create_ssl_context(trust_env=True)\n \n-            assert context.keylog_filename == filename\n+        assert context.keylog_filename == filename\n \n-            context = httpx.create_ssl_context(trust_env=False)\n+        context = httpx.create_ssl_context(trust_env=False)\n \n-            assert context.keylog_filename is None\n+        assert context.keylog_filename is None\n \n \n def test_proxy_from_url():\n",
+  "files_changed": [
+    ".github/workflows/publish.yml",
+    ".github/workflows/test-suite.yml",
+    "CHANGELOG.md",
+    "README.md",
+    "README_chinese.md",
+    "docs/index.md",
+    "httpx/_compat.py",
+    "pyproject.toml",
+    "tests/test_config.py"
+  ],
+  "source_files": [
+    "httpx/_compat.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "lines_added": 22,
+  "lines_removed": 22,
+  "has_test_changes": true,
+  "merge_commit_sha": "b40c04dfa604db0a5f9b48c12268c0a0c63c71d2",
+  "base_commit_sha": "76c9cb65f2a159adb764c2236d139f85b46e1506",
+  "head_commit_sha": "1510a44d36ead5afd26fe7f1697ef603a530d33f",
+  "merged_at": "2023-08-09T09:02:29Z"
+}

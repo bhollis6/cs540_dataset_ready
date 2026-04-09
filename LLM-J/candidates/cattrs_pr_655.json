@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_655",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 655,
+  "title": "Fix structuring of attrs class that inherit from typing/collections.abc generic type aliases",
+  "description": "Fixes #654 \r\n\r\nThe first commit reproduces the error `AttributeError: type object 'Iterable' has no attribute '__parameters__'`.\r\n\r\nI will follow up with the actual fix.",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex f5b910d8..7bfa83b2 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -11,6 +11,11 @@ The third number is for emergencies when we need to start branches for older rel\n \n Our backwards-compatibility policy can be found [here](https://github.com/python-attrs/cattrs/blob/main/.github/SECURITY.md).\n \n+## 25.1.1 (UNRELEASED)\n+\n+- Fixed `AttributeError: no attribute '__parameters__'` while structuring attrs classes that inherit from parametrized generic aliases from `collections.abc`.\n+  ([#654](https://github.com/python-attrs/cattrs/issues/654) [#655](https://github.com/python-attrs/cattrs/pull/655))\n+\n ## 25.1.0 (2025-05-31)\n \n - **Potentially breaking**: The converters raise {class}`StructureHandlerNotFoundError` more eagerly (on hook creation, instead of on hook use).\ndiff --git a/src/cattrs/gen/_generics.py b/src/cattrs/gen/_generics.py\nindex 63d2fb91..069c48c8 100644\n--- a/src/cattrs/gen/_generics.py\n+++ b/src/cattrs/gen/_generics.py\n@@ -36,7 +36,14 @@ def generate_mapping(cl: type, old_mapping: dict[str, type] = {}) -> dict[str, t\n     origin = get_origin(cl)\n \n     if origin is not None:\n-        parameters = origin.__parameters__\n+        # To handle the cases where classes in the typing module are using\n+        # the GenericAlias structure but aren't a Generic and hence\n+        # end up in this function but do not have an `__parameters__`\n+        # attribute. These classes are interface types, for example\n+        # `typing.Hashable`.\n+        parameters = getattr(get_origin(cl), \"__parameters__\", None)\n+        if parameters is None:\n+            return dict(old_mapping)\n \n         for p, t in zip(parameters, get_args(cl)):\n             if isinstance(t, TypeVar):\n",
+  "test_diff": "diff --git a/tests/test_converter_inheritance.py b/tests/test_converter_inheritance.py\nindex 27c68ade..63a5f99a 100644\n--- a/tests/test_converter_inheritance.py\n+++ b/tests/test_converter_inheritance.py\n@@ -41,7 +41,7 @@ class B(A):\n     assert converter.structure({\"i\": 1}, B) == B(2)\n \n \n-@pytest.mark.parametrize(\"typing_cls\", [Hashable, Iterable, Reversible])\n+@pytest.mark.parametrize(\"typing_cls\", [Hashable, Iterable, Reversible, Iterable[int]])\n def test_inherit_typing(converter: BaseConverter, typing_cls):\n     \"\"\"Stuff from typing.* resolves to runtime to collections.abc.*.\n \n@@ -67,7 +67,12 @@ def __reversed__(self):\n \n @pytest.mark.parametrize(\n     \"collections_abc_cls\",\n-    [collections.abc.Hashable, collections.abc.Iterable, collections.abc.Reversible],\n+    [\n+        collections.abc.Hashable,\n+        collections.abc.Iterable,\n+        collections.abc.Reversible,\n+        collections.abc.Iterable[int],\n+    ],\n )\n def test_inherit_collections_abc(converter: BaseConverter, collections_abc_cls):\n     \"\"\"As extension of test_inherit_typing, check if collections.abc.* work.\"\"\"\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/gen/_generics.py",
+    "tests/test_converter_inheritance.py"
+  ],
+  "source_files": [
+    "src/cattrs/gen/_generics.py"
+  ],
+  "test_files": [
+    "tests/test_converter_inheritance.py"
+  ],
+  "lines_added": 20,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "7c6773085bc6e1861cf333d65de6118aeb79bdf3",
+  "base_commit_sha": "0bb472a9517fbb9ebfaa60bc8116c07816b6f072",
+  "head_commit_sha": "3ca2b02591c7f4264a410dd71e1a607cfec500e6",
+  "merged_at": "2025-06-04T14:31:21Z"
+}

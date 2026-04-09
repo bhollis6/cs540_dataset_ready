@@ -1,0 +1,31 @@
+{
+  "candidate_id": "httpx_pr_2776",
+  "repo": "encode/httpx",
+  "pr_number": 2776,
+  "title": "Make `raise_for_status` chainable",
+  "description": "<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\nmake it possible to write code like `r = httpx.get('...').raise_for_status().json()`\r\n\r\nRefs https://github.com/encode/httpx/discussions/2775\r\n\r\n# Checklist\r\n\r\n- [X] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [X] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 4942c9c9a5..3d5ea6d2fe 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n ### Added\n \n * Add `socket_options` argument to `httpx.HTTPTransport` and `httpx.AsyncHTTPTransport` classes. (#2716)\n+* The `Response.raise_for_status()` method now returns the response instance. For example: `data = httpx.get('...').raise_for_status().json()`. (#2776)\n \n ### Fixed\n \ndiff --git a/docs/api.md b/docs/api.md\nindex ca5c0ba3c9..3f9878c708 100644\n--- a/docs/api.md\n+++ b/docs/api.md\n@@ -70,7 +70,7 @@\n   * The amount of time elapsed between sending the request and calling `close()` on the corresponding response received for that request.\n   [total_seconds()](https://docs.python.org/3/library/datetime.html#datetime.timedelta.total_seconds) to correctly get\n   the total elapsed seconds.\n-* `def .raise_for_status()` - **None**\n+* `def .raise_for_status()` - **Response**\n * `def .json()` - **Any**\n * `def .read()` - **bytes**\n * `def .iter_raw([chunk_size])` - **bytes iterator**\ndiff --git a/docs/quickstart.md b/docs/quickstart.md\nindex 1152a14bd3..068547ffc9 100644\n--- a/docs/quickstart.md\n+++ b/docs/quickstart.md\n@@ -288,12 +288,19 @@ httpx._exceptions.HTTPStatusError: 404 Client Error: Not Found for url: https://\n For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\n ```\n \n-Any successful response codes will simply return `None` rather than raising an exception.\n+Any successful response codes will return the `Response` instance rather than raising an exception.\n \n ```pycon\n >>> r.raise_for_status()\n ```\n \n+The method returns the response instance, allowing you to use it inline. For example:\n+\n+```pycon\n+>>> r = httpx.get('...').raise_for_status()\n+>>> data = httpx.get('...').raise_for_status().json()\n+```\n+\n ## Response Headers\n \n The response headers are available as a dictionary-like interface.\ndiff --git a/httpx/_models.py b/httpx/_models.py\nindex 708aa2af7e..5af5c5d23c 100644\n--- a/httpx/_models.py\n+++ b/httpx/_models.py\n@@ -711,7 +711,7 @@ def has_redirect_location(self) -> bool:\n             and \"Location\" in self.headers\n         )\n \n-    def raise_for_status(self) -> None:\n+    def raise_for_status(self) -> \"Response\":\n         \"\"\"\n         Raise the `HTTPStatusError` if one occurred.\n         \"\"\"\n@@ -723,7 +723,7 @@ def raise_for_status(self) -> None:\n             )\n \n         if self.is_success:\n-            return\n+            return self\n \n         if self.has_redirect_location:\n             message = (\n",
+  "test_diff": "diff --git a/tests/client/test_async_client.py b/tests/client/test_async_client.py\nindex 7fa9a77948..cc19e93d41 100644\n--- a/tests/client/test_async_client.py\n+++ b/tests/client/test_async_client.py\n@@ -122,7 +122,7 @@ async def test_raise_for_status(server):\n                     response.raise_for_status()\n                 assert exc_info.value.response == response\n             else:\n-                assert response.raise_for_status() is None  # type: ignore\n+                assert response.raise_for_status() is response\n \n \n @pytest.mark.anyio\ndiff --git a/tests/client/test_client.py b/tests/client/test_client.py\nindex 268cd10689..b8245288ad 100644\n--- a/tests/client/test_client.py\n+++ b/tests/client/test_client.py\n@@ -141,7 +141,7 @@ def test_raise_for_status(server):\n                 assert exc_info.value.response == response\n                 assert exc_info.value.request.url.path == f\"/status/{status_code}\"\n             else:\n-                assert response.raise_for_status() is None  # type: ignore\n+                assert response.raise_for_status() is response\n \n \n def test_options(server):\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "docs/api.md",
+    "docs/quickstart.md",
+    "httpx/_models.py",
+    "tests/client/test_async_client.py",
+    "tests/client/test_client.py"
+  ],
+  "source_files": [
+    "httpx/_models.py"
+  ],
+  "test_files": [
+    "tests/client/test_async_client.py",
+    "tests/client/test_client.py"
+  ],
+  "lines_added": 14,
+  "lines_removed": 6,
+  "has_test_changes": true,
+  "merge_commit_sha": "9415af643f23600403740baad0a466edc5cdbec1",
+  "base_commit_sha": "55b8669acbedb617123409487f744810f59ebe6f",
+  "head_commit_sha": "de504cb3ad7ced8a579f3cd88f39cf4781fb854b",
+  "merged_at": "2023-08-01T09:22:58Z"
+}

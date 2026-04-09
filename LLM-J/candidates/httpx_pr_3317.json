@@ -1,0 +1,30 @@
+{
+  "candidate_id": "httpx_pr_3317",
+  "repo": "encode/httpx",
+  "pr_number": 3317,
+  "title": "Drop unneccessary 'URL.raw' property",
+  "description": "Remove the unneccessary `URL.raw` property.\r\n\r\nPreviously dropped in 0.23.1, and then reintroduced as an interim measure. See #2461 and #2462.\r\n\r\nRelated: #3314, #3315\r\n",
+  "patch_diff": "diff --git a/.github/workflows/test-suite.yml b/.github/workflows/test-suite.yml\nindex 0bb570cedb..ce3df5db81 100644\n--- a/.github/workflows/test-suite.yml\n+++ b/.github/workflows/test-suite.yml\n@@ -5,7 +5,7 @@ on:\n   push:\n     branches: [\"master\"]\n   pull_request:\n-    branches: [\"master\"]\n+    branches: [\"master\", \"version-*\"]\n \n jobs:\n   tests:\ndiff --git a/CHANGELOG.md b/CHANGELOG.md\nindex f3aba3cc03..2692adc2b5 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.\n \n The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n+## Unreleased\n+\n+* The `URL.raw` property has now been removed.\n+\n ## 0.27.2 (27th August, 2024)\n \n ### Fixed\ndiff --git a/httpx/_types.py b/httpx/_types.py\nindex 661af262e7..93eb996e2b 100644\n--- a/httpx/_types.py\n+++ b/httpx/_types.py\n@@ -17,7 +17,6 @@\n     List,\n     Mapping,\n     MutableMapping,\n-    NamedTuple,\n     Optional,\n     Sequence,\n     Tuple,\n@@ -33,16 +32,6 @@\n \n PrimitiveData = Optional[Union[str, int, float, bool]]\n \n-RawURL = NamedTuple(\n-    \"RawURL\",\n-    [\n-        (\"raw_scheme\", bytes),\n-        (\"raw_host\", bytes),\n-        (\"port\", Optional[int]),\n-        (\"raw_path\", bytes),\n-    ],\n-)\n-\n URLTypes = Union[\"URL\", str]\n \n QueryParamTypes = Union[\ndiff --git a/httpx/_urls.py b/httpx/_urls.py\nindex ec4ea6b399..a8752f013f 100644\n--- a/httpx/_urls.py\n+++ b/httpx/_urls.py\n@@ -5,7 +5,7 @@\n \n import idna\n \n-from ._types import QueryParamTypes, RawURL\n+from ._types import QueryParamTypes\n from ._urlparse import urlencode, urlparse\n from ._utils import primitive_value_to_str\n \n@@ -304,22 +304,6 @@ def fragment(self) -> str:\n         \"\"\"\n         return unquote(self._uri_reference.fragment or \"\")\n \n-    @property\n-    def raw(self) -> RawURL:\n-        \"\"\"\n-        Provides the (scheme, host, port, target) for the outgoing request.\n-\n-        In older versions of `httpx` this was used in the low-level transport API.\n-        We no longer use `RawURL`, and this property will be deprecated\n-        in a future release.\n-        \"\"\"\n-        return RawURL(\n-            self.raw_scheme,\n-            self.raw_host,\n-            self.port,\n-            self.raw_path,\n-        )\n-\n     @property\n     def is_absolute_url(self) -> bool:\n         \"\"\"\n",
+  "test_diff": "diff --git a/tests/models/test_url.py b/tests/models/test_url.py\nindex 523a89bf65..fa79acaf42 100644\n--- a/tests/models/test_url.py\n+++ b/tests/models/test_url.py\n@@ -865,19 +865,3 @@ def test_ipv6_url_copy_with_host(url_str, new_host):\n     assert url.host == \"::ffff:192.168.0.1\"\n     assert url.netloc == b\"[::ffff:192.168.0.1]:1234\"\n     assert str(url) == \"http://[::ffff:192.168.0.1]:1234\"\n-\n-\n-# Test for deprecated API\n-\n-\n-def test_url_raw_compatibility():\n-    \"\"\"\n-    Test case for the (to-be-deprecated) `url.raw` accessor.\n-    \"\"\"\n-    url = httpx.URL(\"https://www.example.com/path\")\n-    scheme, host, port, raw_path = url.raw\n-\n-    assert scheme == b\"https\"\n-    assert host == b\"www.example.com\"\n-    assert port is None\n-    assert raw_path == b\"/path\"\n",
+  "files_changed": [
+    ".github/workflows/test-suite.yml",
+    "CHANGELOG.md",
+    "httpx/_types.py",
+    "httpx/_urls.py",
+    "tests/models/test_url.py"
+  ],
+  "source_files": [
+    "httpx/_types.py",
+    "httpx/_urls.py"
+  ],
+  "test_files": [
+    "tests/models/test_url.py"
+  ],
+  "lines_added": 6,
+  "lines_removed": 45,
+  "has_test_changes": true,
+  "merge_commit_sha": "a18f79610141500cf540b2cf4783559731109d7d",
+  "base_commit_sha": "f06171fd5a86cf89387f4ee860ea0da207160418",
+  "head_commit_sha": "c362e199368862a8bb8c52729a975a7babc9df28",
+  "merged_at": "2024-09-24T16:53:13Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "starlette_pr_2996",
+  "repo": "encode/starlette",
+  "pr_number": 2996,
+  "title": "Set encodings when reading config files",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a Given this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n# Summary\r\nFixes UnicodeDecodeError by allowing explicit encoding selection when reading .env files.\r\n\r\nResolves https://github.com/encode/starlette/discussions/2016\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n## Description\r\nModified the _read_file method in starlette/config.py to accept an encoding parameter.\r\nThis ensures .env files can be correctly decoded regardless of the system's default locale encoding.\r\n\r\n**Key changes:**\r\n- Added encoding parameter (default: \"utf-8\") to _read_file\r\n- Passed encoding explicitly to open() when reading .env files\r\n- Retained existing parsing logic (key/value handling unchanged)\r\n\r\n## Motivation\r\nThe current implementation uses open(file_name) without specifying an encoding, which defaults to the system\u2019s locale (e.g., GBK on Windows in Chinese locales).\r\nThis leads to UnicodeDecodeError when the .env file is encoded in UTF-8 (a common format).\r\n\r\n## Expected Outcome\r\nAfter this fix:\r\n- \u2705 UTF-8 .env files can be read on Windows systems using GBK/CP949 locales\r\n- \u2705 Developers have flexibility to override encoding if needed\r\n- \u2705 Backward compatibility preserved (utf-8 is default)\r\n- \u2705 No additional runtime cost introduced\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.",
+  "patch_diff": "diff --git a/docs/config.md b/docs/config.md\nindex d7faa281a..25bc1de18 100644\n--- a/docs/config.md\n+++ b/docs/config.md\n@@ -120,6 +120,18 @@ DEBUG = config('DEBUG') # lookups APP_DEBUG, returns \"yes\"\n ENVIRONMENT = config('ENVIRONMENT') # lookups APP_ENVIRONMENT, raises KeyError as variable is not defined\n ```\n \n+## Custom encoding for environment files \n+\n+By default, Starlette reads environment files using UTF-8 encoding. \n+You can specify a different encoding by setting `encoding` argument.\n+\n+```python title=\"myproject/settings.py\"\n+from starlette.config import Config\n+\n+# Using custom encoding for .env file\n+config = Config(\".env\", encoding=\"latin-1\")\n+```\n+\n ## A full example\n \n Structuring large applications can be complex. You need proper separation of\ndiff --git a/starlette/config.py b/starlette/config.py\nindex 091f857f3..7f839eebb 100644\n--- a/starlette/config.py\n+++ b/starlette/config.py\n@@ -52,6 +52,7 @@ def __init__(\n         env_file: str | Path | None = None,\n         environ: Mapping[str, str] = environ,\n         env_prefix: str = \"\",\n+        encoding: str = \"utf-8\",\n     ) -> None:\n         self.environ = environ\n         self.env_prefix = env_prefix\n@@ -60,7 +61,7 @@ def __init__(\n             if not os.path.isfile(env_file):\n                 warnings.warn(f\"Config file '{env_file}' not found.\")\n             else:\n-                self.file_values = self._read_file(env_file)\n+                self.file_values = self._read_file(env_file, encoding)\n \n     @overload\n     def __call__(self, key: str, *, default: None) -> str | None: ...\n@@ -107,9 +108,9 @@ def get(\n             return self._perform_cast(key, default, cast)\n         raise KeyError(f\"Config '{key}' is missing, and has no default.\")\n \n-    def _read_file(self, file_name: str | Path) -> dict[str, str]:\n+    def _read_file(self, file_name: str | Path, encoding: str) -> dict[str, str]:\n         file_values: dict[str, str] = {}\n-        with open(file_name) as input_file:\n+        with open(file_name, encoding=encoding) as input_file:\n             for line in input_file.readlines():\n                 line = line.strip()\n                 if \"=\" in line and not line.startswith(\"#\"):\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex c256ffc68..c15b6727e 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -140,3 +140,10 @@ def test_config_with_env_prefix(tmpdir: Path, monkeypatch: pytest.MonkeyPatch) -\n \n     with pytest.raises(KeyError):\n         config.get(\"ENVIRONMENT\")\n+\n+\n+def test_config_with_encoding(tmpdir: Path) -> None:\n+    path = tmpdir / \".env\"\n+    path.write_text(\"MESSAGE=Hello \u4e16\u754c\\n\", encoding=\"utf-8\")\n+    config = Config(path, encoding=\"utf-8\")\n+    assert config.get(\"MESSAGE\") == \"Hello \u4e16\u754c\"\n",
+  "files_changed": [
+    "docs/config.md",
+    "starlette/config.py",
+    "tests/test_config.py"
+  ],
+  "source_files": [
+    "starlette/config.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "lines_added": 23,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "a59397db889e3a96c4f34b1406957a3b92e1e8b5",
+  "base_commit_sha": "3b7f0cbf598be305528a498a35089ce723060372",
+  "head_commit_sha": "af6ef5ada2eeab32cb8f850762ee25ca0fd736ba",
+  "merged_at": "2025-10-26T16:30:15Z"
+}

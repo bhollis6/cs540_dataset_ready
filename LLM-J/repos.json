@@ -1,0 +1,22 @@
+{
+  "repos": [
+    {
+      "name": "encode/starlette",
+      "domain": "web framework",
+      "approx_loc": "14k",
+      "rationale": "100% test coverage, 100% type-annotated, very active, PRs consistently include test changes"
+    },
+    {
+      "name": "encode/httpx",
+      "domain": "HTTP client",
+      "approx_loc": "14k",
+      "rationale": "100% test coverage, excellent type hints and architecture, mature project with strong PR+test culture"
+    },
+    {
+      "name": "python-attrs/cattrs",
+      "domain": "data serialization/conversion",
+      "approx_loc": "8-12k",
+      "rationale": "Very active, 52+ test files, type-annotation heavy, different domain from web projects"
+    }
+  ]
+}

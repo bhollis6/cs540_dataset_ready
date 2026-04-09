@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2539",
+  "repo": "encode/httpx",
+  "pr_number": 2539,
+  "title": "Revert \"Raise `TypeError` on invalid query params. (#2523)\"",
+  "description": "This reverts commit 4cbf13ece2e584b45b935df0a0c670e1863c4569 / PR #2523\r\n\r\nSee discussion at https://github.com/encode/httpx/discussions/2538 and in #2523 \u2014 this change is potentially breaking and should be considered for a future release instead (i.e. 0.24.0).",
+  "patch_diff": "diff --git a/httpx/_utils.py b/httpx/_utils.py\nindex 1e1570ee7f..1f64deedcd 100644\n--- a/httpx/_utils.py\n+++ b/httpx/_utils.py\n@@ -67,11 +67,7 @@ def primitive_value_to_str(value: \"PrimitiveData\") -> str:\n         return \"false\"\n     elif value is None:\n         return \"\"\n-    elif isinstance(value, (str, float, int)):\n-        return str(value)\n-    raise TypeError(\n-        f\"Expected str, int, float, bool, or None. Got {type(value).__name__!r}.\"\n-    )\n+    return str(value)\n \n \n def is_known_encoding(encoding: str) -> bool:\n",
+  "test_diff": "diff --git a/tests/models/test_queryparams.py b/tests/models/test_queryparams.py\nindex cbb487bbc6..29b2ca634d 100644\n--- a/tests/models/test_queryparams.py\n+++ b/tests/models/test_queryparams.py\n@@ -87,13 +87,6 @@ def test_empty_query_params():\n     assert str(q) == \"a=\"\n \n \n-def test_invalid_query_params():\n-    with pytest.raises(\n-        TypeError, match=r\"Expected str, int, float, bool, or None. Got 'bytes'.\"\n-    ):\n-        httpx.QueryParams({\"a\": b\"bytes\"})\n-\n-\n def test_queryparam_update_is_hard_deprecated():\n     q = httpx.QueryParams(\"a=123\")\n     with pytest.raises(RuntimeError):\n",
+  "files_changed": [
+    "httpx/_utils.py",
+    "tests/models/test_queryparams.py"
+  ],
+  "source_files": [
+    "httpx/_utils.py"
+  ],
+  "test_files": [
+    "tests/models/test_queryparams.py"
+  ],
+  "lines_added": 1,
+  "lines_removed": 12,
+  "has_test_changes": true,
+  "merge_commit_sha": "bddd774ce065f3442c1f46af1db5b85b1bfb7613",
+  "base_commit_sha": "e27d1b83330d0520f87a7d1da1818e4dcb2add02",
+  "head_commit_sha": "023e66344fbe50ed65bf7bb873c4662f484ae84c",
+  "merged_at": "2023-01-04T09:23:33Z"
+}

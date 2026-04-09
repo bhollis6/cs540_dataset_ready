@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_650",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 650,
+  "title": "Support generic parents in include_subclasses strategy",
+  "description": "Resolves #648\r\n\r\nThe strategy was using parent_cls.__subclasses__() to get the list of subclasses. In case of generics, this method is unavailable.\r\n\r\nThe fix applies sanitizing the cl and getting its origin class for getting a sublcasses tree.\r\n\r\nThe class itself remains generic in the tree.",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex 82c963fc..c6646084 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -46,6 +46,8 @@ Our backwards-compatibility policy can be found [here](https://github.com/python\n   ([#599](https://github.com/python-attrs/cattrs/pull/599))\n - Structuring TypedDicts from invalid inputs now properly raises a {class}`ClassValidationError`.\n   ([#615](https://github.com/python-attrs/cattrs/issues/615) [#616](https://github.com/python-attrs/cattrs/pull/616))\n+- {func} `cattrs.strategies.include_subclasses` now properly working with generic parent classes.\n+  ([#649](https://github.com/python-attrs/cattrs/pull/650))\n - Replace `cattrs.gen.MappingStructureFn` with {class}`cattrs.SimpleStructureHook`.\n - Python 3.13 is now supported.\n   ([#543](https://github.com/python-attrs/cattrs/pull/543) [#547](https://github.com/python-attrs/cattrs/issues/547))\ndiff --git a/src/cattrs/strategies/_subclasses.py b/src/cattrs/strategies/_subclasses.py\nindex 47f3e7de..483a226e 100644\n--- a/src/cattrs/strategies/_subclasses.py\n+++ b/src/cattrs/strategies/_subclasses.py\n@@ -2,6 +2,7 @@\n \n from __future__ import annotations\n \n+import typing\n from gc import collect\n from typing import Any, Callable, TypeVar, Union\n \n@@ -11,8 +12,12 @@\n \n \n def _make_subclasses_tree(cl: type) -> list[type]:\n+    # get class origin for accessing subclasses (see #648 for more info)\n+    cls_origin = typing.get_origin(cl) or cl\n     return [cl] + [\n-        sscl for scl in cl.__subclasses__() for sscl in _make_subclasses_tree(scl)\n+        sscl\n+        for scl in cls_origin.__subclasses__()\n+        for sscl in _make_subclasses_tree(scl)\n     ]\n \n \n",
+  "test_diff": "diff --git a/tests/strategies/test_include_subclasses.py b/tests/strategies/test_include_subclasses.py\nindex 02746305..42507c3c 100644\n--- a/tests/strategies/test_include_subclasses.py\n+++ b/tests/strategies/test_include_subclasses.py\n@@ -9,6 +9,8 @@\n from cattrs.errors import ClassValidationError, StructureHandlerNotFoundError\n from cattrs.strategies import configure_tagged_union, include_subclasses\n \n+T = typing.TypeVar(\"T\")\n+\n \n @define\n class Parent:\n@@ -412,3 +414,21 @@ class NewChild2(NewParent):\n \n     with pytest.raises(StructureHandlerNotFoundError):\n         include_subclasses(NewParent, genconverter)\n+\n+\n+def test_parents_with_generics(genconverter: Converter):\n+    \"\"\"Ensure proper handling of generic parents #648.\"\"\"\n+\n+    @define\n+    class GenericParent(typing.Generic[T]):\n+        p: T\n+\n+    @define\n+    class Child1G(GenericParent[str]):\n+        c: str\n+\n+    include_subclasses(GenericParent[str], genconverter)\n+\n+    assert genconverter.structure({\"p\": 5, \"c\": 5}, GenericParent[str]) == Child1G(\n+        \"5\", \"5\"\n+    )\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/strategies/_subclasses.py",
+    "tests/strategies/test_include_subclasses.py"
+  ],
+  "source_files": [
+    "src/cattrs/strategies/_subclasses.py"
+  ],
+  "test_files": [
+    "tests/strategies/test_include_subclasses.py"
+  ],
+  "lines_added": 28,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "ea4c31139981e75aedcc7f041873acfce0132e2c",
+  "base_commit_sha": "c95a0a596fc2d81024e6551761ebbd79d4a4fa95",
+  "head_commit_sha": "d68583a6f304a6fd6684f7c6cf2b4066a0a72300",
+  "merged_at": "2025-05-26T13:11:49Z"
+}

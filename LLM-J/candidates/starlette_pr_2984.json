@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2984",
+  "repo": "encode/starlette",
+  "pr_number": 2984,
+  "title": "Use `asyncio.iscoroutinefunction` for Python 3.12 and older",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\n\n# Summary\n\n<!-- Write a small summary about what is happening here. -->\ninpsect.iscoroutinefunction still has issues with mocked coroutines, for example, until Python 3.13.\n\nResolves https://github.com/encode/starlette/discussions/2983\n\n# Checklist\n\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\n- [x] I've updated the documentation accordingly.\n",
+  "patch_diff": "diff --git a/starlette/_utils.py b/starlette/_utils.py\nindex 5ac985de1..b0f01d31b 100644\n--- a/starlette/_utils.py\n+++ b/starlette/_utils.py\n@@ -1,7 +1,6 @@\n from __future__ import annotations\n \n import functools\n-import inspect\n import sys\n from collections.abc import Awaitable, Generator\n from contextlib import AbstractAsyncContextManager, contextmanager\n@@ -10,8 +9,11 @@\n from starlette.types import Scope\n \n if sys.version_info >= (3, 13):  # pragma: no cover\n+    from inspect import iscoroutinefunction\n     from typing import TypeIs\n else:  # pragma: no cover\n+    from asyncio import iscoroutinefunction\n+\n     from typing_extensions import TypeIs\n \n has_exceptiongroups = True\n@@ -37,7 +39,7 @@ def is_async_callable(obj: Any) -> Any:\n     while isinstance(obj, functools.partial):\n         obj = obj.func\n \n-    return inspect.iscoroutinefunction(obj) or (callable(obj) and inspect.iscoroutinefunction(obj.__call__))\n+    return iscoroutinefunction(obj) or (callable(obj) and iscoroutinefunction(obj.__call__))\n \n \n T_co = TypeVar(\"T_co\", covariant=True)\n",
+  "test_diff": "diff --git a/tests/test__utils.py b/tests/test__utils.py\nindex 916f460d4..42372ce3a 100644\n--- a/tests/test__utils.py\n+++ b/tests/test__utils.py\n@@ -1,5 +1,6 @@\n import functools\n from typing import Any\n+from unittest.mock import create_autospec\n \n import pytest\n \n@@ -83,6 +84,13 @@ async def async_func(\n     assert is_async_callable(nested_partial)\n \n \n+def test_async_mocked_async_function() -> None:\n+    async def async_func() -> None: ...  # pragma: no cover\n+\n+    mock = create_autospec(async_func)\n+    assert is_async_callable(mock)\n+\n+\n @pytest.mark.parametrize(\n     \"scope, expected_result\",\n     [\n",
+  "files_changed": [
+    "starlette/_utils.py",
+    "tests/test__utils.py"
+  ],
+  "source_files": [
+    "starlette/_utils.py"
+  ],
+  "test_files": [
+    "tests/test__utils.py"
+  ],
+  "lines_added": 12,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "3d7430a0aa7fb45d8e6a6ef19c9ffa675f669335",
+  "base_commit_sha": "6ee94f2cac955eeae68d2898a8dec8cf17b48736",
+  "head_commit_sha": "e63acead35f11e3a36325874a2eebda1fb68b5e9",
+  "merged_at": "2025-08-24T07:01:30Z"
+}

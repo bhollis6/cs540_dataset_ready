@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_2741",
+  "repo": "encode/httpx",
+  "pr_number": 2741,
+  "title": "Fix environment proxies",
+  "description": "Now the httpx parses `NO_PROXY: http://google.com` to `{'all://*http://google.com': None}` but expected `{'http://google.com': None}`\r\n\r\n# TODO\r\n- [x] Write a failing test\r\n- [x] Make the test pass",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 18d0e84a98..950d3898cf 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n ### Fixed\n \n+* Handle `NO_PROXY` envvar cases when a fully qualified URL is supplied as the value. (#2741)\n * Allow URLs where username or password contains unescaped '@'. (#2986)\n * Ensure ASGI `raw_path` does not include URL query component. (#2999)\n * Ensure `Response.iter_text()` cannot yield empty strings. (#2998)\ndiff --git a/httpx/_utils.py b/httpx/_utils.py\nindex a0bc2c5b6d..21241967e3 100644\n--- a/httpx/_utils.py\n+++ b/httpx/_utils.py\n@@ -227,7 +227,9 @@ def get_environment_proxies() -> typing.Dict[str, typing.Optional[str]]:\n             #   (But not \"wwwgoogle.com\")\n             # NO_PROXY can include domains, IPv6, IPv4 addresses and \"localhost\"\n             #   NO_PROXY=example.com,::1,localhost,192.168.0.0/16\n-            if is_ipv4_hostname(hostname):\n+            if \"://\" in hostname:\n+                mounts[hostname] = None\n+            elif is_ipv4_hostname(hostname):\n                 mounts[f\"all://{hostname}\"] = None\n             elif is_ipv6_hostname(hostname):\n                 mounts[f\"all://[{hostname}]\"] = None\n",
+  "test_diff": "diff --git a/tests/test_utils.py b/tests/test_utils.py\nindex bbaf6007b5..5391f9c22d 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -197,6 +197,7 @@ def test_get_ssl_cert_file():\n         ({\"no_proxy\": \"localhost\"}, {\"all://localhost\": None}),\n         ({\"no_proxy\": \"github.com\"}, {\"all://*github.com\": None}),\n         ({\"no_proxy\": \".github.com\"}, {\"all://*.github.com\": None}),\n+        ({\"no_proxy\": \"http://github.com\"}, {\"http://github.com\": None}),\n     ],\n )\n def test_get_environment_proxies(environment, proxies):\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_utils.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "httpx/_utils.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "lines_added": 5,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "3b9060ee1121b48669e0b30045c9344065f4f2ae",
+  "base_commit_sha": "2318fd822cdb16435ccb5cabcba16c0b7969c1e4",
+  "head_commit_sha": "3535d74b682e52c38059bea7b02bcbdbebe0e117",
+  "merged_at": "2023-12-14T14:04:04Z"
+}

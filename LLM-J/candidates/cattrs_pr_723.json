@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_723",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 723,
+  "title": "Fix wrong parameter name in namedtuple_dict_structure_factory",
+  "description": "`namedtuple_dict_structure_factory` passes `_cattrs_use_detailed_validation` to `make_dict_structure_fn_from_attrs`, but the expected parameter name is `_cattrs_detailed_validation` (without the `use_` prefix).\n\nSince `make_dict_structure_fn_from_attrs` accepts `**kwargs` for attribute overrides, the misnamed keyword is silently swallowed as if it were an attribute override key, and `_cattrs_detailed_validation` falls back to its default `\"from_converter\"`.\n\nThis means the `detailed_validation` argument to `namedtuple_dict_structure_factory` has no effect \u2014 the converter's default is always used regardless of what's passed.\n\nThe fix renames the keyword to match the actual parameter name.\n",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex f8f7df14..452e7b7e 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -15,6 +15,8 @@ Our backwards-compatibility policy can be found [here](https://github.com/python\n \n - Fix an `AttributeError` in `cattrs` internals that could be triggered by using the `include_subclasses` strategy in a `structure_hook_factory`\n   ([#721](https://github.com/python-attrs/cattrs/issues/721), [#722](https://github.com/python-attrs/cattrs/pull/722))\n+- Fix the `detailed_validation` parameter being passed under the wrong name in {func}`namedtuple_dict_structure_factory <cattrs.cols.namedtuple_dict_structure_factory>`, causing it to be silently ignored.\n+  ([#723](https://github.com/python-attrs/cattrs/pull/723))\n \n ## 26.1.0 (2026-02-18)\n \ndiff --git a/src/cattrs/cols.py b/src/cattrs/cols.py\nindex 64e4f2c7..d1d22ee8 100644\n--- a/src/cattrs/cols.py\n+++ b/src/cattrs/cols.py\n@@ -277,7 +277,7 @@ def namedtuple_dict_structure_factory(\n             cl,\n             converter,\n             _cattrs_forbid_extra_keys=forbid_extra_keys,\n-            _cattrs_use_detailed_validation=detailed_validation,\n+            _cattrs_detailed_validation=detailed_validation,\n             _cattrs_use_linecache=use_linecache,\n             **kwargs,\n         )\n",
+  "test_diff": "diff --git a/tests/test_tuples.py b/tests/test_tuples.py\nindex 4fcfd85e..c1a9562c 100644\n--- a/tests/test_tuples.py\n+++ b/tests/test_tuples.py\n@@ -11,7 +11,7 @@\n     namedtuple_dict_unstructure_factory,\n )\n from cattrs.converters import Converter\n-from cattrs.errors import ForbiddenExtraKeysError\n+from cattrs.errors import ClassValidationError, ForbiddenExtraKeysError\n \n \n def test_simple_hetero_tuples(genconverter: Converter):\n@@ -141,3 +141,28 @@ class Test(NamedTuple):\n \n     assert isinstance(exc, ForbiddenExtraKeysError)\n     assert exc.extra_fields == {\"b\"}\n+\n+\n+def test_dict_namedtuples_detailed_validation():\n+    \"\"\"Passing detailed_validation to namedtuple_dict_structure_factory works.\n+\n+    Regression test for the parameter being passed under the wrong name.\n+    \"\"\"\n+\n+    class Test(NamedTuple):\n+        a: int\n+\n+    # Create a converter that does NOT use detailed validation by default.\n+    c = Converter(detailed_validation=False)\n+\n+    # But explicitly enable it in the factory.\n+    c.register_structure_hook_factory(\n+        lambda t: t is Test,\n+        lambda t, conv: namedtuple_dict_structure_factory(t, conv, True),\n+    )\n+\n+    # With detailed validation, structuring errors should be wrapped\n+    # in a ClassValidationError instead of being raised directly.\n+\n+    with raises(ClassValidationError):\n+        c.structure({\"a\": \"not_an_int\"}, Test)\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/cols.py",
+    "tests/test_tuples.py"
+  ],
+  "source_files": [
+    "src/cattrs/cols.py"
+  ],
+  "test_files": [
+    "tests/test_tuples.py"
+  ],
+  "lines_added": 29,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "304e3700198311c78a5c6993c0ac6f3307a2e28a",
+  "base_commit_sha": "573915b6b450c23eaf818370ac2e339dd9aee262",
+  "head_commit_sha": "5fd1c7f89f6c5f19b91cc5f2758a0fbf7740730b",
+  "merged_at": "2026-03-03T23:30:35Z"
+}

@@ -1,0 +1,19 @@
+{
+  "candidate_id": "fastapi_pr_4821",
+  "repo": "tiangolo/fastapi",
+  "pr_number": 4821,
+  "title": "Fix token refresh race condition in OAuth2 middleware",
+  "description": "When multiple requests hit the refresh endpoint simultaneously, the middleware could issue duplicate tokens. This PR adds a lock to serialize refresh operations.",
+  "patch_diff": "diff --git a/fastapi/security/oauth2.py b/fastapi/security/oauth2.py\n--- a/fastapi/security/oauth2.py\n+++ b/fastapi/security/oauth2.py\n@@ -45,6 +45,15 @@\n+    async def serialize_token_refresh(self, token: str) -> RefreshResult:\n+        async with self._refresh_lock:\n+            existing = await self._cache.get(token)\n+            if existing and not existing.is_expired:\n+                return existing\n+            new_token = await self._provider.refresh(token)\n+            await self._cache.set(token, new_token)\n+            return new_token",
+  "test_diff": "diff --git a/tests/test_security_oauth2.py b/tests/test_security_oauth2.py\n--- a/tests/test_security_oauth2.py\n+++ b/tests/test_security_oauth2.py\n@@ -102,6 +102,28 @@\n+    async def test_concurrent_refresh_no_duplicates(self):\n+        results = await asyncio.gather(*[refresh(token) for _ in range(10)])\n+        assert len(set(r.token_id for r in results)) == 1",
+  "files_changed": ["fastapi/security/oauth2.py", "tests/test_security_oauth2.py"],
+  "source_files": ["fastapi/security/oauth2.py"],
+  "test_files": ["tests/test_security_oauth2.py"],
+  "lines_added": 42,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "abc123def456",
+  "base_commit_sha": "def456ghi789",
+  "head_commit_sha": "ghi789jkl012",
+  "merged_at": "2024-03-15T10:30:00Z"
+}

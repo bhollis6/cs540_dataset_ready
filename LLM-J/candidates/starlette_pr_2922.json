@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2922",
+  "repo": "encode/starlette",
+  "pr_number": 2922,
+  "title": "Mark http_exception as async to prevent thread creation.",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nIn https://github.com/encode/starlette/blob/master/starlette/_exception_handler.py#L61 we check if the exception_handler is an async function and if not we execute it in a different thread. \r\nThis is meant to ensure that long-running sync IO operations don't block the main async eventloop. \r\nHowever, in the case of [http_exception](https://github.com/encode/starlette/blob/master/starlette/middleware/exceptions.py#L64), a simple function that does not do any io at all - the aforementioned logic spawns a thread to run the function. \r\nMarking this function async is a simple way of making sure this function does not accidently cause a thread to be created.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/middleware/exceptions.py b/starlette/middleware/exceptions.py\nindex 981d2fcae..a99b44dee 100644\n--- a/starlette/middleware/exceptions.py\n+++ b/starlette/middleware/exceptions.py\n@@ -61,7 +61,7 @@ async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:\n \n         await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n \n-    def http_exception(self, request: Request, exc: Exception) -> Response:\n+    async def http_exception(self, request: Request, exc: Exception) -> Response:\n         assert isinstance(exc, HTTPException)\n         if exc.status_code in {204, 304}:\n             return Response(status_code=exc.status_code, headers=exc.headers)\n",
+  "test_diff": "diff --git a/tests/test_exceptions.py b/tests/test_exceptions.py\nindex fe5da0ba6..868245650 100644\n--- a/tests/test_exceptions.py\n+++ b/tests/test_exceptions.py\n@@ -1,6 +1,8 @@\n+import typing\n from collections.abc import Generator\n \n import pytest\n+from pytest import MonkeyPatch\n \n from starlette.exceptions import HTTPException, WebSocketException\n from starlette.middleware.exceptions import ExceptionMiddleware\n@@ -184,3 +186,22 @@ def test_request_in_app_and_handler_is_the_same_object(client: TestClient) -> No\n     response = client.post(\"/consume_body_in_endpoint_and_handler\", content=b\"Hello!\")\n     assert response.status_code == 422\n     assert response.json() == {\"body\": \"Hello!\"}\n+\n+\n+def test_http_exception_does_not_use_threadpool(client: TestClient, monkeypatch: MonkeyPatch) -> None:\n+    \"\"\"\n+    Verify that handling HTTPException does not invoke run_in_threadpool,\n+    confirming the handler correctly runs in the main async context.\n+    \"\"\"\n+    from starlette import _exception_handler\n+\n+    # Replace run_in_threadpool with a function that raises an error\n+    def mock_run_in_threadpool(*args: typing.Any, **kwargs: typing.Any) -> None:\n+        pytest.fail(\"run_in_threadpool should not be called for HTTP exceptions\")  # pragma: no cover\n+\n+    # Apply the monkeypatch only during this test\n+    monkeypatch.setattr(_exception_handler, \"run_in_threadpool\", mock_run_in_threadpool)\n+\n+    # This should succeed because http_exception is async and won't use run_in_threadpool\n+    response = client.get(\"/not_acceptable\")\n+    assert response.status_code == 406\n",
+  "files_changed": [
+    "starlette/middleware/exceptions.py",
+    "tests/test_exceptions.py"
+  ],
+  "source_files": [
+    "starlette/middleware/exceptions.py"
+  ],
+  "test_files": [
+    "tests/test_exceptions.py"
+  ],
+  "lines_added": 22,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "a766a58d14007f07c0b5782fa78cdc370b892796",
+  "base_commit_sha": "4a811767bcba6e933bf7a8b48edef5993ce8948e",
+  "head_commit_sha": "d17b1167e417b9301333d664823343e78403b396",
+  "merged_at": "2025-04-16T12:57:27Z"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_3147",
+  "repo": "encode/starlette",
+  "pr_number": 3147,
+  "title": "Drop deprecated `method` parameter from `FileResponse`",
+  "description": "The `method` parameter has been deprecated for 2 years and was never used.",
+  "patch_diff": "diff --git a/starlette/responses.py b/starlette/responses.py\nindex 431c88e8f..03d82ac57 100644\n--- a/starlette/responses.py\n+++ b/starlette/responses.py\n@@ -6,7 +6,6 @@\n import os\n import stat\n import sys\n-import warnings\n from collections.abc import AsyncIterable, Awaitable, Callable, Iterable, Mapping, Sequence\n from datetime import datetime\n from email.utils import format_datetime, formatdate\n@@ -302,17 +301,11 @@ def __init__(\n         background: BackgroundTask | None = None,\n         filename: str | None = None,\n         stat_result: os.stat_result | None = None,\n-        method: str | None = None,\n         content_disposition_type: str = \"attachment\",\n     ) -> None:\n         self.path = path\n         self.status_code = status_code\n         self.filename = filename\n-        if method is not None:\n-            warnings.warn(\n-                \"The 'method' parameter is not used, and it will be removed.\",\n-                DeprecationWarning,\n-            )\n         if media_type is None:\n             media_type = guess_type(filename or path)[0] or \"text/plain\"\n         self.media_type = media_type\n",
+  "test_diff": "diff --git a/tests/test_responses.py b/tests/test_responses.py\nindex 77f8de8ae..621669459 100644\n--- a/tests/test_responses.py\n+++ b/tests/test_responses.py\n@@ -335,11 +335,6 @@ def test_file_response_with_inline_disposition(tmp_path: Path, test_client_facto\n     assert response.headers[\"content-disposition\"] == expected_disposition\n \n \n-def test_file_response_with_method_warns(tmp_path: Path) -> None:\n-    with pytest.warns(DeprecationWarning):\n-        FileResponse(path=tmp_path, filename=\"example.png\", method=\"GET\")\n-\n-\n def test_file_response_with_range_header(tmp_path: Path, test_client_factory: TestClientFactory) -> None:\n     content = b\"file content\"\n     filename = \"hello.txt\"\n",
+  "files_changed": [
+    "starlette/responses.py",
+    "tests/test_responses.py"
+  ],
+  "source_files": [
+    "starlette/responses.py"
+  ],
+  "test_files": [
+    "tests/test_responses.py"
+  ],
+  "lines_added": 0,
+  "lines_removed": 12,
+  "has_test_changes": true,
+  "merge_commit_sha": "2c614b910b95f1889d6d39d447ba7e5a6b8542a8",
+  "base_commit_sha": "3bddf51c71e0940d1e9bfbae9d952df8389cb80b",
+  "head_commit_sha": "cdc6b443efa07a064ceb24ea36ab0d94e0196891",
+  "merged_at": "2026-02-15T12:56:59Z"
+}

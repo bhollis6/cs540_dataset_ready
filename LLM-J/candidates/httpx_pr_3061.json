@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_3061",
+  "repo": "encode/httpx",
+  "pr_number": 3061,
+  "title": "test `parse_header_links` via public api",
+  "description": "<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nchunk of #2851\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/httpx/_models.py b/httpx/_models.py\nindex b8617cdab5..e08248a8d4 100644\n--- a/httpx/_models.py\n+++ b/httpx/_models.py\n@@ -774,13 +774,13 @@ def links(self) -> typing.Dict[typing.Optional[str], typing.Dict[str, str]]:\n         Returns the parsed header links of the response, if any\n         \"\"\"\n         header = self.headers.get(\"link\")\n-        ldict = {}\n-        if header:\n-            links = parse_header_links(header)\n-            for link in links:\n-                key = link.get(\"rel\") or link.get(\"url\")\n-                ldict[key] = link\n-        return ldict\n+        if header is None:\n+            return {}\n+\n+        return {\n+            (link.get(\"rel\") or link.get(\"url\")): link\n+            for link in parse_header_links(header)\n+        }\n \n     @property\n     def num_bytes_downloaded(self) -> int:\n",
+  "test_diff": "diff --git a/tests/test_utils.py b/tests/test_utils.py\nindex 2f5b2e13cf..0ef87d18d8 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -12,7 +12,6 @@\n     get_ca_bundle_from_env,\n     get_environment_proxies,\n     is_https_redirect,\n-    parse_header_links,\n     same_origin,\n )\n \n@@ -80,7 +79,13 @@ def test_guess_by_bom(encoding, expected):\n     ),\n )\n def test_parse_header_links(value, expected):\n-    assert parse_header_links(value) == expected\n+    all_links = httpx.Response(200, headers={\"link\": value}).links.values()\n+    assert all(link in all_links for link in expected)\n+\n+\n+def test_parse_header_links_no_link():\n+    all_links = httpx.Response(200).links\n+    assert all_links == {}\n \n \n def test_logging_request(server, caplog):\n",
+  "files_changed": [
+    "httpx/_models.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "httpx/_models.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "lines_added": 14,
+  "lines_removed": 9,
+  "has_test_changes": true,
+  "merge_commit_sha": "4f6edf36e93fd9f83ff95b065718fd6bd0c4d3c5",
+  "base_commit_sha": "c7cd6aa5bdcf9f9d63e7dcea33cb78d6920aeed8",
+  "head_commit_sha": "a44c3ca69224e66b4683ad0a320d3619427bacf0",
+  "merged_at": "2024-01-16T10:25:02Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_221",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 221,
+  "title": "Fix  __parameters__ access in gen._generate_mapping",
+  "description": "There are Generic types in the typing modules\r\nfrom which you can inherit in your own classes\r\nwhich do not have an __parameters__ attribute,\r\nsuch classes are now ignored making\r\ngen._generate_mapping effectively a no-op\r\nin case the class do not have an __parameters__\r\nattribute.\r\n\r\nAs https://github.com/ilevkivskyi/typing_inspect/blob/8f6aa2075ba448ab322def454137e7c59b9b302d/typing_inspect.py#L405\r\nis showing there are also cases where __parameters__\r\ncould be None, so I test for both cases, that it\r\nis None or that it does not exist.\r\n\r\nSee Also:\r\nhttps://github.com/python-attrs/cattrs/issues/217",
+  "patch_diff": "diff --git a/HISTORY.rst b/HISTORY.rst\nindex 361f5e86..b36d1935 100644\n--- a/HISTORY.rst\n+++ b/HISTORY.rst\n@@ -12,6 +12,9 @@ History\n * Fix structuring bare ``typing.Tuple`` on Pythons lower than 3.9.\n   (`#218 https://github.com/python-attrs/cattrs/issues/218`_)\n \n+* Fix a wrong ``AttributeError`` of an missing ``__parameters__`` attribute. This could happen \n+  when inheriting certain generic classes \u2013 for example ``typing.*`` classes are affected. \n+  (`#217 <https://github.com/python-attrs/cattrs/issues/217>`_)\n \n 1.10.0 (2022-01-04)\n -------------------\ndiff --git a/src/cattrs/gen.py b/src/cattrs/gen.py\nindex c025269b..4a3d8972 100644\n--- a/src/cattrs/gen.py\n+++ b/src/cattrs/gen.py\n@@ -204,7 +204,17 @@ def _generate_mapping(\n     cl: Type, old_mapping: Dict[str, type]\n ) -> Dict[str, type]:\n     mapping = {}\n-    for p, t in zip(get_origin(cl).__parameters__, get_args(cl)):\n+\n+    # To handle the cases where classes in the typing module are using\n+    # the GenericAlias structure but aren\u2019t a Generic and hence\n+    # end up in this function but do not have an `__parameters__`\n+    # attribute. These classes are interface types, for example\n+    # `typing.Hashable`.\n+    parameters = getattr(get_origin(cl), \"__parameters__\", None)\n+    if parameters is None:\n+        return old_mapping\n+\n+    for p, t in zip(parameters, get_args(cl)):\n         if isinstance(t, TypeVar):\n             continue\n         mapping[p.__name__] = t\n",
+  "test_diff": "diff --git a/tests/test_converter_inheritance.py b/tests/test_converter_inheritance.py\nindex 4b694b6e..90ba337e 100644\n--- a/tests/test_converter_inheritance.py\n+++ b/tests/test_converter_inheritance.py\n@@ -1,3 +1,5 @@\n+import collections\n+import typing\n from typing import Type\n \n import attr\n@@ -43,3 +45,62 @@ class B(A):\n \n     # This should still work, but using the new hook instead.\n     assert converter.structure({\"i\": 1}, B) == B(2)\n+\n+\n+@pytest.mark.parametrize(\"converter_cls\", [Converter, GenConverter])\n+@pytest.mark.parametrize(\n+    \"typing_cls\", [typing.Hashable, typing.Iterable, typing.Reversible]\n+)\n+def test_inherit_typing(converter_cls: Type[Converter], typing_cls):\n+    \"\"\"Stuff from typing.* resolves to runtime to collections.abc.*.\n+\n+    Hence, typing.* are of a special alias type which we want to check if\n+    cattrs handles them correctly.\n+    \"\"\"\n+    converter = converter_cls()\n+\n+    @attr.define\n+    class A(typing_cls):\n+        i: int = 0\n+\n+        def __hash__(self):\n+            return hash(self.i)\n+\n+        def __iter__(self):\n+            return iter([self.i])\n+\n+        def __reversed__(self):\n+            return iter([self.i])\n+\n+    assert converter.structure({\"i\": 1}, A) == A(i=1)\n+\n+\n+@pytest.mark.parametrize(\"converter_cls\", [Converter, GenConverter])\n+@pytest.mark.parametrize(\n+    \"collections_abc_cls\",\n+    [\n+        collections.abc.Hashable,\n+        collections.abc.Iterable,\n+        collections.abc.Reversible,\n+    ],\n+)\n+def test_inherit_collections_abc(\n+    converter_cls: Type[Converter], collections_abc_cls\n+):\n+    \"\"\"As extension of test_inherit_typing, check if collections.abc.* work.\"\"\"\n+    converter = converter_cls()\n+\n+    @attr.define\n+    class A(collections_abc_cls):\n+        i: int = 0\n+\n+        def __hash__(self):\n+            return hash(self.i)\n+\n+        def __iter__(self):\n+            return iter([self.i])\n+\n+        def __reversed__(self):\n+            return iter([self.i])\n+\n+    assert converter.structure({\"i\": 1}, A) == A(i=1)\n",
+  "files_changed": [
+    "HISTORY.rst",
+    "src/cattrs/gen.py",
+    "tests/test_converter_inheritance.py"
+  ],
+  "source_files": [
+    "src/cattrs/gen.py"
+  ],
+  "test_files": [
+    "tests/test_converter_inheritance.py"
+  ],
+  "lines_added": 75,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "3ee4b40fe1fe64a6c68157f9a9abe43e232f69c7",
+  "base_commit_sha": "93dcd9812a331156ae796f1bf7f2c01dda06bb26",
+  "head_commit_sha": "b62813ca3d925f661b83b3864e292eb84582e620",
+  "merged_at": "2022-02-07T02:02:28Z"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2711",
+  "repo": "encode/starlette",
+  "pr_number": 2711,
+  "title": "Fix: Resolve the issue where the directory itself being a symlink does not work.",
+  "description": "\r\n<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n\r\nFixed #2646 \r\n\r\nI test https://github.com/encode/starlette/security/advisories/GHSA-v5gw-mw7f-84px case. test result is 404 Not Found.",
+  "patch_diff": "diff --git a/starlette/staticfiles.py b/starlette/staticfiles.py\nindex 7498c3011..746e740e0 100644\n--- a/starlette/staticfiles.py\n+++ b/starlette/staticfiles.py\n@@ -155,7 +155,7 @@ def lookup_path(self, path: str) -> tuple[str, os.stat_result | None]:\n                 full_path = os.path.abspath(joined_path)\n             else:\n                 full_path = os.path.realpath(joined_path)\n-            directory = os.path.realpath(directory)\n+                directory = os.path.realpath(directory)\n             if os.path.commonpath([full_path, directory]) != directory:\n                 # Don't allow misbehaving clients to break out of the static files\n                 # directory.\n",
+  "test_diff": "diff --git a/tests/test_staticfiles.py b/tests/test_staticfiles.py\nindex 8beb3cd87..8f7423593 100644\n--- a/tests/test_staticfiles.py\n+++ b/tests/test_staticfiles.py\n@@ -559,3 +559,23 @@ def test_staticfiles_avoids_path_traversal(tmp_path: Path) -> None:\n \n     assert exc_info.value.status_code == 404\n     assert exc_info.value.detail == \"Not Found\"\n+\n+\n+def test_staticfiles_self_symlinks(tmpdir: Path, test_client_factory: TestClientFactory) -> None:\n+    statics_path = os.path.join(tmpdir, \"statics\")\n+    os.mkdir(statics_path)\n+\n+    source_file_path = os.path.join(statics_path, \"index.html\")\n+    with open(source_file_path, \"w\") as file:\n+        file.write(\"<h1>Hello</h1>\")\n+\n+    statics_symlink_path = os.path.join(tmpdir, \"statics_symlink\")\n+    os.symlink(statics_path, statics_symlink_path)\n+\n+    app = StaticFiles(directory=statics_symlink_path, follow_symlink=True)\n+    client = test_client_factory(app)\n+\n+    response = client.get(\"/index.html\")\n+    assert response.url == \"http://testserver/index.html\"\n+    assert response.status_code == 200\n+    assert response.text == \"<h1>Hello</h1>\"\n",
+  "files_changed": [
+    "starlette/staticfiles.py",
+    "tests/test_staticfiles.py"
+  ],
+  "source_files": [
+    "starlette/staticfiles.py"
+  ],
+  "test_files": [
+    "tests/test_staticfiles.py"
+  ],
+  "lines_added": 21,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "eee4cdcb9a4e787d53df88ccbee2861a0bb9b0a8",
+  "base_commit_sha": "b68a142a356ede730083347f254e1eae8b5c803e",
+  "head_commit_sha": "a3724fc62a29a0b5463d40697faa6d7298411770",
+  "merged_at": "2024-12-01T16:46:17Z"
+}

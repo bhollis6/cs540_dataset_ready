@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2768",
+  "repo": "encode/starlette",
+  "pr_number": 2768,
+  "title": "Make _MiddlewareFactory compatible with Callable",
+  "description": "# Summary\r\n\r\nMake `app` a positional-only argument so that a `Callable[[ASGIApp, ...], ASGIApp]` can be passed in place of `_MiddlewareFactory`.\r\n\r\nWe can also consider making `_MiddlewareFactory` and moving it into `starlette.types`. This will make it easier to type arguments for `add_middleware()`.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n",
+  "patch_diff": "diff --git a/starlette/middleware/__init__.py b/starlette/middleware/__init__.py\nindex 8e0a54edb..5164e49e0 100644\n--- a/starlette/middleware/__init__.py\n+++ b/starlette/middleware/__init__.py\n@@ -14,7 +14,7 @@\n \n \n class _MiddlewareFactory(Protocol[P]):\n-    def __call__(self, app: ASGIApp, *args: P.args, **kwargs: P.kwargs) -> ASGIApp: ...  # pragma: no cover\n+    def __call__(self, app: ASGIApp, /, *args: P.args, **kwargs: P.kwargs) -> ASGIApp: ...  # pragma: no cover\n \n \n class Middleware:\n",
+  "test_diff": "diff --git a/tests/test_applications.py b/tests/test_applications.py\nindex 29c011a29..db2a6050b 100644\n--- a/tests/test_applications.py\n+++ b/tests/test_applications.py\n@@ -3,7 +3,7 @@\n import os\n from contextlib import asynccontextmanager\n from pathlib import Path\n-from typing import AsyncGenerator, AsyncIterator, Generator\n+from typing import AsyncGenerator, AsyncIterator, Callable, Generator\n \n import anyio.from_thread\n import pytest\n@@ -567,9 +567,12 @@ async def _app(scope: Scope, receive: Receive, send: Send) -> None:\n \n         return _app\n \n+    def get_middleware_factory() -> Callable[[ASGIApp, str], ASGIApp]:\n+        return _middleware_factory\n+\n     app = Starlette()\n     app.add_middleware(_middleware_factory, arg=\"foo\")\n-    app.add_middleware(_middleware_factory, arg=\"bar\")\n+    app.add_middleware(get_middleware_factory(), \"bar\")\n \n     with test_client_factory(app):\n         pass\n",
+  "files_changed": [
+    "starlette/middleware/__init__.py",
+    "tests/test_applications.py"
+  ],
+  "source_files": [
+    "starlette/middleware/__init__.py"
+  ],
+  "test_files": [
+    "tests/test_applications.py"
+  ],
+  "lines_added": 6,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "13d0c1fbcdb6c6f861155beed352112843e57717",
+  "base_commit_sha": "009a3bab62c4e3f1479914b08a3291cfe86e5e9e",
+  "head_commit_sha": "6b38536d993c1966b53e443cc5c390a2223245c9",
+  "merged_at": "2024-11-26T07:28:34Z"
+}

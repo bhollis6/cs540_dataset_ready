@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_2852",
+  "repo": "encode/httpx",
+  "pr_number": 2852,
+  "title": "Raise ValueError on `Response.encoding` being set after `Response.text` has been accessed",
+  "description": "Discussed in #2041\r\n\r\n<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nAfter `Response.text` is accessed, if you try to change `Response.encoding`, nothing happens. So just raise an Exception on change to `encoding` after `text` is accessed.\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 66d2b080cd..4842dfff82 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.\n \n The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n+## Unreleased\n+\n+### Fixed\n+\n+* Raise `ValueError` on `Response.encoding` being set after `Response.text` has been accessed. (#2852)\n+\n ## 0.25.0 (11th Sep, 2023)\n \n ### Removed\ndiff --git a/httpx/_models.py b/httpx/_models.py\nindex e1e45cf06b..8a6bda04bb 100644\n--- a/httpx/_models.py\n+++ b/httpx/_models.py\n@@ -603,6 +603,16 @@ def encoding(self) -> typing.Optional[str]:\n \n     @encoding.setter\n     def encoding(self, value: str) -> None:\n+        \"\"\"\n+        Set the encoding to use for decoding the byte content into text.\n+\n+        If the `text` attribute has been accessed, attempting to set the\n+        encoding will throw a ValueError.\n+        \"\"\"\n+        if hasattr(self, \"_text\"):\n+            raise ValueError(\n+                \"Setting encoding after `text` has been accessed is not allowed.\"\n+            )\n         self._encoding = value\n \n     @property\n",
+  "test_diff": "diff --git a/tests/models/test_responses.py b/tests/models/test_responses.py\nindex 9e65de8154..9177773a50 100644\n--- a/tests/models/test_responses.py\n+++ b/tests/models/test_responses.py\n@@ -298,6 +298,23 @@ def test_response_force_encoding():\n     assert response.encoding == \"iso-8859-1\"\n \n \n+def test_response_force_encoding_after_text_accessed():\n+    response = httpx.Response(\n+        200,\n+        content=b\"Hello, world!\",\n+    )\n+    assert response.status_code == 200\n+    assert response.reason_phrase == \"OK\"\n+    assert response.text == \"Hello, world!\"\n+    assert response.encoding == \"utf-8\"\n+\n+    with pytest.raises(ValueError):\n+        response.encoding = \"UTF8\"\n+\n+    with pytest.raises(ValueError):\n+        response.encoding = \"iso-8859-1\"\n+\n+\n def test_read():\n     response = httpx.Response(\n         200,\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_models.py",
+    "tests/models/test_responses.py"
+  ],
+  "source_files": [
+    "httpx/_models.py"
+  ],
+  "test_files": [
+    "tests/models/test_responses.py"
+  ],
+  "lines_added": 33,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "59df8190a4c72c58238dda315ad446f1c132dcdc",
+  "base_commit_sha": "e4241c6155c8a85789566b8fe10fa2291eea20f4",
+  "head_commit_sha": "ac0af3ed67d261181270ba1bf2684465010f8020",
+  "merged_at": "2023-09-19T07:54:33Z"
+}

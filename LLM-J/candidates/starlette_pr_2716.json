@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2716",
+  "repo": "encode/starlette",
+  "pr_number": 2716,
+  "title": "fix(testclient): exclude query sting from `raw_path`",
+  "description": "# Summary\r\n\r\nAs we discussed in #2692, this commit updates the testclient so that query string is excluded from `raw_path`\r\nfor both HTTP and WebSocket.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n\r\n---\r\n\r\n- Closes #2692",
+  "patch_diff": "diff --git a/starlette/testclient.py b/starlette/testclient.py\nindex 5143c4c57..645ca1090 100644\n--- a/starlette/testclient.py\n+++ b/starlette/testclient.py\n@@ -281,7 +281,7 @@ def handle_request(self, request: httpx.Request) -> httpx.Response:\n             scope = {\n                 \"type\": \"websocket\",\n                 \"path\": unquote(path),\n-                \"raw_path\": raw_path,\n+                \"raw_path\": raw_path.split(b\"?\", 1)[0],\n                 \"root_path\": self.root_path,\n                 \"scheme\": scheme,\n                 \"query_string\": query.encode(),\n@@ -300,7 +300,7 @@ def handle_request(self, request: httpx.Request) -> httpx.Response:\n             \"http_version\": \"1.1\",\n             \"method\": request.method,\n             \"path\": unquote(path),\n-            \"raw_path\": raw_path,\n+            \"raw_path\": raw_path.split(b\"?\", 1)[0],\n             \"root_path\": self.root_path,\n             \"scheme\": scheme,\n             \"query_string\": query.encode(),\n",
+  "test_diff": "diff --git a/tests/test_testclient.py b/tests/test_testclient.py\nindex 92f16d336..68593a9ac 100644\n--- a/tests/test_testclient.py\n+++ b/tests/test_testclient.py\n@@ -378,3 +378,27 @@ def homepage(request: Request) -> Response:\n     client = test_client_factory(app, base_url=\"http://testserver/api/v1/\")\n     response = client.get(\"/bar\")\n     assert response.text == \"/api/v1/bar\"\n+\n+\n+def test_raw_path_with_querystring(test_client_factory: TestClientFactory) -> None:\n+    async def app(scope: Scope, receive: Receive, send: Send) -> None:\n+        response = Response(scope.get(\"raw_path\"))\n+        await response(scope, receive, send)\n+\n+    client = test_client_factory(app)\n+    response = client.get(\"/hello-world\", params={\"foo\": \"bar\"})\n+    assert response.content == b\"/hello-world\"\n+\n+\n+def test_websocket_raw_path_without_params(test_client_factory: TestClientFactory) -> None:\n+    async def app(scope: Scope, receive: Receive, send: Send) -> None:\n+        websocket = WebSocket(scope, receive=receive, send=send)\n+        await websocket.accept()\n+        raw_path = scope.get(\"raw_path\")\n+        assert raw_path is not None\n+        await websocket.send_bytes(raw_path)\n+\n+    client = test_client_factory(app)\n+    with client.websocket_connect(\"/hello-world\", params={\"foo\": \"bar\"}) as websocket:\n+        data = websocket.receive_bytes()\n+        assert data == b\"/hello-world\"\n",
+  "files_changed": [
+    "starlette/testclient.py",
+    "tests/test_testclient.py"
+  ],
+  "source_files": [
+    "starlette/testclient.py"
+  ],
+  "test_files": [
+    "tests/test_testclient.py"
+  ],
+  "lines_added": 26,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "9dc9d2e92919306fae683746e38530ff55ed3092",
+  "base_commit_sha": "cc1e2d7a2fab4a1235eb1132ebd53997e98763b1",
+  "head_commit_sha": "8a108212b370d4964a90b22912e365eba8c8ed60",
+  "merged_at": "2024-11-18T19:28:44Z"
+}

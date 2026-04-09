@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2840",
+  "repo": "encode/starlette",
+  "pr_number": 2840,
+  "title": "Add deprecated warnings to `TestClient` on use of `timeout` argument",
+  "description": "Implements the solution in https://github.com/encode/starlette/issues/1108#issuecomment-2570876216\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n\r\nEdit by @kludex:\r\n- Closes https://github.com/encode/starlette/issues/1108",
+  "patch_diff": "diff --git a/starlette/testclient.py b/starlette/testclient.py\nindex fb2ad6e35..d54025e52 100644\n--- a/starlette/testclient.py\n+++ b/starlette/testclient.py\n@@ -7,6 +7,7 @@\n import math\n import sys\n import typing\n+import warnings\n from concurrent.futures import Future\n from types import GeneratorType\n from urllib.parse import unquote, urljoin\n@@ -426,6 +427,12 @@ def request(  # type: ignore[override]\n         timeout: httpx._types.TimeoutTypes | httpx._client.UseClientDefault = httpx._client.USE_CLIENT_DEFAULT,\n         extensions: dict[str, typing.Any] | None = None,\n     ) -> httpx.Response:\n+        if timeout is not httpx.USE_CLIENT_DEFAULT:\n+            warnings.warn(\n+                \"You should not use the 'timeout' argument with the TestClient. \"\n+                \"See https://github.com/encode/starlette/issues/1108 for more information.\",\n+                DeprecationWarning,\n+            )\n         url = self._merge_url(url)\n         return super().request(\n             method,\n",
+  "test_diff": "diff --git a/tests/test_testclient.py b/tests/test_testclient.py\nindex 478dbca46..c6a3edafc 100644\n--- a/tests/test_testclient.py\n+++ b/tests/test_testclient.py\n@@ -422,3 +422,9 @@ async def app(scope: Scope, receive: Receive, send: Send) -> None:\n     with client.websocket_connect(\"/hello-world\", params={\"foo\": \"bar\"}) as websocket:\n         data = websocket.receive_bytes()\n         assert data == b\"/hello-world\"\n+\n+\n+def test_timeout_deprecation() -> None:\n+    with pytest.deprecated_call(match=\"You should not use the 'timeout' argument with the TestClient.\"):\n+        client = TestClient(mock_service)\n+        client.get(\"/\", timeout=1)\n",
+  "files_changed": [
+    "starlette/testclient.py",
+    "tests/test_testclient.py"
+  ],
+  "source_files": [
+    "starlette/testclient.py"
+  ],
+  "test_files": [
+    "tests/test_testclient.py"
+  ],
+  "lines_added": 13,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "135e3af00a507714a4e391ab8d11b835399aa1a4",
+  "base_commit_sha": "129ccdda1759598031abf5b3443eefb3f972a337",
+  "head_commit_sha": "b72be56fede24b2e4740c2dd637ffec0d1cb828d",
+  "merged_at": "2025-02-22T11:45:06Z"
+}

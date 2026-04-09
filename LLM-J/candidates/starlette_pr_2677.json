@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2677",
+  "repo": "encode/starlette",
+  "pr_number": 2677,
+  "title": "test: add tests in `test_requests`",
+  "description": "# Summary\r\n\r\nAdd tests for some of the uncovered branches in `starlette.requests`, related to [this issue](https://github.com/encode/starlette/issues/2452)\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly. (It seems no documentation needs update)\r\n",
+  "patch_diff": "diff --git a/starlette/requests.py b/starlette/requests.py\nindex 23f8ac70a..26c13d1ca 100644\n--- a/starlette/requests.py\n+++ b/starlette/requests.py\n@@ -93,7 +93,7 @@ def app(self) -> typing.Any:\n \n     @property\n     def url(self) -> URL:\n-        if not hasattr(self, \"_url\"):\n+        if not hasattr(self, \"_url\"):  # pragma: no branch\n             self._url = URL(scope=self.scope)\n         return self._url\n \n@@ -122,7 +122,7 @@ def headers(self) -> Headers:\n \n     @property\n     def query_params(self) -> QueryParams:\n-        if not hasattr(self, \"_query_params\"):\n+        if not hasattr(self, \"_query_params\"):  # pragma: no branch\n             self._query_params = QueryParams(self.scope[\"query_string\"])\n         return self._query_params\n \n@@ -237,7 +237,7 @@ async def body(self) -> bytes:\n         return self._body\n \n     async def json(self) -> typing.Any:\n-        if not hasattr(self, \"_json\"):\n+        if not hasattr(self, \"_json\"):  # pragma: no branch\n             body = await self.body()\n             self._json = json.loads(body)\n         return self._json\n@@ -276,7 +276,7 @@ def form(\n         return AwaitableOrContextManagerWrapper(self._get_form(max_files=max_files, max_fields=max_fields))\n \n     async def close(self) -> None:\n-        if self._form is not None:\n+        if self._form is not None:  # pragma: no branch\n             await self._form.close()\n \n     async def is_disconnected(self) -> bool:\n",
+  "test_diff": "diff --git a/tests/test_requests.py b/tests/test_requests.py\nindex 02f29ee35..2f173713e 100644\n--- a/tests/test_requests.py\n+++ b/tests/test_requests.py\n@@ -425,7 +425,7 @@ async def app(scope: Scope, receive: Receive, send: Send) -> None:\n         # Browsers don't send extra whitespace or semicolons in Cookie headers,\n         # but cookie_parser() should parse whitespace the same way\n         # document.cookie parses whitespace.\n-        # (\"  =  b  ;  ;  =  ;   c  =  ;  \", {\"\": \"b\", \"c\": \"\"}),\n+        (\"  =  b  ;  ;  =  ;   c  =  ;  \", {\"\": \"b\", \"c\": \"\"}),\n     ],\n )\n def test_cookies_invalid(\n",
+  "files_changed": [
+    "starlette/requests.py",
+    "tests/test_requests.py"
+  ],
+  "source_files": [
+    "starlette/requests.py"
+  ],
+  "test_files": [
+    "tests/test_requests.py"
+  ],
+  "lines_added": 5,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "4fbf766b3eac4146b86175682cec88d266fd8470",
+  "base_commit_sha": "d289ac7e8de469d0f26c0a210d82e1b315ad8304",
+  "head_commit_sha": "040f1b7c17360d5b4eaf747d188be35029e22f53",
+  "merged_at": "2024-09-23T18:38:19Z"
+}

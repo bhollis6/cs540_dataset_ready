@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2671",
+  "repo": "encode/httpx",
+  "pr_number": 2671,
+  "title": "Fix optional percent encoding behaviour.",
+  "description": "Closes #2670\r\n\r\n- [x] Tests for failing optional percent encoding.\r\n- [x] Fix for failing optional percent encoding.",
+  "patch_diff": "diff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex 0fbec3584a..6522d917bc 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -399,7 +399,7 @@ def normalize_path(path: str) -> str:\n \n def percent_encode(char: str) -> str:\n     \"\"\"\n-    Replace every character in a string with the percent-encoded representation.\n+    Replace a single character with the percent-encoded representation.\n \n     Characters outside the ASCII range are represented with their a percent-encoded\n     representation of their UTF-8 byte sequence.\n@@ -411,13 +411,29 @@ def percent_encode(char: str) -> str:\n     return \"\".join([f\"%{byte:02x}\" for byte in char.encode(\"utf-8\")]).upper()\n \n \n+def is_safe(string: str, safe: str = \"/\") -> bool:\n+    \"\"\"\n+    Determine if a given string is already quote-safe.\n+    \"\"\"\n+    NON_ESCAPED_CHARS = UNRESERVED_CHARACTERS + safe + \"%\"\n+\n+    # All characters must already be non-escaping or '%'\n+    for char in string:\n+        if char not in NON_ESCAPED_CHARS:\n+            return False\n+\n+    # Any '%' characters must be valid '%xx' escape sequences.\n+    return string.count(\"%\") == len(PERCENT_ENCODED_REGEX.findall(string))\n+\n+\n def quote(string: str, safe: str = \"/\") -> str:\n-    NON_ESCAPED_CHARS = UNRESERVED_CHARACTERS + safe\n-    if string.count(\"%\") == len(PERCENT_ENCODED_REGEX.findall(string)):\n-        # If all occurances of '%' are valid '%xx' escapes, then treat\n-        # percent as a non-escaping character.\n-        NON_ESCAPED_CHARS += \"%\"\n+    \"\"\"\n+    Use percent-encoding to quote a string if required.\n+    \"\"\"\n+    if is_safe(string, safe=safe):\n+        return string\n \n+    NON_ESCAPED_CHARS = UNRESERVED_CHARACTERS + safe\n     return \"\".join(\n         [char if char in NON_ESCAPED_CHARS else percent_encode(char) for char in string]\n     )\n",
+  "test_diff": "diff --git a/tests/test_urlparse.py b/tests/test_urlparse.py\nindex ec1fd20d03..6b5c834427 100644\n--- a/tests/test_urlparse.py\n+++ b/tests/test_urlparse.py\n@@ -126,6 +126,24 @@ def test_urlparse_leading_dot_prefix_on_relative_url():\n     assert url.path == \"../abc\"\n \n \n+# Tests for optional percent encoding\n+\n+\n+def test_param_requires_encoding():\n+    url = httpx.URL(\"http://webservice\", params={\"u\": \"with spaces\"})\n+    assert str(url) == \"http://webservice?u=with%20spaces\"\n+\n+\n+def test_param_does_not_require_encoding():\n+    url = httpx.URL(\"http://webservice\", params={\"u\": \"with%20spaces\"})\n+    assert str(url) == \"http://webservice?u=with%20spaces\"\n+\n+\n+def test_param_with_existing_escape_requires_encoding():\n+    url = httpx.URL(\"http://webservice\", params={\"u\": \"http://example.com?q=foo%2Fa\"})\n+    assert str(url) == \"http://webservice?u=http%3A//example.com%3Fq%3Dfoo%252Fa\"\n+\n+\n # Tests for invalid URLs\n \n \n",
+  "files_changed": [
+    "httpx/_urlparse.py",
+    "tests/test_urlparse.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/test_urlparse.py"
+  ],
+  "lines_added": 40,
+  "lines_removed": 6,
+  "has_test_changes": true,
+  "merge_commit_sha": "9ae170a936df39f42a6ddf8eb2c27026e20bea7e",
+  "base_commit_sha": "15d09a3bbc20372cd87e48f17f7c9381c8220a0f",
+  "head_commit_sha": "f591a6d23f14af6dfcd621e5f73dc165b71520d0",
+  "merged_at": "2023-04-19T12:21:42Z"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate_id": "cattrs_pr_283",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 283,
+  "title": "Raise on input/tuple-args length mis-match",
+  "description": "When structuring a heterogeneous tuple, if the input has too few or many elements, this PR now raises an error. The error is a `ValueError` in non-detailed validation.\r\n\r\nTwo existing tuple-structuring tests had to be fixed (in the zero-element case).\r\n\r\nFixes #57",
+  "patch_diff": "diff --git a/src/cattrs/converters.py b/src/cattrs/converters.py\nindex 0b1bf94f..f2c3bd75 100644\n--- a/src/cattrs/converters.py\n+++ b/src/cattrs/converters.py\n@@ -573,6 +573,14 @@ def _structure_tuple(self, obj, tup: Type[T]) -> T:\n                 return tuple(conv(e, tup_type) for e in obj)\n         else:\n             # We're dealing with a heterogenous tuple.\n+            exp_len = len(tup_params)\n+            try:\n+                len_obj = len(obj)\n+            except TypeError:\n+                pass  # most likely an unsized iterator, eg generator\n+            else:\n+                if len_obj > exp_len:\n+                    exp_len = len_obj\n             if self.detailed_validation:\n                 errors = []\n                 res = []\n@@ -583,18 +591,31 @@ def _structure_tuple(self, obj, tup: Type[T]) -> T:\n                     except Exception as exc:\n                         exc.__note__ = f\"Structuring {tup} @ index {ix}\"\n                         errors.append(exc)\n+                if len(res) < exp_len:\n+                    problem = \"Not enough\" if len(res) < len(tup_params) else \"Too many\"\n+                    exc = ValueError(\n+                        f\"{problem} values in {obj!r} to structure as {tup!r}\"\n+                    )\n+                    exc.__note__ = f\"Structuring {tup}\"\n+                    errors.append(exc)\n                 if errors:\n                     raise IterableValidationError(\n                         f\"While structuring {tup!r}\", errors, tup\n                     )\n                 return tuple(res)\n             else:\n-                return tuple(\n+                res = tuple(\n                     [\n                         self._structure_func.dispatch(t)(e, t)\n                         for t, e in zip(tup_params, obj)\n                     ]\n                 )\n+                if len(res) < exp_len:\n+                    problem = \"Not enough\" if len(res) < len(tup_params) else \"Too many\"\n+                    raise ValueError(\n+                        f\"{problem} values in {obj!r} to structure as {tup!r}\"\n+                    )\n+                return res\n \n     @staticmethod\n     def _get_dis_func(union) -> Callable[..., Type]:\n",
+  "test_diff": "diff --git a/tests/test_structure.py b/tests/test_structure.py\nindex b4053c00..f604a2a6 100644\n--- a/tests/test_structure.py\n+++ b/tests/test_structure.py\n@@ -129,7 +129,10 @@ def test_structuring_hetero_tuples(list_of_vals_and_types, detailed_validation):\n     converter = BaseConverter(detailed_validation=detailed_validation)\n     types = tuple(e[1] for e in list_of_vals_and_types)\n     vals = [e[0] for e in list_of_vals_and_types]\n-    t = Tuple[types]\n+    if types:\n+        t = Tuple[types]\n+    else:\n+        t = Tuple\n \n     converted = converter.structure(vals, t)\n \n@@ -141,13 +144,24 @@ def test_structuring_hetero_tuples(list_of_vals_and_types, detailed_validation):\n     for x, y in zip(types, converted):\n         assert isinstance(y, x)\n \n+    t2 = Tuple[types + (str,)]  # one longer\n+    vals2 = vals + [None]  # one longer\n+    expected_exception = IterableValidationError if detailed_validation else ValueError\n+    with raises(expected_exception):\n+        converter.structure(vals, t2)\n+    with raises(expected_exception):\n+        converter.structure(vals2, t)\n+\n \n @given(lists(primitives_and_type))\n def test_stringifying_tuples(list_of_vals_and_types):\n     \"\"\"Stringify all elements of a heterogeneous tuple.\"\"\"\n     converter = BaseConverter()\n     vals = [e[0] for e in list_of_vals_and_types]\n-    t = Tuple[(str,) * len(list_of_vals_and_types)]\n+    if len(list_of_vals_and_types):\n+        t = Tuple[(str,) * len(list_of_vals_and_types)]\n+    else:\n+        t = Tuple\n \n     converted = converter.structure(vals, t)\n \n",
+  "files_changed": [
+    "src/cattrs/converters.py",
+    "tests/test_structure.py"
+  ],
+  "source_files": [
+    "src/cattrs/converters.py"
+  ],
+  "test_files": [
+    "tests/test_structure.py"
+  ],
+  "lines_added": 38,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "b55fbe063d4eb66a22677c42a4ba48b289eedd65",
+  "base_commit_sha": "b1a681a60d07623618dfe440ac9c3ee6b9780307",
+  "head_commit_sha": "8354a769b0c4698c629fe89c7d16719081dde1e4",
+  "merged_at": "2022-09-11T22:23:05Z"
+}

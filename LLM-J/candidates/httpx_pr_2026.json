@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2026",
+  "repo": "encode/httpx",
+  "pr_number": 2026,
+  "title": "Dont perform implicit close/warning on `__del__`",
+  "description": "- Prompted by discussion #1951\r\n- Closes #2024\r\n\r\nWe currently attempt to perform a bit of hand-holding for cases where a client instance has not been closed at the point it is deleted. The reasoning here was to try to give users a bit more of a guard against unintentional resource leaks.\r\n\r\nOur behaviour here was...\r\n\r\n* For sync clients, automatically `.close()` clients on `__del__`, if they're still open.\r\n* For async clients, issue a warning on `__del__`, if they're still open.\r\n\r\nAs it turns out, this *just isn't reliable*. We really can't do this properly, because if `__del__` is called at `atexit` then there's all sorted of bit of stdlib that may not be available. We can't reliably call into `warnings.warn`, and it turns out we can't even reliably access the properties on an `intenum` class. Geez.\r\n\r\nSo. Let's just *not do this anymore*.\r\n\r\nIf you're leaking client instances (which as it happens, zillions of `requests` and `urllib3` using codebases currently already do.) Then okay, that's just the way it is. I'm not sure what flags you'd need to enable in python to have the system warn you about when that's the case, but we should rely on that level of warning, rather than attempting to add any ourselves.\r\n\r\nBetter that we stick with the current status-quo, than attempt to do better and actually just end up with user-hostile exceptions or undefined behaviours.",
+  "patch_diff": "diff --git a/httpx/_client.py b/httpx/_client.py\nindex 5621520377..2b513b0d35 100644\n--- a/httpx/_client.py\n+++ b/httpx/_client.py\n@@ -1273,13 +1273,6 @@ def __exit__(\n             if transport is not None:\n                 transport.__exit__(exc_type, exc_value, traceback)\n \n-    def __del__(self) -> None:\n-        # We use 'getattr' here, to manage the case where '__del__()' is called\n-        # on a partially initiallized instance that raised an exception during\n-        # the call to '__init__()'.\n-        if getattr(self, \"_state\", None) == ClientState.OPENED:  # noqa: B009\n-            self.close()\n-\n \n class AsyncClient(BaseClient):\n     \"\"\"\n@@ -1983,34 +1976,3 @@ async def __aexit__(\n         for proxy in self._mounts.values():\n             if proxy is not None:\n                 await proxy.__aexit__(exc_type, exc_value, traceback)\n-\n-    def __del__(self) -> None:\n-        # We use 'getattr' here, to manage the case where '__del__()' is called\n-        # on a partially initiallized instance that raised an exception during\n-        # the call to '__init__()'.\n-        if getattr(self, \"_state\", None) == ClientState.OPENED:  # noqa: B009\n-            # Unlike the sync case, we cannot silently close the client when\n-            # it is garbage collected, because `.aclose()` is an async operation,\n-            # but `__del__` is not.\n-            #\n-            # For this reason we require explicit close management for\n-            # `AsyncClient`, and issue a warning on unclosed clients.\n-            #\n-            # The context managed style is usually preferable, because it neatly\n-            # ensures proper resource cleanup:\n-            #\n-            #     async with httpx.AsyncClient() as client:\n-            #         ...\n-            #\n-            # However, an explicit call to `aclose()` is also sufficient:\n-            #\n-            #    client = httpx.AsyncClient()\n-            #    try:\n-            #        ...\n-            #    finally:\n-            #        await client.aclose()\n-            warnings.warn(\n-                f\"Unclosed {self!r}. \"\n-                \"See https://www.python-httpx.org/async/#opening-and-closing-clients \"\n-                \"for details.\"\n-            )\n",
+  "test_diff": "diff --git a/tests/client/test_async_client.py b/tests/client/test_async_client.py\nindex 1761287454..219d612f79 100644\n--- a/tests/client/test_async_client.py\n+++ b/tests/client/test_async_client.py\n@@ -286,14 +286,6 @@ async def test_client_closed_state_using_with_block():\n         await client.get(\"http://example.com\")\n \n \n-@pytest.mark.usefixtures(\"async_environment\")\n-async def test_deleting_unclosed_async_client_causes_warning():\n-    client = httpx.AsyncClient(transport=httpx.MockTransport(hello_world))\n-    await client.get(\"http://example.com\")\n-    with pytest.warns(UserWarning):\n-        del client\n-\n-\n def unmounted(request: httpx.Request) -> httpx.Response:\n     data = {\"app\": \"unmounted\"}\n     return httpx.Response(200, json=data)\n",
+  "files_changed": [
+    "httpx/_client.py",
+    "tests/client/test_async_client.py"
+  ],
+  "source_files": [
+    "httpx/_client.py"
+  ],
+  "test_files": [
+    "tests/client/test_async_client.py"
+  ],
+  "lines_added": 0,
+  "lines_removed": 46,
+  "has_test_changes": true,
+  "merge_commit_sha": "7f0d43daad60b37d07f7734a83986e9dade59bf7",
+  "base_commit_sha": "0f1ff50a1e88ddee0c7ffe4ef1c04f0dc30cc6ab",
+  "head_commit_sha": "128bf9a4e60012633b0d48dfa4fa0d0ba0aa9149",
+  "merged_at": "2022-01-13T10:37:37Z"
+}

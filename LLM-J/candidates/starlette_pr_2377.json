@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2377",
+  "repo": "encode/starlette",
+  "pr_number": 2377,
+  "title": "Turn `scope[\"client\"]` to `None` on `TestClient`",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nRelated to: https://github.com/encode/starlette/issues/2295\r\n\r\nI suggest to not include the client scope, instead of always setting it to None. According to the ASGI spec this has the same effect.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [ ] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/testclient.py b/starlette/testclient.py\nindex 04ac90a05..149fbb07a 100644\n--- a/starlette/testclient.py\n+++ b/starlette/testclient.py\n@@ -245,7 +245,7 @@ def handle_request(self, request: httpx.Request) -> httpx.Response:\n                 \"scheme\": scheme,\n                 \"query_string\": query.encode(),\n                 \"headers\": headers,\n-                \"client\": [\"testclient\", 50000],\n+                \"client\": None,\n                 \"server\": [host, port],\n                 \"subprotocols\": subprotocols,\n                 \"state\": self.app_state.copy(),\n@@ -263,7 +263,7 @@ def handle_request(self, request: httpx.Request) -> httpx.Response:\n             \"scheme\": scheme,\n             \"query_string\": query.encode(),\n             \"headers\": headers,\n-            \"client\": [\"testclient\", 50000],\n+            \"client\": None,\n             \"server\": [host, port],\n             \"extensions\": {\"http.response.debug\": {}},\n             \"state\": self.app_state.copy(),\n",
+  "test_diff": "diff --git a/tests/test_testclient.py b/tests/test_testclient.py\nindex 44bcd7ace..38c6f0872 100644\n--- a/tests/test_testclient.py\n+++ b/tests/test_testclient.py\n@@ -254,19 +254,6 @@ async def asgi(receive, send):\n         assert data == {\"message\": \"test\"}\n \n \n-def test_client(test_client_factory):\n-    async def app(scope, receive, send):\n-        client = scope.get(\"client\")\n-        assert client is not None\n-        host, port = client\n-        response = JSONResponse({\"host\": host, \"port\": port})\n-        await response(scope, receive, send)\n-\n-    client = test_client_factory(app)\n-    response = client.get(\"/\")\n-    assert response.json() == {\"host\": \"testclient\", \"port\": 50000}\n-\n-\n @pytest.mark.parametrize(\"param\", (\"2020-07-14T00:00:00+00:00\", \"Espa\u00f1a\", \"voil\u00e0\"))\n def test_query_params(test_client_factory, param: str):\n     def homepage(request):\n",
+  "files_changed": [
+    "starlette/testclient.py",
+    "tests/test_testclient.py"
+  ],
+  "source_files": [
+    "starlette/testclient.py"
+  ],
+  "test_files": [
+    "tests/test_testclient.py"
+  ],
+  "lines_added": 2,
+  "lines_removed": 15,
+  "has_test_changes": true,
+  "merge_commit_sha": "483849a466a2bfc121f5a367339e1aa3ed20344b",
+  "base_commit_sha": "966f0fc85764bd478d7c582fc8e2e5f91dbebae6",
+  "head_commit_sha": "c5fa90c85dfa137deb9d1dc8aa6ad8aa30d9567c",
+  "merged_at": "2023-12-25T09:33:10Z"
+}

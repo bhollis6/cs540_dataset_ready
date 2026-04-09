@@ -1,0 +1,28 @@
+{
+  "candidate_id": "cattrs_pr_15",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 15,
+  "title": "Support to respect default values from attr class",
+  "description": "These changes are to fix #10 or #14 \r\n\r\nI added one unit test to support creating the attr class without providing optional value. \r\n\r\n@Tinche let me know your feedback on the same.",
+  "patch_diff": "diff --git a/cattr/converters.py b/cattr/converters.py\nindex dc7f8b0f..05844a1d 100644\n--- a/cattr/converters.py\n+++ b/cattr/converters.py\n@@ -281,16 +281,16 @@ def structure_attrs_fromdict(self, obj, cl):\n     def _structure_attr_from_dict(self, a, name, mapping):\n         \"\"\"Handle an individual attrs attribute structuring.\"\"\"\n         type_ = a.metadata.get(TYPE_METADATA_KEY)\n+        val = mapping.get(name, a.default)\n         if type_ is None:\n             # No type.\n-            return mapping[name]\n+            return val\n         if _is_union_type(type_):\n-            # This is a union.\n-            val = mapping.get(name, NOTHING)\n+\n             if NoneType in type_.__args__ and val is NOTHING:\n                 return None\n             return self._structure_union(val, type_)\n-        return self._structure.dispatch(type_)(mapping.get(a.name), type_)\n+        return self._structure.dispatch(type_)(val, type_)\n \n     def _structure_list(self, obj, cl):\n         # type: (Type[GenericMeta], Iterable[T]) -> List[T]\n",
+  "test_diff": "diff --git a/tests/metadata/test_roundtrips.py b/tests/metadata/test_roundtrips.py\nindex 2dbe3228..6426cd34 100644\n--- a/tests/metadata/test_roundtrips.py\n+++ b/tests/metadata/test_roundtrips.py\n@@ -2,14 +2,14 @@\n import attr\n import pytest\n \n-from attr import fields\n+from attr import fields, make_class\n from hypothesis import assume, given\n from hypothesis.strategies import sampled_from\n \n from cattr import UnstructureStrategy, typed\n from typing import Union, Optional\n \n-from . import simple_typed_classes, nested_typed_classes\n+from . import simple_typed_classes, nested_typed_classes, simple_typed_attrs\n \n unstructure_strats = sampled_from(list(UnstructureStrategy))\n \n@@ -25,6 +25,20 @@ def test_simple_roundtrip(converter, cls_and_vals, strat):\n     assert inst == converter.structure(converter.unstructure(inst), cl)\n \n \n+@given(simple_typed_attrs(defaults=True), unstructure_strats)\n+def test_simple_roundtrip_defaults(converter, cls_and_vals, strat):\n+    \"\"\"\n+    Simple classes with metadata can be unstructured and restructured.\n+    \"\"\"\n+    a, _ = cls_and_vals\n+    cl = make_class(\"HypClass\", {\"a\": a})\n+    converter.unstruct_strat = strat\n+    inst = cl()\n+    assert converter.unstructure(converter.structure(\n+        {}, cl)) == converter.unstructure(inst)\n+    assert inst == converter.structure(converter.unstructure(inst), cl)\n+\n+\n @given(nested_typed_classes, unstructure_strats)\n def test_nested_roundtrip(converter, cls_and_vals, strat):\n     \"\"\"\ndiff --git a/tests/test_structure_attrs.py b/tests/test_structure_attrs.py\nindex 77ba9ef9..b975c882 100644\n--- a/tests/test_structure_attrs.py\n+++ b/tests/test_structure_attrs.py\n@@ -1,10 +1,10 @@\n \"\"\"Loading of attrs classes.\"\"\"\n-from attr import asdict, astuple, fields\n+from attr import asdict, astuple, fields, make_class\n from hypothesis import assume, given\n \n from typing import Union\n \n-from . import simple_classes\n+from . import simple_classes, simple_attrs\n \n \n @given(simple_classes())\n@@ -20,6 +20,16 @@ def test_structure_simple_from_dict(converter, cl_and_vals):\n     assert obj == loaded\n \n \n+@given(simple_attrs(defaults=True))\n+def test_structure_simple_from_dict_default(converter, cl_and_vals):\n+    \"\"\"Test structuring non-nested attrs classes with default value.\"\"\"\n+    a, _ = cl_and_vals\n+    cl = make_class(\"HypClass\", {\"a\": a})\n+    obj = cl()\n+    loaded = converter.structure({}, cl)\n+    assert obj == loaded\n+\n+\n @given(simple_classes())\n def test_roundtrip(converter, cl_and_vals):\n     # type: (Converter, Any) -> None\n",
+  "files_changed": [
+    "cattr/converters.py",
+    "tests/metadata/test_roundtrips.py",
+    "tests/test_structure_attrs.py"
+  ],
+  "source_files": [
+    "cattr/converters.py"
+  ],
+  "test_files": [
+    "tests/metadata/test_roundtrips.py",
+    "tests/test_structure_attrs.py"
+  ],
+  "lines_added": 32,
+  "lines_removed": 8,
+  "has_test_changes": true,
+  "merge_commit_sha": "60d560d52bc2adc078a3484703c0030f909a7696",
+  "base_commit_sha": "02d9da0a0a7a81c66fc9d8c56c2457170333bd7b",
+  "head_commit_sha": "3f220ac158d6f9b3fe7f03802c3e723fee083b5b",
+  "merged_at": "2017-11-09T20:24:38Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_408",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 408,
+  "title": "Make validation notes picklable.",
+  "description": "Certain test runners (in my case, Django's `RemoteTestRunner`) pickle the exceptions raised to accumulate them from multiple processes.\r\n\r\nFor exceptions with `AttributeValidationNote` and/or `IterableValidationNote` attached, because we have overridden `__new__` on these classes, pickle cannot correctly unpickle them with the required arguments. For this use case, exceptions being pickable is necessary to accumulate errors with the `multiprocessing` setup.\r\n\r\nThis implements [`__getnewargs__`](https://docs.python.org/3/library/pickle.html#object.__getnewargs__) to fix this problem.",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex c62f0885..1551c06b 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -26,6 +26,8 @@\n   ([#398](https://github.com/python-attrs/cattrs/issues/398) [#399](https://github.com/python-attrs/cattrs/pull/399))\n - Broaden loads' type definition for the preconf orjson converter.\n   ([#400](https://github.com/python-attrs/cattrs/pull/400))\n+- `AttributeValidationNote` and `IterableValidationNote` are now picklable.\n+  ([#408](https://github.com/python-attrs/cattrs/pull/408))\n \n ## 23.1.2 (2023-06-02)\n \ndiff --git a/src/cattrs/errors.py b/src/cattrs/errors.py\nindex 20a5f5d0..9148bf10 100644\n--- a/src/cattrs/errors.py\n+++ b/src/cattrs/errors.py\n@@ -40,6 +40,9 @@ def __new__(\n         instance.type = type\n         return instance\n \n+    def __getnewargs__(self) -> Tuple[str, Union[int, str], Any]:\n+        return (str(self), self.index, self.type)\n+\n \n class IterableValidationError(BaseValidationError):\n     \"\"\"Raised when structuring an iterable.\"\"\"\n@@ -76,6 +79,9 @@ def __new__(cls, string: str, name: str, type: Any) -> \"AttributeValidationNote\"\n         instance.type = type\n         return instance\n \n+    def __getnewargs__(self) -> Tuple[str, str, Any]:\n+        return (str(self), self.name, self.type)\n+\n \n class ClassValidationError(BaseValidationError):\n     \"\"\"Raised when validating a class if any attributes are invalid.\"\"\"\n",
+  "test_diff": "diff --git a/tests/test_validation.py b/tests/test_validation.py\nindex 9f371d12..d472bb15 100644\n--- a/tests/test_validation.py\n+++ b/tests/test_validation.py\n@@ -2,13 +2,19 @@\n from typing import Dict, FrozenSet, List, Set, Tuple\n \n import pytest\n+import pickle\n from attrs import define, field\n from attrs.validators import in_\n from hypothesis import given\n \n from cattrs import Converter\n from cattrs._compat import Counter\n-from cattrs.errors import ClassValidationError, IterableValidationError\n+from cattrs.errors import (\n+    AttributeValidationNote,\n+    ClassValidationError,\n+    IterableValidationError,\n+    IterableValidationNote,\n+)\n \n \n def test_class_validation():\n@@ -178,3 +184,20 @@ def test_hetero_tuple_validation():\n     assert exc.value.exceptions[0].__notes__ == [\n         \"Structuring typing.Tuple[int, int, int] @ index 2\"\n     ]\n+\n+\n+def test_notes_pickling():\n+    \"\"\"Validation notes should be picklable\"\"\"\n+    note = pickle.loads(  # noqa: S301\n+        pickle.dumps(IterableValidationNote(\"foo\", \"key\", str))\n+    )\n+    assert note == \"foo\"\n+    assert note.index == \"key\"\n+    assert note.type is str\n+\n+    note = pickle.loads(  # noqa: S301\n+        pickle.dumps(AttributeValidationNote(\"foo\", \"name\", int))\n+    )\n+    assert note == \"foo\"\n+    assert note.name == \"name\"\n+    assert note.type is int\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/errors.py",
+    "tests/test_validation.py"
+  ],
+  "source_files": [
+    "src/cattrs/errors.py"
+  ],
+  "test_files": [
+    "tests/test_validation.py"
+  ],
+  "lines_added": 32,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "992b137223faf3890e9e0d4307f49045b1cf57b7",
+  "base_commit_sha": "d1b106abd1ed8b71f315835c7f3ece291b4682fe",
+  "head_commit_sha": "5ce946db0fbba38671efb05162032a8de2147b71",
+  "merged_at": "2023-08-05T12:29:13Z"
+}

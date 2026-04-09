@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2659",
+  "repo": "encode/httpx",
+  "pr_number": 2659,
+  "title": "fix: NO_PROXY should support IPv4, IPv6 and localhost",
+  "description": "Closes #2660 \r\n\r\nThe `get_environment_proxies` function in **_utils.py** is responsible for parsing and mounting proxy info from system environment.\r\n\r\nhttps://github.com/encode/httpx/blob/4b5a92e88e03443c2619f0905d756b159f9f0222/httpx/_utils.py#L229-L264\r\n\r\nFor env `no_proxy`, according to [CURLOPT_NOPROXY explained](https://curl.se/libcurl/c/CURLOPT_NOPROXY.html), it should support domains, IPv4, IPv6 and the `localhost`. However, current `get_environment_proxies` function implementation only supports domains correctly as it always adds wildcard `*` in front of the `hostname`. \r\n\r\nI encountered error when my environment `no_proxy` includes IPv6 address like `::1`. It is wrongly transformed into `all://*::1` and causes urlparse error since the _urlparse.py parses the `:1` as port.\r\n\r\n![image](https://user-images.githubusercontent.com/26450272/232004919-042f07ff-dd55-4c3c-9e49-91d69c5cf3d6.png)\r\n\r\nTo fix this issue, I looked into this repo and suggest handling the `no_proxy` hostnames as domains, IPv4, IPv6 and the `localhost` seperately. I have updated the `get_environment_proxies` function in **_utils.py** and tested it.\r\n\r\nReplies and discussions are welcomed!\r\n",
+  "patch_diff": "diff --git a/httpx/_utils.py b/httpx/_utils.py\nindex c55d33a6f5..2568fdca1c 100644\n--- a/httpx/_utils.py\n+++ b/httpx/_utils.py\n@@ -1,5 +1,6 @@\n import codecs\n import email.message\n+import ipaddress\n import mimetypes\n import os\n import re\n@@ -259,7 +260,16 @@ def get_environment_proxies() -> typing.Dict[str, typing.Optional[str]]:\n             # NO_PROXY=google.com is marked as \"all://*google.com,\n             #   which disables \"www.google.com\" and \"google.com\".\n             #   (But not \"wwwgoogle.com\")\n-            mounts[f\"all://*{hostname}\"] = None\n+            # NO_PROXY can include domains, IPv6, IPv4 addresses and \"localhost\"\n+            #   NO_PROXY=example.com,::1,localhost,192.168.0.0/16\n+            if is_ipv4_hostname(hostname):\n+                mounts[f\"all://{hostname}\"] = None\n+            elif is_ipv6_hostname(hostname):\n+                mounts[f\"all://[{hostname}]\"] = None\n+            elif hostname.lower() == \"localhost\":\n+                mounts[f\"all://{hostname}\"] = None\n+            else:\n+                mounts[f\"all://*{hostname}\"] = None\n \n     return mounts\n \n@@ -449,3 +459,19 @@ def __lt__(self, other: \"URLPattern\") -> bool:\n \n     def __eq__(self, other: typing.Any) -> bool:\n         return isinstance(other, URLPattern) and self.pattern == other.pattern\n+\n+\n+def is_ipv4_hostname(hostname: str) -> bool:\n+    try:\n+        ipaddress.IPv4Address(hostname.split(\"/\")[0])\n+    except:\n+        return False\n+    return True\n+\n+\n+def is_ipv6_hostname(hostname: str) -> bool:\n+    try:\n+        ipaddress.IPv6Address(hostname.split(\"/\")[0])\n+    except:\n+        return False\n+    return True\n",
+  "test_diff": "diff --git a/tests/test_utils.py b/tests/test_utils.py\nindex 3eaf2451d6..ab0fcbecd9 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -185,6 +185,12 @@ def test_get_ssl_cert_file():\n         ),\n         ({\"all_proxy\": \"http://127.0.0.1\"}, {\"all://\": \"http://127.0.0.1\"}),\n         ({\"TRAVIS_APT_PROXY\": \"http://127.0.0.1\"}, {}),\n+        ({\"no_proxy\": \"127.0.0.1\"}, {\"all://127.0.0.1\": None}),\n+        ({\"no_proxy\": \"192.168.0.0/16\"}, {\"all://192.168.0.0/16\": None}),\n+        ({\"no_proxy\": \"::1\"}, {\"all://[::1]\": None}),\n+        ({\"no_proxy\": \"localhost\"}, {\"all://localhost\": None}),\n+        ({\"no_proxy\": \"github.com\"}, {\"all://*github.com\": None}),\n+        ({\"no_proxy\": \".github.com\"}, {\"all://*.github.com\": None}),\n     ],\n )\n def test_get_environment_proxies(environment, proxies):\n",
+  "files_changed": [
+    "httpx/_utils.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "httpx/_utils.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "lines_added": 33,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "15d09a3bbc20372cd87e48f17f7c9381c8220a0f",
+  "base_commit_sha": "7d7c4f15b8784e4a550d974139acfa64193b32c2",
+  "head_commit_sha": "045ad02a63b75411a65aad5fa105b165bb28d9b9",
+  "merged_at": "2023-04-19T12:14:37Z"
+}

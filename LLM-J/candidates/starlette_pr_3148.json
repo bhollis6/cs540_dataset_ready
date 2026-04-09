@@ -1,0 +1,27 @@
+{
+  "candidate_id": "starlette_pr_3148",
+  "repo": "encode/starlette",
+  "pr_number": 3148,
+  "title": "Enable `autoescape` by default in `Jinja2Templates`",
+  "description": "- Use `jinja2.select_autoescape()` as the default when creating the Jinja2 environment from a directory.\r\n- This is the [recommended secure baseline](https://jinja.palletsprojects.com/en/stable/api/) per Jinja2 documentation, and matches Flask's default behavior.\r\n- Does not affect users who pass their own `env` \u2014 they remain in full control.\r\n- Closes #3146.",
+  "patch_diff": "diff --git a/docs/templates.md b/docs/templates.md\nindex 01f343238..0b8973c82 100644\n--- a/docs/templates.md\n+++ b/docs/templates.md\n@@ -1,13 +1,14 @@\n Starlette is not _strictly_ coupled to any particular templating engine, but\n Jinja2 provides an excellent choice.\n \n-### Jinja2Templates\n-\n-Signature: `Jinja2Templates(directory, context_processors=None, **env_options)`\n-\n-* `directory` - A string, [os.Pathlike][pathlike] or a list of strings or [os.Pathlike][pathlike] denoting a directory path.\n-* `context_processors` - A list of functions that return a dictionary to add to the template context.\n-* `**env_options` - Additional keyword arguments to pass to the Jinja2 environment.\n+??? abstract \"API Reference\"\n+    ::: starlette.templating.Jinja2Templates\n+        options:\n+            parameter_headings: false\n+            show_root_heading: true\n+            heading_level: 3\n+            filters:\n+                - \"__init__\"\n \n Starlette provides a simple way to get `jinja2` configured. This is probably\n what you want to use by default.\n@@ -73,6 +74,16 @@ templates = Jinja2Templates(env=env)\n ```\n \n \n+## Autoescape\n+\n+When using the `directory` argument, Starlette enables autoescape by default for\n+`.html`, `.htm`, and `.xml` templates using [`jinja2.select_autoescape()`](https://jinja.palletsprojects.com/en/stable/api/#jinja2.select_autoescape).\n+\n+This protects against Cross-Site Scripting (XSS) vulnerabilities by escaping\n+user-provided content before rendering it in the template. For example, if a user\n+submits `<script>alert('XSS')</script>` as their name, it will be rendered as\n+`&lt;script&gt;alert('XSS')&lt;/script&gt;` instead of being executed as JavaScript.\n+\n ## Context processors\n \n A context processor is a function that returns a dictionary to be merged into a template context.\n@@ -126,20 +137,6 @@ def test_homepage():\n     assert \"request\" in response.context\n ```\n \n-## Customizing Jinja2 Environment\n-\n-`Jinja2Templates` accepts all options supported by Jinja2 `Environment`.\n-This will allow more control over the `Environment` instance created by Starlette.\n-\n-For the list of options available to `Environment` you can check Jinja2 documentation [here](https://jinja.palletsprojects.com/en/3.0.x/api/#jinja2.Environment)\n-\n-```python\n-from starlette.templating import Jinja2Templates\n-\n-\n-templates = Jinja2Templates(directory='templates', autoescape=False, auto_reload=True)\n-```\n-\n ## Asynchronous template rendering\n \n Jinja2 supports async template rendering, however as a general rule\ndiff --git a/starlette/templating.py b/starlette/templating.py\nindex 70b12d8a6..67872b377 100644\n--- a/starlette/templating.py\n+++ b/starlette/templating.py\n@@ -92,7 +92,7 @@ def __init__(\n         self.context_processors = context_processors or []\n         if directory is not None:\n             loader = jinja2.FileSystemLoader(directory)\n-            self.env = jinja2.Environment(loader=loader)\n+            self.env = jinja2.Environment(loader=loader, autoescape=jinja2.select_autoescape())\n         elif env is not None:  # pragma: no branch\n             self.env = env\n \n",
+  "test_diff": "diff --git a/tests/test_templates.py b/tests/test_templates.py\nindex 33626bf57..e1b8990dc 100644\n--- a/tests/test_templates.py\n+++ b/tests/test_templates.py\n@@ -34,6 +34,18 @@ async def homepage(request: Request) -> Response:\n     assert set(response.context.keys()) == {\"request\"}  # type: ignore\n \n \n+def test_templates_autoescape(tmp_path: Path) -> None:\n+    path = tmp_path / \"index.html\"\n+    path.write_text(\"Hello, {{ name }}\")\n+\n+    templates = Jinja2Templates(directory=tmp_path)\n+    template = templates.get_template(\"index.html\")\n+    assert (\n+        template.render(name=\"<script>alert('XSS')</script>\")\n+        == \"Hello, &lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;\"\n+    )\n+\n+\n def test_calls_context_processors(tmp_path: Path, test_client_factory: TestClientFactory) -> None:\n     path = tmp_path / \"index.html\"\n     path.write_text(\"<html>Hello {{ username }}</html>\")\n",
+  "files_changed": [
+    "docs/templates.md",
+    "starlette/templating.py",
+    "tests/test_templates.py"
+  ],
+  "source_files": [
+    "starlette/templating.py"
+  ],
+  "test_files": [
+    "tests/test_templates.py"
+  ],
+  "lines_added": 31,
+  "lines_removed": 22,
+  "has_test_changes": true,
+  "merge_commit_sha": "496b7106a6223b1bb95785790766ec5e9b9f1c9d",
+  "base_commit_sha": "41dfca28131c28020ceb78f2b9eb036627a022cd",
+  "head_commit_sha": "923d016d6b8566295d349f1575b6c49a4d3358da",
+  "merged_at": "2026-02-22T13:27:33Z"
+}

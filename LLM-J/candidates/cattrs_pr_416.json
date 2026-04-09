@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_416",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 416,
+  "title": "Use the un-underscored name if no alias attribute is there.",
+  "description": "This appears to be caused by a thinko in #391, this fixes it again.\n",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex eebd0fc5..b9d07af2 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -45,6 +45,8 @@\n   ([#420](https://github.com/python-attrs/cattrs/pull/420))\n - Add support for `datetime.date`s to the PyYAML preconfigured converter.\n   ([#393](https://github.com/python-attrs/cattrs/issues/393))\n+- Remove some unused lines in the unstructuring code.\n+  ([#416](https://github.com/python-attrs/cattrs/pull/416))\n \n ## 23.1.2 (2023-06-02)\n \ndiff --git a/src/cattrs/converters.py b/src/cattrs/converters.py\nindex b0da1082..0eb9aff2 100644\n--- a/src/cattrs/converters.py\n+++ b/src/cattrs/converters.py\n@@ -509,16 +509,12 @@ def structure_attrs_fromdict(self, obj: Mapping[str, Any], cl: Type[T]) -> T:\n \n         conv_obj = {}  # Start with a fresh dict, to ignore extra keys.\n         for a in fields(cl):\n-            name = a.name\n-\n             try:\n-                val = obj[name]\n+                val = obj[a.name]\n             except KeyError:\n                 continue\n \n-            if name[0] == \"_\":\n-                name = name[1:]\n-\n+            # try .alias and .name because this code also supports dataclasses!\n             conv_obj[getattr(a, \"alias\", a.name)] = self._structure_attribute(a, val)\n \n         return cl(**conv_obj)\n",
+  "test_diff": "diff --git a/tests/test_converter.py b/tests/test_converter.py\nindex 6e3b4696..7fd3129a 100644\n--- a/tests/test_converter.py\n+++ b/tests/test_converter.py\n@@ -17,7 +17,7 @@\n from hypothesis import HealthCheck, assume, given, settings\n from hypothesis.strategies import booleans, just, lists, one_of, sampled_from\n \n-from cattrs import Converter, UnstructureStrategy\n+from cattrs import BaseConverter, Converter, UnstructureStrategy\n from cattrs.errors import ClassValidationError, ForbiddenExtraKeysError\n from cattrs.gen import make_dict_structure_fn, override\n \n@@ -381,6 +381,23 @@ class C:\n     assert inst == converter.structure(unstructured, C)\n \n \n+def test_dict_roundtrip_with_alias():\n+    \"\"\"\n+    A class with an aliased attribute can be unstructured and structured.\n+    \"\"\"\n+\n+    converter = BaseConverter()\n+\n+    @define\n+    class C:\n+        _a: int\n+\n+    inst = C(a=0)\n+    unstructured = converter.unstructure(inst)\n+    assert unstructured == {\"_a\": 0}\n+    assert converter.structure(unstructured, C) == inst\n+\n+\n @given(simple_typed_classes(defaults=True))\n def test_type_overrides(cl_and_vals):\n     \"\"\"\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/converters.py",
+    "tests/test_converter.py"
+  ],
+  "source_files": [
+    "src/cattrs/converters.py"
+  ],
+  "test_files": [
+    "tests/test_converter.py"
+  ],
+  "lines_added": 22,
+  "lines_removed": 7,
+  "has_test_changes": true,
+  "merge_commit_sha": "c1e93e909a0ba296435b92987df73f89c3b3a30b",
+  "base_commit_sha": "c447dfe4de2978ef1bb2974b53562e413fe28a1a",
+  "head_commit_sha": "47c3964d88c247e51d05f56f2d692a602e89e91b",
+  "merged_at": "2023-09-23T15:53:32Z"
+}

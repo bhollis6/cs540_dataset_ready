@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2576",
+  "repo": "encode/starlette",
+  "pr_number": 2576,
+  "title": "Allow returning memoryview in StreamingResponse",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/responses.py b/starlette/responses.py\nindex 15292f0e7..047ff9561 100644\n--- a/starlette/responses.py\n+++ b/starlette/responses.py\n@@ -207,7 +207,7 @@ def __init__(\n         self.headers[\"location\"] = quote(str(url), safe=\":/%#?=@[]!$&'()*+,;\")\n \n \n-Content = typing.Union[str, bytes]\n+Content = typing.Union[str, bytes, memoryview]\n SyncContentStream = typing.Iterable[Content]\n AsyncContentStream = typing.AsyncIterable[Content]\n ContentStream = typing.Union[AsyncContentStream, SyncContentStream]\n@@ -248,7 +248,7 @@ async def stream_response(self, send: Send) -> None:\n             }\n         )\n         async for chunk in self.body_iterator:\n-            if not isinstance(chunk, bytes):\n+            if not isinstance(chunk, (bytes, memoryview)):\n                 chunk = chunk.encode(self.charset)\n             await send({\"type\": \"http.response.body\", \"body\": chunk, \"more_body\": True})\n \n",
+  "test_diff": "diff --git a/tests/test_responses.py b/tests/test_responses.py\nindex a3cdcadcf..fa3c1009f 100644\n--- a/tests/test_responses.py\n+++ b/tests/test_responses.py\n@@ -541,6 +541,13 @@ def test_streaming_response_known_size(test_client_factory: TestClientFactory) -\n     assert response.headers[\"content-length\"] == \"10\"\n \n \n+def test_streaming_response_memoryview(test_client_factory: TestClientFactory) -> None:\n+    app = StreamingResponse(content=iter([memoryview(b\"hello\"), memoryview(b\"world\")]))\n+    client: TestClient = test_client_factory(app)\n+    response = client.get(\"/\")\n+    assert response.text == \"helloworld\"\n+\n+\n @pytest.mark.anyio\n async def test_streaming_response_stops_if_receiving_http_disconnect() -> None:\n     streamed = 0\n",
+  "files_changed": [
+    "starlette/responses.py",
+    "tests/test_responses.py"
+  ],
+  "source_files": [
+    "starlette/responses.py"
+  ],
+  "test_files": [
+    "tests/test_responses.py"
+  ],
+  "lines_added": 9,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "9fd3eccef16a364f137de52d84cf48f4af573714",
+  "base_commit_sha": "96c90f26622c8f243ad965371eae2c2028a518de",
+  "head_commit_sha": "f66d93d24583f4efcc3b69e693eeead38db99c1e",
+  "merged_at": "2024-04-22T17:15:24Z"
+}

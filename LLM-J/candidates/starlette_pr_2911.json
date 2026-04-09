@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2911",
+  "repo": "encode/starlette",
+  "pr_number": 2911,
+  "title": "Prevents reraising of exception from `BaseHTTPMiddleware`",
+  "description": "Fix for #2893\r\n\r\n# Summary\r\n\r\nAdds a check to not reraise raised exceptions.\r\n\r\n\r\n",
+  "patch_diff": "diff --git a/starlette/middleware/base.py b/starlette/middleware/base.py\nindex 2a59337e5..b49ab611f 100644\n--- a/starlette/middleware/base.py\n+++ b/starlette/middleware/base.py\n@@ -104,6 +104,7 @@ async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:\n         wrapped_receive = request.wrapped_receive\n         response_sent = anyio.Event()\n         app_exc: Exception | None = None\n+        exception_already_raised = False\n \n         async def call_next(request: Request) -> Response:\n             async def receive_or_disconnect() -> Message:\n@@ -150,6 +151,8 @@ async def coro() -> None:\n                     message = await recv_stream.receive()\n             except anyio.EndOfStream:\n                 if app_exc is not None:\n+                    nonlocal exception_already_raised\n+                    exception_already_raised = True\n                     raise app_exc\n                 raise RuntimeError(\"No response returned.\")\n \n@@ -176,8 +179,7 @@ async def body_stream() -> typing.AsyncGenerator[bytes, None]:\n                 await response(scope, wrapped_receive, send)\n                 response_sent.set()\n                 recv_stream.close()\n-\n-        if app_exc is not None:\n+        if app_exc is not None and not exception_already_raised:\n             raise app_exc\n \n     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:\n",
+  "test_diff": "diff --git a/tests/middleware/test_base.py b/tests/middleware/test_base.py\nindex e4e82077f..427ec44ac 100644\n--- a/tests/middleware/test_base.py\n+++ b/tests/middleware/test_base.py\n@@ -320,6 +320,27 @@ async def passthrough(request: Request, call_next: RequestResponseEndpoint) -> R\n         client.get(\"/\")\n \n \n+def test_exception_can_be_caught(test_client_factory: TestClientFactory) -> None:\n+    async def error_endpoint(_: Request) -> None:\n+        raise ValueError(\"TEST\")\n+\n+    async def catches_error(request: Request, call_next: RequestResponseEndpoint) -> Response:\n+        try:\n+            return await call_next(request)\n+        except ValueError as exc:\n+            return PlainTextResponse(content=str(exc), status_code=400)\n+\n+    app = Starlette(\n+        middleware=[Middleware(BaseHTTPMiddleware, dispatch=catches_error)],\n+        routes=[Route(\"/\", error_endpoint)],\n+    )\n+\n+    client = test_client_factory(app)\n+    response = client.get(\"/\")\n+    assert response.status_code == 400\n+    assert response.text == \"TEST\"\n+\n+\n @pytest.mark.anyio\n async def test_do_not_block_on_background_tasks() -> None:\n     response_complete = anyio.Event()\n",
+  "files_changed": [
+    "starlette/middleware/base.py",
+    "tests/middleware/test_base.py"
+  ],
+  "source_files": [
+    "starlette/middleware/base.py"
+  ],
+  "test_files": [
+    "tests/middleware/test_base.py"
+  ],
+  "lines_added": 25,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "48f7cd7f28b9e4b9a5a6b19159139205907aec41",
+  "base_commit_sha": "5d98cd52ef1e2b8e486baac1f7c48e69581fc4ff",
+  "head_commit_sha": "0d08e5de072db5de0e56680ce9f8e997b9bb333a",
+  "merged_at": "2025-04-13T13:38:18Z"
+}

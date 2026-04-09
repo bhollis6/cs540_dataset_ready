@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_3312",
+  "repo": "encode/httpx",
+  "pr_number": 3312,
+  "title": "Clarified error when header value is None",
+  "description": "Previously, when the header value was None, a misleading error was thrown: \"AttributeError: Object 'NoneType' does not have attribute 'encode'.\" Now it looks better.\r\n\r\n![image](https://github.com/user-attachments/assets/ec12330f-aa7e-4084-8c81-c89aef8fdea9)\r\n",
+  "patch_diff": "diff --git a/httpx/_utils.py b/httpx/_utils.py\nindex a9ece19438..46a4d63b1d 100644\n--- a/httpx/_utils.py\n+++ b/httpx/_utils.py\n@@ -50,6 +50,8 @@ def normalize_header_value(value: str | bytes, encoding: str | None = None) -> b\n     \"\"\"\n     if isinstance(value, bytes):\n         return value\n+    if not isinstance(value, str):\n+        raise TypeError(f\"Header value must be str or bytes, not {type(value)}\")\n     return value.encode(encoding or \"ascii\")\n \n \n",
+  "test_diff": "diff --git a/tests/client/test_headers.py b/tests/client/test_headers.py\nindex c51e40c335..b8d2976700 100755\n--- a/tests/client/test_headers.py\n+++ b/tests/client/test_headers.py\n@@ -177,6 +177,14 @@ def test_header_does_not_exist():\n         del headers[\"baz\"]\n \n \n+def test_header_with_incorrect_value():\n+    with pytest.raises(\n+        TypeError,\n+        match=f\"Header value must be str or bytes, not {type(None)}\",\n+    ):\n+        httpx.Headers({\"foo\": None})  # type: ignore\n+\n+\n def test_host_with_auth_and_port_in_url():\n     \"\"\"\n     The Host header should only include the hostname, or hostname:port\n",
+  "files_changed": [
+    "httpx/_utils.py",
+    "tests/client/test_headers.py"
+  ],
+  "source_files": [
+    "httpx/_utils.py"
+  ],
+  "test_files": [
+    "tests/client/test_headers.py"
+  ],
+  "lines_added": 10,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "49d74a2e7f773f88a84dd4af900d7a8543636ae2",
+  "base_commit_sha": "2e01aa0075327c5c30632207e8b7a1961dda5303",
+  "head_commit_sha": "86a258262fc0b0c20feb1daf0735b4d007c8d3b1",
+  "merged_at": "2024-09-26T17:01:47Z"
+}

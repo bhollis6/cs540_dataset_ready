@@ -1,0 +1,28 @@
+{
+  "candidate_id": "starlette_pr_2810",
+  "repo": "encode/starlette",
+  "pr_number": 2810,
+  "title": "Add `client` parameter to `TestClient`",
+  "description": "# Summary\r\nFixes https://github.com/encode/starlette/issues/2295\r\n\r\nAdded client and port parameter to TestClient\r\n",
+  "patch_diff": "diff --git a/starlette/testclient.py b/starlette/testclient.py\nindex 2c096aa22..8e908d36f 100644\n--- a/starlette/testclient.py\n+++ b/starlette/testclient.py\n@@ -234,6 +234,7 @@ def __init__(\n         raise_server_exceptions: bool = True,\n         root_path: str = \"\",\n         *,\n+        client: tuple[str, int],\n         app_state: dict[str, typing.Any],\n     ) -> None:\n         self.app = app\n@@ -241,6 +242,7 @@ def __init__(\n         self.root_path = root_path\n         self.portal_factory = portal_factory\n         self.app_state = app_state\n+        self.client = client\n \n     def handle_request(self, request: httpx.Request) -> httpx.Response:\n         scheme = request.url.scheme\n@@ -285,7 +287,7 @@ def handle_request(self, request: httpx.Request) -> httpx.Response:\n                 \"scheme\": scheme,\n                 \"query_string\": query.encode(),\n                 \"headers\": headers,\n-                \"client\": [\"testclient\", 50000],\n+                \"client\": self.client,\n                 \"server\": [host, port],\n                 \"subprotocols\": subprotocols,\n                 \"state\": self.app_state.copy(),\n@@ -304,7 +306,7 @@ def handle_request(self, request: httpx.Request) -> httpx.Response:\n             \"scheme\": scheme,\n             \"query_string\": query.encode(),\n             \"headers\": headers,\n-            \"client\": [\"testclient\", 50000],\n+            \"client\": self.client,\n             \"server\": [host, port],\n             \"extensions\": {\"http.response.debug\": {}},\n             \"state\": self.app_state.copy(),\n@@ -409,6 +411,7 @@ def __init__(\n         cookies: httpx._types.CookieTypes | None = None,\n         headers: dict[str, str] | None = None,\n         follow_redirects: bool = True,\n+        client: tuple[str, int] = (\"testclient\", 50000),\n     ) -> None:\n         self.async_backend = _AsyncBackend(backend=backend, backend_options=backend_options or {})\n         if _is_asgi3(app):\n@@ -424,6 +427,7 @@ def __init__(\n             raise_server_exceptions=raise_server_exceptions,\n             root_path=root_path,\n             app_state=self.app_state,\n+            client=client,\n         )\n         if headers is None:\n             headers = {}\n",
+  "test_diff": "diff --git a/tests/test_testclient.py b/tests/test_testclient.py\nindex 68593a9ac..279b81d91 100644\n--- a/tests/test_testclient.py\n+++ b/tests/test_testclient.py\n@@ -282,6 +282,19 @@ async def app(scope: Scope, receive: Receive, send: Send) -> None:\n     assert response.json() == {\"host\": \"testclient\", \"port\": 50000}\n \n \n+def test_client_custom_client(test_client_factory: TestClientFactory) -> None:\n+    async def app(scope: Scope, receive: Receive, send: Send) -> None:\n+        client = scope.get(\"client\")\n+        assert client is not None\n+        host, port = client\n+        response = JSONResponse({\"host\": host, \"port\": port})\n+        await response(scope, receive, send)\n+\n+    client = test_client_factory(app, client=(\"192.168.0.1\", 3000))\n+    response = client.get(\"/\")\n+    assert response.json() == {\"host\": \"192.168.0.1\", \"port\": 3000}\n+\n+\n @pytest.mark.parametrize(\"param\", (\"2020-07-14T00:00:00+00:00\", \"Espa\u00f1a\", \"voil\u00e0\"))\n def test_query_params(test_client_factory: TestClientFactory, param: str) -> None:\n     def homepage(request: Request) -> Response:\ndiff --git a/tests/types.py b/tests/types.py\nindex 1cbacf107..e4769d308 100644\n--- a/tests/types.py\n+++ b/tests/types.py\n@@ -19,6 +19,7 @@ def __call__(\n             cookies: httpx._types.CookieTypes | None = None,\n             headers: dict[str, str] | None = None,\n             follow_redirects: bool = True,\n+            client: tuple[str, int] = (\"testclient\", 50000),\n         ) -> TestClient: ...\n else:  # pragma: no cover\n \n",
+  "files_changed": [
+    "starlette/testclient.py",
+    "tests/test_testclient.py",
+    "tests/types.py"
+  ],
+  "source_files": [
+    "starlette/testclient.py"
+  ],
+  "test_files": [
+    "tests/test_testclient.py",
+    "tests/types.py"
+  ],
+  "lines_added": 20,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "20066626dbf785789c37b216e34b076284373038",
+  "base_commit_sha": "cef7834e2b9eec9ec7bd1e00f9dacf7c3048c65e",
+  "head_commit_sha": "3e9cc68a56b58ba5e0e58f5fe5807c19012aa729",
+  "merged_at": "2024-12-28T06:05:10Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_2768",
+  "repo": "encode/httpx",
+  "pr_number": 2768,
+  "title": "Use Mozilla documentation instead of `httpstatuses.com` for HTTP error reference",
+  "description": "Discussion at https://github.com/encode/httpx/discussions/2766\r\n\r\nhttpstatuses.com redirects to https://www.webfx.com/web-development/glossary/http-status-codes/ which has advertisements and is now generally an unpleasant resource \u2014 I'll spare you the visit:\r\n\r\n<img width=\"1781\" alt=\"httpstatuses\" src=\"https://github.com/encode/httpx/assets/2586601/fcf3faee-1adb-4abd-b317-5660644de316\">\r\n\r\nInstead we use the Mozilla documentation which looks like this: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200\r\n",
+  "patch_diff": "diff --git a/docs/quickstart.md b/docs/quickstart.md\nindex 07cbfd0865..1152a14bd3 100644\n--- a/docs/quickstart.md\n+++ b/docs/quickstart.md\n@@ -285,7 +285,7 @@ Traceback (most recent call last):\n   File \"/Users/tomchristie/GitHub/encode/httpcore/httpx/models.py\", line 837, in raise_for_status\n     raise HTTPStatusError(message, response=self)\n httpx._exceptions.HTTPStatusError: 404 Client Error: Not Found for url: https://httpbin.org/status/404\n-For more information check: https://httpstatuses.com/404\n+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404\n ```\n \n Any successful response codes will simply return `None` rather than raising an exception.\ndiff --git a/httpx/_models.py b/httpx/_models.py\nindex e0e5278cc0..708aa2af7e 100644\n--- a/httpx/_models.py\n+++ b/httpx/_models.py\n@@ -729,12 +729,12 @@ def raise_for_status(self) -> None:\n             message = (\n                 \"{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\\n\"\n                 \"Redirect location: '{0.headers[location]}'\\n\"\n-                \"For more information check: https://httpstatuses.com/{0.status_code}\"\n+                \"For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}\"\n             )\n         else:\n             message = (\n                 \"{error_type} '{0.status_code} {0.reason_phrase}' for url '{0.url}'\\n\"\n-                \"For more information check: https://httpstatuses.com/{0.status_code}\"\n+                \"For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/{0.status_code}\"\n             )\n \n         status_class = self.status_code // 100\n",
+  "test_diff": "diff --git a/tests/models/test_responses.py b/tests/models/test_responses.py\nindex ba46692e0d..9e65de8154 100644\n--- a/tests/models/test_responses.py\n+++ b/tests/models/test_responses.py\n@@ -102,7 +102,7 @@ def test_raise_for_status():\n         response.raise_for_status()\n     assert str(exc_info.value) == (\n         \"Informational response '101 Switching Protocols' for url 'https://example.org'\\n\"\n-        \"For more information check: https://httpstatuses.com/101\"\n+        \"For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/101\"\n     )\n \n     # 3xx status codes are redirections.\n@@ -114,7 +114,7 @@ def test_raise_for_status():\n     assert str(exc_info.value) == (\n         \"Redirect response '303 See Other' for url 'https://example.org'\\n\"\n         \"Redirect location: 'https://other.org'\\n\"\n-        \"For more information check: https://httpstatuses.com/303\"\n+        \"For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/303\"\n     )\n \n     # 4xx status codes are a client error.\n@@ -125,7 +125,7 @@ def test_raise_for_status():\n         response.raise_for_status()\n     assert str(exc_info.value) == (\n         \"Client error '403 Forbidden' for url 'https://example.org'\\n\"\n-        \"For more information check: https://httpstatuses.com/403\"\n+        \"For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403\"\n     )\n \n     # 5xx status codes are a server error.\n@@ -136,7 +136,7 @@ def test_raise_for_status():\n         response.raise_for_status()\n     assert str(exc_info.value) == (\n         \"Server error '500 Internal Server Error' for url 'https://example.org'\\n\"\n-        \"For more information check: https://httpstatuses.com/500\"\n+        \"For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500\"\n     )\n \n     # Calling .raise_for_status without setting a request instance is\n",
+  "files_changed": [
+    "docs/quickstart.md",
+    "httpx/_models.py",
+    "tests/models/test_responses.py"
+  ],
+  "source_files": [
+    "httpx/_models.py"
+  ],
+  "test_files": [
+    "tests/models/test_responses.py"
+  ],
+  "lines_added": 7,
+  "lines_removed": 7,
+  "has_test_changes": true,
+  "merge_commit_sha": "18d7721c385bd06516d91b3e6e8c55c8af9ca7b6",
+  "base_commit_sha": "f6866ce388266ac5c395b68ce7f664911fd09d2c",
+  "head_commit_sha": "f286ceb837946da9db16a4e32a179995e8dbcad7",
+  "merged_at": "2023-07-13T20:17:07Z"
+}

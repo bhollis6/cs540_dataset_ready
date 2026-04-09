@@ -1,0 +1,29 @@
+{
+  "candidate_id": "httpx_pr_3651",
+  "repo": "encode/httpx",
+  "pr_number": 3651,
+  "title": "Upgrade Python formatter ruff",
+  "description": "<!-- Thanks for contributing to HTTPX! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\nUnblocks #3648 which is currently failing on the command [`ruff format`](https://docs.astral.sh/ruff/formatter).\r\n* #3648 \r\n* https://github.com/astral-sh/ruff/releases\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [ ] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/httpx/_exceptions.py b/httpx/_exceptions.py\nindex 77f45a6d39..dd7fb6cdb3 100644\n--- a/httpx/_exceptions.py\n+++ b/httpx/_exceptions.py\n@@ -331,9 +331,7 @@ class StreamClosed(StreamError):\n     \"\"\"\n \n     def __init__(self) -> None:\n-        message = (\n-            \"Attempted to read or stream content, but the stream has \" \"been closed.\"\n-        )\n+        message = \"Attempted to read or stream content, but the stream has been closed.\"\n         super().__init__(message)\n \n \ndiff --git a/httpx/_urls.py b/httpx/_urls.py\nindex 147a8fa333..301d0874d5 100644\n--- a/httpx/_urls.py\n+++ b/httpx/_urls.py\n@@ -379,7 +379,7 @@ def __repr__(self) -> str:\n \n         if \":\" in userinfo:\n             # Mask any password component.\n-            userinfo = f'{userinfo.split(\":\")[0]}:[secure]'\n+            userinfo = f\"{userinfo.split(':')[0]}:[secure]\"\n \n         authority = \"\".join(\n             [\ndiff --git a/requirements.txt b/requirements.txt\nindex 646cb813d7..8b5a111a71 100644\n--- a/requirements.txt\n+++ b/requirements.txt\n@@ -22,7 +22,7 @@ coverage[toml]==7.6.1\n cryptography==44.0.1\n mypy==1.13.0\n pytest==8.3.4\n-ruff==0.8.1\n+ruff==0.12.11\n trio==0.27.0\n trio-typing==0.10.0\n trustme==1.2.0\n",
+  "test_diff": "diff --git a/tests/test_content.py b/tests/test_content.py\nindex f63ec18a6b..9bfe983722 100644\n--- a/tests/test_content.py\n+++ b/tests/test_content.py\n@@ -489,18 +489,18 @@ def test_response_invalid_argument():\n def test_ensure_ascii_false_with_french_characters():\n     data = {\"greeting\": \"Bonjour, \u00e7a va ?\"}\n     response = httpx.Response(200, json=data)\n-    assert (\n-        \"\u00e7a va\" in response.text\n-    ), \"ensure_ascii=False should preserve French accented characters\"\n+    assert \"\u00e7a va\" in response.text, (\n+        \"ensure_ascii=False should preserve French accented characters\"\n+    )\n     assert response.headers[\"Content-Type\"] == \"application/json\"\n \n \n def test_separators_for_compact_json():\n     data = {\"cl\u00e9\": \"valeur\", \"liste\": [1, 2, 3]}\n     response = httpx.Response(200, json=data)\n-    assert (\n-        response.text == '{\"cl\u00e9\":\"valeur\",\"liste\":[1,2,3]}'\n-    ), \"separators=(',', ':') should produce a compact representation\"\n+    assert response.text == '{\"cl\u00e9\":\"valeur\",\"liste\":[1,2,3]}', (\n+        \"separators=(',', ':') should produce a compact representation\"\n+    )\n     assert response.headers[\"Content-Type\"] == \"application/json\"\n \n \n",
+  "files_changed": [
+    "httpx/_exceptions.py",
+    "httpx/_urls.py",
+    "requirements.txt",
+    "tests/test_content.py"
+  ],
+  "source_files": [
+    "httpx/_exceptions.py",
+    "httpx/_urls.py"
+  ],
+  "test_files": [
+    "tests/test_content.py"
+  ],
+  "lines_added": 9,
+  "lines_removed": 11,
+  "has_test_changes": true,
+  "merge_commit_sha": "364697efcafe39290358745da8be451a40a3eab2",
+  "base_commit_sha": "89102021fcb44f6c3fab6304e5f951692723c908",
+  "head_commit_sha": "927b5ac58942eb0f6dfdc3e0b90cac0d3bc9ae8e",
+  "merged_at": "2025-09-03T11:17:26Z"
+}

@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2871",
+  "repo": "encode/starlette",
+  "pr_number": 2871,
+  "title": "Don't compress on server sent events",
+  "description": "- Alternative to https://github.com/encode/starlette/pull/2753\r\n\r\ncc @vin",
+  "patch_diff": "diff --git a/starlette/middleware/gzip.py b/starlette/middleware/gzip.py\nindex b677063da..fc63e91b6 100644\n--- a/starlette/middleware/gzip.py\n+++ b/starlette/middleware/gzip.py\n@@ -5,6 +5,8 @@\n from starlette.datastructures import Headers, MutableHeaders\n from starlette.types import ASGIApp, Message, Receive, Scope, Send\n \n+DEFAULT_EXCLUDED_CONTENT_TYPES = (\"text/event-stream\",)\n+\n \n class GZipMiddleware:\n     def __init__(self, app: ASGIApp, minimum_size: int = 500, compresslevel: int = 9) -> None:\n@@ -30,6 +32,7 @@ def __init__(self, app: ASGIApp, minimum_size: int, compresslevel: int = 9) -> N\n         self.initial_message: Message = {}\n         self.started = False\n         self.content_encoding_set = False\n+        self.content_type_is_excluded = False\n         self.gzip_buffer = io.BytesIO()\n         self.gzip_file = gzip.GzipFile(mode=\"wb\", fileobj=self.gzip_buffer, compresslevel=compresslevel)\n \n@@ -46,7 +49,8 @@ async def send_with_gzip(self, message: Message) -> None:\n             self.initial_message = message\n             headers = Headers(raw=self.initial_message[\"headers\"])\n             self.content_encoding_set = \"content-encoding\" in headers\n-        elif message_type == \"http.response.body\" and self.content_encoding_set:\n+            self.content_type_is_excluded = headers.get(\"content-type\", \"\").startswith(DEFAULT_EXCLUDED_CONTENT_TYPES)\n+        elif message_type == \"http.response.body\" and (self.content_encoding_set or self.content_type_is_excluded):\n             if not self.started:\n                 self.started = True\n                 await self.send(self.initial_message)\n",
+  "test_diff": "diff --git a/tests/middleware/test_gzip.py b/tests/middleware/test_gzip.py\nindex b20a7cb84..38a4e1e35 100644\n--- a/tests/middleware/test_gzip.py\n+++ b/tests/middleware/test_gzip.py\n@@ -104,3 +104,25 @@ async def generator(bytes: bytes, count: int) -> ContentStream:\n     assert response.text == \"x\" * 4000\n     assert response.headers[\"Content-Encoding\"] == \"text\"\n     assert \"Content-Length\" not in response.headers\n+\n+\n+def test_gzip_ignored_on_server_sent_events(test_client_factory: TestClientFactory) -> None:\n+    def homepage(request: Request) -> StreamingResponse:\n+        async def generator(bytes: bytes, count: int) -> ContentStream:\n+            for _ in range(count):\n+                yield bytes\n+\n+        streaming = generator(bytes=b\"x\" * 400, count=10)\n+        return StreamingResponse(streaming, status_code=200, media_type=\"text/event-stream\")\n+\n+    app = Starlette(\n+        routes=[Route(\"/\", endpoint=homepage)],\n+        middleware=[Middleware(GZipMiddleware)],\n+    )\n+\n+    client = test_client_factory(app)\n+    response = client.get(\"/\", headers={\"accept-encoding\": \"gzip\"})\n+    assert response.status_code == 200\n+    assert response.text == \"x\" * 4000\n+    assert \"Content-Encoding\" not in response.headers\n+    assert \"Content-Length\" not in response.headers\n",
+  "files_changed": [
+    "starlette/middleware/gzip.py",
+    "tests/middleware/test_gzip.py"
+  ],
+  "source_files": [
+    "starlette/middleware/gzip.py"
+  ],
+  "test_files": [
+    "tests/middleware/test_gzip.py"
+  ],
+  "lines_added": 27,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "a9a8dab0cc3cbd05dca37650fc392717b9fe5bbf",
+  "base_commit_sha": "4ae3213ca557a25aff91f1d43d530ca3962c729d",
+  "head_commit_sha": "7040bcbed6cb395cb025b324977641549476da25",
+  "merged_at": "2025-02-22T12:54:55Z"
+}

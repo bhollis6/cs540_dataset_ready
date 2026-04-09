@@ -1,0 +1,29 @@
+{
+  "candidate_id": "cattrs_pr_108",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 108,
+  "title": "fix structure for union of attr classes with default values",
+  "description": "Structure union of attr classes when one of the fields was optional and had a default value was not deterministic.\r\n\r\nDisambiguator function sometimes was created to use field with default value - and because it's allowed to not provide this value to `__init__` method wrong class was chosen to structure.\r\n\r\nA provided test case is a minimal deterministic test I was able to generate. \r\n",
+  "patch_diff": "diff --git a/HISTORY.rst b/HISTORY.rst\nindex 78893c50..8dde8be5 100644\n--- a/HISTORY.rst\n+++ b/HISTORY.rst\n@@ -2,6 +2,11 @@\n History\n =======\n \n+1.1.2 (unrelased)\n+-----------------\n+* Disambigualation do not pick non required field.\n+  (`#108 <https://github.com/Tinche/cattrs/pull/108>`_)\n+\n 1.1.1 (2020-10-30)\n ------------------\n * Add metadata for supported Python versions.\ndiff --git a/src/cattr/disambiguators.py b/src/cattr/disambiguators.py\nindex 2c472191..ecc2e233 100644\n--- a/src/cattr/disambiguators.py\n+++ b/src/cattr/disambiguators.py\n@@ -10,7 +10,7 @@\n     Type,\n )\n \n-from attr import fields\n+from attr import fields, NOTHING\n \n from cattr._compat import get_origin\n \n@@ -42,7 +42,14 @@ def create_uniq_field_dis_func(*classes: Type) -> Callable:\n             if not uniq:\n                 m = \"{} has no usable unique attributes.\".format(cl)\n                 raise ValueError(m)\n-            uniq_attrs_dict[next(iter(uniq))] = cl\n+            # We need a unique attribute with no default.\n+            cl_fields = fields(get_origin(cl) or cl)\n+            for attr_name in uniq:\n+                if getattr(cl_fields, attr_name).default is NOTHING:\n+                    break\n+            else:\n+                raise ValueError(f\"{cl} has no usable non-default attributes.\")\n+            uniq_attrs_dict[attr_name] = cl\n         else:\n             fallback = cl\n \n",
+  "test_diff": "diff --git a/tests/test_disambigutors.py b/tests/test_disambigutors.py\nindex c9078e7b..4da1ca14 100644\n--- a/tests/test_disambigutors.py\n+++ b/tests/test_disambigutors.py\n@@ -1,8 +1,11 @@\n \"\"\"Tests for auto-disambiguators.\"\"\"\n+from typing import Any\n+\n import attr\n import pytest\n \n-from hypothesis import assume, given\n+from attr import NOTHING\n+from hypothesis import HealthCheck, assume, given, settings\n \n from cattr.disambiguators import create_uniq_field_dis_func\n \n@@ -40,6 +43,18 @@ class D(object):\n         # No unique fields on either class.\n         create_uniq_field_dis_func(C, D)\n \n+    @attr.s\n+    class E:\n+        pass\n+\n+    @attr.s\n+    class F:\n+        b = attr.ib(default=Any)\n+\n+    with pytest.raises(ValueError):\n+        # no usable non-default attributes\n+        create_uniq_field_dis_func(E, F)\n+\n \n @given(simple_classes(defaults=False))\n def test_fallback(cl_and_vals):\n@@ -63,9 +78,12 @@ class A(object):\n         fn({\"xyz\": 1}) is A  # Uses the fallback.\n \n \n+@settings(\n+    suppress_health_check=[HealthCheck.filter_too_much, HealthCheck.too_slow]\n+)\n @given(simple_classes(), simple_classes())\n def test_disambiguation(cl_and_vals_a, cl_and_vals_b):\n-    \"\"\"Disambiguation should work when there are unique fields.\"\"\"\n+    \"\"\"Disambiguation should work when there are unique required fields.\"\"\"\n     cl_a, vals_a = cl_and_vals_a\n     cl_b, vals_b = cl_and_vals_b\n \n@@ -76,6 +94,10 @@ def test_disambiguation(cl_and_vals_a, cl_and_vals_b):\n     assume(len(req_b))\n \n     assume((req_a - req_b) or (req_b - req_a))\n+    for attr_name in req_a - req_b:\n+        assume(getattr(attr.fields(cl_a), attr_name).default is NOTHING)\n+    for attr_name in req_b - req_a:\n+        assume(getattr(attr.fields(cl_b), attr_name).default is NOTHING)\n \n     fn = create_uniq_field_dis_func(cl_a, cl_b)\n \ndiff --git a/tests/test_structure.py b/tests/test_structure.py\nindex b41957cc..bbdde276 100644\n--- a/tests/test_structure.py\n+++ b/tests/test_structure.py\n@@ -29,6 +29,7 @@\n )\n from pytest import raises\n \n+import attr\n from cattr import Converter\n from cattr._compat import is_bare, is_union_type\n from cattr.converters import NoneType\n@@ -351,3 +352,21 @@ class Bar(Foo):\n     converter.register_structure_hook(Bar, lambda obj, cls: cls(\"bar\"))\n     assert converter.structure(None, Foo).value == \"foo\"\n     assert converter.structure(None, Bar).value == \"bar\"\n+\n+\n+def test_structure_union_edge_case():\n+    converter = Converter()\n+\n+    @attr.s(auto_attribs=True)\n+    class A:\n+        a1: Any\n+        a2: Optional[Any] = None\n+\n+    @attr.s(auto_attribs=True)\n+    class B:\n+        b1: Any\n+        b2: Optional[Any] = None\n+\n+    assert converter.structure(\n+        [{\"a1\": \"foo\"}, {\"b1\": \"bar\"}], List[Union[A, B]]\n+    ) == [A(\"foo\"), B(\"bar\")]\n",
+  "files_changed": [
+    "HISTORY.rst",
+    "src/cattr/disambiguators.py",
+    "tests/test_disambigutors.py",
+    "tests/test_structure.py"
+  ],
+  "source_files": [
+    "src/cattr/disambiguators.py"
+  ],
+  "test_files": [
+    "tests/test_disambigutors.py",
+    "tests/test_structure.py"
+  ],
+  "lines_added": 57,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "25ffce7e000ad27485982732214b4181ec0e6116",
+  "base_commit_sha": "1ab1cb27b0ee76d34ad8310d300329fba97a8f3a",
+  "head_commit_sha": "ba9cd71530783974f98bc0948d1641a280a4cb8e",
+  "merged_at": "2020-11-18T23:22:02Z"
+}

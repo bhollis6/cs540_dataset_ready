@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_2669",
+  "repo": "encode/httpx",
+  "pr_number": 2669,
+  "title": "Fix exception suppression in asgi transport",
+  "description": "Bug description:\r\n\r\nIf httpx client uses asgi transport with `raise_app_exceptions=False` and response is not complete, exception is still raised.\r\n\r\nThis is mostly come up in tests where you want to check how your application behave in error states. But currently it works only with non-streaming responses, which is quite limiting.\r\n\r\nI propose simple fix for such non-complete responses to be able to comply with the `raise_app_exceptions=False`.\r\n\r\nTest case included.",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 71f5b02e34..d19b2ab8df 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n ### Fixed\n \n+* Return `500` error response instead of exceptions when `raise_app_exceptions=False` is set on `ASGITransport`. (#2669)\n * Ensure all WSGITransport environs have a SERVER_PROTOCOL. (#2708)\n \n ## 0.24.1 (17th May, 2023)\ndiff --git a/httpx/_transports/asgi.py b/httpx/_transports/asgi.py\nindex bdf7f7a145..f67f0fbd5b 100644\n--- a/httpx/_transports/asgi.py\n+++ b/httpx/_transports/asgi.py\n@@ -161,9 +161,15 @@ async def send(message: typing.Dict[str, typing.Any]) -> None:\n         try:\n             await self.app(scope, receive, send)\n         except Exception:  # noqa: PIE-786\n-            if self.raise_app_exceptions or not response_complete.is_set():\n+            if self.raise_app_exceptions:\n                 raise\n \n+            response_complete.set()\n+            if status_code is None:\n+                status_code = 500\n+            if response_headers is None:\n+                response_headers = {}\n+\n         assert response_complete.is_set()\n         assert status_code is not None\n         assert response_headers is not None\n",
+  "test_diff": "diff --git a/tests/test_asgi.py b/tests/test_asgi.py\nindex 17c8d5eb27..14d6df6ded 100644\n--- a/tests/test_asgi.py\n+++ b/tests/test_asgi.py\n@@ -3,6 +3,7 @@\n import pytest\n \n import httpx\n+from httpx import ASGITransport\n \n \n async def hello_world(scope, receive, send):\n@@ -191,3 +192,12 @@ async def read_body(scope, receive, send):\n \n     assert response.status_code == 200\n     assert disconnect\n+\n+\n+@pytest.mark.anyio\n+async def test_asgi_exc_no_raise():\n+    transport = ASGITransport(app=raise_exc, raise_app_exceptions=False)\n+    async with httpx.AsyncClient(transport=transport) as client:\n+        response = await client.get(\"http://www.example.org/\")\n+\n+        assert response.status_code == 500\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_transports/asgi.py",
+    "tests/test_asgi.py"
+  ],
+  "source_files": [
+    "httpx/_transports/asgi.py"
+  ],
+  "test_files": [
+    "tests/test_asgi.py"
+  ],
+  "lines_added": 18,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "a682f6f1c7f1c5e10c66ae5bef139aea37ef0c4e",
+  "base_commit_sha": "f9abbbbb4898cac96420e5c5b9d34036a94d46bf",
+  "head_commit_sha": "735cd884035876379f3dddc300db95ccbefe71ef",
+  "merged_at": "2023-05-21T00:17:23Z"
+}

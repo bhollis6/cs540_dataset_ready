@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2806",
+  "repo": "encode/starlette",
+  "pr_number": 2806,
+  "title": "Make UUID path parameter conversion more flexible",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nBased on @adriangb suggestion made in this [discussion thread](https://github.com/encode/starlette/discussions/2802#discussioncomment-11583842), here is a more flexible conversion of UUID path parameters. \r\n\r\nUUID representation may vary depending on the system from which it is generated. Some systems may return an hex representation with no hyphens, while some others use upper-case letters.\r\n\r\nFrom Python perspective, they are all valid:\r\n![image](https://github.com/user-attachments/assets/75af3f98-c2a5-4d3d-b860-beb06656886b)\r\n\r\nNot handling those cases may yield to hard-to-debug 404 errors.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n",
+  "patch_diff": "diff --git a/starlette/convertors.py b/starlette/convertors.py\nindex 2d8ab53be..84df87a58 100644\n--- a/starlette/convertors.py\n+++ b/starlette/convertors.py\n@@ -67,7 +67,7 @@ def to_string(self, value: float) -> str:\n \n \n class UUIDConvertor(Convertor[uuid.UUID]):\n-    regex = \"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\"\n+    regex = \"[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{4}-?[0-9a-fA-F]{12}\"\n \n     def convert(self, value: str) -> uuid.UUID:\n         return uuid.UUID(value)\n",
+  "test_diff": "diff --git a/tests/test_convertors.py b/tests/test_convertors.py\nindex ced1b86cc..0fabe101b 100644\n--- a/tests/test_convertors.py\n+++ b/tests/test_convertors.py\n@@ -1,5 +1,6 @@\n from datetime import datetime\n from typing import Iterator\n+from uuid import UUID\n \n import pytest\n \n@@ -70,3 +71,26 @@ def float_convertor(request: Request) -> JSONResponse:\n     client = test_client_factory(app)\n     response = client.get(f\"/{param}\")\n     assert response.status_code == status_code\n+\n+\n+@pytest.mark.parametrize(\n+    \"param, status_code\",\n+    [\n+        (\"00000000-aaaa-ffff-9999-000000000000\", 200),\n+        (\"00000000aaaaffff9999000000000000\", 200),\n+        (\"00000000-AAAA-FFFF-9999-000000000000\", 200),\n+        (\"00000000AAAAFFFF9999000000000000\", 200),\n+        (\"not-a-uuid\", 404),\n+    ],\n+)\n+def test_default_uuid_convertor(test_client_factory: TestClientFactory, param: str, status_code: int) -> None:\n+    def uuid_convertor(request: Request) -> JSONResponse:\n+        param = request.path_params[\"param\"]\n+        assert isinstance(param, UUID)\n+        return JSONResponse(\"ok\")\n+\n+    app = Router(routes=[Route(\"/{param:uuid}\", endpoint=uuid_convertor)])\n+\n+    client = test_client_factory(app)\n+    response = client.get(f\"/{param}\")\n+    assert response.status_code == status_code\n",
+  "files_changed": [
+    "starlette/convertors.py",
+    "tests/test_convertors.py"
+  ],
+  "source_files": [
+    "starlette/convertors.py"
+  ],
+  "test_files": [
+    "tests/test_convertors.py"
+  ],
+  "lines_added": 25,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "cba90a77fe1b5929ae99616af597665120704b7e",
+  "base_commit_sha": "c82acf3a03a9b97ffc4332cd3970a1f679383aeb",
+  "head_commit_sha": "38a1ceeb0aa0a7200987f35cd79ebd901945924a",
+  "merged_at": "2024-12-25T08:48:06Z"
+}

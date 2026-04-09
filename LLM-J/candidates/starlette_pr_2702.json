@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2702",
+  "repo": "encode/starlette",
+  "pr_number": 2702,
+  "title": "generate boundary with token_hex",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [ ] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [ ] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/responses.py b/starlette/responses.py\nindex b951e5125..790aa7ebc 100644\n--- a/starlette/responses.py\n+++ b/starlette/responses.py\n@@ -11,7 +11,7 @@\n from email.utils import format_datetime, formatdate\n from functools import partial\n from mimetypes import guess_type\n-from random import choices as random_choices\n+from secrets import token_hex\n from urllib.parse import quote\n \n import anyio\n@@ -401,7 +401,8 @@ async def _handle_multiple_ranges(\n         file_size: int,\n         send_header_only: bool,\n     ) -> None:\n-        boundary = \"\".join(random_choices(\"abcdefghijklmnopqrstuvwxyz0123456789\", k=13))\n+        # In firefox and chrome, they use boundary with 95-96 bits entropy (that's roughly 13 bytes).\n+        boundary = token_hex(13)\n         content_length, header_generator = self.generate_multipart(\n             ranges, boundary, file_size, self.headers[\"content-type\"]\n         )\n",
+  "test_diff": "diff --git a/tests/test_responses.py b/tests/test_responses.py\nindex 645d26a68..1fb8c6be0 100644\n--- a/tests/test_responses.py\n+++ b/tests/test_responses.py\n@@ -598,13 +598,13 @@ def test_file_response_range_multi(file_response_client: TestClient) -> None:\n     response = file_response_client.get(\"/\", headers={\"Range\": \"bytes=0-100, 200-300\"})\n     assert response.status_code == 206\n     assert response.headers[\"content-range\"].startswith(\"multipart/byteranges; boundary=\")\n-    assert response.headers[\"content-length\"] == \"400\"\n+    assert response.headers[\"content-length\"] == \"439\"\n \n \n def test_file_response_range_multi_head(file_response_client: TestClient) -> None:\n     response = file_response_client.head(\"/\", headers={\"Range\": \"bytes=0-100, 200-300\"})\n     assert response.status_code == 206\n-    assert response.headers[\"content-length\"] == \"400\"\n+    assert response.headers[\"content-length\"] == \"439\"\n     assert response.content == b\"\"\n \n     response = file_response_client.head(\n",
+  "files_changed": [
+    "starlette/responses.py",
+    "tests/test_responses.py"
+  ],
+  "source_files": [
+    "starlette/responses.py"
+  ],
+  "test_files": [
+    "tests/test_responses.py"
+  ],
+  "lines_added": 5,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "075efd0c5c9f5e49a4416f3b4a24e24efab135f8",
+  "base_commit_sha": "b8139f9fe3b1acb34ddbe38dc6472a60b621540e",
+  "head_commit_sha": "3ca56fbebbcf18bdb94744a544c46eb65753c0f2",
+  "merged_at": "2024-09-25T11:27:55Z"
+}

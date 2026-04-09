@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2422",
+  "repo": "encode/starlette",
+  "pr_number": 2422,
+  "title": "Raise `FileNotFoundError` when the `env_file` parameter on `Config` is not valid",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\nAddresses #2101\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n\r\n-> I think this if ok without doc update. Let me know otherwise.\r\n",
+  "patch_diff": "diff --git a/starlette/config.py b/starlette/config.py\nindex 173955006..1ac49ea85 100644\n--- a/starlette/config.py\n+++ b/starlette/config.py\n@@ -58,7 +58,9 @@ def __init__(\n         self.environ = environ\n         self.env_prefix = env_prefix\n         self.file_values: typing.Dict[str, str] = {}\n-        if env_file is not None and os.path.isfile(env_file):\n+        if env_file is not None:\n+            if not os.path.isfile(env_file):\n+                raise FileNotFoundError(f\"Config file '{env_file}' not found.\")\n             self.file_values = self._read_file(env_file)\n \n     @typing.overload\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex 70b0a4812..f7b294c7a 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -104,6 +104,13 @@ def cast_to_int(v) -> int:\n         config.get(\"BOOL_AS_INT\", cast=bool)\n \n \n+def test_missing_env_file_raises(tmpdir):\n+    path = os.path.join(tmpdir, \".env\")\n+\n+    with pytest.raises(FileNotFoundError, match=f\"Config file '{path}' not found.\"):\n+        Config(path)\n+\n+\n def test_environ():\n     environ = Environ()\n \n",
+  "files_changed": [
+    "starlette/config.py",
+    "tests/test_config.py"
+  ],
+  "source_files": [
+    "starlette/config.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "lines_added": 10,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "13c66c929428424daeb711b46623f47fb9ca36ee",
+  "base_commit_sha": "d2d9192966a7719747c04ce992b4a7df098cf82f",
+  "head_commit_sha": "56a3df51e312636985d1d0c7defd4bbc00c74541",
+  "merged_at": "2024-01-20T12:06:50Z"
+}

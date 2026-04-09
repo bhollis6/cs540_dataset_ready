@@ -1,0 +1,170 @@
+[
+  {
+    "candidate_id": "httpx_pr_2423",
+    "repo": "encode/httpx",
+    "pr_number": 2423,
+    "preflight": {
+      "candidate_id": "httpx_pr_2423",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 3.9230926036834717
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 1,
+      "dependency_files_read": 0,
+      "total_chars": 10276,
+      "truncated": false
+    },
+    "stage1_score": 22,
+    "evaluated_at": "2026-03-25T05:52:46.370331+00:00"
+  },
+  {
+    "candidate_id": "httpx_pr_2535",
+    "repo": "encode/httpx",
+    "pr_number": 2535,
+    "preflight": {
+      "candidate_id": "httpx_pr_2535",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 3.546422004699707
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 4,
+      "dependency_files_read": 0,
+      "total_chars": 99485,
+      "truncated": false
+    },
+    "stage1_score": 22,
+    "evaluated_at": "2026-03-25T05:52:50.111767+00:00"
+  },
+  {
+    "candidate_id": "httpx_pr_2547",
+    "repo": "encode/httpx",
+    "pr_number": 2547,
+    "preflight": {
+      "candidate_id": "httpx_pr_2547",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 3.5938613414764404
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 3,
+      "dependency_files_read": 0,
+      "total_chars": 96504,
+      "truncated": false
+    },
+    "stage1_score": 22,
+    "evaluated_at": "2026-03-25T05:52:53.927170+00:00"
+  },
+  {
+    "candidate_id": "httpx_pr_1574",
+    "repo": "encode/httpx",
+    "pr_number": 1574,
+    "preflight": {
+      "candidate_id": "httpx_pr_1574",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 3.7132580280303955
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 2,
+      "dependency_files_read": 0,
+      "total_chars": 71932,
+      "truncated": false
+    },
+    "stage1_score": 21,
+    "evaluated_at": "2026-03-25T05:52:57.859483+00:00"
+  },
+  {
+    "candidate_id": "httpx_pr_2523",
+    "repo": "encode/httpx",
+    "pr_number": 2523,
+    "preflight": {
+      "candidate_id": "httpx_pr_2523",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 4.201115608215332
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 1,
+      "dependency_files_read": 0,
+      "total_chars": 17207,
+      "truncated": false
+    },
+    "stage1_score": 21,
+    "evaluated_at": "2026-03-25T05:53:02.240695+00:00"
+  },
+  {
+    "candidate_id": "httpx_pr_2543",
+    "repo": "encode/httpx",
+    "pr_number": 2543,
+    "preflight": {
+      "candidate_id": "httpx_pr_2543",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 3.998007297515869
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 2,
+      "dependency_files_read": 0,
+      "total_chars": 36977,
+      "truncated": false
+    },
+    "stage1_score": 21,
+    "evaluated_at": "2026-03-25T05:53:06.439318+00:00"
+  },
+  {
+    "candidate_id": "httpx_pr_2539",
+    "repo": "encode/httpx",
+    "pr_number": 2539,
+    "preflight": {
+      "candidate_id": "httpx_pr_2539",
+      "status": "FAIL",
+      "reason": "No failing tests at base commit \u2014 no FAIL_TO_PASS signal",
+      "fail_to_pass_tests": [],
+      "pass_to_pass_tests": [],
+      "patch_apply_method": "git_apply",
+      "install_success": false,
+      "elapsed_seconds": 3.747934341430664
+    },
+    "judge_response": null,
+    "context_stats": {
+      "source_files_read": 1,
+      "dependency_files_read": 0,
+      "total_chars": 17367,
+      "truncated": false
+    },
+    "stage1_score": 19,
+    "evaluated_at": "2026-03-25T05:53:10.375608+00:00"
+  }
+]

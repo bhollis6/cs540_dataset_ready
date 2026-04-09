@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2688",
+  "repo": "encode/starlette",
+  "pr_number": 2688,
+  "title": "Fix BackgroundTasks with BaseHTTPMiddleware",
+  "description": "Alternative to https://github.com/encode/starlette/pull/2176",
+  "patch_diff": "diff --git a/starlette/middleware/base.py b/starlette/middleware/base.py\nindex 2ac6f7f7f..f51b13f73 100644\n--- a/starlette/middleware/base.py\n+++ b/starlette/middleware/base.py\n@@ -206,6 +206,7 @@ def __init__(\n         self.status_code = status_code\n         self.media_type = media_type\n         self.init_headers(headers)\n+        self.background = None\n \n     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:\n         if self.info is not None:\n@@ -222,3 +223,6 @@ async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:\n             await send({\"type\": \"http.response.body\", \"body\": chunk, \"more_body\": True})\n \n         await send({\"type\": \"http.response.body\", \"body\": b\"\", \"more_body\": False})\n+\n+        if self.background:\n+            await self.background()\n",
+  "test_diff": "diff --git a/tests/middleware/test_base.py b/tests/middleware/test_base.py\nindex 225038650..15080e5c5 100644\n--- a/tests/middleware/test_base.py\n+++ b/tests/middleware/test_base.py\n@@ -1006,16 +1006,29 @@ async def endpoint(request: Request) -> Response:\n \n @pytest.mark.anyio\n async def test_multiple_middlewares_stacked_client_disconnected() -> None:\n+    \"\"\"\n+    Tests for:\n+    - https://github.com/encode/starlette/issues/2516\n+    - https://github.com/encode/starlette/pull/2687\n+    \"\"\"\n+    ordered_events: list[str] = []\n+    unordered_events: list[str] = []\n+\n     class MyMiddleware(BaseHTTPMiddleware):\n-        def __init__(self, app: ASGIApp, version: int, events: list[str]) -> None:\n+        def __init__(self, app: ASGIApp, version: int) -> None:\n             self.version = version\n-            self.events = events\n             super().__init__(app)\n \n         async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:\n-            self.events.append(f\"{self.version}:STARTED\")\n+            ordered_events.append(f\"{self.version}:STARTED\")\n             res = await call_next(request)\n-            self.events.append(f\"{self.version}:COMPLETED\")\n+            ordered_events.append(f\"{self.version}:COMPLETED\")\n+\n+            def background() -> None:\n+                unordered_events.append(f\"{self.version}:BACKGROUND\")\n+\n+            assert res.background is None\n+            res.background = BackgroundTask(background)\n             return res\n \n     async def sleepy(request: Request) -> Response:\n@@ -1027,11 +1040,9 @@ async def sleepy(request: Request) -> Response:\n             raise AssertionError(\"Should have raised ClientDisconnect\")\n         return Response(b\"\")\n \n-    events: list[str] = []\n-\n     app = Starlette(\n         routes=[Route(\"/\", sleepy)],\n-        middleware=[Middleware(MyMiddleware, version=_ + 1, events=events) for _ in range(10)],\n+        middleware=[Middleware(MyMiddleware, version=_ + 1) for _ in range(10)],\n     )\n \n     scope = {\n@@ -1051,7 +1062,7 @@ async def send(message: Message) -> None:\n \n     await app(scope, receive().__anext__, send)\n \n-    assert events == [\n+    assert ordered_events == [\n         \"1:STARTED\",\n         \"2:STARTED\",\n         \"3:STARTED\",\n@@ -1074,6 +1085,21 @@ async def send(message: Message) -> None:\n         \"1:COMPLETED\",\n     ]\n \n+    assert sorted(unordered_events) == sorted(\n+        [\n+            \"1:BACKGROUND\",\n+            \"2:BACKGROUND\",\n+            \"3:BACKGROUND\",\n+            \"4:BACKGROUND\",\n+            \"5:BACKGROUND\",\n+            \"6:BACKGROUND\",\n+            \"7:BACKGROUND\",\n+            \"8:BACKGROUND\",\n+            \"9:BACKGROUND\",\n+            \"10:BACKGROUND\",\n+        ]\n+    )\n+\n     assert sent == [\n         {\n             \"type\": \"http.response.start\",\n",
+  "files_changed": [
+    "starlette/middleware/base.py",
+    "tests/middleware/test_base.py"
+  ],
+  "source_files": [
+    "starlette/middleware/base.py"
+  ],
+  "test_files": [
+    "tests/middleware/test_base.py"
+  ],
+  "lines_added": 38,
+  "lines_removed": 8,
+  "has_test_changes": true,
+  "merge_commit_sha": "53f9dc02be5b41f31ba096c8a5d65a6e6ca94fe0",
+  "base_commit_sha": "8e1fc9b3d1578ae7d4b03c9cb2338019106f8544",
+  "head_commit_sha": "93625516e42fb5cca387fb719595d537aaf8712c",
+  "merged_at": "2024-09-07T12:42:54Z"
+}

@@ -1,0 +1,27 @@
+{
+  "candidate_id": "cattrs_pr_688",
+  "repo": "python-attrs/cattrs",
+  "pr_number": 688,
+  "title": "Fix structuring of nested generics, add test",
+  "description": "This mirrors #662 to allow nested generics for structuring nested generic classes. I encountered this issue when composing generic classes describing a REST API's JSON schema. It only seems to happen with string annotations.\r\n\r\nWithout the patch, the included tests will show `TypeError`s similar to:\r\n\r\n```\r\n  File \"cattrs/tests/test_generics_nested_string.py\", line 23, in test_structure_nested_roundtrip\r\n    structured = genconverter.structure(raw, Container[Inner])\r\n  File \"cattrs/src/cattrs/converters.py\", line 589, in structure\r\n    return self._structure_func.dispatch(cl)(obj, cl)\r\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^\r\n  File \"cattrs/src/cattrs/dispatch.py\", line 133, in dispatch_without_caching\r\n    res = self._function_dispatch.dispatch(typ)\r\n  File \"cattrs/src/cattrs/dispatch.py\", line 76, in dispatch\r\n    return handler(typ)\r\n  File \"cattrs/src/cattrs/converters.py\", line 1309, in gen_structure_attrs_fromdict\r\n    resolve_types(cl)\r\n    ~~~~~~~~~~~~~^^^^\r\n  File \"cattrs/.venv/lib/python3.13/site-packages/attr/_funcs.py\", line 487, in resolve_types\r\n    hints = typing.get_type_hints(cls, **kwargs)\r\n  File \"/usr/lib/python3.13/typing.py\", line 2484, in get_type_hints\r\n    raise TypeError('{!r} is not a module, class, method, '\r\n                    'or function.'.format(obj))\r\nTypeError: tests.test_generics_nested_string.test_structure_nested_roundtrip.<locals>.Container[tests.test_generics_nested_string.test_structure_nested_roundtrip.<locals>.Inner] is not a module, class, method, or function.\r\n```\r\n\r\nMinimal reproducing example:\r\n\r\n```py\r\nfrom __future__ import annotations\r\n\r\nfrom typing import Generic, TypeVar\r\n\r\nfrom attrs import define\r\nfrom cattrs import Converter\r\n\r\nT = TypeVar('T')\r\n\r\n@define(auto_attribs=True)\r\nclass Inner:\r\n    value: int\r\n\r\n@define(auto_attribs=True)\r\nclass Container(Generic[T]):\r\n    data: T\r\n\r\nConverter().structure({'data': {'value': 42}}, Container[Inner])\r\n\r\n```",
+  "patch_diff": "diff --git a/HISTORY.md b/HISTORY.md\nindex 4768967a..2eed1dce 100644\n--- a/HISTORY.md\n+++ b/HISTORY.md\n@@ -11,6 +11,11 @@ The third number is for emergencies when we need to start branches for older rel\n \n Our backwards-compatibility policy can be found [here](https://github.com/python-attrs/cattrs/blob/main/.github/SECURITY.md).\n \n+## 25.4.0 (UNRELEASED)\n+\n+- Fix structuring of nested generic classes with stringified annotations.\n+  ([#688](https://github.com/python-attrs/cattrs/pull/688))\n+\n ## 25.3.0 (2025-10-07)\n \n - **Potentially breaking**: [Abstract sets](https://docs.python.org/3/library/collections.abc.html#collections.abc.Set) are now structured into frozensets.\ndiff --git a/src/cattrs/converters.py b/src/cattrs/converters.py\nindex 08d7fc56..13f63ee1 100644\n--- a/src/cattrs/converters.py\n+++ b/src/cattrs/converters.py\n@@ -1303,10 +1303,11 @@ def gen_structure_typeddict(self, cl: Any) -> Callable[[dict, Any], dict]:\n     def gen_structure_attrs_fromdict(\n         self, cl: type[T]\n     ) -> Callable[[Mapping[str, Any], Any], T]:\n-        attribs = fields(get_origin(cl) or cl if is_generic(cl) else cl)\n+        origin = get_origin(cl)\n+        attribs = fields(origin or cl if is_generic(cl) else cl)\n         if attrs_has(cl) and any(isinstance(a.type, str) for a in attribs):\n             # PEP 563 annotations - need to be resolved.\n-            resolve_types(cl)\n+            resolve_types(origin or cl)\n         attrib_overrides = {\n             a.name: self.type_overrides[a.type]\n             for a in attribs\n",
+  "test_diff": "diff --git a/tests/test_generics_nested.py b/tests/test_generics_nested.py\nnew file mode 100644\nindex 00000000..1e0da3a8\n--- /dev/null\n+++ b/tests/test_generics_nested.py\n@@ -0,0 +1,23 @@\n+\"\"\"Tests un/structure of nested generic classes (stringified only)\"\"\"\n+\n+from __future__ import annotations\n+\n+from typing import Generic, TypeVar\n+\n+from attrs import define\n+\n+T = TypeVar(\"T\")\n+\n+\n+def test_structure_nested_roundtrip(genconverter):\n+    @define(auto_attribs=True)\n+    class Inner:\n+        value: int\n+\n+    @define(auto_attribs=True)\n+    class Container(Generic[T]):\n+        data: T\n+\n+    raw = {\"data\": {\"value\": 42}}\n+    structured = genconverter.structure(raw, Container[Inner])\n+    assert genconverter.unstructure(structured, Container[Inner]) == raw\n",
+  "files_changed": [
+    "HISTORY.md",
+    "src/cattrs/converters.py",
+    "tests/test_generics_nested.py"
+  ],
+  "source_files": [
+    "src/cattrs/converters.py"
+  ],
+  "test_files": [
+    "tests/test_generics_nested.py"
+  ],
+  "lines_added": 31,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "2ec13dd485b54f76bc00a204919c84d061b58a0a",
+  "base_commit_sha": "62f3afd24010a08c9c29c2fed438016408e46f9d",
+  "head_commit_sha": "0d095603c208cf014bcc5334a9272474e863676d",
+  "merged_at": "2025-10-16T12:18:02Z"
+}

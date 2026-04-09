@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_3029",
+  "repo": "encode/starlette",
+  "pr_number": 3029,
+  "title": "Support multiple cookie headers in `Request.cookies`",
+  "description": "- Closes https://github.com/Kludex/starlette/pull/3002\r\n- Closes https://github.com/Kludex/starlette/issues/2977",
+  "patch_diff": "diff --git a/starlette/requests.py b/starlette/requests.py\nindex 628358d15..99e8b9e19 100644\n--- a/starlette/requests.py\n+++ b/starlette/requests.py\n@@ -140,10 +140,11 @@ def path_params(self) -> dict[str, Any]:\n     def cookies(self) -> dict[str, str]:\n         if not hasattr(self, \"_cookies\"):\n             cookies: dict[str, str] = {}\n-            cookie_header = self.headers.get(\"cookie\")\n+            cookie_headers = self.headers.getlist(\"cookie\")\n+\n+            for header in cookie_headers:\n+                cookies.update(cookie_parser(header))\n \n-            if cookie_header:\n-                cookies = cookie_parser(cookie_header)\n             self._cookies = cookies\n         return self._cookies\n \n",
+  "test_diff": "diff --git a/tests/test_requests.py b/tests/test_requests.py\nindex 7e2c608dc..1799e89e0 100644\n--- a/tests/test_requests.py\n+++ b/tests/test_requests.py\n@@ -450,6 +450,19 @@ async def app(scope: Scope, receive: Receive, send: Send) -> None:\n     assert result[\"cookies\"] == expected\n \n \n+def test_multiple_cookie_headers(test_client_factory: TestClientFactory) -> None:\n+    async def app(scope: Scope, receive: Receive, send: Send) -> None:\n+        scope[\"headers\"] = [(b\"cookie\", b\"a=abc\"), (b\"cookie\", b\"b=def\"), (b\"cookie\", b\"c=ghi\")]\n+        request = Request(scope, receive)\n+        response = JSONResponse({\"cookies\": request.cookies})\n+        await response(scope, receive, send)\n+\n+    client = test_client_factory(app)\n+    response = client.get(\"/\")\n+    result = response.json()\n+    assert result[\"cookies\"] == {\"a\": \"abc\", \"b\": \"def\", \"c\": \"ghi\"}\n+\n+\n def test_chunked_encoding(test_client_factory: TestClientFactory) -> None:\n     async def app(scope: Scope, receive: Receive, send: Send) -> None:\n         request = Request(scope, receive)\n",
+  "files_changed": [
+    "starlette/requests.py",
+    "tests/test_requests.py"
+  ],
+  "source_files": [
+    "starlette/requests.py"
+  ],
+  "test_files": [
+    "tests/test_requests.py"
+  ],
+  "lines_added": 17,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "7f78881448d06ac2b296fc3533abbb0148fb9402",
+  "base_commit_sha": "f617177ab955f7e79e0d863a7c28adb6200b4acc",
+  "head_commit_sha": "4b8c5fe874ea2df8566338f51bd833e716646092",
+  "merged_at": "2025-09-20T21:43:26Z"
+}

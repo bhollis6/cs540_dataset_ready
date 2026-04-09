@@ -1,0 +1,37 @@
+[project]
+name = "llm-judge"
+version = "0.1.0"
+description = "LLM-as-a-Judge PR selection for agent-readiness experiments"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "numpy>=1.24.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+api = [
+    "anthropic>=0.40.0",
+    "openai>=1.0.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.4.0",
+]
+
+[project.scripts]
+llm-judge = "src.cli:main"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/evaluator/prompts.py" = ["E501"]
+"src/deep_eval/prompts.py" = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

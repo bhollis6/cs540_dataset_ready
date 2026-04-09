@@ -1,0 +1,28 @@
+{
+  "candidate_id": "starlette_pr_2600",
+  "repo": "encode/starlette",
+  "pr_number": 2600,
+  "title": "Ensure accurate `root_path` removal in `get_route_path` function",
+  "description": "<!-- Thanks for contributing to Starlette! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\nIssue: https://github.com/encode/starlette/issues/2599\r\nDiscussion: https://github.com/encode/starlette/discussions/2495\r\n\r\n# Summary\r\n\r\nChange regex used to remove root_path to consider only the root path without match simillar endpoint that contains the root_path as substring.\r\nex: \r\n\r\n```\r\nroot_path = \"product\"\r\nscope[\"path\"] = \"products/all\"\r\n```\r\n\r\nbefore:\r\n```\r\nre.sub(r\"^\" + root_path, \"\", scope[\"path\"]) -> 's/all'\r\n```\r\n\r\nafter: \r\n```\r\nre.sub(r\"^\" + root_path + r\"(?=/|$)\", \"\", scope[\"path\"]) -> '/products/all'\r\n```\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/_utils.py b/starlette/_utils.py\nindex 90bd346fd..f615eeea4 100644\n--- a/starlette/_utils.py\n+++ b/starlette/_utils.py\n@@ -85,5 +85,5 @@ def collapse_excgroups() -> typing.Generator[None, None, None]:\n \n def get_route_path(scope: Scope) -> str:\n     root_path = scope.get(\"root_path\", \"\")\n-    route_path = re.sub(r\"^\" + root_path, \"\", scope[\"path\"])\n+    route_path = re.sub(r\"^\" + root_path + r\"(?=/|$)\", \"\", scope[\"path\"])\n     return route_path\n",
+  "test_diff": "diff --git a/tests/test__utils.py b/tests/test__utils.py\nindex 2ecf47483..f46775b4b 100644\n--- a/tests/test__utils.py\n+++ b/tests/test__utils.py\n@@ -1,7 +1,10 @@\n import functools\n from typing import Any\n \n-from starlette._utils import is_async_callable\n+import pytest\n+\n+from starlette._utils import get_route_path, is_async_callable\n+from starlette.types import Scope\n \n \n def test_async_func() -> None:\n@@ -78,3 +81,15 @@ async def async_func(\n     partial = functools.partial(async_func, b=2)\n     nested_partial = functools.partial(partial, a=1)\n     assert is_async_callable(nested_partial)\n+\n+\n+@pytest.mark.parametrize(\n+    \"scope, expected_result\",\n+    [\n+        ({\"path\": \"/foo-123/bar\", \"root_path\": \"/foo\"}, \"/foo-123/bar\"),\n+        ({\"path\": \"/foo/bar\", \"root_path\": \"/foo\"}, \"/bar\"),\n+        ({\"path\": \"/foo\", \"root_path\": \"/foo\"}, \"\"),\n+    ],\n+)\n+def test_get_route_path(scope: Scope, expected_result: str) -> None:\n+    assert get_route_path(scope) == expected_result\ndiff --git a/tests/test_routing.py b/tests/test_routing.py\nindex 9fa44def4..6bb398ba5 100644\n--- a/tests/test_routing.py\n+++ b/tests/test_routing.py\n@@ -1221,6 +1221,12 @@ async def pure_asgi_echo_paths(scope: Scope, receive: Receive, send: Send, name:\n         name=\"path\",\n         methods=[\"GET\"],\n     ),\n+    Route(\n+        \"/root-queue/path\",\n+        functools.partial(echo_paths, name=\"queue_path\"),\n+        name=\"queue_path\",\n+        methods=[\"POST\"],\n+    ),\n     Mount(\"/asgipath\", app=functools.partial(pure_asgi_echo_paths, name=\"asgipath\")),\n     Mount(\n         \"/sub\",\n@@ -1266,3 +1272,11 @@ def test_paths_with_root_path(test_client_factory: TestClientFactory) -> None:\n         \"path\": \"/root/sub/path\",\n         \"root_path\": \"/root/sub\",\n     }\n+\n+    response = client.post(\"/root/root-queue/path\")\n+    assert response.status_code == 200\n+    assert response.json() == {\n+        \"name\": \"queue_path\",\n+        \"path\": \"/root/root-queue/path\",\n+        \"root_path\": \"/root\",\n+    }\n",
+  "files_changed": [
+    "starlette/_utils.py",
+    "tests/test__utils.py",
+    "tests/test_routing.py"
+  ],
+  "source_files": [
+    "starlette/_utils.py"
+  ],
+  "test_files": [
+    "tests/test__utils.py",
+    "tests/test_routing.py"
+  ],
+  "lines_added": 31,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "1131b3cbcd6f9e2aa3500fd4d7bf3cd200fa2532",
+  "base_commit_sha": "1eb4036110ef46768b7e5ff359021d6eba0d8254",
+  "head_commit_sha": "25c3339e79db8fb2fbda65a5b72632b8faf3f4e9",
+  "merged_at": "2024-09-01T15:12:43Z"
+}

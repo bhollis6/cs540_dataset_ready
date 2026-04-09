@@ -1,0 +1,26 @@
+{
+  "candidate_id": "starlette_pr_2649",
+  "repo": "encode/starlette",
+  "pr_number": 2649,
+  "title": "Revert \"Add support for ASGI `pathsend` extension\"",
+  "description": "This reverts #2435.\r\nSuperseed #2616, as discussed in [comments](https://github.com/encode/starlette/pull/2616#discussion_r1686260072).\r\n\r\n# Checklist\r\n\r\n- [X] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [X] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/starlette/responses.py b/starlette/responses.py\nindex bd66f897e..1f41c23d4 100644\n--- a/starlette/responses.py\n+++ b/starlette/responses.py\n@@ -341,8 +341,6 @@ async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:\n         )\n         if scope[\"method\"].upper() == \"HEAD\":\n             await send({\"type\": \"http.response.body\", \"body\": b\"\", \"more_body\": False})\n-        elif \"extensions\" in scope and \"http.response.pathsend\" in scope[\"extensions\"]:\n-            await send({\"type\": \"http.response.pathsend\", \"path\": str(self.path)})\n         else:\n             async with await anyio.open_file(self.path, mode=\"rb\") as file:\n                 more_body = True\n",
+  "test_diff": "diff --git a/tests/test_responses.py b/tests/test_responses.py\nindex 434cc5a22..c134cbda5 100644\n--- a/tests/test_responses.py\n+++ b/tests/test_responses.py\n@@ -350,38 +350,6 @@ def test_file_response_with_method_warns(\n         FileResponse(path=tmpdir, filename=\"example.png\", method=\"GET\")\n \n \n-@pytest.mark.anyio\n-async def test_file_response_with_pathsend(tmpdir: Path) -> None:\n-    path = os.path.join(tmpdir, \"xyz\")\n-    content = b\"<file content>\" * 1000\n-    with open(path, \"wb\") as file:\n-        file.write(content)\n-\n-    app = FileResponse(path=path, filename=\"example.png\")\n-\n-    async def receive() -> Message:  # type: ignore[empty-body]\n-        ...  # pragma: no cover\n-\n-    async def send(message: Message) -> None:\n-        if message[\"type\"] == \"http.response.start\":\n-            assert message[\"status\"] == status.HTTP_200_OK\n-            headers = Headers(raw=message[\"headers\"])\n-            assert headers[\"content-type\"] == \"image/png\"\n-            assert \"content-length\" in headers\n-            assert \"content-disposition\" in headers\n-            assert \"last-modified\" in headers\n-            assert \"etag\" in headers\n-        elif message[\"type\"] == \"http.response.pathsend\":\n-            assert message[\"path\"] == str(path)\n-\n-    # Since the TestClient doesn't support `pathsend`, we need to test this directly.\n-    await app(\n-        {\"type\": \"http\", \"method\": \"get\", \"extensions\": {\"http.response.pathsend\": {}}},\n-        receive,\n-        send,\n-    )\n-\n-\n def test_set_cookie(\n     test_client_factory: TestClientFactory, monkeypatch: pytest.MonkeyPatch\n ) -> None:\n",
+  "files_changed": [
+    "starlette/responses.py",
+    "tests/test_responses.py"
+  ],
+  "source_files": [
+    "starlette/responses.py"
+  ],
+  "test_files": [
+    "tests/test_responses.py"
+  ],
+  "lines_added": 0,
+  "lines_removed": 34,
+  "has_test_changes": true,
+  "merge_commit_sha": "67f473d4a3a25e821ab2f30da88b54854ae41e86",
+  "base_commit_sha": "8b1d2c27233ce8cd118b7ebdeb0bc08f68f2a90b",
+  "head_commit_sha": "a6909db26fe06f200e5f14983111c038fd767eb2",
+  "merged_at": "2024-07-23T10:10:14Z"
+}

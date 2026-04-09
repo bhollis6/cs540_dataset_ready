@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_3376",
+  "repo": "encode/httpx",
+  "pr_number": 3376,
+  "title": "Just use default `safe=...` characters for `urlescape`",
+  "description": "Don't try to be clever about which `safe=...` characters to use when calling `urlescape()`.\r\n",
+  "patch_diff": "diff --git a/httpx/_urls.py b/httpx/_urls.py\nindex bfc0e9e698..7976cb1837 100644\n--- a/httpx/_urls.py\n+++ b/httpx/_urls.py\n@@ -12,20 +12,6 @@\n __all__ = [\"URL\", \"QueryParams\"]\n \n \n-# To urlencode query parameters, we use the whatwg query percent-encode set\n-# and additionally escape U+0025 (%), U+0026 (&), U+002B (+) and U+003D (=).\n-\n-# https://url.spec.whatwg.org/#percent-encoded-bytes\n-\n-URLENCODE_SAFE = \"\".join(\n-    [\n-        chr(i)\n-        for i in range(0x20, 0x7F)\n-        if i not in (0x20, 0x22, 0x23, 0x25, 0x26, 0x2B, 0x3C, 0x3D, 0x3E)\n-    ]\n-)\n-\n-\n class URL:\n     \"\"\"\n     url = httpx.URL(\"HTTPS://jo%40email.com:a%20secret@m\u00fcller.de:1234/pa%20th?search=ab#anchorlink\")\n@@ -619,7 +605,7 @@ def __eq__(self, other: typing.Any) -> bool:\n         return sorted(self.multi_items()) == sorted(other.multi_items())\n \n     def __str__(self) -> str:\n-        return urlencode(self.multi_items(), safe=URLENCODE_SAFE)\n+        return urlencode(self.multi_items())\n \n     def __repr__(self) -> str:\n         class_name = self.__class__.__name__\n",
+  "test_diff": "diff --git a/tests/models/test_url.py b/tests/models/test_url.py\nindex d32ed52169..03072e8f5c 100644\n--- a/tests/models/test_url.py\n+++ b/tests/models/test_url.py\n@@ -148,7 +148,7 @@ def test_url_query_encoding():\n     assert url.raw_path == b\"/?a=b+c&d=e/f\"\n \n     url = httpx.URL(\"https://www.example.com/\", params={\"a\": \"b c\", \"d\": \"e/f\"})\n-    assert url.raw_path == b\"/?a=b+c&d=e/f\"\n+    assert url.raw_path == b\"/?a=b+c&d=e%2Ff\"\n \n \n def test_url_params():\n@@ -309,7 +309,7 @@ def test_param_with_existing_escape_requires_encoding():\n     # even if they include a valid escape sequence.\n     # We want to match browser form behaviour here.\n     url = httpx.URL(\"http://webservice\", params={\"u\": \"http://example.com?q=foo%2Fa\"})\n-    assert str(url) == \"http://webservice?u=http://example.com?q%3Dfoo%252Fa\"\n+    assert str(url) == \"http://webservice?u=http%3A%2F%2Fexample.com%3Fq%3Dfoo%252Fa\"\n \n \n # Tests for query parameter percent encoding.\n",
+  "files_changed": [
+    "httpx/_urls.py",
+    "tests/models/test_url.py"
+  ],
+  "source_files": [
+    "httpx/_urls.py"
+  ],
+  "test_files": [
+    "tests/models/test_url.py"
+  ],
+  "lines_added": 3,
+  "lines_removed": 17,
+  "has_test_changes": true,
+  "merge_commit_sha": "5dda2aa30692e8529555f57efa7bcd203a7d5ac1",
+  "base_commit_sha": "544038155382473ce87b17ef2238c96e48dee700",
+  "head_commit_sha": "68c18e383ce93b9e4fbe2923b80a834fe3e06923",
+  "merged_at": "2024-10-28T17:38:16Z"
+}

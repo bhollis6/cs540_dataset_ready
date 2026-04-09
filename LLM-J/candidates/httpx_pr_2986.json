@@ -1,0 +1,27 @@
+{
+  "candidate_id": "httpx_pr_2986",
+  "repo": "encode/httpx",
+  "pr_number": 2986,
+  "title": "Allow URLs where username or password contains unescaped '@'.",
+  "description": "Closes https://github.com/encode/httpx/issues/2985.",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 02ccc86a03..f81d973e4b 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.\n \n The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).\n \n+## Unreleased\n+\n+### Fixed\n+\n+* Allow URLs where username or password contains unescaped '@'. (#2986)\n+\n ## 0.25.2 (24th November, 2023)\n \n ### Added\ndiff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex a9a0aecd9b..c44e3519a0 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -62,8 +62,8 @@\n     (\n         r\"(?:(?P<userinfo>{userinfo})@)?\" r\"(?P<host>{host})\" r\":?(?P<port>{port})?\"\n     ).format(\n-        userinfo=\"[^@]*\",  # Any character sequence not including '@'.\n-        host=\"(\\\\[.*\\\\]|[^:]*)\",  # Either any character sequence not including ':',\n+        userinfo=\".*\",  # Any character sequence.\n+        host=\"(\\\\[.*\\\\]|[^:@]*)\",  # Either any character sequence excluding ':' or '@',\n         # or an IPv6 address enclosed within square brackets.\n         port=\".*\",  # Any character sequence.\n     )\n",
+  "test_diff": "diff --git a/tests/models/test_url.py b/tests/models/test_url.py\nindex 34250e3830..4683a321d6 100644\n--- a/tests/models/test_url.py\n+++ b/tests/models/test_url.py\n@@ -132,6 +132,54 @@ def test_url_params():\n     assert url.params == httpx.QueryParams({\"a\": \"123\"})\n \n \n+# Tests for username and password\n+\n+\n+@pytest.mark.parametrize(\n+    \"url,userinfo,username,password\",\n+    [\n+        # username and password in URL.\n+        (\n+            \"https://username:password@example.com\",\n+            b\"username:password\",\n+            \"username\",\n+            \"password\",\n+        ),\n+        # username and password in URL with percent escape sequences.\n+        (\n+            \"https://username%40gmail.com:pa%20ssword@example.com\",\n+            b\"username%40gmail.com:pa%20ssword\",\n+            \"username@gmail.com\",\n+            \"pa ssword\",\n+        ),\n+        (\n+            \"https://user%20name:p%40ssword@example.com\",\n+            b\"user%20name:p%40ssword\",\n+            \"user name\",\n+            \"p@ssword\",\n+        ),\n+        # username and password in URL without percent escape sequences.\n+        (\n+            \"https://username@gmail.com:pa ssword@example.com\",\n+            b\"username%40gmail.com:pa%20ssword\",\n+            \"username@gmail.com\",\n+            \"pa ssword\",\n+        ),\n+        (\n+            \"https://user name:p@ssword@example.com\",\n+            b\"user%20name:p%40ssword\",\n+            \"user name\",\n+            \"p@ssword\",\n+        ),\n+    ],\n+)\n+def test_url_username_and_password(url, userinfo, username, password):\n+    url = httpx.URL(url)\n+    assert url.userinfo == userinfo\n+    assert url.username == username\n+    assert url.password == password\n+\n+\n # Tests for different host types\n \n \n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "httpx/_urlparse.py",
+    "tests/models/test_url.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/models/test_url.py"
+  ],
+  "lines_added": 56,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "b471f01d668b9ef730e8843531b07b1c21b74c47",
+  "base_commit_sha": "5b5f6d8e172910371b5901f6e21717097274c513",
+  "head_commit_sha": "c1f3cc58d2c1bca05204f47a9e375998b59ab912",
+  "merged_at": "2023-12-07T10:08:14Z"
+}

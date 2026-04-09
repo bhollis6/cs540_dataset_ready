@@ -1,0 +1,28 @@
+{
+  "candidate_id": "httpx_pr_2998",
+  "repo": "encode/httpx",
+  "pr_number": 2998,
+  "title": "Fixed `iter_text` adding an empty string",
+  "description": "# Summary\r\n\r\nFixes `TextChunker().decode(\"\")` not handling empty string, as exposed in https://github.com/encode/httpx/discussions/2995\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [ ] I've updated the documentation accordingly.\r\n",
+  "patch_diff": "diff --git a/httpx/_decoders.py b/httpx/_decoders.py\nindex 57c649297a..3f507c8e04 100644\n--- a/httpx/_decoders.py\n+++ b/httpx/_decoders.py\n@@ -212,7 +212,7 @@ def __init__(self, chunk_size: typing.Optional[int] = None) -> None:\n \n     def decode(self, content: str) -> typing.List[str]:\n         if self._chunk_size is None:\n-            return [content]\n+            return [content] if content else []\n \n         self._buffer.write(content)\n         if self._buffer.tell() >= self._chunk_size:\n@@ -280,7 +280,9 @@ def decode(self, text: str) -> typing.List[str]:\n             text = text[:-1]\n \n         if not text:\n-            return []\n+            # NOTE: the edge case input of empty text doesn't occur in practice,\n+            # because other httpx internals filter out this value\n+            return []  # pragma: no cover\n \n         trailing_newline = text[-1] in NEWLINE_CHARS\n         lines = text.splitlines()\ndiff --git a/httpx/_models.py b/httpx/_models.py\nindex dac177c4f6..b8617cdab5 100644\n--- a/httpx/_models.py\n+++ b/httpx/_models.py\n@@ -853,7 +853,7 @@ def iter_text(\n                     yield chunk\n             text_content = decoder.flush()\n             for chunk in chunker.decode(text_content):\n-                yield chunk\n+                yield chunk  # pragma: no cover\n             for chunk in chunker.flush():\n                 yield chunk\n \n@@ -957,7 +957,7 @@ async def aiter_text(\n                     yield chunk\n             text_content = decoder.flush()\n             for chunk in chunker.decode(text_content):\n-                yield chunk\n+                yield chunk  # pragma: no cover\n             for chunk in chunker.flush():\n                 yield chunk\n \n",
+  "test_diff": "diff --git a/tests/test_decoders.py b/tests/test_decoders.py\nindex 61c9a4acca..170a93453c 100644\n--- a/tests/test_decoders.py\n+++ b/tests/test_decoders.py\n@@ -219,6 +219,17 @@ def test_text_decoder_empty_cases():\n     assert response.text == \"\"\n \n \n+@pytest.mark.parametrize(\n+    [\"data\", \"expected\"],\n+    [((b\"Hello,\", b\" world!\"), [\"Hello,\", \" world!\"])],\n+)\n+def test_streaming_text_decoder(\n+    data: typing.Iterable[bytes], expected: typing.List[str]\n+) -> None:\n+    response = httpx.Response(200, content=iter(data))\n+    assert list(response.iter_text()) == expected\n+\n+\n def test_line_decoder_nl():\n     response = httpx.Response(200, content=[b\"\"])\n     assert list(response.iter_lines()) == []\n",
+  "files_changed": [
+    "httpx/_decoders.py",
+    "httpx/_models.py",
+    "tests/test_decoders.py"
+  ],
+  "source_files": [
+    "httpx/_decoders.py",
+    "httpx/_models.py"
+  ],
+  "test_files": [
+    "tests/test_decoders.py"
+  ],
+  "lines_added": 17,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "1e110964736a95d822144390b99d7ecf17fca527",
+  "base_commit_sha": "90538a3b4610ba49ce16c997bcfdb9101f9503be",
+  "head_commit_sha": "2781f4db7ad4ce4b6d300e775325b49d4654fc17",
+  "merged_at": "2023-12-11T22:34:25Z"
+}

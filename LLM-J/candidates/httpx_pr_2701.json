@@ -1,0 +1,26 @@
+{
+  "candidate_id": "httpx_pr_2701",
+  "repo": "encode/httpx",
+  "pr_number": 2701,
+  "title": "Fix for gen-delims escaping behaviour in path/query/fragment",
+  "description": "Fix which gen-delims need to be escaped for path/query/fragment components in URL.\r\n\r\n* `path` now allows `: / [ ] @` instead of `: @ /`\r\n* `query` now allows `: / [ ] @ ?` instead of `/ ?`\r\n* `fragment` now allows `: / [ ] @ ? #` instead of `/ ?`\r\n\r\nCloses #2694",
+  "patch_diff": "diff --git a/httpx/_urlparse.py b/httpx/_urlparse.py\nindex 5ee6e58201..69ff0b4b02 100644\n--- a/httpx/_urlparse.py\n+++ b/httpx/_urlparse.py\n@@ -253,12 +253,19 @@ def urlparse(url: str = \"\", **kwargs: typing.Optional[str]) -> ParseResult:\n     if has_authority:\n         path = normalize_path(path)\n \n-    parsed_path: str = quote(path, safe=SUB_DELIMS + \":@/\")\n+    # The GEN_DELIMS set is... : / ? # [ ] @\n+    # These do not need to be percent-quoted unless they serve as delimiters for the\n+    # specific component.\n+\n+    # For 'path' we need to drop ? and # from the GEN_DELIMS set.\n+    parsed_path: str = quote(path, safe=SUB_DELIMS + \":/[]@\")\n+    # For 'query' we need to drop '#' from the GEN_DELIMS set.\n     parsed_query: typing.Optional[str] = (\n-        None if query is None else quote(query, safe=SUB_DELIMS + \"/?\")\n+        None if query is None else quote(query, safe=SUB_DELIMS + \":/?[]@\")\n     )\n+    # For 'fragment' we can include all of the GEN_DELIMS set.\n     parsed_fragment: typing.Optional[str] = (\n-        None if fragment is None else quote(fragment, safe=SUB_DELIMS + \"/?\")\n+        None if fragment is None else quote(fragment, safe=SUB_DELIMS + \":/?#[]@\")\n     )\n \n     # The parsed ASCII bytestrings are our canonical form.\n",
+  "test_diff": "diff --git a/tests/test_urlparse.py b/tests/test_urlparse.py\nindex 575ec84a8b..0347d3124c 100644\n--- a/tests/test_urlparse.py\n+++ b/tests/test_urlparse.py\n@@ -247,3 +247,33 @@ def test_copy_with():\n \n     url = url.copy_with(path=\"/abc\")\n     assert str(url) == \"http://example.com/abc\"\n+\n+\n+# Tests for percent encoding across path, query, and fragement...\n+\n+\n+def test_path_percent_encoding():\n+    # Test percent encoding for SUB_DELIMS ALPHA NUM and allowable GEN_DELIMS\n+    url = httpx.URL(\"https://example.com/!$&'()*+,;= abc ABC 123 :/[]@\")\n+    assert url.raw_path == b\"/!$&'()*+,;=%20abc%20ABC%20123%20:/[]@\"\n+    assert url.path == \"/!$&'()*+,;= abc ABC 123 :/[]@\"\n+    assert url.query == b\"\"\n+    assert url.fragment == \"\"\n+\n+\n+def test_query_percent_encoding():\n+    # Test percent encoding for SUB_DELIMS ALPHA NUM and allowable GEN_DELIMS\n+    url = httpx.URL(\"https://example.com/?!$&'()*+,;= abc ABC 123 :/[]@\" + \"?\")\n+    assert url.raw_path == b\"/?!$&'()*+,;=%20abc%20ABC%20123%20:/[]@?\"\n+    assert url.path == \"/\"\n+    assert url.query == b\"!$&'()*+,;=%20abc%20ABC%20123%20:/[]@?\"\n+    assert url.fragment == \"\"\n+\n+\n+def test_fragment_percent_encoding():\n+    # Test percent encoding for SUB_DELIMS ALPHA NUM and allowable GEN_DELIMS\n+    url = httpx.URL(\"https://example.com/#!$&'()*+,;= abc ABC 123 :/[]@\" + \"?#\")\n+    assert url.raw_path == b\"/\"\n+    assert url.path == \"/\"\n+    assert url.query == b\"\"\n+    assert url.fragment == \"!$&'()*+,;= abc ABC 123 :/[]@?#\"\n",
+  "files_changed": [
+    "httpx/_urlparse.py",
+    "tests/test_urlparse.py"
+  ],
+  "source_files": [
+    "httpx/_urlparse.py"
+  ],
+  "test_files": [
+    "tests/test_urlparse.py"
+  ],
+  "lines_added": 40,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "ee432c0d3098375df258b6d5844e7569080b2369",
+  "base_commit_sha": "df5dbc05580a4c3225e70153729e2a306d67a472",
+  "head_commit_sha": "7be2dc0e7e7aa1f91d8b35d891bbb3d7971d9644",
+  "merged_at": "2023-05-09T13:20:12Z"
+}
