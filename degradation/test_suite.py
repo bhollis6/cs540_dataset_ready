@@ -72,4 +72,6 @@ def strip_test_harness(repo_path: str, dry_run: bool = True):
 if __name__ == "__main__":
     # Dry run = False, permantely delete
     # Insert repo directory for first parameter
-    strip_test_harness(r"starlette", dry_run=False)
+    import sys
+    target = sys.argv[1]
+    strip_test_harness(target, dry_run=False)

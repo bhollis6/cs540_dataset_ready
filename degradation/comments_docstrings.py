@@ -8,6 +8,7 @@ from pathlib import Path
 # Added 'tests' and 'test' to the exclusion list
 EXCLUDE_DIRS = {'.git', 'venv', 'env', '__pycache__', '.tox', 'build', 'dist', '.idea', '.vscode', 'tests', 'test', 'testing'}
 PRAGMAS = ('noqa', 'type:', 'pylint:', 'fmt:', 'mypy:', 'pyright:', 'coding:')
+EXCLUDE_FILES = {'sync.py', 'compile.py', 'cli.py'}
 
 def is_structurally_identical(source_original: str, source_stripped: str) -> bool:
     class StructuralNodeVisitor(ast.NodeVisitor):
@@ -135,7 +136,7 @@ def strip_comments_docstrings(directory):
         
         for file in files:
             # Skip test files explicitly
-            if file.endswith('.py') and not file.startswith('test_') and not file.endswith('_test.py'):
+            if file.endswith('.py') and not file.startswith('test_') and not file.endswith('_test.py') and file not in EXCLUDE_FILES:
                 filepath = Path(root) / file
                 if process_file(filepath):
                     processed_count += 1
@@ -144,12 +145,15 @@ def strip_comments_docstrings(directory):
                     failed_count += 1
 
     print(f"\nDone.")
-    print(f"Successfully stripped: {processed_count} files.")
+    print(f"Successfully stripped: {processed_count} files of comments and docstrings.")
     if failed_count > 0:
         print(f"Skipped (Safety Reverts/Errors): {failed_count} files.")
 
 if __name__ == "__main__":
     import sys
     # Allow passing directory via CLI, default to current dir if none provided
-    target = sys.argv[1] if len(sys.argv) > 1 else "."
-    strip_comments_docstrings(r"starlette")
+    if len(sys.argv) > 1:
+        target = sys.argv[1]
+        strip_comments_docstrings(target)
+    else:
+        print("Enter an directory to strip")

@@ -1,28 +1,40 @@
 import libcst as cst
 import random
 import glob
+import sys
+import os
 
-class TypeHintStripper(cst.CSTTransformer):
-    def __init__(self, removal_chance=1):
+class SuperSafeTypeHintStripper(cst.CSTTransformer):
+    def __init__(self, removal_chance=1.0):
         self.removal_chance = removal_chance
         self.hints_encountered = 0
         self.hints_removed = 0
         
-        self.in_protected_class = False
-        self.in_protected_function = False
+        self.class_protection_stack = []
+        self.func_protection_stack = []
 
-        # Edge cases that shouldn't be degraded.
-        self.protected_class_decorators = {"dataclass", "define", "type"} # dataclasses, attrs, strawberry
-        self.protected_base_classes = {"BaseModel", "NamedTuple", "TypedDict", "Base", "DeclarativeBase"} # Pydantic, typing, SQLAlchemy
+        # Expanded to protect attrs, pydantic, dataclasses, and ORMs
+        self.protected_class_decorators = {
+            "dataclass", "define", "type", "s", "attrs", "frozen",
+            "pydantic.dataclasses.dataclass", "as_declarative"
+        }
+        
+        # Expanded to protect Settings, RootModels, and SQL structural models
+        self.protected_base_classes = {
+            "BaseModel", "NamedTuple", "TypedDict", "Base", "DeclarativeBase",
+            "Protocol", "Generic", "Enum", "IntEnum", "StrEnum",
+            "BaseSettings", "RootModel", "SQLModel", "MappedAsDataclass" 
+        }
+        
+        # Expanded to protect API routers, CLI tools, and test frameworks
         self.protected_func_decorators = {
-            "get", "post", "put", "delete", "patch", # FastAPI
-            "command",                               # Typer CLI
-            "singledispatch", "register",            # functools
-            "beartype"                               # Runtime checkers
+            "get", "post", "put", "delete", "patch",        # FastAPI/Flask
+            "command", "group", "option", "argument",       # Typer/Click
+            "singledispatch", "register", "beartype",       # Standard/Runtime
+            "overload", "given", "fixture", "model_validator", "field_validator"
         }
 
     def _get_node_name(self, node):
-        """Safely extracts the string name from various AST node types (Name, Attribute, Call)."""
         if isinstance(node, cst.Name):
             return node.value
         elif isinstance(node, cst.Attribute):
@@ -31,42 +43,48 @@ class TypeHintStripper(cst.CSTTransformer):
             return self._get_node_name(node.func)
         return None
 
+    @property
+    def is_protected(self):
+        return any(self.class_protection_stack) or any(self.func_protection_stack)
+
     def visit_ClassDef(self, node: cst.ClassDef) -> bool:
-        # Check decorators
+        protected = False
         for dec in node.decorators:
-            name = self._get_node_name(dec.decorator)
-            if name in self.protected_class_decorators:
-                self.in_protected_class = True
-                return True
+            if self._get_node_name(dec.decorator) in self.protected_class_decorators:
+                protected = True
+                break
 
-        # Check base classes (inheritance)
-        for base in node.bases:
-            name = self._get_node_name(base.value)
-            if name in self.protected_base_classes:
-                self.in_protected_class = True
-                return True
+        if not protected:
+            for base in node.bases:
+                if self._get_node_name(base.value) in self.protected_base_classes:
+                    protected = True
+                    break
 
-        self.in_protected_class = False
+        self.class_protection_stack.append(protected)
         return True
 
     def leave_ClassDef(self, original_node, updated_node):
-        self.in_protected_class = False
+        self.class_protection_stack.pop()
         return updated_node
 
     def visit_FunctionDef(self, node: cst.FunctionDef) -> bool:
+        protected = False
         for dec in node.decorators:
-            name = self._get_node_name(dec.decorator)
-            if name in self.protected_func_decorators:
-                self.in_protected_function = True
-                return True
-                    
-        self.in_protected_function = False
+            if self._get_node_name(dec.decorator) in self.protected_func_decorators:
+                protected = True
+                break
+                
+        self.func_protection_stack.append(protected)
         return True
 
     def leave_FunctionDef(self, original_node, updated_node):
-        self.in_protected_function = False
+        self.func_protection_stack.pop()
         
-        if original_node.returns and not self.in_protected_class and not self.in_protected_function:
+        # Protect all dunder methods (like __init__, __init_subclass__) to avoid AST corruption
+        if original_node.name.value.startswith("__") and original_node.name.value.endswith("__"):
+             return updated_node
+
+        if original_node.returns and not self.is_protected:
             self.hints_encountered += 1
             if random.random() < self.removal_chance:
                 self.hints_removed += 1
@@ -74,7 +92,7 @@ class TypeHintStripper(cst.CSTTransformer):
         return updated_node
 
     def leave_AnnAssign(self, original_node, updated_node):
-        if self.in_protected_class or self.in_protected_function:
+        if self.is_protected:
             return updated_node
             
         self.hints_encountered += 1 
@@ -83,11 +101,14 @@ class TypeHintStripper(cst.CSTTransformer):
             if updated_node.value is None:
                 return cst.Pass()
             else:
-                return cst.Assign(targets=[cst.AssignTarget(updated_node.target)], value=updated_node.value)
+                return cst.Assign(
+                    targets=[cst.AssignTarget(updated_node.target)], 
+                    value=updated_node.value
+                )
         return updated_node
 
     def leave_Param(self, original_node, updated_node):
-        if self.in_protected_class or self.in_protected_function:
+        if self.is_protected:
             return updated_node
             
         if original_node.annotation:
@@ -97,19 +118,23 @@ class TypeHintStripper(cst.CSTTransformer):
                 return updated_node.with_changes(annotation=None)
         return updated_node
 
-def process_repo(repo_path):
-    files = glob.glob(f"{repo_path}/**/*.py", recursive=True)
+def process_repo(repo_path, skip_tests=True):
+    files = glob.glob(os.path.join(repo_path, "**", "*.py"), recursive=True)
     
     total_hints_before = 0
     total_hints_removed = 0
     
     for file_path in files:
+        normalized_path = file_path.lower()
+        if skip_tests and ("test" in normalized_path or "conftest.py" in normalized_path):
+            continue
+            
         with open(file_path, "r", encoding="utf-8") as f:
             source = f.read()
             
         try:
             tree = cst.parse_module(source)
-            transformer = TypeHintStripper(removal_chance=1)
+            transformer = SuperSafeTypeHintStripper(removal_chance=1.0)
             modified_tree = tree.visit(transformer)
             
             total_hints_before += transformer.hints_encountered
@@ -118,11 +143,15 @@ def process_repo(repo_path):
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(modified_tree.code)
                 
-            print(f"Processed: {file_path} (Removed {transformer.hints_removed}/{transformer.hints_encountered} hints)")
         except Exception as e:
             print(f"Failed to process {file_path}: {e}")
 
     print(f"\nSummary: Removed {total_hints_removed} out of {total_hints_before} safe hints.")
 
-# Insert repo directory here
-process_repo("starlette")
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <repo_path>")
+        sys.exit(1)
+        
+    target = sys.argv[1]
+    process_repo(target, skip_tests=True)
