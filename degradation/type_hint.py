@@ -1,8 +1,13 @@
 import libcst as cst
 import random
-import glob
 import sys
-import os
+from pathlib import Path
+
+
+EXCLUDE_DIR_NAMES = {
+    ".git", "venv", "env", ".venv", "__pycache__", ".tox", ".nox",
+    "build", "dist", ".idea", ".vscode",
+}
 
 class SuperSafeTypeHintStripper(cst.CSTTransformer):
     def __init__(self, removal_chance=1.0):
@@ -118,15 +123,32 @@ class SuperSafeTypeHintStripper(cst.CSTTransformer):
                 return updated_node.with_changes(annotation=None)
         return updated_node
 
-def process_repo(repo_path, skip_tests=True):
-    files = glob.glob(os.path.join(repo_path, "**", "*.py"), recursive=True)
+def _should_skip_file(file_path: Path, repo_root: Path, skip_tests: bool) -> bool:
+    relative_parts = file_path.relative_to(repo_root).parts
+    if any(part in EXCLUDE_DIR_NAMES for part in relative_parts[:-1]):
+        return True
+
+    if not skip_tests:
+        return False
+
+    name = file_path.name.lower()
+    return (
+        name == "conftest.py"
+        or name.startswith("test_")
+        or name.endswith("_test.py")
+        or any(part in {"tests", "test", "testing"} for part in relative_parts[:-1])
+    )
+
+
+def process_repo(repo_path, skip_tests=False):
+    repo_root = Path(repo_path).resolve()
+    files = [path for path in repo_root.rglob("*.py") if path.is_file()]
     
     total_hints_before = 0
     total_hints_removed = 0
     
     for file_path in files:
-        normalized_path = file_path.lower()
-        if skip_tests and ("test" in normalized_path or "conftest.py" in normalized_path):
+        if _should_skip_file(file_path, repo_root, skip_tests):
             continue
             
         with open(file_path, "r", encoding="utf-8") as f:
@@ -144,7 +166,7 @@ def process_repo(repo_path, skip_tests=True):
                 f.write(modified_tree.code)
                 
         except Exception as e:
-            print(f"Failed to process {file_path}: {e}")
+                print(f"Failed to process {file_path}: {e}")
 
     print(f"\nSummary: Removed {total_hints_removed} out of {total_hints_before} safe hints.")
 
@@ -154,4 +176,4 @@ if __name__ == "__main__":
         sys.exit(1)
         
     target = sys.argv[1]
-    process_repo(target, skip_tests=True)
+    process_repo(target, skip_tests=False)

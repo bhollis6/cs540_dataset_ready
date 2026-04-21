@@ -4,7 +4,14 @@ import json
 from pathlib import Path
 
 from src.evaluator.models import CriterionScore, EvaluationResult, JudgeResponse
-from src.scraper.models import CandidatePR, _is_non_code_file, _is_test_file
+from src.scraper.models import (
+    CandidatePR,
+    PRMetadata,
+    _is_executable_test_file,
+    _is_non_code_file,
+    _is_test_file,
+    _is_test_support_file,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -72,6 +79,47 @@ def test_is_test_file():
     assert _is_test_file("conftest.py") is True
     assert _is_test_file("src/main.py") is False
     assert _is_test_file("src/testing.py") is False
+
+
+def test_executable_test_file_classification():
+    assert _is_executable_test_file("tests/test_main.py") is True
+    assert _is_executable_test_file("src/main_test.py") is True
+    assert _is_executable_test_file("tests.py") is True
+    assert _is_executable_test_file("tests/conftest.py") is False
+    assert _is_executable_test_file("tests/utils.py") is False
+
+
+def test_test_support_file_classification():
+    assert _is_test_support_file("tests/conftest.py") is True
+    assert _is_test_support_file("tests/utils.py") is True
+    assert _is_test_support_file("tests/fixtures/data.json") is True
+    assert _is_test_support_file("tests/test_main.py") is False
+    assert _is_test_support_file("src/main.py") is False
+
+
+def test_prmetadata_splits_test_files_from_support_files():
+    pr = PRMetadata(
+        pr_number=1,
+        title="Fix something",
+        body="Detailed description for the bug fix.",
+        additions=10,
+        deletions=2,
+        changed_files_count=4,
+        file_paths=[
+            "src/app.py",
+            "tests/test_app.py",
+            "tests/conftest.py",
+            "tests/fixtures/sample.json",
+        ],
+        merge_commit_sha="abc",
+        base_commit_sha="def",
+        head_commit_sha="ghi",
+        merged_at="2024-01-01T00:00:00Z",
+    )
+    assert pr.source_files == ["src/app.py"]
+    assert pr.test_files == ["tests/test_app.py"]
+    assert pr.test_support_files == ["tests/conftest.py", "tests/fixtures/sample.json"]
+    assert pr.has_test_changes is True
 
 
 def test_is_non_code_file():

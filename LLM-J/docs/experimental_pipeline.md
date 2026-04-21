@@ -69,12 +69,14 @@ This is essentially the same approach SWE-bench uses, adapted for our controlled
 **Mutations:**
 1. Strip type hints (remove all type annotations via AST transformation)
 2. Degrade naming (replace meaningful variable/function names with generic symbols like v0, v1)
-3. Flatten directory structure (collapse nested directories, randomize file organization)
-4. Remove test files (delete test suite, simulating a repo with no tests)
+3. Remove comments and docstrings (strip natural-language intent and usage guidance)
+4. Remove test files (delete existing test files while preserving test infrastructure so the agent can still write and run its own tests)
+
+For the first three degradations, existing test files are also degraded. Otherwise the agent could recover clean type, naming, and behavioral signals from the untouched tests.
 
 **Why single mutations:** We isolate one variable at a time so we can cleanly attribute any performance change to that specific property. If we degrade naming and type hints at the same time and performance drops, we can't tell which one caused it. Single mutations keep the causal story clean. Combinations are a stretch goal if time permits.
 
-**Why these four:** Hu et al. (ASE 2024) showed that naming quality has the largest impact on model understanding at the function level. Type hints have been shown to improve model accuracy in related work (Luo et al., 2025). Directory structure and test suite breadth are practitioner-identified pain points (Gustafson, 2025) that no one has empirically measured yet. These four give us a mix of properties with existing evidence and properties we're testing for the first time.
+**Why these four:** Hu et al. (ASE 2024) showed that naming quality has the largest impact on model understanding at the function level. Type hints have been shown to improve model accuracy in related work (Luo et al., 2025). Comments/docstrings remove a natural-language intent channel that agents clearly use during orientation, while test surface captures both verification and behavioral examples. These four give us a mix of properties with existing evidence and properties we can manipulate cleanly without breaking the repo.
 
 **Output:** For each repo, 4 degraded versions alongside the original gold standard. 5 versions total per repo.
 

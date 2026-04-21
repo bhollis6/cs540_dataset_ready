@@ -99,6 +99,54 @@ def build_parser() -> argparse.ArgumentParser:
                       help="Skip pre-flight validation, only run LLM evaluation")
     deep.add_argument("--context-budget", type=int, default=None,
                       help="Max chars for source context (default: no limit)")
+    deep.add_argument(
+        "--min-navigation-depth",
+        type=int,
+        default=3,
+        help="Minimum Stage 2 navigation depth score required for verified manifests",
+    )
+
+    audit = subparsers.add_parser(
+        "audit-naming",
+        help="Create a disposable worktree and generate a repo-level naming readiness report",
+    )
+    audit.add_argument("--repo", required=True, help="GitHub repo in owner/name format")
+    audit.add_argument("--clones-dir", type=Path, default=Path("clones"))
+    audit.add_argument("--output-dir", type=Path, default=Path("audit_results"))
+    audit.add_argument("--commit", type=str, default=None,
+                       help="Optional commit SHA to audit instead of the current clone HEAD")
+    audit.add_argument("--sample-limit", type=int, default=10,
+                       help="How many sample symbols per kind to keep in the dry-run summary")
+    audit.add_argument("--live", action="store_true", default=False,
+                       help="Run a real rope-backed rename pass on the disposable worktree")
+    audit.add_argument("--keep-worktree", action="store_true", default=False,
+                       help="Keep the disposable audit worktree after the report is written")
+
+    readiness = subparsers.add_parser(
+        "audit-repo",
+        help="Create a disposable worktree and generate a repo-level degradation readiness report",
+    )
+    readiness.add_argument("--repo", required=True, help="GitHub repo in owner/name format")
+    readiness.add_argument("--clones-dir", type=Path, default=Path("clones"))
+    readiness.add_argument("--output-dir", type=Path, default=Path("audit_results"))
+    readiness.add_argument("--commit", type=str, default=None,
+                           help="Optional commit SHA to audit instead of the current clone HEAD")
+    readiness.add_argument("--sample-limit", type=int, default=10,
+                           help="How many sample symbols to keep for the embedded naming summary")
+    readiness.add_argument("--keep-worktree", action="store_true", default=False,
+                           help="Keep the disposable audit worktree after the report is written")
+
+    packet = subparsers.add_parser(
+        "build-packet",
+        help="Assemble a repo-level experiment review packet from readiness and task artifacts",
+    )
+    packet.add_argument("--repo", required=True, help="GitHub repo in owner/name format")
+    packet.add_argument("--results-dir", type=Path, default=Path("results"))
+    packet.add_argument("--deep-results-dir", type=Path, default=Path("deep_results"))
+    packet.add_argument("--readiness-dir", type=Path, default=Path("audit_results"))
+    packet.add_argument("--naming-audit-dir", type=Path, default=None,
+                        help="Optional separate directory for naming readiness reports")
+    packet.add_argument("--output-dir", type=Path, default=Path("packets"))
 
     return parser
 
@@ -318,10 +366,42 @@ def main() -> None:
         config.preflight_only = args.preflight_only
         config.skip_preflight = args.skip_preflight
         config.context_budget_chars = args.context_budget
+        config.min_navigation_depth = args.min_navigation_depth
         config._repo_filter = args.repo
         config._candidates_dir = args.candidates_dir
 
         cmd_deep_evaluate(config, args.candidates_dir, args.results_dir)
+
+    elif args.command == "audit-naming":
+        cmd_audit_naming(
+            repo=args.repo,
+            clones_dir=args.clones_dir,
+            output_dir=args.output_dir,
+            commit_sha=args.commit,
+            sample_limit=args.sample_limit,
+            live=args.live,
+            keep_worktree=args.keep_worktree,
+        )
+
+    elif args.command == "audit-repo":
+        cmd_audit_repo(
+            repo=args.repo,
+            clones_dir=args.clones_dir,
+            output_dir=args.output_dir,
+            commit_sha=args.commit,
+            sample_limit=args.sample_limit,
+            keep_worktree=args.keep_worktree,
+        )
+
+    elif args.command == "build-packet":
+        cmd_build_packet(
+            repo=args.repo,
+            results_dir=args.results_dir,
+            deep_results_dir=args.deep_results_dir,
+            readiness_dir=args.readiness_dir,
+            naming_audit_dir=args.naming_audit_dir,
+            output_dir=args.output_dir,
+        )
 
 
 def cmd_deep_evaluate(config: Config, candidates_dir: Path, results_dir: Path) -> None:
@@ -375,6 +455,90 @@ def cmd_deep_evaluate(config: Config, candidates_dir: Path, results_dir: Path) -
         print(f"    Pre-flight PASS: {preflight_pass}/{len(results)}")
         if judged:
             print(f"    Stage 2 ACCEPT: {accepted}/{len(judged)}")
+
+
+def cmd_audit_naming(
+    *,
+    repo: str,
+    clones_dir: Path,
+    output_dir: Path,
+    commit_sha: str | None,
+    sample_limit: int,
+    live: bool,
+    keep_worktree: bool,
+) -> None:
+    """Generate a repo-level naming readiness report."""
+    from src.workflow.repo_audit import run_repo_naming_audit
+
+    print(f"\n{'='*60}")
+    print(f"Naming Audit: {repo}")
+    print(f"Mode: {'live' if live else 'dry-run'}")
+    print(f"{'='*60}", flush=True)
+
+    report_path = run_repo_naming_audit(
+        repo=repo,
+        clones_dir=clones_dir,
+        output_dir=output_dir,
+        sample_limit=sample_limit,
+        live=live,
+        commit_sha=commit_sha,
+        keep_worktree=keep_worktree,
+    )
+    print(f"\nWrote naming readiness report to {report_path}")
+
+
+def cmd_audit_repo(
+    *,
+    repo: str,
+    clones_dir: Path,
+    output_dir: Path,
+    commit_sha: str | None,
+    sample_limit: int,
+    keep_worktree: bool,
+) -> None:
+    """Generate a repo-level degradation readiness report."""
+    from src.workflow.repo_readiness import run_repo_readiness_audit
+
+    print(f"\n{'='*60}")
+    print(f"Repo Readiness Audit: {repo}")
+    print(f"{'='*60}", flush=True)
+
+    report_path = run_repo_readiness_audit(
+        repo=repo,
+        clones_dir=clones_dir,
+        output_dir=output_dir,
+        sample_limit=sample_limit,
+        commit_sha=commit_sha,
+        keep_worktree=keep_worktree,
+    )
+    print(f"\nWrote repo readiness report to {report_path}")
+
+
+def cmd_build_packet(
+    *,
+    repo: str,
+    results_dir: Path,
+    deep_results_dir: Path,
+    readiness_dir: Path,
+    naming_audit_dir: Path | None,
+    output_dir: Path,
+) -> None:
+    """Assemble a repo-level review packet."""
+    from src.workflow.repo_packet import build_repo_experiment_packet
+
+    print(f"\n{'='*60}")
+    print(f"Experiment Packet: {repo}")
+    print(f"{'='*60}")
+
+    packet_path = build_repo_experiment_packet(
+        repo=repo,
+        results_dir=results_dir,
+        deep_results_dir=deep_results_dir,
+        readiness_dir=readiness_dir,
+        naming_audit_dir=naming_audit_dir,
+        output_dir=output_dir,
+    )
+    print(f"\nWrote experiment packet to {packet_path}")
 
 
 if __name__ == "__main__":

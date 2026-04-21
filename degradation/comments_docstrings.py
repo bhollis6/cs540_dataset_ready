@@ -1,12 +1,13 @@
 import tokenize
 import io
 import os
-import argparse
 import ast
 from pathlib import Path
 
-# Added 'tests' and 'test' to the exclusion list
-EXCLUDE_DIRS = {'.git', 'venv', 'env', '__pycache__', '.tox', 'build', 'dist', '.idea', '.vscode', 'tests', 'test', 'testing'}
+# Existing test files should also be degraded for this condition.
+EXCLUDE_DIRS = {
+    '.git', 'venv', 'env', '.venv', '__pycache__', '.tox', 'build', 'dist', '.idea', '.vscode'
+}
 PRAGMAS = ('noqa', 'type:', 'pylint:', 'fmt:', 'mypy:', 'pyright:', 'coding:')
 EXCLUDE_FILES = {'sync.py', 'compile.py', 'cli.py'}
 
@@ -135,8 +136,7 @@ def strip_comments_docstrings(directory):
         dirs[:] = [d for d in dirs if d not in EXCLUDE_DIRS]
         
         for file in files:
-            # Skip test files explicitly
-            if file.endswith('.py') and not file.startswith('test_') and not file.endswith('_test.py') and file not in EXCLUDE_FILES:
+            if file.endswith('.py') and file not in EXCLUDE_FILES:
                 filepath = Path(root) / file
                 if process_file(filepath):
                     processed_count += 1

@@ -23,37 +23,11 @@ from src.deep_eval.repo_manager import (
     sanitize_worktree,
     verify_commit_exists,
 )
+from src.output.degradation_plan import build_stage4_handoff, load_candidate_handoff
 from src.providers.base import get_provider
 
 if TYPE_CHECKING:
     from src.config import Config
-
-
-def _load_candidate_manifest_data(candidates_dir: Path, candidate_id: str) -> dict:
-    """Load candidate metadata required for the verified manifest."""
-    candidate_file = candidates_dir / f"{candidate_id}.json"
-    if not candidate_file.exists():
-        raise FileNotFoundError(
-            f"Candidate file required for verified manifest not found: {candidate_file}"
-        )
-
-    with open(candidate_file) as f:
-        candidate_data = json.load(f)
-
-    required_keys = [
-        "base_commit_sha",
-        "merge_commit_sha",
-        "head_commit_sha",
-        "source_files",
-        "test_files",
-    ]
-    missing = [key for key in required_keys if key not in candidate_data]
-    if missing:
-        raise ValueError(
-            f"Candidate {candidate_id} missing required manifest fields: {', '.join(missing)}"
-        )
-
-    return candidate_data
 
 
 def deep_evaluate_repo(
@@ -241,27 +215,30 @@ def write_deep_results(
     print(f"  Wrote deep results to {detail_path}")
 
     # Verified manifest — only candidates that passed both preflight and LLM
-    verified = [
+    min_navigation_depth = getattr(config, "min_navigation_depth", 3)
+    llm_accepted = [
         r for r in results
         if r.preflight.status == "PASS"
         and r.judge_response is not None
         and r.judge_response.recommendation == "ACCEPT"
+    ]
+    verified = [
+        r for r in llm_accepted
+        if r.judge_response is not None
+        and r.judge_response.navigation_depth.score >= min_navigation_depth
     ]
 
     # Build verified PR entries, loading git SHAs and file lists from candidate JSONs
     candidates_dir = getattr(config, '_candidates_dir', Path("candidates"))
     verified_entries = []
     for r in sorted(verified, key=lambda x: x.judge_response.total_score, reverse=True):
-        candidate_data = _load_candidate_manifest_data(candidates_dir, r.candidate_id)
+        candidate_data = load_candidate_handoff(candidates_dir / f"{r.candidate_id}.json")
+        handoff = build_stage4_handoff(candidate_data)
 
         verified_entries.append({
             "candidate_id": r.candidate_id,
             "pr_number": r.pr_number,
-            "base_commit_sha": candidate_data.get("base_commit_sha"),
-            "merge_commit_sha": candidate_data.get("merge_commit_sha"),
-            "head_commit_sha": candidate_data.get("head_commit_sha"),
-            "source_files": candidate_data.get("source_files", []),
-            "test_files": candidate_data.get("test_files", []),
+            **handoff,
             "stage1_score": r.stage1_score,
             "stage2_score": r.judge_response.total_score if r.judge_response else None,
             "navigation_depth": (
@@ -281,6 +258,8 @@ def write_deep_results(
         "model_used": config.model,
         "stage1_candidates": len(results),
         "preflight_passed": sum(1 for r in results if r.preflight.status == "PASS"),
+        "llm_stage2_accepted": len(llm_accepted),
+        "navigation_depth_threshold": min_navigation_depth,
         "stage2_accepted": len(verified),
         "verified_prs": verified_entries,
     }

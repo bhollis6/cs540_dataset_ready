@@ -2,7 +2,7 @@
 
 ## Project Context
 
-We're studying how degrading codebase properties (naming quality, type hints, directory structure, test coverage) affects AI coding agent performance. Our experimental pipeline requires selecting 3-5 high-quality historical PRs per repo that we revert and ask agents to re-solve. Selecting good PRs is a judgment call with multiple criteria, and we need to do it across 10-15 repos with potentially dozens of candidates each. We use LLM-as-a-Judge (point-wise evaluation) to score and filter candidate PRs against a structured rubric.
+We're studying how degrading codebase properties (naming quality, type hints, comments/docstrings, and test surface) affects AI coding agent performance. Our experimental pipeline requires selecting 3-5 high-quality historical PRs per repo that we revert and ask agents to re-solve. Selecting good PRs is a judgment call with multiple criteria, and we need to do it across 10-15 repos with potentially dozens of candidates each. We use LLM-as-a-Judge (point-wise evaluation) to score and filter candidate PRs against a structured rubric.
 
 ## LLM-J Technique: Point-wise Evaluation
 
@@ -41,6 +41,9 @@ A directory of candidate PRs organized by repo. Each candidate is a JSON file:
   "patch_diff": "diff --git a/fastapi/security/oauth2.py b/fastapi/security/oauth2.py\n--- a/fastapi/security/oauth2.py\n+++ b/fastapi/security/oauth2.py\n@@ -45,6 +45,15 @@...",
   "test_diff": "diff --git a/tests/test_security_oauth2.py b/tests/test_security_oauth2.py\n--- a/tests/test_security_oauth2.py\n+++ b/tests/test_security_oauth2.py\n@@ -102,6 +102,28 @@...",
   "files_changed": ["fastapi/security/oauth2.py", "tests/test_security_oauth2.py"],
+  "source_files": ["fastapi/security/oauth2.py"],
+  "test_files": ["tests/test_security_oauth2.py"],
+  "test_support_files": [],
   "lines_added": 42,
   "lines_removed": 3,
   "has_test_changes": true
@@ -64,10 +67,10 @@ Does this PR include or modify tests that verify the fix?
 - 5: Clear test additions/modifications that directly validate the fix, could serve as pass/fail signal
 
 ### 3. Mutation Relevance (1-5)
-Does this PR touch code that contains properties we plan to degrade (type hints, meaningful variable names, structured directories, documented functions)?
+Does this PR touch code that contains properties we plan to degrade (type hints, meaningful variable names, comments/docstrings, and surrounding test-readable behavior)?
 - 1: Touches only config files, CI scripts, or auto-generated code
 - 3: Some relevant code but mostly boilerplate
-- 5: Core application code with type annotations, descriptive naming, docstrings, clear module structure
+- 5: Core application code with type annotations, descriptive naming, meaningful comments/docstrings, and surrounding tests that would normally expose rich signals before degradation
 
 ### 4. Clarity (1-5)
 Is the issue description clear enough to hand to an AI coding agent as a task prompt?
@@ -150,7 +153,11 @@ The scraper should:
 3. For each PR, grab: title, body/description, patch diff, list of changed files, lines added/removed
 4. Detect whether the PR includes test changes (look for files in `tests/`, `test_`, `_test.py`, etc.)
 5. Split the diff into `patch_diff` (non-test changes) and `test_diff` (test changes)
-6. Output each PR as a JSON file in the candidate format
+6. Split test-related paths into:
+   - `test_files`: executable/removable tests such as `test_*.py` and `*_test.py`
+   - `test_support_files`: preserved infrastructure such as `conftest.py`, fixtures, and helpers
+7. For selected and verified manifests, emit `degradation_targets` so Stage 4 can consume explicit edit/delete/preserve lists instead of recomputing policy
+8. Output each PR as a JSON file in the candidate format
 
 Pre-filter before sending to the judge to save API calls:
 - Skip PRs that only touch docs, CI configs, or markdown files

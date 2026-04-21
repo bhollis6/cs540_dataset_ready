@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Our research measures how specific codebase properties affect AI coding agent performance. We take well-structured Python repositories, degrade one property at a time (strip type hints, obfuscate names, flatten directories, remove tests), and run an agent on the same task in both the clean and degraded versions. Every comparison is within the same repo on the same task, so any performance difference is attributable to the property we changed.
+Our research measures how specific codebase properties affect AI coding agent performance. We take well-structured Python repositories, degrade one property at a time (strip type hints, obfuscate names, remove comments/docstrings, remove tests), and run an agent on the same task in both the clean and degraded versions. Every comparison is within the same repo on the same task, so any performance difference is attributable to the property we changed.
 
 This experiment depends on having good historical tasks to give the agent. We use real bug fixes from each repo's git history, revert the fix, and ask the agent to re-solve it. The original tests serve as our ground truth. But not every merged PR makes a good experimental task. It needs to be well-scoped, have test coverage, touch code relevant to our degradations, and be at the right difficulty level.
 
@@ -151,7 +151,7 @@ Three layers of filtering reduced 69 candidates to 7 high-confidence experimenta
 
 ## What's Next
 
-These 7 candidates from starlette represent one repo's contribution to our experimental dataset. We will repeat this pipeline across 10-15 repositories to build a full corpus of high-quality experimental tasks. Once we have 3-5 validated tasks per repo, we begin the degradation experiments: stripping type hints, obfuscating names, flattening directories, and removing tests, then measuring how agent performance changes across clean and degraded conditions. The LLM-J tool built here is reusable infrastructure. Every new repo we add goes through the same scrape, score, validate, and filter process with no manual intervention beyond reviewing the final shortlist.
+These 7 candidates from starlette represent one repo's contribution to our experimental dataset. We will repeat this pipeline across 10-15 repositories to build a full corpus of high-quality experimental tasks. Once we have 3-5 validated tasks per repo, we begin the degradation experiments: stripping type hints, obfuscating names, removing comments/docstrings, and removing tests, then measuring how agent performance changes across clean and degraded conditions. The LLM-J tool built here is reusable infrastructure. Every new repo we add goes through the same scrape, score, validate, and filter process with no manual intervention beyond reviewing the final shortlist.
 
 ## References
 

@@ -7,6 +7,8 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
+from src.output.degradation_plan import build_stage4_handoff, load_candidate_handoff
+
 if TYPE_CHECKING:
     from src.config import Config
     from src.evaluator.models import EvaluationResult
@@ -19,6 +21,8 @@ def write_manifest(results: list[EvaluationResult], config: Config) -> None:
     Stage 5 (agent task runs). They contain everything downstream needs
     to revert PRs and apply targeted degradation.
     """
+    config.output_dir.mkdir(parents=True, exist_ok=True)
+
     # Group run_number=1 results by repo
     by_repo: dict[str, list[EvaluationResult]] = defaultdict(list)
     for r in results:
@@ -34,10 +38,8 @@ def write_manifest(results: list[EvaluationResult], config: Config) -> None:
         selected_prs = []
         for r in sorted(accepted, key=lambda x: x.response.total_score, reverse=True):
             candidate_file = config.input_dir / f"{r.candidate_id}.json"
-            candidate_data = {}
-            if candidate_file.exists():
-                with open(candidate_file) as f:
-                    candidate_data = json.load(f)
+            candidate_data = load_candidate_handoff(candidate_file)
+            handoff = build_stage4_handoff(candidate_data)
 
             selected_prs.append({
                 "candidate_id": r.candidate_id,
@@ -46,11 +48,7 @@ def write_manifest(results: list[EvaluationResult], config: Config) -> None:
                 "scores": r.response.criterion_scores,
                 "recommendation": r.response.recommendation,
                 "summary": r.response.summary,
-                "merge_commit_sha": candidate_data.get("merge_commit_sha"),
-                "base_commit_sha": candidate_data.get("base_commit_sha"),
-                "head_commit_sha": candidate_data.get("head_commit_sha"),
-                "source_files": candidate_data.get("source_files", []),
-                "test_files": candidate_data.get("test_files", []),
+                **handoff,
             })
 
         manifest = {

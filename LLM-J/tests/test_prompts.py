@@ -52,6 +52,7 @@ def test_user_prompt_truncates_long_diffs():
         "test_diff": "y" * 50000,
         "source_files": ["src/main.py"],
         "test_files": ["tests/test_main.py"],
+        "test_support_files": ["tests/conftest.py"],
         "lines_added": 100,
         "lines_removed": 50,
     }

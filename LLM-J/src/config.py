@@ -41,6 +41,7 @@ class Config:
     review_threshold: int = 13
     reliability_check: bool = False
     max_retries: int = 1
+    min_navigation_depth: int = 3
 
     # Paths
     input_dir: Path = Path("candidates")

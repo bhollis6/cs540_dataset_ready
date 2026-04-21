@@ -7,8 +7,8 @@ are suitable for a controlled experiment on AI coding agents.
 
 ## Context
 
-We are studying how degrading codebase properties (naming quality, type hints, directory structure, \
-test coverage) affects AI coding agent performance. We will:
+We are studying how degrading codebase properties (naming quality, type hints, comments/docstrings, \
+and test surface) affects AI coding agent performance. We will:
 1. Check out the repo at the state BEFORE this PR was merged
 2. Apply degradations (strip type hints, obfuscate names, etc.) to the ENTIRE repo
 3. Drop an AI agent into the degraded repo with only the issue description
@@ -37,8 +37,8 @@ Does this PR include tests that verify the fix?
 Looking at the FULL source files (not just the diff), does the code that must be understood to solve \
 this task contain properties we plan to degrade?
 - 1: Mostly config, boilerplate, or auto-generated code
-- 3: Some relevant code but sparse type hints, generic names, or flat structure
-- 5: Rich type annotations, descriptive naming, docstrings, clear module structure throughout
+- 3: Some relevant code but sparse type hints, weak naming, or limited documentation/test signal
+- 5: Rich type annotations, descriptive naming, meaningful comments/docstrings, and strong surrounding tests that would normally help the agent orient before degradation
 
 ### 4. Clarity (1-5)
 Is the issue description clear enough to hand to an AI coding agent as a task prompt?

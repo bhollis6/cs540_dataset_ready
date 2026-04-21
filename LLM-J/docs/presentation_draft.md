@@ -19,7 +19,7 @@ CS 540 | [Your names] | Spring 2026
 **How does codebase quality affect AI coding agents?**
 
 - Take well-structured Python repos
-- Degrade one property at a time: type hints, naming, directory structure, tests
+- Degrade one property at a time: type hints, naming, comments/docstrings, tests
 - Run an agent on the same bug fix task, clean vs degraded
 - Same repo, same task, only the degradation changes
 
@@ -229,7 +229,7 @@ Three layers: rubric scoring, mechanical validation, contextual depth assessment
 
 - Run pipeline across all target repos (starlette, httpx, cattrs)
 - 3-5 verified tasks per repo
-- Begin degradation experiments: strip type hints, obfuscate names, flatten directories, remove tests
+- Begin degradation experiments: strip type hints, obfuscate names, remove comments/docstrings, remove tests
 - Measure agent performance: bootstrap efficiency, task success, token usage
 
 **Talking points:**
