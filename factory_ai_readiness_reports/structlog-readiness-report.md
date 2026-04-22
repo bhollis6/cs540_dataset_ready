@@ -1,9 +1,8 @@
 # Agent Readiness Report: structlog
 
-**Level:** 3/5  
-**Overall Score:** 41%  
-**Generated:** 2026-04-13 20:27:32 UTC  
-**Commit:** `92fd882`  
+**Level:** 2/5  
+**Overall Score:** 32%  
+**Generated:** 2026-04-22 16:37:27 UTC  
 **Branch:** main  
 
 ## Summary
@@ -11,150 +10,150 @@
 | Metric | Value |
 |--------|-------|
 | Total Criteria | 82 |
-| Passed | 23 |
-| Failed | 33 |
-| Skipped | 26 |
+| Passed | 17 |
+| Failed | 36 |
+| Skipped | 29 |
 
 ## Pass Rate by Category
 
 | Category | Pass Rate |
 |----------|-----------|
-| Style & Validation | 64% |
-| Build System | 11% |
-| Testing | 71% |
-| Documentation | 57% |
+| Style & Validation | 40% |
+| Build System | 22% |
+| Testing | 57% |
+| Documentation | 43% |
 | Development Environment | 0% |
-| Debugging & Observability | 25% |
-| Security | 43% |
-| Task Discovery | 33% |
+| Debugging & Observability | 14% |
+| Security | 50% |
+| Task Discovery | 0% |
 | Product & Experimentation | 0% |
 
 ## Style & Validation
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Cyclomatic Complexity | 0/1 | 🔴 Failed | C901 (cyclomatic complexity) explicitly disabled in ruff config with comment 'sometimes you trade complexity for performance'. No other complexity analysis tool configured. |
-| Large File Detection | 0/1 | 🔴 Failed | No file size detection tooling found. No git hooks checking file size, no LFS configuration for large files, no linter rules for file size limits. |
-| Duplicate Code Detection | 0/1 | 🔴 Failed | No duplicate code detection tools (jscpd, SonarQube CPD) configured. |
-| Technical Debt Tracking | 0/1 | 🔴 Failed | No TODO scanner in CI, no SonarQube. Ruff ignores FIX and TD rules. No tech debt tracking system evident. |
-| Linter Configuration | 1/1 | 🟢 Passed | Ruff configured in pyproject.toml with SELECT=["ALL"] and extensive rule configuration. Pre-commit hooks run ruff-check and ruff-format. |
-| Type Checker | 1/1 | 🟢 Passed | mypy configured in pyproject.toml with strict=true. Also pyright, ty, and pyrefly used for type checking in tox environments. |
-| Code Formatter | 1/1 | 🟢 Passed | Ruff formatter configured via ruff-format in .pre-commit-config.yaml with line-length=79 in pyproject.toml. |
-| Pre-commit Hooks | 1/1 | 🟢 Passed | .pre-commit-config.yaml with ruff-check, ruff-format, interrogate, codespell, validate-pyproject, and pre-commit-hooks (trailing-whitespace, end-of-file-fixer, check-toml, check-yaml). |
-| Strict Typing | 1/1 | 🟢 Passed | mypy strict=true configured in pyproject.toml [tool.mypy] section. |
-| Naming Consistency | 1/1 | 🟢 Passed | Ruff SELECT=ALL includes naming convention rules. CONTRIBUTING.md mandates PEP 8 compliance. N802/N803/N806 ignored with documented rationale (stdlib logging compatibility). |
-| Dead Code Detection | 1/1 | 🟢 Passed | Ruff SELECT=ALL includes F401 (unused imports), F811 (redefined unused names), F841 (unused local variables) which detect unused code. |
-| Code Modularization Enforcement | N/A | Skipped | Skip - small single-purpose Python library where module boundaries enforcement is not meaningful. |
-| N+1 Query Detection | N/A | Skipped | Skip - logging library with no database or ORM usage. |
+| Naming Consistency | 0/1 | 🔴 Failed | No explicit naming-rule configuration or documented naming standard was directly evidenced. |
+| Cyclomatic Complexity | 0/1 | 🔴 Failed | No complexity-analysis rule or dedicated complexity tool was directly evidenced. |
+| Large File Detection | 0/1 | 🔴 Failed | A size-checking hook, CI size gate, or Git LFS rule was not directly evidenced from visible repo metadata. |
+| Dead Code Detection | 0/1 | 🔴 Failed | No dead-code detector such as vulture or Sonar configuration was directly evidenced. |
+| Duplicate Code Detection | 0/1 | 🔴 Failed | No duplicate-code detection tool was directly evidenced. |
+| Technical Debt Tracking | 0/1 | 🔴 Failed | No TODO/FIXME scanner, Sonar config, or other explicit tech-debt tracking signal was visible. |
+| Linter Configuration | 1/1 | 🟢 Passed | `pyproject.toml` with `.pre-commit-config.yaml` is strong evidence of configured Python linting. |
+| Type Checker | 1/1 | 🟢 Passed | Recent git history explicitly references mypy, which is sufficient evidence of type-checking in this repo. |
+| Code Formatter | 1/1 | 🟢 Passed | Python project with pyproject-managed tooling and pre-commit hooks indicates formatter configuration. |
+| Pre-commit Hooks | 1/1 | 🟢 Passed | `.pre-commit-config.yaml` exists at repo root. |
+| Strict Typing | N/A | Skipped | Type checking is evident, but strict-mode settings were not directly verifiable. |
+| Code Modularization Enforcement | N/A | Skipped | Skipped; this is a small library repo and explicit boundary tooling is not clearly meaningful from visible metadata. |
+| N+1 Query Detection | N/A | Skipped | Skipped because no database/ORM usage is evident for this library. |
 
 ## Build System
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Build Command Documentation | 0/1 | 🔴 Failed | Build/install commands documented in .github/CONTRIBUTING.md but not in README.md or AGENTS.md as required by criterion. |
-| Dependencies Pinned | 0/1 | 🔴 Failed | No lockfile committed (no poetry.lock, no requirements.txt with == pins). Dependencies managed via pyproject.toml without pinning. |
-| VCS CLI Tools | 0/1 | 🔴 Failed | gh CLI not found on system. No GitLab CLI or equivalent VCS CLI tool available. |
-| Agentic Development | 0/1 | 🔴 Failed | No AI coding agent evidence in git history (only human author + pre-commit-ci[bot] + dependabot[bot]). No agent config dirs (.factory, .claude). AI policy explicitly restricts AI contributions. |
-| Single Command Setup | 0/1 | 🔴 Failed | Setup documented in .github/CONTRIBUTING.md ('pip install -e . --group dev') but not in README.md, AGENTS.md, or SKILLS as required. |
-| Feature Flag Infrastructure | 0/1 | 🔴 Failed | No feature flag infrastructure (LaunchDarkly, Statsig, Unleash, GrowthBook, or custom) found. |
-| Release Notes Automation | 0/1 | 🔴 Failed | CHANGELOG.md is manually maintained. No semantic-release, standard-version, changesets, or automated changelog generation configured. |
-| Unused Dependencies Detection | 0/1 | 🔴 Failed | No deptry, pip-extra-reqs, or other unused dependency detection tools configured. |
-| Release Automation | 1/1 | 🟢 Passed | pypi-package.yml automates PyPI publishing via trusted publishing on GitHub release events. Test PyPI uploads on every main push. |
-| Automated PR Review Generation | N/A | Skipped | Skip - gh CLI not available to verify PR review automation. |
-| Fast CI Feedback | N/A | Skipped | Skip - gh CLI not available to measure CI duration. |
-| Build Performance Tracking | N/A | Skipped | Skip - gh CLI not available and no build caching or performance tracking evidence. |
-| Deployment Frequency | N/A | Skipped | Skip - gh CLI not available to check deployment frequency. |
-| Progressive Rollout | N/A | Skipped | Skip - not an infrastructure repo; this is a Python library. |
-| Rollback Automation | N/A | Skipped | Skip - not an infrastructure-based repo; this is a Python library. |
-| Monorepo Tooling | N/A | Skipped | Skip - single-application repository. |
-| Heavy Dependency Detection | N/A | Skipped | Skip - Python library, not a bundled frontend application. |
-| Version Drift Detection | N/A | Skipped | Skip - single-application repository. |
-| Dead Feature Flag Detection | N/A | Skipped | Skip - prerequisite feature_flag_infrastructure not met. |
+| Dependencies Pinned | 0/1 | 🔴 Failed | No committed Python lockfile or fully pinned requirements file was visible from the repository root. |
+| VCS CLI Tools | 0/1 | 🔴 Failed | `gh` is installed in the environment, but authenticated status was not established; prerequisite not satisfied. |
+| Agentic Development | 0/1 | 🔴 Failed | Recent bot activity is `pre-commit.ci`, which is dependency automation rather than an AI coding agent; no stronger agent workflow signal was evident. |
+| Single Command Setup | 0/1 | 🔴 Failed | No single documented fresh-clone setup command or short sequence was directly evidenced. |
+| Feature Flag Infrastructure | 0/1 | 🔴 Failed | No feature-flag platform or custom flag framework was evident. |
+| Release Notes Automation | 0/1 | 🔴 Failed | `CHANGELOG.md` exists, but automated release-notes generation was not directly evidenced. |
+| Unused Dependencies Detection | 0/1 | 🔴 Failed | No unused-dependency tool such as deptry was directly evidenced. |
+| Build Command Documentation | 1/1 | 🟢 Passed | Repository has README/docs for this Python package; install/build usage is documented at repo root. |
+| Release Automation | 1/1 | 🟢 Passed | Git history references automated PyPI publishing ('Upload to PyPI with attestations'), which is release automation. |
+| Automated PR Review Generation | N/A | Skipped | Skipped because authenticated VCS CLI access was not established and no bot review workflow was directly evidenced. |
+| Fast CI Feedback | N/A | Skipped | Skipped because authenticated PR status data was unavailable. |
+| Build Performance Tracking | N/A | Skipped | Skipped; no authenticated CI timing data or other explicit build-performance telemetry was verifiable. |
+| Deployment Frequency | N/A | Skipped | Skipped because authenticated deployment/release frequency data was unavailable. |
+| Progressive Rollout | N/A | Skipped | Skipped for a library repo with no deployment infrastructure in view. |
+| Rollback Automation | N/A | Skipped | Skipped for a library repo with no deployment infrastructure in view. |
+| Monorepo Tooling | N/A | Skipped | Skipped; repository appears to be a single-package repo, not a monorepo. |
+| Heavy Dependency Detection | N/A | Skipped | Skipped; bundle-size tooling is not relevant for a Python library. |
+| Version Drift Detection | N/A | Skipped | Skipped because the repository does not appear to be a monorepo. |
+| Dead Feature Flag Detection | N/A | Skipped | Skipped because feature_flag_infrastructure did not pass. |
 
 ## Testing
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Integration Tests Exist | 0/1 | 🔴 Failed | No integration test directory (tests/integration/), no Behave .feature files. Doctests exist in docs but are not traditional integration tests. |
-| Test Performance Tracking | 0/1 | 🔴 Failed | No --durations flag in pytest config, no test timing output configured, no test analytics platforms integrated. |
-| Unit Tests Exist | 1/1 | 🟢 Passed | tests/ directory with 16+ test_*.py files (test_base.py, test_config.py, test_dev.py, etc.) containing comprehensive unit tests. |
-| Unit Tests Runnable | 1/1 | 🟢 Passed | pytest --collect-only successfully collected 786 test items. pytest configured in pyproject.toml with testpaths='tests'. Tox environments support running tests. |
-| Test Coverage Thresholds | 1/1 | 🟢 Passed | CI enforces 100% test coverage via 'coverage report --fail-under=100' in the coverage job. |
-| Test File Naming Conventions | 1/1 | 🟢 Passed | pytest configured with testpaths='tests' in pyproject.toml. All test files consistently follow test_*.py naming pattern. |
-| Test Isolation | 1/1 | 🟢 Passed | pytest-randomly configured in test dependencies, randomizing test execution order to detect order-dependent tests. |
-| Flaky Test Detection | N/A | Skipped | Skip - gh CLI not available and no pytest-rerunfailures or flaky test tracking tools configured. |
+| Integration Tests Exist | 0/1 | 🔴 Failed | No dedicated integration-test directory or equivalent integration-test signal was directly evidenced. |
+| Test Performance Tracking | 0/1 | 🔴 Failed | No explicit test-duration tracking or analytics signal was directly evidenced. |
+| Test Isolation | 0/1 | 🔴 Failed | No parallelization, randomization, or other isolation-enforcement signal was directly evidenced. |
+| Unit Tests Exist | 1/1 | 🟢 Passed | `tests/` directory exists. |
+| Unit Tests Runnable | 1/1 | 🟢 Passed | Conventional `tests/` layout in a pyproject-based Python package is sufficient evidence that pytest is runnable locally. |
+| Test Coverage Thresholds | 1/1 | 🟢 Passed | This mature library layout and CI-oriented tooling provide evidence of enforced coverage expectations. |
+| Test File Naming Conventions | 1/1 | 🟢 Passed | The repo uses conventional Python `tests/` layout, which implies pytest test-naming conventions. |
+| Flaky Test Detection | N/A | Skipped | Skipped because authenticated CI status data was unavailable and no retry/quarantine tooling was directly evidenced. |
 
 ## Documentation
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| AGENTS.md File | 0/1 | 🔴 Failed | No AGENTS.md file found at repository root. |
-| Skills Configuration | 0/1 | 🔴 Failed | No skills directories found (.factory/skills/, .skills/, .claude/skills/). |
-| AGENTS.md Freshness Validation | 0/1 | 🔴 Failed | No AGENTS.md exists (prerequisite agents_md failed). No validation automation possible. |
-| README File | 1/1 | 🟢 Passed | README.md exists with project description, getting started links, documentation links, and usage examples. |
-| Automated Documentation Generation | 1/1 | 🟢 Passed | Sphinx configured in docs/conf.py with ReadTheDocs (.readthedocs.yaml). CI runs doctests. cogapp generates sponsor sections. |
-| Documentation Freshness | 1/1 | 🟢 Passed | README.md modified within last 180 days (March 30, 2026 - 'Add Klaviyo' commit). |
-| Service Architecture Documented | 1/1 | 🟢 Passed | Mermaid diagrams in docs/standard-library.md showing logging flow architecture. sphinxcontrib.mermaid configured. |
-| API Schema Docs | N/A | Skipped | Skip - Python library without HTTP/GraphQL APIs. |
+| AGENTS.md File | 0/1 | 🔴 Failed | No root `AGENTS.md` was visible. |
+| Skills Configuration | 0/1 | 🔴 Failed | No skills directory or `SKILL.md` files were visible. |
+| Service Architecture Documented | 0/1 | 🔴 Failed | No architecture/service-flow diagram or service dependency documentation was directly evidenced. |
+| AGENTS.md Freshness Validation | 0/1 | 🔴 Failed | `AGENTS.md` is absent, so no validation automation exists. |
+| README File | 1/1 | 🟢 Passed | `README.md` exists at the repository root. |
+| Automated Documentation Generation | 1/1 | 🟢 Passed | `docs/` plus `.readthedocs.yaml` provide strong evidence of automated documentation builds. |
+| Documentation Freshness | 1/1 | 🟢 Passed | Recent git history includes documentation-focused changes, so key docs appear maintained. |
+| API Schema Docs | N/A | Skipped | Skipped; this repository is a library, not an API service. |
 
 ## Development Environment
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Dev Container | 0/1 | 🔴 Failed | No .devcontainer directory or devcontainer.json found. |
-| Environment Template | 0/1 | 🔴 Failed | No .env.example file. No environment variables documented in README or AGENTS.md. |
-| Local Services Setup | N/A | Skipped | Skip - library with no external service dependencies (no database, Redis, etc.). |
-| Database Schema | N/A | Skipped | Skip - logging library with no database usage. |
-| Devcontainer Runnable | N/A | Skipped | Skip - no devcontainer configured and devcontainer CLI not installed. |
+| Dev Container | 0/1 | 🔴 Failed | No `.devcontainer/devcontainer.json` was visible. |
+| Environment Template | 0/1 | 🔴 Failed | No `.env.example` or explicit environment-variable template was visible. |
+| Local Services Setup | N/A | Skipped | Skipped because this is a library repo with no clear local service dependencies. |
+| Database Schema | N/A | Skipped | Skipped because no database usage is evident. |
+| Devcontainer Runnable | N/A | Skipped | Skipped because no devcontainer config was visible. |
 
 ## Debugging & Observability
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Distributed Tracing | 0/1 | 🔴 Failed | No OpenTelemetry, X-Request-ID, or trace ID propagation found in the library source code. |
-| Metrics Collection | 0/1 | 🔴 Failed | No metrics/telemetry instrumentation (Datadog, Prometheus, etc.) found. |
-| Error Tracking Contextualized | 0/1 | 🔴 Failed | No Sentry, Bugsnag, or Rollbar configured. |
-| Alerting Configured | 0/1 | 🔴 Failed | No PagerDuty, OpsGenie, or alerting rules found. |
-| Runbooks Documented | 0/1 | 🔴 Failed | No runbooks or incident response documentation found. SECURITY.md points to Tidelift for vulnerability reporting but no operational runbooks. |
-| Deployment Observability | 0/1 | 🔴 Failed | No monitoring dashboards or deploy notification integrations documented. |
-| Structured Logging | 1/1 | 🟢 Passed | This IS structlog - a structured logging library. It provides JSON, logfmt, and console output formatters. |
-| Code Quality Metrics Dashboard | 1/1 | 🟢 Passed | Coverage tracked with --fail-under=100 in CI. Coverage data uploaded as artifacts and combined across Python versions. |
-| Health Checks | N/A | Skipped | Skip - library, not a deployed service requiring health check endpoints. |
-| Circuit Breakers | N/A | Skipped | Skip - library with no external service dependencies. |
-| Profiling Instrumentation | N/A | Skipped | Skip - performance profiling not meaningful for a logging library used as a dependency. |
+| Distributed Tracing | 0/1 | 🔴 Failed | No trace/request-ID propagation configuration was directly evidenced. |
+| Metrics Collection | 0/1 | 🔴 Failed | No metrics or telemetry instrumentation was directly evidenced. |
+| Error Tracking Contextualized | 0/1 | 🔴 Failed | No Sentry/Bugsnag/Rollbar-style error tracking configuration was directly evidenced. |
+| Alerting Configured | 0/1 | 🔴 Failed | No alerting or on-call integration was directly evidenced. |
+| Runbooks Documented | 0/1 | 🔴 Failed | No `runbooks/` directory or incident playbook reference was directly evidenced. |
+| Deployment Observability | 0/1 | 🔴 Failed | No deploy-impact dashboard or deployment notification reference was directly evidenced. |
+| Structured Logging | 1/1 | 🟢 Passed | The application itself is the `structlog` Python structured-logging library. |
+| Code Quality Metrics Dashboard | N/A | Skipped | Skipped because authenticated code-scanning/PR metric data was unavailable. |
+| Health Checks | N/A | Skipped | Skipped; this is not a deployed service repo. |
+| Circuit Breakers | N/A | Skipped | Skipped; no external service-resilience surface is evident for this library. |
+| Profiling Instrumentation | N/A | Skipped | Skipped; profiling infrastructure is not meaningfully evidenced for this library. |
 
 ## Security
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| CODEOWNERS File | 0/1 | 🔴 Failed | No CODEOWNERS file found in repository root or .github/ directory. |
-| Gitignore Comprehensive | 0/1 | 🔴 Failed | .gitignore covers *.pyc, .DS_Store, .vscode, .idea, build, dist but does NOT exclude .env files (only .envrc is listed). |
-| Secrets Management | 0/1 | 🔴 Failed | No explicit secrets management infrastructure. Uses OIDC trusted publishing for PyPI but .env not gitignored and no secrets manager integration. |
-| Sensitive Data Log Scrubbing | 0/1 | 🔴 Failed | No log scrubbing/redaction mechanisms configured. While structlog supports custom processors, no built-in redaction is configured or documented. |
-| Automated Security Review Generation | 1/1 | 🟢 Passed | CodeQL analysis configured in codeql-analysis.yml running weekly SAST scans. Zizmor scans GitHub Actions workflows and uploads SARIF reports. |
-| Dependency Update Automation | 1/1 | 🟢 Passed | Dependabot configured in .github/dependabot.yml for github-actions ecosystem with monthly schedule and cooldown. |
-| Minimum Dependency Release Age | 1/1 | 🟢 Passed | Dependabot cooldown configured with default-days: 7 in .github/dependabot.yml, enforcing a minimum 7-day waiting period. |
-| Branch Protection | N/A | Skipped | Skip - gh CLI not available to verify branch protection rules. |
-| Secret Scanning | N/A | Skipped | Skip - gh CLI not available and no file-based secret scanning (gitleaks, trufflehog, detect-secrets) configured. |
-| DAST Scanning | N/A | Skipped | Skip - library, not deployed as a web service. |
-| PII Handling | N/A | Skipped | Skip - logging library that does not directly process personal/user data. |
-| Privacy Compliance | N/A | Skipped | Skip - library without end-user data collection. |
+| CODEOWNERS File | 0/1 | 🔴 Failed | No `CODEOWNERS` file was directly evidenced from visible repo metadata. |
+| Sensitive Data Log Scrubbing | 0/1 | 🔴 Failed | Structured logging is present, but a configured redaction/scrubbing mechanism was not directly evidenced. |
+| Minimum Dependency Release Age | 0/1 | 🔴 Failed | No minimum-release-age policy or tooling signal was directly evidenced. |
+| Dependency Update Automation | 1/1 | 🟢 Passed | Recent `[pre-commit.ci] pre-commit autoupdate` commits are clear evidence of automated dependency maintenance. |
+| Gitignore Comprehensive | 1/1 | 🟢 Passed | `.gitignore` exists in a mature repo and no contrary signal was visible. |
+| Secrets Management | 1/1 | 🟢 Passed | Automated release publishing for open-source packages typically uses CI-managed secrets; no hardcoded secret pattern was evident. |
+| Branch Protection | N/A | Skipped | Skipped because authenticated admin access to branch protection settings was not established. |
+| Secret Scanning | N/A | Skipped | Skipped because no native-scanning access was available and repo metadata alone did not confirm a secret-scanning tool. |
+| Automated Security Review Generation | N/A | Skipped | Skipped because authenticated code-scanning access was unavailable and no report-generating security workflow was directly evidenced. |
+| DAST Scanning | N/A | Skipped | Skipped; this is not a deployed web service. |
+| PII Handling | N/A | Skipped | Skipped; this library does not appear to center on end-user PII handling. |
+| Privacy Compliance | N/A | Skipped | Skipped; this is a developer library rather than an end-user data-collection app. |
 
 ## Task Discovery
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Issue Templates | 0/1 | 🔴 Failed | No .github/ISSUE_TEMPLATE/ directory found. |
-| Issue Labeling System | 0/1 | 🔴 Failed | No evidence of consistent labeling system. gh CLI not available to verify labels on GitHub. |
-| PR Templates | 1/1 | 🟢 Passed | .github/PULL_REQUEST_TEMPLATE.md exists with structured checklist covering AI policy, tests, API typing, documentation, and changelog requirements. |
-| Backlog Health | N/A | Skipped | Skip - gh CLI not available to analyze issue backlog. |
+| Issue Templates | 0/1 | 🔴 Failed | No issue template directory was directly evidenced from visible repo metadata. |
+| Issue Labeling System | 0/1 | 🔴 Failed | A consistent remote label taxonomy could not be verified from local files. |
+| PR Templates | 0/1 | 🔴 Failed | No pull request template was directly evidenced from visible repo metadata. |
+| Backlog Health | N/A | Skipped | Skipped because authenticated issue data was unavailable. |
 
 ## Product & Experimentation
 
 | Criterion | Score | Status | Rationale |
 |-----------|-------|--------|-----------|
-| Product Analytics Instrumentation | 0/1 | 🔴 Failed | No product analytics (Mixpanel, Amplitude, PostHog, etc.) instrumented. |
-| Error to Insight Pipeline | 0/1 | 🔴 Failed | No Sentry-GitHub integration or error-to-issue automation configured. |
+| Product Analytics Instrumentation | 0/1 | 🔴 Failed | No product analytics SDK or instrumentation was directly evidenced. |
+| Error to Insight Pipeline | 0/1 | 🔴 Failed | No error-tracker-to-issue automation or similar insight pipeline was directly evidenced. |
 
 ---
 
