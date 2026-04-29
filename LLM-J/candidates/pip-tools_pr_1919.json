@@ -1,0 +1,31 @@
+{
+  "candidate_id": "pip-tools_pr_1919",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1919,
+  "title": "Fix a bug where pip-sync would unexpectedly uninstall some packages",
+  "description": "- fixes #1917 \r\n- fixes  #1918\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Provided the tests for the changes.\r\n- [x] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [x] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/sync.py b/piptools/sync.py\nindex c39015fde..c1d690aee 100644\n--- a/piptools/sync.py\n+++ b/piptools/sync.py\n@@ -15,6 +15,7 @@\n     direct_url_as_pep440_direct_reference,\n     direct_url_from_link,\n )\n+from pip._vendor.packaging.utils import canonicalize_name\n \n from ._compat import Distribution, get_dev_pkgs\n from .exceptions import IncompatibleRequirements\n@@ -59,7 +60,7 @@ def dependency_tree(\n \n     while queue:\n         v = queue.popleft()\n-        key = v.key\n+        key = str(canonicalize_name(v.key))\n         if key in dependencies:\n             continue\n \n@@ -85,7 +86,7 @@ def get_dists_to_ignore(installed: Iterable[Distribution]) -> list[str]:\n     locally, click should also be installed/uninstalled depending on the given\n     requirements.\n     \"\"\"\n-    installed_keys = {r.key: r for r in installed}\n+    installed_keys = {str(canonicalize_name(r.key)): r for r in installed}\n     return list(\n         flat_map(lambda req: dependency_tree(installed_keys, req), PACKAGES_TO_IGNORE)\n     )\n@@ -143,7 +144,7 @@ def diff_key_from_ireq(ireq: InstallRequirement) -> str:\n \n def diff_key_from_req(req: Distribution) -> str:\n     \"\"\"Get a unique key for the requirement.\"\"\"\n-    key = req.key\n+    key = str(canonicalize_name(req.key))\n     if (\n         req.direct_url\n         and isinstance(req.direct_url.info, ArchiveInfo)\n",
+  "test_diff": "diff --git a/tests/conftest.py b/tests/conftest.py\nindex 024efa480..dedf366e4 100644\n--- a/tests/conftest.py\n+++ b/tests/conftest.py\n@@ -139,7 +139,7 @@ def _fake_dist(line, deps=None):\n         if deps is None:\n             deps = []\n         req = Requirement.parse(line)\n-        key = req.key\n+        key = req.name\n         if \"==\" in line:\n             version = line.split(\"==\")[1]\n         else:\ndiff --git a/tests/test_sync.py b/tests/test_sync.py\nindex ebd26a21e..e84b598ba 100644\n--- a/tests/test_sync.py\n+++ b/tests/test_sync.py\n@@ -226,16 +226,18 @@ def test_diff_leave_packaging_packages_alone(fake_dist, from_line):\n     assert to_uninstall == {\"first\"}\n \n \n-def test_diff_leave_piptools_alone(fake_dist, from_line):\n+def test_diff_leave_piptools_and_its_dependencies_alone(fake_dist, from_line):\n     # Suppose an env contains Django, and pip-tools itself (including all of\n     # its dependencies)\n     installed = [\n         fake_dist(\"django==1.7\"),\n         fake_dist(\"first==2.0.1\"),\n-        fake_dist(\"pip-tools==1.1.1\", [\"click>=4\", \"first\", \"six\"]),\n+        fake_dist(\"pip-tools==1.1.1\", [\"click>=4\", \"first\", \"six\", \"build\"]),\n         fake_dist(\"six==1.9.0\"),\n         fake_dist(\"click==4.1\"),\n         fake_dist(\"foobar==0.3.6\"),\n+        fake_dist(\"build==0.10.0\", [\"pyproject_hooks\"]),\n+        fake_dist(\"pyproject_hooks==1.0.0\"),\n     ]\n \n     # Then this Django-only requirement should keep pip around (i.e. NOT\n@@ -274,6 +276,27 @@ def test_diff_with_matching_url_hash(fake_dist, from_line):\n     assert to_uninstall == set()\n \n \n+@pytest.mark.parametrize(\n+    (\"installed_dist\", \"compiled_req\"),\n+    (\n+        pytest.param(\"Django==1.7\", \"django==1.7\", id=\"case insensitive\"),\n+        pytest.param(\n+            \"jaraco.classes==3.2\",\n+            \"jaraco-classes==3.2\",\n+            id=\"different namespace notation\",\n+        ),\n+    ),\n+)\n+def test_diff_respects_canonical_package_names(\n+    fake_dist, from_line, installed_dist, compiled_req\n+):\n+    installed = [fake_dist(installed_dist)]\n+    reqs = [from_line(compiled_req)]\n+    to_install, to_uninstall = diff(reqs, installed)\n+    assert to_install == set()\n+    assert to_uninstall == set()\n+\n+\n def test_diff_with_no_url_hash(fake_dist, from_line):\n     # if URL hash is not provided, assume the contents have\n     # changed and reinstall\n",
+  "files_changed": [
+    "piptools/sync.py",
+    "tests/conftest.py",
+    "tests/test_sync.py"
+  ],
+  "source_files": [
+    "piptools/sync.py"
+  ],
+  "test_files": [
+    "tests/test_sync.py"
+  ],
+  "test_support_files": [
+    "tests/conftest.py"
+  ],
+  "lines_added": 30,
+  "lines_removed": 6,
+  "has_test_changes": true,
+  "merge_commit_sha": "6b162acefee9df6449ddb7dd595dbaa7ff188197",
+  "base_commit_sha": "963642811c93a32cdaf730e8226d0fe091391882",
+  "env_commit_sha": "963642811c93a32cdaf730e8226d0fe091391882",
+  "head_commit_sha": "99133cb0ee267e465322a9e33784a22790cf0fe0",
+  "merged_at": "2023-07-18T16:12:00Z"
+}

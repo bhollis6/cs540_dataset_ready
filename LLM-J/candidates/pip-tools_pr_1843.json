@@ -1,0 +1,31 @@
+{
+  "candidate_id": "pip-tools_pr_1843",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1843,
+  "title": "Use covdefaults",
+  "description": "It provides many sensible default settings, e.g. [exclude_lines](https://github.com/asottile/covdefaults#coveragereport).\r\nAlso addresses https://github.com/jazzband/pip-tools/pull/1791#issuecomment-1499658356",
+  "patch_diff": "diff --git a/.coveragerc b/.coveragerc\nindex 26c6762a7..10e81fe25 100644\n--- a/.coveragerc\n+++ b/.coveragerc\n@@ -1,8 +1,8 @@\n [run]\n-branch = True\n-source = .\n+plugins = covdefaults\n omit =\n     piptools/_compat/*\n \n [report]\n include = piptools/*, tests/*\n+fail_under = 99\ndiff --git a/piptools/__main__.py b/piptools/__main__.py\nindex 20c76051f..9cd2bab3e 100644\n--- a/piptools/__main__.py\n+++ b/piptools/__main__.py\n@@ -15,5 +15,5 @@ def cli() -> None:\n \n \n # Enable ``python -m piptools ...``.\n-if __name__ == \"__main__\":  # pragma: no branch\n+if __name__ == \"__main__\":\n     cli()\ndiff --git a/pyproject.toml b/pyproject.toml\nindex 44e0233ae..4a07c5a9f 100644\n--- a/pyproject.toml\n+++ b/pyproject.toml\n@@ -61,7 +61,7 @@ testing = [\n   \"flit_core >=2,<4\",\n   \"poetry_core>=1.0.0\",\n ]\n-coverage = [\"pytest-cov\"]\n+coverage = [\"covdefaults\", \"pytest-cov\"]\n \n [project.scripts]\n pip-compile = \"piptools.scripts.compile:cli\"\n",
+  "test_diff": "diff --git a/tests/test_cli_compile.py b/tests/test_cli_compile.py\nindex 2e48e5f06..e15ec6ed0 100644\n--- a/tests/test_cli_compile.py\n+++ b/tests/test_cli_compile.py\n@@ -2809,7 +2809,7 @@ def test_failure_of_legacy_resolver_prompts_for_backtracking(\n         assert \"Consider using backtracking resolver with\" in out.stderr\n     elif current_resolver == \"backtracking\":\n         assert out.exit_code == 0, out\n-    else:  # pragma: no cover\n+    else:\n         raise AssertionError(\"unreachable\")\n \n \n",
+  "files_changed": [
+    ".coveragerc",
+    "piptools/__main__.py",
+    "pyproject.toml",
+    "tests/test_cli_compile.py"
+  ],
+  "source_files": [
+    ".coveragerc",
+    "piptools/__main__.py"
+  ],
+  "test_files": [
+    "tests/test_cli_compile.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 5,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "e187b41b141607f41e4d5a5b30964f9ad8eedbef",
+  "base_commit_sha": "7aa22d4f764efe2e89800e5b9f226d37cc20f427",
+  "env_commit_sha": "7aa22d4f764efe2e89800e5b9f226d37cc20f427",
+  "head_commit_sha": "4101ac8fec723fbb1dbe32a31eec2a3b5792cb35",
+  "merged_at": "2023-05-09T17:53:13Z"
+}

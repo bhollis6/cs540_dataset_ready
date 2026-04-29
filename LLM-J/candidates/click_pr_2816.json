@@ -1,0 +1,29 @@
+{
+  "candidate_id": "click_pr_2816",
+  "repo": "pallets/click",
+  "pr_number": 2816,
+  "title": "show correct auto complete value for nargs option in combination with flag option",
+  "description": "This pull request resolves an issue in the autocompletion logic for options with nargs > 1 when combined with boolean options. Previously, autocompletion would suggest incorrect values, leading to confusion and an inconsistent user experience.\r\n\r\nfixes #2813\r\n\r\n- [X]  Add tests that demonstrate the correct behavior of the change. Tests\r\n        should fail without the change.\r\n- [X]  Add or update relevant docs, in the docs folder and in code.\r\n- [x]  Add an entry in CHANGES.rst summarizing the change and linking to the issue.\r\n",
+  "patch_diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex a2f60d68f7..c2e019da34 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -1,5 +1,12 @@\n .. currentmodule:: click\n \n+Version 8.2.x\n+-------------\n+\n+Unreleased\n+\n+-   show correct auto complete value for nargs option in combination with flag option :issue:`2813`\n+\n Version 8.2.2\n -------------\n \ndiff --git a/src/click/shell_completion.py b/src/click/shell_completion.py\nindex 4cb53b91a5..5bebb5a9c7 100644\n--- a/src/click/shell_completion.py\n+++ b/src/click/shell_completion.py\n@@ -552,6 +552,7 @@ def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bo\n \n         if _start_of_option(ctx, arg):\n             last_option = arg\n+            break\n \n     return last_option is not None and last_option in param.opts\n \n",
+  "test_diff": "diff --git a/tests/test_shell_completion.py b/tests/test_shell_completion.py\nindex 819ca8bd57..06c6645def 100644\n--- a/tests/test_shell_completion.py\n+++ b/tests/test_shell_completion.py\n@@ -220,6 +220,19 @@ def test_option_flag():\n     assert _get_words(cli, [\"--on\"], \"a\") == [\"a1\", \"a2\"]\n \n \n+def test_flag_option_with_nargs_option():\n+    cli = Command(\n+        \"cli\",\n+        add_help_option=False,\n+        params=[\n+            Argument([\"a\"], type=Choice([\"a1\", \"a2\", \"b\"])),\n+            Option([\"--flag\"], is_flag=True),\n+            Option([\"-c\"], type=Choice([\"p\", \"q\"]), nargs=2),\n+        ],\n+    )\n+    assert _get_words(cli, [\"a1\", \"--flag\", \"-c\"], \"\") == [\"p\", \"q\"]\n+\n+\n def test_option_custom():\n     def custom(ctx, param, incomplete):\n         return [incomplete.upper()]\n",
+  "files_changed": [
+    "CHANGES.rst",
+    "src/click/shell_completion.py",
+    "tests/test_shell_completion.py"
+  ],
+  "source_files": [
+    "src/click/shell_completion.py"
+  ],
+  "test_files": [
+    "tests/test_shell_completion.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 21,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "4f936ac1981645488f396953bc59e50445de00b6",
+  "base_commit_sha": "1c68e531ef5e45f6facdb777c720d0f984614b81",
+  "env_commit_sha": "1c68e531ef5e45f6facdb777c720d0f984614b81",
+  "head_commit_sha": "c03b461e6713a53849134fe186feeea0efd1244d",
+  "merged_at": "2025-08-07T05:57:15Z"
+}

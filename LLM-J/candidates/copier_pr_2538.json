@@ -1,0 +1,28 @@
+{
+  "candidate_id": "copier_pr_2538",
+  "repo": "copier-org/copier",
+  "pr_number": 2538,
+  "title": "fix(vcs): make Git version parsing robust to vendor-suffixed patch versions",
+  "description": "I've fixed a bug related to Git version parsing with vendor-suffixed patch versions. Git can report versions like 2.53.GIT, which caused `get_git_version()` to fail parsing the Git version.\r\n\r\nI've updated the version extraction to normalize this output to a valid semantic version (for example, 2.53.0) and added tests covering both standard (2.53.0) and suffixed (2.53.GIT) Git version outputs.\r\n\r\nFixes #2537.",
+  "patch_diff": "diff --git a/copier/_vcs.py b/copier/_vcs.py\nindex d77fbd6b5..e1d7bfa02 100644\n--- a/copier/_vcs.py\n+++ b/copier/_vcs.py\n@@ -38,7 +38,7 @@ def get_git_version() -> Version:\n     \"\"\"Get the installed git version.\"\"\"\n     git = get_git()\n \n-    return Version(re.findall(r\"\\d+\\.\\d+\\.\\d+\", git(\"version\"))[0])\n+    return Version(re.findall(r\"\\d+\\.\\d+(?:\\.\\d+)?\", git(\"version\"))[0])\n \n \n GIT_PREFIX = (\"git@\", \"git://\", \"git+\", \"https://github.com/\", \"https://gitlab.com/\")\n",
+  "test_diff": "diff --git a/tests/test_vcs.py b/tests/test_vcs.py\nindex be5c24a9b..813fc034f 100644\n--- a/tests/test_vcs.py\n+++ b/tests/test_vcs.py\n@@ -2,6 +2,7 @@\n import shutil\n from collections.abc import Callable, Iterator, Sequence\n from pathlib import Path\n+from unittest import mock\n \n import pytest\n from packaging.version import Version\n@@ -238,3 +239,21 @@ def test_select_latest_version_tag(\n     assert (dst / filename).read_text() == \"v1.0.1\"\n     answers = load_answersfile_data(dst)\n     assert answers[\"_commit\"] == \"v1.0.1\"\n+\n+\n+@pytest.mark.parametrize(\n+    (\"git_version_output\", \"expected_version\"),\n+    [\n+        (\"git version 2.53.0\\n\", Version(\"2.53.0\")),\n+        (\"git version 2.53.GIT\\n\", Version(\"2.53.0\")),\n+    ],\n+)\n+def test_get_git_version(git_version_output: str, expected_version: Version) -> None:\n+    def _mock_git(*args: str) -> str:\n+        assert args == (\"version\",)\n+        return git_version_output\n+\n+    with mock.patch(\n+        \"copier._vcs.get_git\", return_value=mock.MagicMock(side_effect=_mock_git)\n+    ):\n+        assert get_git_version() == expected_version\n",
+  "files_changed": [
+    "copier/_vcs.py",
+    "tests/test_vcs.py"
+  ],
+  "source_files": [
+    "copier/_vcs.py"
+  ],
+  "test_files": [
+    "tests/test_vcs.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 20,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "1ba971c0865c2dcfd5a519d3338d212cb71c1776",
+  "base_commit_sha": "128f0003ad295d89cedf41001b64bc6108afac57",
+  "env_commit_sha": "128f0003ad295d89cedf41001b64bc6108afac57",
+  "head_commit_sha": "5b7372002eba1ae32a07f6f6ac15ec1f1c7a9f6c",
+  "merged_at": "2026-03-09T12:00:56Z"
+}

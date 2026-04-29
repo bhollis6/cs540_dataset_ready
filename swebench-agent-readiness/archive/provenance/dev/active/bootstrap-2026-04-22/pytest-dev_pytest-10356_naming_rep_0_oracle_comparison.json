@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pytest-dev__pytest-10356",
+  "repo": "pytest-dev/pytest",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 1.432,
+    "changed_files": [
+      "src/_pytest/mark/structures.py",
+      "testing/test_mark.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 1.462,
+    "changed_files": [
+      "src/_pytest/mark/structures.py",
+      "src/_pytest/python.py",
+      "testing/test_mark.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 0.030000000000000027
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10356/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10356/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "src/_pytest/mark/structures.py",
+        "src/_pytest/python.py",
+        "testing/test_mark.py",
+        ".pilot-venv-py39/bin/python"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/_pytest/mark/structures.py",
+        "testing/test_mark.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        ".pilot-venv-py39/bin/python",
+        "src/_pytest/python.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 1177767,
+      "cached_input_tokens": 1101696,
+      "output_tokens": 9748,
+      "total_tokens": 1187515
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "src/_pytest/mark/structures.py",
+        "src/_pytest/python.py",
+        "testing/test_mark.py",
+        "src/_pytest/nodes.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/_pytest/mark/structures.py",
+        "testing/test_mark.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "src/_pytest/nodes.py",
+        "src/_pytest/python.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 395621,
+      "cached_input_tokens": 350336,
+      "output_tokens": 6652,
+      "total_tokens": 402273
+    }
+  }
+}

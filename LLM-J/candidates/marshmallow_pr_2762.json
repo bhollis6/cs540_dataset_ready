@@ -1,0 +1,30 @@
+{
+  "candidate_id": "marshmallow_pr_2762",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2762,
+  "title": "Warn when using ordered class Meta option",
+  "description": "`ordered` has technically been deprecated since https://github.com/marshmallow-code/marshmallow/pull/1896, but now we raise an explicit warning when it's set",
+  "patch_diff": "diff --git a/CHANGELOG.rst b/CHANGELOG.rst\nindex 85105ca2d..ab79c680b 100644\n--- a/CHANGELOG.rst\n+++ b/CHANGELOG.rst\n@@ -13,6 +13,12 @@ Documentation:\n \n - Various documentation improvements (:pr:`2757`, :pr:`2759`).\n \n+Deprecations:\n+\n+- The ``ordered`` `class Meta <marshmallow.Schema.Meta>` option is deprecated (:issue:`2146`, :pr:`2762`). \n+  Field order is already preserved by default. Set `marshmallow.Schema.dict_class` to `collections.OrderedDict` \n+  to maintain the previous behavior.\n+\n 3.25.1 (2025-01-11)\n *******************\n \ndiff --git a/pyproject.toml b/pyproject.toml\nindex 1c8d9e9fe..9974fbcb1 100644\n--- a/pyproject.toml\n+++ b/pyproject.toml\n@@ -91,7 +91,7 @@ no_implicit_optional = true\n \n [tool.pytest.ini_options]\n norecursedirs = \".git .ropeproject .tox docs env venv tests/mypy_test_cases\"\n-addopts = \"-v --tb=short\"\n filterwarnings = [\n   \"ignore:Returning `False` from a validator:marshmallow.warnings.ChangedInMarshmallow4Warning\",\n+  \"ignore:The `ordered` `class Meta` option is deprecated.:marshmallow.warnings.RemovedInMarshmallow4Warning\",\n ]\ndiff --git a/src/marshmallow/schema.py b/src/marshmallow/schema.py\nindex 567dfd7ed..b5b238ed3 100644\n--- a/src/marshmallow/schema.py\n+++ b/src/marshmallow/schema.py\n@@ -229,6 +229,14 @@ def __init__(self, meta: type, ordered: bool = False):\n         else:\n             render_module = json\n         self.render_module = getattr(meta, \"render_module\", render_module)\n+        if hasattr(meta, \"ordered\"):\n+            warnings.warn(\n+                \"The `ordered` `class Meta` option is deprecated. \"\n+                \"Field order is already preserved by default. \"\n+                \"Set `Schema.dict_class` to OrderedDict to maintain the previous behavior.\",\n+                RemovedInMarshmallow4Warning,\n+                stacklevel=2,\n+            )\n         self.ordered = getattr(meta, \"ordered\", ordered)\n         self.index_errors = getattr(meta, \"index_errors\", True)\n         self.include = getattr(meta, \"include\", {})\n",
+  "test_diff": "diff --git a/tests/test_options.py b/tests/test_options.py\nindex 4200ab905..98fe4f2d9 100644\n--- a/tests/test_options.py\n+++ b/tests/test_options.py\n@@ -4,6 +4,7 @@\n import pytest\n \n from marshmallow import EXCLUDE, Schema, fields\n+from marshmallow.warnings import RemovedInMarshmallow4Warning\n from tests.base import User\n \n \n@@ -59,6 +60,19 @@ class Meta:\n \n \n class TestFieldOrdering:\n+    def test_ordered_option_is_deprecate(self):\n+        with pytest.warns(RemovedInMarshmallow4Warning):\n+\n+            class MySchema(Schema):\n+                class Meta:\n+                    ordered = True\n+\n+        with pytest.warns(RemovedInMarshmallow4Warning):\n+\n+            class MySchema(Schema):\n+                class Meta:\n+                    ordered = False\n+\n     @pytest.mark.parametrize(\"with_meta\", (False, True))\n     def test_ordered_option_is_inherited(self, user, with_meta):\n         class ParentUnordered(Schema):\n",
+  "files_changed": [
+    "CHANGELOG.rst",
+    "pyproject.toml",
+    "src/marshmallow/schema.py",
+    "tests/test_options.py"
+  ],
+  "source_files": [
+    "src/marshmallow/schema.py"
+  ],
+  "test_files": [
+    "tests/test_options.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 29,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "4113c8ac3f5234130776c21c33207f1de9b09c05",
+  "base_commit_sha": "0ebc9508a1e6a0441350595e0bc89760c037010d",
+  "env_commit_sha": "0ebc9508a1e6a0441350595e0bc89760c037010d",
+  "head_commit_sha": "60d983a6c16ffed275216e514995f853d622a97b",
+  "merged_at": "2025-01-12T20:26:23Z"
+}

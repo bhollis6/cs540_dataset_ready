@@ -72,6 +72,7 @@ class CandidatePR:
     has_test_changes: bool
     merge_commit_sha: str | None
     base_commit_sha: str | None
+    env_commit_sha: str | None
     head_commit_sha: str | None
     merged_at: str | None
 
@@ -93,6 +94,7 @@ class CandidatePR:
             "has_test_changes": self.has_test_changes,
             "merge_commit_sha": self.merge_commit_sha,
             "base_commit_sha": self.base_commit_sha,
+            "env_commit_sha": self.env_commit_sha,
             "head_commit_sha": self.head_commit_sha,
             "merged_at": self.merged_at,
         }
@@ -116,6 +118,7 @@ class CandidatePR:
             has_test_changes=data["has_test_changes"],
             merge_commit_sha=data.get("merge_commit_sha"),
             base_commit_sha=data.get("base_commit_sha"),
+            env_commit_sha=data.get("env_commit_sha", data.get("base_commit_sha")),
             head_commit_sha=data.get("head_commit_sha"),
             merged_at=data.get("merged_at"),
         )

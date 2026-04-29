@@ -105,3 +105,24 @@ def test_build_audit_command_requires_uv_for_live(monkeypatch: pytest.MonkeyPatc
             sample_limit=3,
             live=True,
         )
+
+
+def test_build_audit_environment_sets_writable_uv_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.delenv("UV_CACHE_DIR", raising=False)
+
+    env = repo_audit._build_audit_environment(
+        output_path=tmp_path / "audit_results" / "report.json",
+        live=True,
+    )
+
+    assert env is not None
+    assert env["UV_CACHE_DIR"] == str(tmp_path / "audit_results" / ".uv-cache")
+
+
+def test_build_audit_environment_is_none_for_dry_run(tmp_path: Path):
+    env = repo_audit._build_audit_environment(
+        output_path=tmp_path / "audit_results" / "report.json",
+        live=False,
+    )
+
+    assert env is None

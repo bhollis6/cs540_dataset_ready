@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-readiness.local/swebench/task_eligibility.schema.json",
+  "title": "SWE-bench Agent Readiness Task Eligibility Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_name",
+    "dataset_split",
+    "instance_id",
+    "repo",
+    "changed_source_files",
+    "changed_test_files",
+    "changed_test_support_files",
+    "regression_surface_strength",
+    "test_signal",
+    "conditions",
+    "overall_status",
+    "eligible_conditions",
+    "decision_summary"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string"
+    },
+    "dataset_name": {
+      "type": "string"
+    },
+    "dataset_split": {
+      "type": "string"
+    },
+    "instance_id": {
+      "type": "string"
+    },
+    "repo": {
+      "type": "string"
+    },
+    "base_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "changed_source_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "changed_test_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "changed_test_support_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "regression_surface_strength": {
+      "enum": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "test_signal": {
+      "$ref": "#/$defs/signalAssessment"
+    },
+    "conditions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type_hints",
+        "naming",
+        "comments_docstrings",
+        "remove_tests"
+      ],
+      "properties": {
+        "type_hints": {
+          "$ref": "#/$defs/conditionEligibility"
+        },
+        "naming": {
+          "$ref": "#/$defs/conditionEligibility"
+        },
+        "comments_docstrings": {
+          "$ref": "#/$defs/conditionEligibility"
+        },
+        "remove_tests": {
+          "$ref": "#/$defs/conditionEligibility"
+        }
+      }
+    },
+    "overall_status": {
+      "enum": [
+        "GO",
+        "REVIEW",
+        "NO_GO"
+      ]
+    },
+    "eligible_conditions": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "type_hints",
+          "naming",
+          "comments_docstrings",
+          "remove_tests"
+        ]
+      }
+    },
+    "chosen_pilot_condition": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "type_hints",
+        "naming",
+        "comments_docstrings",
+        "remove_tests",
+        null
+      ]
+    },
+    "decision_summary": {
+      "type": "string"
+    },
+    "evidence_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "signalAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "level",
+        "rationale",
+        "evidence"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "conditionEligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition",
+        "status",
+        "signal",
+        "fairness_notes",
+        "blockers"
+      ],
+      "properties": {
+        "condition": {
+          "enum": [
+            "type_hints",
+            "naming",
+            "comments_docstrings",
+            "remove_tests"
+          ]
+        },
+        "status": {
+          "enum": [
+            "GO",
+            "REVIEW",
+            "NO_GO"
+          ]
+        },
+        "signal": {
+          "$ref": "#/$defs/signalAssessment"
+        },
+        "fairness_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

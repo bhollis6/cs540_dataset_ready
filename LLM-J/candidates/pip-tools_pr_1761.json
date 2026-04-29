@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pip-tools_pr_1761",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1761,
+  "title": "Fix failing tests that depend on a logger verbosity level",
+  "description": "Reset the logger to its initial state so that tests which update or depend on logger's verbosity wouldn't [conflict](https://github.com/jazzband/pip-tools/actions/runs/3515128716/jobs/5890003279) with each other.\r\n\r\nPartially addresses #1720.\r\nSupersedes #1743.\r\n\r\n<!--- Describe the changes here. --->\r\n\r\n##### Contributor checklist\r\n\r\n- [ ] Provided the tests for the changes.\r\n- [x] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/logging.py b/piptools/logging.py\nindex 10b6cc9ab..28d70f544 100644\n--- a/piptools/logging.py\n+++ b/piptools/logging.py\n@@ -16,9 +16,9 @@ class LogContext:\n     stream = sys.stderr\n \n     def __init__(self, verbosity: int = 0, indent_width: int = 2):\n-        self.verbosity = verbosity\n-        self.current_indent = 0\n-        self._indent_width = indent_width\n+        self.verbosity = self._initial_verbosity = verbosity\n+        self.current_indent = self._initial_indent = 0\n+        self._indent_width = self._initial_indent_width = indent_width\n \n     def log(self, message: str, *args: Any, **kwargs: Any) -> None:\n         kwargs.setdefault(\"err\", True)\n@@ -58,5 +58,11 @@ def indentation(self) -> Iterator[None]:\n         finally:\n             self._dedent()\n \n+    def reset(self) -> None:\n+        \"\"\"Reset logger to initial state.\"\"\"\n+        self.verbosity = self._initial_verbosity\n+        self.current_indent = self._initial_indent\n+        self._indent_width = self._initial_indent_width\n+\n \n log = LogContext()\n",
+  "test_diff": "diff --git a/tests/conftest.py b/tests/conftest.py\nindex 1308901ff..e98d0fcfb 100644\n--- a/tests/conftest.py\n+++ b/tests/conftest.py\n@@ -26,6 +26,7 @@\n from piptools._compat.pip_compat import uses_pkg_resources\n from piptools.cache import DependencyCache\n from piptools.exceptions import NoCandidateFound\n+from piptools.logging import log\n from piptools.repositories import PyPIRepository\n from piptools.repositories.base import BaseRepository\n from piptools.resolver import BacktrackingResolver, LegacyResolver\n@@ -432,3 +433,13 @@ def venv(tmp_path):\n         check=True,\n     )\n     return tmp_path / (\"Scripts\" if platform.system() == \"Windows\" else \"bin\")\n+\n+\n+@pytest.fixture(autouse=True)\n+def _reset_log():\n+    \"\"\"\n+    Since piptools.logging.log is a global variable we have to restore its initial\n+    state. Some tests can change logger verbosity which might cause a conflict\n+    with other tests that depend on it.\n+    \"\"\"\n+    log.reset()\n",
+  "files_changed": [
+    "piptools/logging.py",
+    "tests/conftest.py"
+  ],
+  "source_files": [
+    "piptools/logging.py"
+  ],
+  "test_files": [],
+  "test_support_files": [
+    "tests/conftest.py"
+  ],
+  "lines_added": 20,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "2531b9f4ba82164c018efd93dc9bab256067ab8a",
+  "base_commit_sha": "cd1baaa613cd77c0a02b46b818ecd762653dfce0",
+  "env_commit_sha": "cd1baaa613cd77c0a02b46b818ecd762653dfce0",
+  "head_commit_sha": "779b0ea86c51a2e9894adde700b181115aa6dab6",
+  "merged_at": "2022-12-11T09:38:36Z"
+}

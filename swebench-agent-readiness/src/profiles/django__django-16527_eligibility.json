@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "django__django-16527",
+  "repo": "django/django",
+  "base_commit": "bd366ca2aeffa869b7dbc0b0aa01caea75e6dc31",
+  "changed_source_files": [
+    "django/contrib/admin/templatetags/admin_modify.py"
+  ],
+  "changed_test_files": [
+    "tests/admin_views/test_templatetags.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 6 PASS_TO_PASS.",
+    "evidence": [
+      "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 admin_views.test_templatetags"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "low",
+        "rationale": "Target surface has 0 annotation nodes.",
+        "evidence": [
+          "django/contrib/admin/templatetags/admin_modify.py",
+          "tests/admin_views/test_templatetags.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 96 local rename candidates before safety filtering.",
+        "evidence": [
+          "django/contrib/admin/templatetags/admin_modify.py",
+          "tests/admin_views/test_templatetags.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve public/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 7 docstrings and 4 comments.",
+        "evidence": [
+          "django/contrib/admin/templatetags/admin_modify.py",
+          "tests/admin_views/test_templatetags.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Gold preflight passed 1 FAIL_TO_PASS and 6 PASS_TO_PASS targets.",
+        "evidence": [
+          "tests/admin_views/test_templatetags.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as a django/django task for the next Phase 1 repo after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/django_signal_screen_2026-04-27.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/django__django-16527_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/django__django-16527_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": []
+}

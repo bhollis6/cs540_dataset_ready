@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "scikit-learn__scikit-learn-26194",
+  "repo": "scikit-learn/scikit-learn",
+  "harness": "codex-cli",
+  "chosen_condition": "remove_tests",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 3.067,
+    "changed_files": [
+      "sklearn/metrics/_ranking.py",
+      "sklearn/metrics/tests/test_ranking.py"
+    ]
+  },
+  "degraded": {
+    "condition": "remove_tests",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 2.956,
+    "changed_files": [
+      "sklearn/metrics/_ranking.py",
+      "sklearn/metrics/tests/test_common.py",
+      "sklearn/metrics/tests/test_ranking.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": -0.11100000000000021
+  },
+  "notes": [
+    "Visible validation: clean full sklearn/metrics/tests/test_ranking.py had 203 passed and 2 failed because the agent did not update every stale visible assertion/import in that file.",
+    "Visible validation: degraded passed the relocated regression slice in sklearn/metrics/tests/test_common.py and the nearby ROC display slice in sklearn/metrics/_plot/tests/test_roc_curve_display.py.",
+    "Degraded remove-tests behavior deleted sklearn/metrics/tests/test_ranking.py from the workspace and relocated visible regression coverage to sklearn/metrics/tests/test_common.py."
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 2,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-26194/codex-cli/clean/rep_2/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-26194/codex-cli/remove_tests/rep_2/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "sklearn/metrics/_ranking.py",
+        "sklearn/metrics/tests/test_ranking.py",
+        ".pilot-venv-py39/bin/python",
+        "sklearn/__check_build/__init__.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sklearn/metrics/_ranking.py",
+        "sklearn/metrics/tests/test_ranking.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        ".pilot-venv-py39/bin/python",
+        "sklearn/__check_build/__init__.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 980915,
+      "cached_input_tokens": 871680,
+      "output_tokens": 8831,
+      "total_tokens": 989746
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "sklearn/metrics/_ranking.py",
+        "sklearn/metrics/tests/test_common.py",
+        "sklearn/metrics/tests/test_classification.py",
+        "sklearn/metrics/_plot/tests/test_roc_curve_display.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sklearn/metrics/_ranking.py",
+        "sklearn/metrics/tests/test_common.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "sklearn/metrics/_plot/tests/test_roc_curve_display.py",
+        "sklearn/metrics/tests/test_classification.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 1920093,
+      "cached_input_tokens": 1801472,
+      "output_tokens": 8054,
+      "total_tokens": 1928147
+    }
+  }
+}

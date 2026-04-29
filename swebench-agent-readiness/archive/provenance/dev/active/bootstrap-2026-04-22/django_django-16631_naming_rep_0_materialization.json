@@ -1,0 +1,15 @@
+{
+  "instance_id": "django__django-16631",
+  "repo": "django/django",
+  "base_commit": "9b224579875e30203d079cc2fee83b116d98eb78",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/clean/rep_0/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/naming/rep_0/workspace",
+  "degraded_condition": "naming",
+  "degraded_targets": {
+    "target_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py",
+      "tests/auth_tests/test_basic.py"
+    ]
+  }
+}

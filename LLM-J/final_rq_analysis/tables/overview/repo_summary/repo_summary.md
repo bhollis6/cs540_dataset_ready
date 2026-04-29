@@ -1,0 +1,12 @@
+| repo | repo_full | n | success | fail | hidden_bug_fix_test_failures_total | previously_passing_test_failures_total | mean_total_duration_seconds | mean_total_tokens_including_cache | success_rate | clean_success_rate | naming_success_rate | type_hints_success_rate | comments_docstrings_success_rate | remove_tests_success_rate |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| pip-tools | jazzband/pip-tools | 15 | 5 | 10 | 200 | 0 | 241.5969 | 1008274.4 | 0.3333 | 0.3333 | 0.3333 | 0.3333 | 0.3333 | 0.3333 |
+| pydantic-settings | pydantic/pydantic-settings | 15 | 5 | 10 | 33 | 184 | 324.2589 | 1091185.7333 | 0.3333 | 0.3333 | 0.0 | 0.3333 | 0.3333 | 0.6667 |
+| copier | copier-org/copier | 15 | 8 | 7 | 16 | 109 | 296.034 | 1248099.5333 | 0.5333 | 0.6667 | 0.0 | 0.6667 | 0.6667 | 0.6667 |
+| click | pallets/click | 15 | 9 | 6 | 2 | 54 | 191.4599 | 900272.8 | 0.6 | 0.3333 | 0.3333 | 0.6667 | 1.0 | 0.6667 |
+| cattrs | python-attrs/cattrs | 15 | 11 | 4 | 2 | 2 | 395.405 | 1191971.3333 | 0.7333 | 0.6667 | 1.0 | 0.6667 | 0.3333 | 1.0 |
+| httpx | encode/httpx | 15 | 11 | 4 | 7 | 26 | 414.2893 | 1500081.2667 | 0.7333 | 1.0 | 0.6667 | 0.6667 | 0.6667 | 0.6667 |
+| starlette | encode/starlette | 15 | 12 | 3 | 1 | 10 | 241.5741 | 753343.5333 | 0.8 | 0.6667 | 0.3333 | 1.0 | 1.0 | 1.0 |
+| uvicorn | encode/uvicorn | 15 | 12 | 3 | 6 | 0 | 277.7996 | 995749.8 | 0.8 | 1.0 | 0.3333 | 0.6667 | 1.0 | 1.0 |
+| marshmallow | marshmallow-code/marshmallow | 15 | 14 | 1 | 0 | 165 | 233.5152 | 951449.0667 | 0.9333 | 1.0 | 0.6667 | 1.0 | 1.0 | 1.0 |
+| structlog | hynek/structlog | 15 | 14 | 1 | 2 | 0 | 309.8946 | 785023.6667 | 0.9333 | 1.0 | 1.0 | 1.0 | 0.6667 | 1.0 |

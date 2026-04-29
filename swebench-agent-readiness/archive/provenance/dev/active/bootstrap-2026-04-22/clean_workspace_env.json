@@ -1,0 +1,18 @@
+{
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/clean/rep_0/workspace",
+  "venv_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/clean/rep_0/workspace/.pilot-venv",
+  "python_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/clean/rep_0/workspace/.pilot-venv/bin/python",
+  "package_installs": [
+    [
+      "py==1.11.0",
+      "packaging==23.1",
+      "attrs==23.1.0",
+      "more-itertools==10.1.0",
+      "pluggy==0.13.1"
+    ],
+    [
+      "-e",
+      "."
+    ]
+  ]
+}

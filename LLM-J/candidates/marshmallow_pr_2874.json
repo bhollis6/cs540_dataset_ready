@@ -1,0 +1,29 @@
+{
+  "candidate_id": "marshmallow_pr_2874",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2874,
+  "title": "Fix: Case sensitivity in validator",
+  "description": "Fix #2870 \r\n\r\nThe URL validator lowercases the scheme parsed from the input URL, but stores the user-provided schemes parameter without any processing. This causes validation always fail when users provide uppercase or mixed-case schemes.\r\n\r\nI changed the lowercase the custom schemes in `URL.__init__` and added a corresponding test.",
+  "patch_diff": "diff --git a/AUTHORS.rst b/AUTHORS.rst\nindex a7ffd703d..2459c8c0d 100644\n--- a/AUTHORS.rst\n+++ b/AUTHORS.rst\n@@ -180,3 +180,4 @@ Contributors (chronological)\n - Nicolas Simonds `@0xDEC0DE <https://github.com/0xDEC0DE>`_\n - Florian Laport `@Florian-Laport <https://github.com/Florian-Laport>`_\n - `@agentgodzilla <https://github.com/agentgodzilla>`_\n+- Xiao `@T90REAL <https://github.com/T90REAL>`_\n\\ No newline at end of file\ndiff --git a/src/marshmallow/validate.py b/src/marshmallow/validate.py\nindex ee89f765f..5d36519a6 100644\n--- a/src/marshmallow/validate.py\n+++ b/src/marshmallow/validate.py\n@@ -187,7 +187,7 @@ def __init__(\n         self.relative = relative\n         self.absolute = absolute\n         self.error: str = error or self.default_message\n-        self.schemes = schemes or self.default_schemes\n+        self.schemes = {s.lower() for s in schemes} if schemes else self.default_schemes\n         self.require_tld = require_tld\n \n     def _repr_args(self) -> str:\n",
+  "test_diff": "diff --git a/tests/test_validate.py b/tests/test_validate.py\nindex 783e90063..d878b1180 100644\n--- a/tests/test_validate.py\n+++ b/tests/test_validate.py\n@@ -205,6 +205,14 @@ def test_url_custom_scheme():\n     assert validator(url) == url\n \n \n+def test_url_custom_scheme_case_insensitive():\n+    validator = validate.URL(schemes={\"HTTP\"})\n+    assert validator(\"http://example.com\") == \"http://example.com\"\n+\n+    validator = validate.URL(schemes={\"HtTp\"})\n+    assert validator(\"hTtP://example.com\") == \"hTtP://example.com\"\n+\n+\n @pytest.mark.parametrize(\n     \"valid_url\",\n     (\n",
+  "files_changed": [
+    "AUTHORS.rst",
+    "src/marshmallow/validate.py",
+    "tests/test_validate.py"
+  ],
+  "source_files": [
+    "src/marshmallow/validate.py"
+  ],
+  "test_files": [
+    "tests/test_validate.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 10,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "10fe10be814a77765a76334e00bc6f69cd18409b",
+  "base_commit_sha": "880d87f6acc389aa80c223dae4013f7eed05ab13",
+  "env_commit_sha": "880d87f6acc389aa80c223dae4013f7eed05ab13",
+  "head_commit_sha": "bc06327b3de6186e76961d984630ea1b9aaab894",
+  "merged_at": "2025-12-05T22:44:34Z"
+}

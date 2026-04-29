@@ -1,0 +1,61 @@
+{
+  "repo": "hynek/structlog",
+  "profile_version": 1,
+  "runtime": {
+    "os": "ubuntu-22.04",
+    "arch": "x86_64",
+    "python": "3.11",
+    "package_manager": "uv"
+  },
+  "environment": {
+    "env_commit_strategy": "base_or_override",
+    "system_packages": [],
+    "env_vars": {
+      "SETUPTOOLS_SCM_PRETEND_VERSION": "24.1.0",
+      "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_STRUCTLOG": "24.1.0"
+    },
+    "pre_install": [],
+    "install_commands": [
+      "uv pip install -e .[tests]"
+    ],
+    "install_fallbacks": [
+      "pip install -e .[tests]"
+    ],
+    "post_install": [
+      "python -m pip install colorama rich better-exceptions twisted"
+    ],
+    "dependency_pins": {}
+  },
+  "test": {
+    "command": "pytest -q",
+    "selection_mode": "explicit_nodeids",
+    "plugin_policy": {
+      "mode": "explicit_only",
+      "explicit_plugins": [
+        "pytest_asyncio.plugin"
+      ]
+    },
+    "env_vars": {}
+  },
+  "historical_quirks": {
+    "known_break_windows": [],
+    "notes": [
+      "Initial RQ1 scale-out profile.",
+      "Historical pyproject config sets asyncio_mode=auto, so pytest-asyncio must be installed and explicitly loaded while plugin autoload is disabled.",
+      "Selected candidates touch dev/stdlib/processor renderers; install colorama, rich, better-exceptions, and twisted to keep optional test surfaces available across historical commits."
+    ]
+  },
+  "degradation": {
+    "supported_conditions": [
+      "type_hints",
+      "naming",
+      "comments_docstrings",
+      "remove_tests"
+    ],
+    "test_support_globs": []
+  },
+  "admission": {
+    "pilot_probe_target": 3,
+    "pilot_min_verified_tasks": 2
+  }
+}

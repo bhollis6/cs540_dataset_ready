@@ -1,0 +1,14 @@
+{
+  "instance_id": "sphinx-doc__sphinx-9367",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "6918e69600810a4664e53653d6ff0290c3c4a788",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-9367/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-9367/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "sphinx/pycode/ast.py",
+      "tests/test_pycode_ast.py"
+    ]
+  }
+}

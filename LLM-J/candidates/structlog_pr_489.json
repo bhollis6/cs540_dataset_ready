@@ -1,0 +1,29 @@
+{
+  "candidate_id": "structlog_pr_489",
+  "repo": "hynek/structlog",
+  "pr_number": 489,
+  "title": "Fix missing exception info in aexception()",
+  "description": "# Summary\r\n\r\nThis is how I've solved #488 for my needs.\r\n\r\nI've not updated the test cases. I can do it, if you're happy with this change.\r\n\r\n",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex e21336ac..cee51a9d 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -21,6 +21,9 @@ You can find out backwards-compatibility policy [here](https://github.com/hynek/\n   This prevents crashes if the actual Exception is passed for the *exc_info* argument instead of a tuple or `True`.\n   [#482](https://github.com/hynek/structlog/issues/482)\n \n+- `FilteringBoundLogger.aexception()` now extracts the exception info using `sys.exc_info()` before passing control to the asyncio executor (where original exception info is no longer available).\n+  [#488](https://github.com/hynek/structlog/issues/488)\n+\n \n ## [22.3.0](https://github.com/hynek/structlog/compare/22.2.0...22.3.0) - 2022-11-24\n \ndiff --git a/src/structlog/_log_levels.py b/src/structlog/_log_levels.py\nindex 6e9fb1af..d3863a02 100644\n--- a/src/structlog/_log_levels.py\n+++ b/src/structlog/_log_levels.py\n@@ -12,6 +12,7 @@\n import asyncio\n import contextvars\n import logging\n+import sys\n \n from typing import Any, Callable\n \n@@ -86,7 +87,10 @@ def exception(self: FilteringBoundLogger, event: str, **kw: Any) -> Any:\n \n \n async def aexception(self: FilteringBoundLogger, event: str, **kw: Any) -> Any:\n-    kw.setdefault(\"exc_info\", True)\n+    # Exception info has to be extracted this early, because it is no longer\n+    # available once control is passed to the executor.\n+    if kw.get(\"exc_info\", True) is True:\n+        kw[\"exc_info\"] = sys.exc_info()\n \n     ctx = contextvars.copy_context()\n     return await asyncio.get_running_loop().run_in_executor(\n",
+  "test_diff": "diff --git a/tests/test_log_levels.py b/tests/test_log_levels.py\nindex e9d3cf05..727b4a9f 100644\n--- a/tests/test_log_levels.py\n+++ b/tests/test_log_levels.py\n@@ -188,12 +188,33 @@ def test_exception(self, bl, cl):\n \n     async def test_async_exception(self, bl, cl):\n         \"\"\"\n-        exception ensures that exc_info is set to True, unless it's already\n+        aexception sets exc_info to current exception info, if it's not already\n         set.\n         \"\"\"\n-        await bl.aexception(\"boom\")\n+        try:\n+            raise Exception(\"boom\")\n+        except Exception as e:\n+            await bl.aexception(\"foo\")\n+            exc = e\n \n-        assert [(\"error\", (), {\"event\": \"boom\", \"exc_info\": True})] == cl.calls\n+        assert 1 == len(cl.calls)\n+        assert isinstance(cl.calls[0][2][\"exc_info\"], tuple)\n+        assert exc == cl.calls[0][2][\"exc_info\"][1]\n+\n+    async def test_async_exception_true(self, bl, cl):\n+        \"\"\"\n+        aexception replaces exc_info with current exception info, if exc_info\n+        is True.\n+        \"\"\"\n+        try:\n+            raise Exception(\"boom\")\n+        except Exception as e:\n+            await bl.aexception(\"foo\", exc_info=True)\n+            exc = e\n+\n+        assert 1 == len(cl.calls)\n+        assert isinstance(cl.calls[0][2][\"exc_info\"], tuple)\n+        assert exc is cl.calls[0][2][\"exc_info\"][1]\n \n     def test_exception_passed(self, bl, cl):\n         \"\"\"\n@@ -205,7 +226,8 @@ def test_exception_passed(self, bl, cl):\n \n     async def test_async_exception_passed(self, bl, cl):\n         \"\"\"\n-        exception if exc_info has a value, exception doesn't tamper with it.\n+        exception if exc_info has a value (other than True), exception doesn't\n+        tamper with it.\n         \"\"\"\n         await bl.aexception(\"boom\", exc_info=42)\n \n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "src/structlog/_log_levels.py",
+    "tests/test_log_levels.py"
+  ],
+  "source_files": [
+    "src/structlog/_log_levels.py"
+  ],
+  "test_files": [
+    "tests/test_log_levels.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 34,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "48ee400699060ae5c6d1309c887c9c6d5c4524fe",
+  "base_commit_sha": "0614664ca0a5bbc88f8c5450641a3f1d96d216c5",
+  "env_commit_sha": "0614664ca0a5bbc88f8c5450641a3f1d96d216c5",
+  "head_commit_sha": "f2ecc3a33e45442ac86749f7e1df26dbd6f1c170",
+  "merged_at": "2023-02-10T15:33:33Z"
+}

@@ -1,0 +1,31 @@
+{
+  "candidate_id": "pip-tools_pr_2358",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 2358,
+  "title": "Add `--uploaded-prior-to` as a passthrough option for `pip-compile`",
+  "description": "Expose pip's --uploaded-prior-to option (added in pip 26.0) via pip-compile, allowing users to restrict package candidates to those uploaded before a given datetime for supply-chain security.\r\n\r\nRaises an error for pip < 26.0.\r\n\r\nCloses #2288\r\n\r\n<!--- Describe the changes here. --->\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Included tests for the changes.\r\n- [x] A change note is created in `changelog.d/` (see [`changelog.d/README.md`]\r\n      for instructions) or the PR text says \"no changelog needed\".\r\n\r\n[`changelog.d/README.md`]:\r\nhttps://github.com/jazzband/pip-tools/blob/main/changelog.d/#readme\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] ~If no changelog is needed, apply the `bot:chronographer:skip` label.~\r\n- [x] Assign the PR to an existing or new milestone for the target version\r\n      (following Semantic Versioning).\r\n",
+  "patch_diff": "diff --git a/changelog.d/2288.feature.md b/changelog.d/2288.feature.md\nnew file mode 100644\nindex 000000000..7ab0da48c\n--- /dev/null\n+++ b/changelog.d/2288.feature.md\n@@ -0,0 +1,3 @@\n+Added `--uploaded-prior-to` as a passthrough option for `pip-compile`, allowing\n+users to restrict package candidates to versions uploaded before a given\n+datetime. Requires pip >= 26.0 -- by {user}`miettal`.\ndiff --git a/piptools/scripts/compile.py b/piptools/scripts/compile.py\nindex 7fba15612..ac82e73bc 100755\n--- a/piptools/scripts/compile.py\n+++ b/piptools/scripts/compile.py\n@@ -113,6 +113,7 @@ def _determine_linesep(\n @options.cert\n @options.client_cert\n @options.trusted_host\n+@options.uploaded_prior_to\n @options.header\n @options.emit_trusted_host\n @options.annotate\n@@ -158,6 +159,7 @@ def cli(\n     cert: str | None,\n     client_cert: str | None,\n     trusted_host: tuple[str, ...],\n+    uploaded_prior_to: str | None,\n     header: bool,\n     emit_trusted_host: bool,\n     annotate: bool,\n@@ -298,6 +300,14 @@ def cli(\n         pip_args.extend([\"--pre\"])\n     for host in trusted_host:\n         pip_args.extend([\"--trusted-host\", host])\n+    if uploaded_prior_to:\n+        if _pip_api.PIP_VERSION_MAJOR_MINOR < (26, 0):\n+            raise click.BadParameter(\n+                \"--uploaded-prior-to requires pip >= 26.0, \"\n+                f\"but you have pip {_pip_api.PIP_VERSION}\",\n+                param_hint=\"--uploaded-prior-to\",\n+            )\n+        pip_args.extend([\"--uploaded-prior-to\", uploaded_prior_to])\n     if not build_isolation:\n         pip_args.append(\"--no-build-isolation\")\n     if resolver_name == \"legacy\":\ndiff --git a/piptools/scripts/options.py b/piptools/scripts/options.py\nindex 3037e5dc9..a8ab0e4cc 100644\n--- a/piptools/scripts/options.py\n+++ b/piptools/scripts/options.py\n@@ -162,6 +162,16 @@ def _get_default_option(option_name: str) -> _t.Any:\n     ),\n )\n \n+uploaded_prior_to = click.option(\n+    \"--uploaded-prior-to\",\n+    default=None,\n+    help=(\n+        \"Only consider package versions uploaded prior to the given date/time. \"\n+        \"Accepts ISO 8601 strings (e.g., '2023-01-01T00:00:00Z'). \"\n+        \"Requires pip >= 26.0.\"\n+    ),\n+)\n+\n header = click.option(\n     \"--header/--no-header\",\n     is_flag=True,\n",
+  "test_diff": "diff --git a/tests/test_cli_compile.py b/tests/test_cli_compile.py\nindex c694a8a2b..52d9f8986 100644\n--- a/tests/test_cli_compile.py\n+++ b/tests/test_cli_compile.py\n@@ -1865,6 +1865,40 @@ def test_build_project_metadata_isolation_option(\n     assert kwargs[\"isolated\"] is expected\n \n \n+@mock.patch(\"piptools.scripts.compile.PyPIRepository\")\n+def test_uploaded_prior_to_option(PyPIRepository, runner):\n+    \"\"\"\n+    The --uploaded-prior-to option must be passed to PyPIRepository when pip >= 26.0.\n+    \"\"\"\n+    with open(\"requirements.in\", \"w\"):\n+        pass\n+\n+    with (\n+        mock.patch.object(_pip_api, \"PIP_VERSION_MAJOR_MINOR\", (26, 0)),\n+        mock.patch.object(_pip_api, \"PIP_VERSION\", Version(\"26.0\")),\n+    ):\n+        runner.invoke(cli, [\"--uploaded-prior-to\", \"2025-01-01T00:00:00Z\"])\n+\n+    args, kwargs = PyPIRepository.call_args\n+    assert \"--uploaded-prior-to\" in args[0]\n+    assert \"2025-01-01T00:00:00Z\" in args[0]\n+\n+\n+@mock.patch(\"piptools.scripts.compile.PyPIRepository\")\n+def test_uploaded_prior_to_requires_pip_26(PyPIRepository, runner):\n+    \"\"\"\n+    The --uploaded-prior-to option must raise an error when pip < 26.0.\n+    \"\"\"\n+    with open(\"requirements.in\", \"w\"):\n+        pass\n+\n+    with mock.patch.object(_pip_api, \"PIP_VERSION_MAJOR_MINOR\", (25, 3)):\n+        result = runner.invoke(cli, [\"--uploaded-prior-to\", \"2025-01-01T00:00:00Z\"])\n+\n+    assert result.exit_code != 0\n+    assert \"requires pip >= 26.0\" in result.stderr\n+\n+\n @mock.patch(\"piptools.scripts.compile.PyPIRepository\")\n def test_forwarded_args(PyPIRepository, runner):\n     \"\"\"\n",
+  "files_changed": [
+    "changelog.d/2288.feature.md",
+    "piptools/scripts/compile.py",
+    "piptools/scripts/options.py",
+    "tests/test_cli_compile.py"
+  ],
+  "source_files": [
+    "piptools/scripts/compile.py",
+    "piptools/scripts/options.py"
+  ],
+  "test_files": [
+    "tests/test_cli_compile.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 57,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "fbfea2788f23251e87182e09b276144527c12701",
+  "base_commit_sha": "57db5ab21c64ed1b8630e393c97dfe04a9a63264",
+  "env_commit_sha": "57db5ab21c64ed1b8630e393c97dfe04a9a63264",
+  "head_commit_sha": "40281868a7070efbe711ffae990e44b68e190ab7",
+  "merged_at": "2026-04-01T19:49:15Z"
+}

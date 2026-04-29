@@ -1,0 +1,31 @@
+{
+  "candidate_id": "pip-tools_pr_1893",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1893,
+  "title": "Exclude default config value from the pip-compile header",
+  "description": "Resolves https://github.com/jazzband/pip-tools/pull/1863#issuecomment-1611728125\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Provided the tests for the changes.\r\n- [x] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/utils.py b/piptools/utils.py\nindex 4374b74a9..6b7d2d2c8 100644\n--- a/piptools/utils.py\n+++ b/piptools/utils.py\n@@ -2,7 +2,6 @@\n \n import collections\n import copy\n-import functools\n import itertools\n import json\n import os\n@@ -366,6 +365,12 @@ def get_compile_command(click_ctx: click.Context) -> str:\n         if option_long_name in COMPILE_EXCLUDE_OPTIONS:\n             continue\n \n+        # Exclude config option if it's the default one\n+        if option_long_name == \"--config\":\n+            default_config = select_config_file(click_ctx.params.get(\"src_files\", ()))\n+            if value == default_config:\n+                continue\n+\n         # Skip options without a value\n         if option.default is None and not value:\n             continue\n@@ -594,7 +599,14 @@ def select_config_file(src_files: tuple[str, ...]) -> Path | None:\n         ),\n         None,\n     )\n-    return config_file_path\n+    if config_file_path is None:\n+        return None\n+\n+    return (\n+        config_file_path.relative_to(working_directory)\n+        if is_path_relative_to(config_file_path, working_directory)\n+        else config_file_path\n+    )\n \n \n # Some of the defined click options have different `dest` values than the defaults\n@@ -628,7 +640,6 @@ def get_click_dest_for_option(option_name: str) -> str:\n ]\n \n \n-@functools.lru_cache()\n def parse_config_file(config_file: Path) -> dict[str, Any]:\n     try:\n         config = tomllib.loads(config_file.read_text(encoding=\"utf-8\"))\n@@ -656,3 +667,14 @@ def parse_config_file(config_file: Path) -> dict[str, Any]:\n                 original_option, f\"Config key '{original_option}' must be a list\"\n             )\n     return piptools_config\n+\n+\n+def is_path_relative_to(path1: Path, path2: Path) -> bool:\n+    \"\"\"Return True if ``path1`` is relative to ``path2``.\"\"\"\n+    # TODO: remove this function in favor of Path.is_relative_to()\n+    #       when we drop support for Python 3.8\n+    try:\n+        path1.relative_to(path2)\n+    except ValueError:\n+        return False\n+    return True\n",
+  "test_diff": "diff --git a/tests/conftest.py b/tests/conftest.py\nindex 70f0e0e90..513b72430 100644\n--- a/tests/conftest.py\n+++ b/tests/conftest.py\n@@ -473,6 +473,6 @@ def _maker(\n \n         config_to_dump = {\"tool\": {\"pip-tools\": {pyproject_param: new_default}}}\n         config_file.write_text(tomli_w.dumps(config_to_dump))\n-        return config_file\n+        return config_file.relative_to(tmpdir_cwd)\n \n     return _maker\ndiff --git a/tests/test_utils.py b/tests/test_utils.py\nindex 5f1e9ab5d..4820492d6 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -386,6 +386,30 @@ def test_get_compile_command(tmpdir_cwd, cli_args, expected_command):\n         assert get_compile_command(ctx) == expected_command\n \n \n+@pytest.mark.parametrize(\n+    (\"config_file\", \"expected_command\"),\n+    (\n+        pytest.param(\n+            \"pyproject.toml\", \"pip-compile\", id=\"exclude default pyproject.toml\"\n+        ),\n+        pytest.param(\n+            \".pip-tools.toml\", \"pip-compile\", id=\"exclude default .pip-tools.toml\"\n+        ),\n+        pytest.param(\n+            \"my-config.toml\",\n+            \"pip-compile --config=my-config.toml\",\n+            id=\"include non-default my-config.toml\",\n+        ),\n+    ),\n+)\n+def test_get_compile_command_with_config(tmpdir_cwd, config_file, expected_command):\n+    \"\"\"Test that get_compile_command excludes or includes config file.\"\"\"\n+    with open(config_file, \"w\"):\n+        pass\n+    with compile_cli.make_context(\"pip-compile\", [\"--config\", config_file]) as ctx:\n+        assert get_compile_command(ctx) == expected_command\n+\n+\n def test_get_compile_command_escaped_filenames(tmpdir_cwd):\n     \"\"\"\n     Test that get_compile_command output (re-)escapes ' -- '-escaped filenames.\n",
+  "files_changed": [
+    "piptools/utils.py",
+    "tests/conftest.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "piptools/utils.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "test_support_files": [
+    "tests/conftest.py"
+  ],
+  "lines_added": 50,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "e8b8ce71268f1f5dd193eac8d38071e02ad7b91f",
+  "base_commit_sha": "64859e3d50f45edaf8be5ac7c8057b6b7b382c1c",
+  "env_commit_sha": "64859e3d50f45edaf8be5ac7c8057b6b7b382c1c",
+  "head_commit_sha": "2680f3f86c648667c17c3e267ce6ea2568ce2e0d",
+  "merged_at": "2023-07-01T06:40:01Z"
+}

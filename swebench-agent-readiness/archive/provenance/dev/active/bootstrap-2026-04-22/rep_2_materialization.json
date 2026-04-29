@@ -1,0 +1,14 @@
+{
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "e6e300e729dd33956e5448d8be9a0b1540b4e53a",
+  "clean_workspace": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_skipping.py"
+    ]
+  }
+}

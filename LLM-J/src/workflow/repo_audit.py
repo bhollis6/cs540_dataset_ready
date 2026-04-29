@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -90,11 +91,12 @@ def _run_child_naming_audit(
         sample_limit=sample_limit,
         live=live,
     )
+    env = _build_audit_environment(output_path=output_path, live=live)
     if live:
-        subprocess.run(command, check=True)
+        subprocess.run(command, check=True, env=env)
         return
 
-    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    result = subprocess.run(command, check=True, capture_output=True, text=True, env=env)
     stdout_lines = [
         line for line in result.stdout.splitlines()
         if not line.startswith("Wrote naming audit to ")
@@ -141,6 +143,15 @@ def _build_audit_command(
         "--output",
         str(output_path),
     ]
+
+
+def _build_audit_environment(*, output_path: Path, live: bool) -> dict[str, str] | None:
+    if not live:
+        return None
+
+    env = os.environ.copy()
+    env.setdefault("UV_CACHE_DIR", str(output_path.parent / ".uv-cache"))
+    return env
 
 
 def _naming_audit_script_path() -> Path:

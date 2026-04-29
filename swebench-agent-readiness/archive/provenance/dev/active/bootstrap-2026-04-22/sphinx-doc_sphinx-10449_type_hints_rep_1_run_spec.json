@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sphinx-doc__sphinx-10449",
+  "repo": "sphinx-doc/sphinx",
+  "harness": "codex-cli",
+  "integration_strategy": "pypi_dependency",
+  "eligibility_path": "<LOCAL_SWEBENCH_RUN_ROOT>/src/profiles/sphinx-doc__sphinx-10449_eligibility.json",
+  "chosen_condition": "type_hints",
+  "clean": {
+    "condition": "clean",
+    "replication_index": 1,
+    "run_root": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1",
+    "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/workspace",
+    "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/oracle_workspace",
+    "logs_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/logs",
+    "metadata_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/metadata.json",
+    "prompt_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/issue_prompt.md",
+    "result_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/result.json",
+    "metrics_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/metrics.json",
+    "degradation_targets": {}
+  },
+  "degraded": {
+    "condition": "type_hints",
+    "replication_index": 1,
+    "run_root": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1",
+    "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/workspace",
+    "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/oracle_workspace",
+    "logs_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/logs",
+    "metadata_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/metadata.json",
+    "prompt_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/issue_prompt.md",
+    "result_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/result.json",
+    "metrics_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/metrics.json",
+    "degradation_targets": {
+      "target_files": [
+        "sphinx/ext/autodoc/typehints.py",
+        "tests/test_ext_autodoc_configs.py"
+      ]
+    }
+  },
+  "comparison_artifact_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/comparison.json"
+}

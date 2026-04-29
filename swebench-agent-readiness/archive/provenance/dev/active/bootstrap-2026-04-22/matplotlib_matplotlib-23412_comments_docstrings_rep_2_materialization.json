@@ -1,0 +1,14 @@
+{
+  "instance_id": "matplotlib__matplotlib-23412",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "f06c2c3abdaf4b90285ce5ca7fedbb8ace715911",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-23412/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-23412/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "lib/matplotlib/patches.py",
+      "lib/matplotlib/tests/test_patches.py"
+    ]
+  }
+}

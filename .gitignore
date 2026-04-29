@@ -1,5 +1,45 @@
+# Local secrets
 **.env
+
+# Python environments, caches, and build products
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/*.egg-info/
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+**/.uv-cache/
+
+# Notebook/editor/OS clutter
+.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+
+# Packaged scratch exports
+*.zip
+
+# Raw local experiment artifacts: never push these.
 LLM-J/clones/
-__pycache__/
-*.egg-info/
-.pytest_cache/
+LLM-J/runs/
+LLM-J/comparison_slices/
+LLM-J/container_probe_bundles/
+LLM-J/probe_results/
+LLM-J/audit_results/
+LLM-J/deep_results/
+LLM-J/packets/
+LLM-J/.codex/
+LLM-J/.codex-stage5-home/
+LLM-J/deep_results_rerun*/
+swebench-agent-readiness/runs/
+swebench_pivot/
+
+# Historical scratch docs/distributions kept local unless explicitly requested.
+LLM-J/dev/
+LLM-J/deep_research/
+LLM-J/archive/
+swebench-agent-readiness/archive/historical_docs/
+swebench-agent-readiness/archive/old_distributions/
+swebench-agent-readiness/archive/provenance/dev/active/repo-cleanup-2026-04-29/
+factory_ai_readiness_reports/

@@ -1,0 +1,14 @@
+{
+  "instance_id": "pytest-dev__pytest-10081",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "da9a2b584eb7a6c7e924b2621ed0ddaeca0a7bea",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "src/_pytest/unittest.py",
+      "testing/test_unittest.py"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "condition": "naming",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/naming/rep_0/workspace",
+  "prompt_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/naming/rep_0/issue_prompt.md",
+  "stdout_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/naming/rep_0/logs/agent_stdout.jsonl",
+  "stderr_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/naming/rep_0/logs/agent_stderr.log",
+  "output_last_message_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/naming/rep_0/logs/last_message.md",
+  "sandbox_mode": "workspace-write",
+  "env_bin_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/naming/rep_0/workspace/.pilot-venv-py39/bin"
+}

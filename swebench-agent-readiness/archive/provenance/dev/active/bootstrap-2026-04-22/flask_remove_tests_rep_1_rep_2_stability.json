@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pallets__flask-5014",
+  "condition": "remove_tests",
+  "replications": [
+    1,
+    2
+  ],
+  "oracle_success_stable": true,
+  "clean_changed_files_stable": true,
+  "degraded_changed_files_stable": true,
+  "efficiency_penalty_replicated_directionally": true,
+  "efficiency_penalty_magnitude_stable": false,
+  "replication_summaries": [
+    {
+      "replication_index": 1,
+      "clean": {
+        "files_opened_before_first_edit": 2,
+        "exploration_efficiency": 1.0,
+        "total_tokens": 344381,
+        "changed_files": [
+          "src/flask/blueprints.py",
+          "tests/test_blueprints.py"
+        ]
+      },
+      "degraded": {
+        "files_opened_before_first_edit": 4,
+        "exploration_efficiency": 0.25,
+        "total_tokens": 599656,
+        "changed_files": [
+          "src/flask/blueprints.py",
+          "tests/test_basic.py",
+          "tests/test_blueprints.py"
+        ]
+      }
+    },
+    {
+      "replication_index": 2,
+      "clean": {
+        "files_opened_before_first_edit": 2,
+        "exploration_efficiency": 1.0,
+        "total_tokens": 536631,
+        "changed_files": [
+          "src/flask/blueprints.py",
+          "tests/test_blueprints.py"
+        ]
+      },
+      "degraded": {
+        "files_opened_before_first_edit": 3,
+        "exploration_efficiency": 0.6667,
+        "total_tokens": 564830,
+        "changed_files": [
+          "src/flask/blueprints.py",
+          "tests/test_basic.py",
+          "tests/test_blueprints.py"
+        ]
+      }
+    }
+  ],
+  "interpretation": "The Flask remove_tests exploration penalty replicated directionally, but with a smaller magnitude in rep_2. The stable signal is redirected test strategy plus preserved oracle success."
+}

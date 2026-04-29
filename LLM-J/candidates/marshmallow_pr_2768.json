@@ -1,0 +1,28 @@
+{
+  "candidate_id": "marshmallow_pr_2768",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2768,
+  "title": "Remove unused utils.is_keyed_tuple",
+  "description": "This doesn't seem to be used anymore. Should we keep it?",
+  "patch_diff": "diff --git a/src/marshmallow/utils.py b/src/marshmallow/utils.py\nindex 09da12ec6..5232adcc2 100644\n--- a/src/marshmallow/utils.py\n+++ b/src/marshmallow/utils.py\n@@ -57,13 +57,6 @@ def is_instance_or_subclass(val, class_) -> bool:\n         return isinstance(val, class_)\n \n \n-def is_keyed_tuple(obj) -> bool:\n-    \"\"\"Return True if ``obj`` has keyed tuple behavior, such as\n-    namedtuples or SQLAlchemy's KeyedTuples.\n-    \"\"\"\n-    return isinstance(obj, tuple) and hasattr(obj, \"_fields\")\n-\n-\n # https://stackoverflow.com/a/27596917\n def is_aware(datetime: dt.datetime) -> bool:\n     return (\n",
+  "test_diff": "diff --git a/tests/test_utils.py b/tests/test_utils.py\nindex 060ca5f44..38de4f4d8 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -94,20 +94,6 @@ def test_set_value():\n         utils.set_value(d, \"foo.bar\", 42)\n \n \n-def test_is_keyed_tuple():\n-    Point = namedtuple(\"Point\", [\"x\", \"y\"])\n-    p = Point(24, 42)\n-    assert utils.is_keyed_tuple(p) is True\n-    t = (24, 42)\n-    assert utils.is_keyed_tuple(t) is False\n-    d = {\"x\": 42, \"y\": 24}\n-    assert utils.is_keyed_tuple(d) is False\n-    s = \"xy\"\n-    assert utils.is_keyed_tuple(s) is False\n-    lst = [24, 42]\n-    assert utils.is_keyed_tuple(lst) is False\n-\n-\n def test_is_collection():\n     assert utils.is_collection([1, \"foo\", {}]) is True\n     assert utils.is_collection((\"foo\", 2.3)) is True\n",
+  "files_changed": [
+    "src/marshmallow/utils.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "src/marshmallow/utils.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 0,
+  "lines_removed": 21,
+  "has_test_changes": true,
+  "merge_commit_sha": "dc9d85245d95489e3b42dd831366123e9e306dce",
+  "base_commit_sha": "701f52c83e1054ab4ead9ef17f1a99b6fc6e4636",
+  "env_commit_sha": "701f52c83e1054ab4ead9ef17f1a99b6fc6e4636",
+  "head_commit_sha": "16a373b5ac43399193a5a6177bc3935d30b9753b",
+  "merged_at": "2025-01-13T19:53:01Z"
+}

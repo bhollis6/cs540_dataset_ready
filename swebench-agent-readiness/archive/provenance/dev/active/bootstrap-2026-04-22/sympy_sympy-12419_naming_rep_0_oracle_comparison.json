@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sympy__sympy-12419",
+  "repo": "sympy/sympy",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 0.911,
+    "changed_files": [
+      "sympy/concrete/summations.py",
+      "sympy/concrete/tests/test_sums_products.py",
+      "sympy/matrices/expressions/matexpr.py",
+      "sympy/matrices/expressions/tests/test_indexing.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 7,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 0.869,
+    "changed_files": [
+      "sympy/concrete/summations.py",
+      "sympy/concrete/tests/test_sums_products.py",
+      "sympy/matrices/expressions/matexpr.py",
+      "sympy/matrices/expressions/matmul.py",
+      "sympy/matrices/expressions/tests/test_funcmatrix.py",
+      "sympy/matrices/expressions/tests/test_indexing.py",
+      "sympy/matrices/expressions/tests/test_inverse.py",
+      "sympy/matrices/expressions/tests/test_matexpr.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": true,
+    "fail_to_pass_failed_count_delta": 1,
+    "pass_to_pass_failed_count_delta": 7,
+    "files_opened_before_first_edit_delta": 1,
+    "exploration_efficiency_delta": -0.16669999999999996,
+    "total_duration_seconds_delta": -0.04200000000000004
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "sympy/matrices/expressions/matexpr.py",
+        "sympy/matrices/expressions/tests/test_matexpr.py",
+        "sympy/functions/special/tensor_functions.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sympy/matrices/expressions/matexpr.py",
+        "sympy/matrices/expressions/tests/test_matexpr.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "sympy/functions/special/tensor_functions.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 2113186,
+      "cached_input_tokens": 2023552,
+      "output_tokens": 11681,
+      "total_tokens": 2124867
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "sympy/matrices/expressions/matexpr.py",
+        "sympy/matrices/expressions/tests/test_indexing.py",
+        "sympy/matrices/expressions/tests/test_matexpr.py",
+        "sympy/__init__.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sympy/matrices/expressions/matexpr.py",
+        "sympy/matrices/expressions/tests/test_matexpr.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "sympy/__init__.py",
+        "sympy/matrices/expressions/tests/test_indexing.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 2312163,
+      "cached_input_tokens": 2205824,
+      "output_tokens": 15525,
+      "total_tokens": 2327688
+    }
+  }
+}

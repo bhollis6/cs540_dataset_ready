@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "scikit-learn__scikit-learn-25232",
+  "repo": "scikit-learn/scikit-learn",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 49.687,
+    "changed_files": [
+      "sklearn/impute/_iterative.py",
+      "sklearn/impute/tests/test_impute.py"
+    ]
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 49.737,
+    "changed_files": [
+      "sklearn/impute/_iterative.py",
+      "sklearn/impute/tests/test_impute.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 0.05000000000000426
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 2,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25232/codex-cli/clean/rep_2/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25232/codex-cli/comments_docstrings/rep_2/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "sklearn/impute/_iterative.py",
+        "sklearn/impute/tests/test_impute.py",
+        "sklearn/impute/_base.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sklearn/impute/_iterative.py",
+        "sklearn/impute/tests/test_impute.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "sklearn/impute/_base.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 834844,
+      "cached_input_tokens": 752640,
+      "output_tokens": 5979,
+      "total_tokens": 840823
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "sklearn/impute/_iterative.py",
+        "sklearn/impute/tests/test_impute.py",
+        "sklearn/impute/_base.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sklearn/impute/_iterative.py",
+        "sklearn/impute/tests/test_impute.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "sklearn/impute/_base.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 875307,
+      "cached_input_tokens": 782336,
+      "output_tokens": 7274,
+      "total_tokens": 882581
+    }
+  }
+}

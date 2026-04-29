@@ -1,0 +1,24 @@
+{
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/clean/rep_0/workspace",
+  "venv_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/clean/rep_0/workspace/.pilot-venv-py311",
+  "python_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/clean/rep_0/workspace/.pilot-venv-py311/bin/python",
+  "python_version": "3.11",
+  "package_installs": [
+    [
+      "-r",
+      "$HOME/requirements.txt"
+    ],
+    [
+      "setuptools==70.0.0",
+      "click==8.1.3",
+      "itsdangerous==2.1.2",
+      "Jinja2==3.1.2",
+      "MarkupSafe==2.1.1",
+      "Werkzeug==2.3.7"
+    ],
+    [
+      "-e",
+      "."
+    ]
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "psf__requests-1142",
+  "repo": "psf/requests",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 0.46,
+    "changed_files": [
+      "requests/models.py",
+      "test_requests.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.25,
+    "total_duration_seconds": 0.456,
+    "changed_files": [
+      "requests/models.py",
+      "test_requests.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": true,
+    "fail_to_pass_failed_count_delta": 1,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 2,
+    "exploration_efficiency_delta": -0.25,
+    "total_duration_seconds_delta": -0.0040000000000000036
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1142/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1142/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "requests/models.py",
+        "requests/adapters.py"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "requests/models.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "requests/adapters.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 380909,
+      "cached_input_tokens": 304256,
+      "output_tokens": 3322,
+      "total_tokens": 384231
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "requests/models.py",
+        "requests/api.py",
+        "requests/sessions.py",
+        "requests/adapters.py"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "requests/models.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        "requests/adapters.py",
+        "requests/api.py",
+        "requests/sessions.py"
+      ],
+      "exploration_efficiency": 0.25,
+      "first_edit_detected": true,
+      "input_tokens": 545420,
+      "cached_input_tokens": 488320,
+      "output_tokens": 4242,
+      "total_tokens": 549662
+    }
+  }
+}

@@ -1,0 +1,332 @@
+[
+  {
+    "candidate_id": "uvicorn_pr_2742",
+    "repo": "encode/uvicorn",
+    "pr_number": 2742,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "A high-quality, tightly scoped bug fix for asyncio context variable pollution across ASGI runs. The test is exemplary \u2014 it directly exercises the triggering condition (HIGH_WATER_LIMIT body pause) and would serve as a clean pass/fail signal. The main weakness is the sparse PR description, but the inline comments and test docstring provide enough context for reconstruction. Well-suited for the experiment: focused scope, meaningful code surface, non-trivial but not overwhelming complexity.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely tightly scoped: identical one-liner fix applied in exactly two parallel HTTP protocol implementation files (h11_impl.py and httptools_impl.py), plus a single regression test. Both source changes are the same conceptual fix (replacing `loop.create_task(...)` with `contextvars.Context().run(loop.create_task, ...)`). No unrelated cleanup, no drift."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test `test_no_contextvars_pollution_asyncio` is a carefully crafted regression test that directly validates the exact bug being fixed. It constructs an ASGI app that captures its initial context, sends a large request (specifically sized > HIGH_WATER_LIMIT to trigger the read-pause/resume code path that causes context pollution), then a simple GET, and asserts both return an empty context dict. It also uses the `http_protocol_cls` fixture, so it covers both h11 and httptools implementations. This test would fail without the fix and pass with it \u2014 ideal pass/fail signal."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The touched source files are core HTTP protocol implementation code with type annotations, descriptive variable names, and meaningful inline comments (including a link to the upstream CPython issue and a TODO for a future cleaner API). The test code also has a docstring and clear variable naming. Degrading the comments would obscure the 'why' behind the fix. Type hints and naming in surrounding code are present but not unusually rich. Solid but not the highest density of degradable properties."
+      },
+      "clarity": {
+        "score": 3,
+        "reasoning": "The PR description is minimal \u2014 'One possible solution for #2167' with no explanation of what the bug is, what context pollution means, or how the fix works. An AI agent receiving this as a task prompt would need to infer intent from the code comments and test docstring. Fortunately, the inline comments (linking to the CPython issue and explaining the rationale) and test docstring ('Non-regression test for https://github.com/encode/uvicorn/issues/2167') provide recoverable context, but the top-level description alone is insufficient."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The actual code change is very small (one logical line replaced in two files), but understanding the bug requires non-trivial knowledge: asyncio task context inheritance semantics, the contextvars module, and why a large body (> HIGH_WATER_LIMIT) triggers the specific interleaving that causes pollution. An agent needs to understand this mechanism to arrive at the right fix independently, rather than just copying a pattern. This lands in the sweet spot \u2014 not trivially obvious, not overwhelming."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2769",
+    "repo": "encode/uvicorn",
+    "pr_number": 2769,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "A clean, well-scoped bug fix ensuring WebSocket transports are always closed after ASGI application return, applied consistently across three protocol implementations. Strong test coverage with a direct pass/fail signal. The main weakness is the sparse PR description requiring code reading to fully understand. Overall a good experimental candidate: focused, testable, in core application code with type annotations and descriptive naming that would expose meaningful signals under mutation.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Single coherent fix: ensuring `self.transport.close()` is always called when `run_asgi` finishes, regardless of exit path. The identical pattern is applied across three WebSocket protocol implementations (websockets_impl.py, websockets_sansio_impl.py, wsproto_impl.py), all implementing the same interface. No unrelated changes bundled in."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The added test `test_close_transport_on_asgi_return` directly reproduces the bug scenario: an ASGI app that accepts a WebSocket but returns without sending a close frame. It connects a real client, expects a ConnectionClosed exception, and asserts the close code is 1006. The test includes a docstring explaining the exact contract being verified. It parameterizes over ws/http protocol classes, so it validates all three implementations. This is a clean pass/fail signal for the fix."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "Touches core async protocol handling code in the WebSocket layer. The ASGI callables and scope use type annotations (Scope, ASGIReceiveCallable, ASGISendCallable, ASGISendEvent). Variable names are descriptive (handshake_completed_event, closed_event, transport). The test has a meaningful docstring. The code is genuine application logic, not boilerplate or config. Falls short of a 5 only because the patch diff itself is mostly deletions/restructuring with limited inline comments to degrade."
+      },
+      "clarity": {
+        "score": 3,
+        "reasoning": "The PR title 'fix(websockets): Send close frame on ASGI return' is descriptive, and the test docstring provides a clear one-sentence problem statement. However, the PR body is nearly empty ('Replaces #2332' with no further explanation). An agent would need to read the code and test to understand the full context of what was broken and why the refactoring approach is correct. No reproduction steps or expected vs. actual behavior description is provided."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The fix is non-trivial: it requires understanding async WebSocket lifecycle, ASGI protocol semantics, the semantics of Python try/except/else control flow, and why collapsing multiple `transport.close()` calls into a single unconditional call is safe and correct. It's not a one-liner, but it's also not sprawling \u2014 the core change is ~10 lines restructured across 3 similar files. Solidly in the 'understand some context' range; an agent that knows the ASGI spec can reason about this without heroic effort."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2776",
+    "repo": "encode/uvicorn",
+    "pr_number": 2776,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 17,
+    "recommendation": "REVIEW",
+    "summary": "This PR is a pure typo fix (attribute name misspelling) that is far too simple for the experiment. While it is perfectly scoped and clearly described, a coding agent can solve it by running a literal string search-and-replace with zero understanding of the codebase. There is no meaningful complexity for measuring the effect of codebase degradation \u2014 the task is equally trivial in a clean or degraded codebase. Reject.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Single atomic change: renaming one misspelled attribute `error_occured` to `error_occurred` across one source file and one test file. No unrelated changes bundled in."
+      },
+      "test_coverage": {
+        "score": 4,
+        "reasoning": "The test diff updates 5 existing assertions that directly reference the renamed attribute across multiple test scenarios (lifespan auto/on modes, startup/shutdown failure cases). These assertions directly validate the attribute exists and has the correct value, serving as clear pass/fail signals for the rename. Slightly below 5 because no new test cases are added \u2014 only existing assertions are updated."
+      },
+      "mutation_relevance": {
+        "score": 2,
+        "reasoning": "The change is purely a variable/attribute rename \u2014 a typo fix. The source file (`uvicorn/lifespan/on.py`) does contain real application logic with type annotations and descriptive naming, but the actual mutation here only touches the misspelled name. Degrading naming quality would trivially revert this PR's entire change. There are no meaningful comments/docstrings or complex logic being touched. The surrounding code is relevant application logic, but the PR itself interacts with it only superficially."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The description is crystal clear: fix a specific typo in a specific attribute name (`error_occured` \u2192 `error_occurred`) in a specific class (`LifespanOn`). The PR even notes the backward-compatibility concern. No ambiguity about what the task is."
+      },
+      "complexity": {
+        "score": 1,
+        "reasoning": "This is a mechanical find-and-replace of a misspelled attribute name. Every change is identical in nature: swap `error_occured` for `error_occurred`. No logic reasoning required, no architectural decisions, no edge cases to handle. This is the definition of a trivially simple change."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2824",
+    "repo": "encode/uvicorn",
+    "pr_number": 2824,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "This is a well-described, tightly scoped bug fix with excellent test coverage. The description is clear enough to serve as a direct agent prompt, and the tests provide strong pass/fail signal. However, the actual fix is a one-line regex edit with essentially no meaningful mutation surface (no type hints, no named variables, no docstrings on the changed line), and the implementation complexity is very low \u2014 an agent that understands regex escaping will solve it trivially. The PR is high quality but too simple and too thin on mutation-relevant code to produce meaningful experimental signal across degradation conditions.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Single-line regex fix in one source file plus corresponding tests. The change is laser-focused on fixing the broken HEADER_RE character class \u2014 nothing unrelated is touched."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test diff adds a parametrized test `test_invalid_header_name` with 19 distinct cases covering every character that the fixed regex should reject (space, null, parens, brackets, braces, equals, quotes, backslash, tab, DEL, control bytes). These tests directly validate the fix and would serve as clear pass/fail signal: they should fail against the old regex and pass with the new one."
+      },
+      "mutation_relevance": {
+        "score": 3,
+        "reasoning": "The source change is a single-line regex constant \u2014 there are no type hints, variable names to degrade, or docstrings on that line. The surrounding file (httptools_impl.py) is a real application module that likely has those properties, but the changed line itself is minimal. The test additions are descriptive and well-named, offering some mutation surface, but the core fix is a one-character-class correction with very limited richness for degradation experiments."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The PR description is exceptionally clear: it quotes the broken regex, explains exactly why it is broken (premature closing of the character class), shows the corrected regex, and includes a concrete before/after test matrix demonstrating the failure. An AI agent could be handed this description verbatim as a task prompt with no ambiguity."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "Once the bug is understood, the fix is a single-line regex correction (escaping `[`, `]`, and `\\`). An agent that understands regex character class escaping rules can produce this fix in seconds. The conceptual insight (unescaped `]` closes the class early) is non-trivial to diagnose, but the actual implementation is trivial \u2014 2-3 characters changed in a string literal. This lands at the low end of our desired complexity range."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2829",
+    "repo": "encode/uvicorn",
+    "pr_number": 2829,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 24,
+    "recommendation": "ACCEPT",
+    "summary": "Excellent experimental candidate. The PR fixes a genuine, well-documented protocol bug with a focused, symmetric change across two parallel implementations, accompanied by directly-validating tests that serve as clear pass/fail signals. The code is core ASGI protocol logic rich in type hints, descriptive naming, and meaningful state variables \u2014 all high-value mutation targets. The description is comprehensive enough to serve as a standalone agent task prompt. Complexity is in the ideal sweet spot: requires real protocol understanding but the solution is contained and verifiable.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR touches exactly 2 source files (h11_impl.py and httptools_impl.py) and 1 test file. The change is tightly scoped to a single bug fix: adding a `shutting_down` flag and modifying `shutdown()` and `receive()` in both parallel HTTP protocol implementations. The dual-file change is structurally necessary because h11 and httptools are symmetric implementations of the same interface \u2014 not unrelated cleanup."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "Two new test functions are added: `test_shutdown_during_streaming_sends_disconnect` directly asserts that `receive()` returns `{'type': 'http.disconnect'}` during server shutdown \u2014 the exact core fix. `test_shutdown_during_streaming_allows_send_before_exit` validates the design decision that `send()` still works after the shutdown signal. Both tests are parameterized over both HTTP protocol implementations via `http_protocol_cls`, giving 4 new test cases total. These are unambiguous pass/fail signals for the fix."
+      },
+      "mutation_relevance": {
+        "score": 5,
+        "reasoning": "The source files are core ASGI protocol implementation code with rich mutation targets: type annotations (`ASGIReceiveEvent`, `ASGI3Application`, `ASGISendCallable`), highly descriptive variable names (`shutting_down`, `disconnected`, `response_complete`, `message_event`, `keep_alive`), and meaningful conditional logic. The test file has clear behavioral assertions tied to named concepts. Degrading any of naming (`shutting_down` \u2192 `flag1`), type hints, or docstrings would materially impair an agent's ability to understand the state machine and reproduce the fix."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "The PR description is exceptionally thorough: it includes a minimal FastAPI reproduction app, exact console output showing the bug (server hangs on streaming after SIGINT), expected behavior after the fix, root-cause explanation (deadlock between ASGI app waiting for disconnect and server waiting for app to finish), comparison with Hypercorn's behavior, and an AI disclaimer with full conversation log. This could be handed directly to an AI agent as a task prompt with minimal reformatting."
+      },
+      "complexity": {
+        "score": 4,
+        "reasoning": "86 lines added, 8 removed across 3 files. The core change is adding a boolean flag (`shutting_down`), modifying two conditions in `receive()`, and setting the flag in `shutdown()`. The non-trivial reasoning required: understanding why a separate `shutting_down` flag is needed instead of reusing `disconnected` (because `disconnected` silently drops `send()` calls, which would break non-streaming requests completing during shutdown). This requires navigating the ASGI state machine across two protocol implementations, but the solution is contained and well-reasoned. Sits solidly in the 3-4 sweet spot."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2844",
+    "repo": "encode/uvicorn",
+    "pr_number": 2844,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 14,
+    "recommendation": "REVIEW",
+    "summary": "This PR is a poor candidate for the experiment. It adds benchmark infrastructure rather than fixing or implementing application functionality, meaning there is no 'fix' for an agent to re-solve and no FAIL_TO_PASS signal available. The mutation relevance is very low since zero core uvicorn source lines are touched \u2014 all changes are in CI config, dependencies, and test scaffolding. Degrading naming or type hints in the benchmark mock classes would not meaningfully affect an agent's ability to reproduce this work. Additionally, the complexity sits below the desired sweet-spot: the 9 test functions are structurally repetitive templates over the same mock infrastructure pattern.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR is tightly focused on a single coherent addition: a CodSpeed benchmark suite for HTTP protocol hot paths. Every changed file serves this one purpose \u2014 CI workflow, dev dependency, benchmark infrastructure, benchmark tests, coverage exclusion, and .gitignore update. Nothing unrelated is bundled in."
+      },
+      "test_coverage": {
+        "score": 1,
+        "reasoning": "This PR adds no fix or feature to the application code \u2014 the benchmarks ARE the change. There is no 'core fix' to verify. The benchmark tests run HTTP protocol scenarios and can pass/fail, but they don't validate a bug fix or correctness regression. They measure performance, which is entirely orthogonal to our FAIL_TO_PASS signal requirement."
+      },
+      "mutation_relevance": {
+        "score": 2,
+        "reasoning": "The PR modifies zero lines of core application code in uvicorn itself. All changes are in test benchmark infrastructure (MockTransport, MockLoop, MockTask in tests/benchmarks/http.py), new test files, CI YAML, pyproject.toml, and uv.lock. The mock classes do use type hints and descriptive naming, but this is test support scaffolding \u2014 not the kind of production application code whose degradation would meaningfully affect an agent's ability to solve the task."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly lists what was added (9 benchmark scenarios \u00d7 2 protocols), references the CI integration, and provides a concrete test plan with checkboxes. An agent given this description would understand the task: create benchmark tests covering these specific HTTP scenarios using pytest-codspeed. Loses one point because the description doesn't explain the mock infrastructure approach an agent would need to discover through code reading."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The implementation involves creating mock classes (MockTransport, MockLoop, etc.) and writing 9 templated test functions that are structurally nearly identical. While it requires some knowledge of uvicorn's internal protocol API (connection_made, data_received), the patterns are repetitive and the logic is shallow \u2014 no algorithmic reasoning required. This sits at the simple end of real work, not the sweet-spot 3-4 range we need."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2859",
+    "repo": "encode/uvicorn",
+    "pr_number": 2859,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 16,
+    "recommendation": "REVIEW",
+    "summary": "This PR is a clean, well-scoped TODO completion that implements a known Python 3.11+ API improvement, but it scores poorly for our experiment on two critical axes: the test changes don't verify the behavioral fix (just prevent mock breakage), and the change itself is too mechanically simple \u2014 a version gate around an already-commented-out alternative implementation. Agents would likely solve this correctly even in a heavily degraded codebase, making it a weak experimental candidate.",
+    "scores": {
+      "scope": {
+        "score": 4,
+        "reasoning": "The PR is tightly focused on replacing `contextvars.Context().run(loop.create_task, ...)` with the native `context=` kwarg on Python 3.11+. The identical change is applied to two parallel files (h11_impl.py and httptools_impl.py), which is coherent and expected. The description mentions a 'bonus' fix in watchfilesreload.py which is a minor unrelated addition preventing a 5, but the core scope is well-controlled."
+      },
+      "test_coverage": {
+        "score": 2,
+        "reasoning": "The test changes in test_http.py and benchmarks/http.py only update the MockLoop.create_task signature to accept **kwargs so the mock doesn't break when the new code path passes `context=` on Python 3.11+. There are no new test cases that directly verify the behavioral correctness of the version branch (e.g., asserting that context isolation actually works, or that `context=contextvars.Context()` is called on 3.11+). The changes prevent test breakage but don't validate the fix."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The modified files (h11_impl.py and httptools_impl.py) are core HTTP protocol implementation files in uvicorn with type hints, descriptive variable names, and meaningful inline comments explaining the 'why' (e.g., references to CPython issue #140947). The surrounding code would be rich with annotations and context. The changes sit inside a method with real logic, making it moderately useful for degradation experiments."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The description clearly explains the problem (a known TODO for replacing Context().run() with the native kwarg), the rationale (performance under high concurrency, Python 3.11 API addition), the implementation strategy (sys.version_info branch with coverage pragmas following existing convention), and includes a test plan. An agent could understand and reimplement this without reading the code first. Slightly below 5 because there are no reproduction steps and the 'bonus' fix adds ambiguity."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "This is a mechanical TODO completion. The solution is straightforward: add a version check and place the existing code in the else branch, add the new API call in the if branch, then update two mock signatures. There is minimal reasoning required beyond knowing Python 3.11 added `context=` to `create_task()`. The entire diff is about 8 substantive lines applied twice. This is too simple to produce meaningful experimental signal \u2014 an agent would likely succeed regardless of codebase quality."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2888",
+    "repo": "encode/uvicorn",
+    "pr_number": 2888,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 24,
+    "recommendation": "ACCEPT",
+    "summary": "Excellent experiment candidate. The PR is a single, clearly-bounded feature addition to a specific protocol implementation, backed by targeted integration tests that produce clear pass/fail signals. The source code is rich with type annotations, descriptive identifiers, and explanatory comments \u2014 all properties the experiment plans to degrade. The description is detailed enough to serve directly as an agent task prompt. Complexity sits squarely in the 3-4 sweet spot: non-trivial asyncio state machine work, but tightly scoped enough that codebase quality degradation should produce measurable differences in agent performance.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely tightly scoped: adds keepalive ping/pong to exactly one protocol implementation (websockets_sansio_impl.py), with a minor doc update and test additions. No unrelated cleanup or bundled changes. The PR resolves a single clearly-identified gap (sansio path ignoring ws_ping_interval/ws_ping_timeout)."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "Three new integration tests directly validate the core behavior: test_server_keepalive_ping_pong checks that a full roundtrip completes and last_ping_rtt > 0, test_server_keepalive_ping_timeout muzzles pong responses and asserts close code 1011 with reason 'keepalive ping timeout', and test_server_keepalive_disabled asserts no ping_timer is set when interval is None. These tests are specific, deterministic pass/fail signals tied exactly to the implementation's state machine."
+      },
+      "mutation_relevance": {
+        "score": 5,
+        "reasoning": "Core application code with rich mutation targets: type annotations (TimerHandle | None, bytes | None, float), highly descriptive naming (pending_ping_payload, ping_sent_at, last_ping_rtt, schedule_ping, keepalive_timeout), inline comments explaining the why of the design (stale-pong detection, loop chain, duplicate schedule_ping guard), and surrounding tests that expose internal state (last_ping_rtt, ping_timer). Degrading any of these properties would meaningfully impair an agent's ability to reconstruct the implementation."
+      },
+      "clarity": {
+        "score": 5,
+        "reasoning": "Exceptionally detailed PR description: identifies the exact gap (sansio ignoring ws_ping_interval/ws_ping_timeout), explains the chosen design (timers vs tasks with explicit tradeoffs), references the upstream keepalive pattern, describes each test case and what it validates, and links to the original issue (#2883). An AI agent could derive the full task spec from the description alone without reading any code."
+      },
+      "complexity": {
+        "score": 4,
+        "reasoning": "Requires understanding asyncio timer semantics, the websockets sansio protocol event model, and a small state machine (ping_timer -> send_keepalive_ping -> pong_timer -> handle_pong -> schedule_ping, with timeout path). About 67 lines of implementation spread across 6 focused methods. Non-trivial but well-bounded \u2014 a competent agent should be able to solve it with codebase context, making it a good discriminating test case. Not so complex that it would fail regardless of code quality."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2903",
+    "repo": "encode/uvicorn",
+    "pr_number": 2903,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 22,
+    "recommendation": "ACCEPT",
+    "summary": "This is a high-quality experimental candidate. It is tightly scoped to a single middleware file, contains rich test coverage with parametrized edge-case matrices, is built on core application code with type hints and descriptive names that degrade meaningfully, has a sufficiently clear description, and sits at moderate complexity \u2014 requiring real understanding of proxy trust models and address parsing without being overwhelming. Strong 5/5 on three dimensions; slight deductions only for clarity (bug not stated explicitly) and complexity (not as deep as possible, but that's appropriate).",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR touches exactly two files: `uvicorn/middleware/proxy_headers.py` and `tests/middleware/test_proxy_headers.py`. Every change is directly related to the single feature of preserving client port information from X-Forwarded-For headers. No unrelated cleanup, no tangential changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "Two new parametrized test functions are added. `test_proxy_headers_multiple_proxies_with_ports` covers the multi-proxy trust-chain scenario with ports (4 cases). `test_proxy_headers_x_forwarded_for_port_shapes` covers all the `_parse_host_port` edge cases (9 cases: IPv4 bare, IPv4 with port, bracketed IPv6 with/without port, bare IPv6, invalid ports for both families, malformed brackets). These tests directly validate the new behavior and would serve as clear pass/fail signals for an agent's implementation."
+      },
+      "mutation_relevance": {
+        "score": 5,
+        "reasoning": "The source file is core application logic with: explicit type annotations (`tuple[str, int]` return types), descriptive variable names (`bracket_end`, `remainder`, `x_forwarded_for_hosts`, `host_port`), a meaningful docstring on `_parse_host_port` explaining conservative parsing intent, and inline comments explaining the trust model and reverse-iteration rationale. Degrading any of these properties (names, type hints, docstrings, test coverage) would meaningfully impair an agent's ability to reproduce the correct behavior."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly states what changed (port preservation, IPv4/IPv6 parsing, trust model locality, test coverage) and references multiple related issues (#2789, #2822, #2823, #2820, #2809) that give additional context. It mentions the Waitress inspiration. The main gap is that the original bug (ports were hardcoded to 0) is only implied rather than explicitly stated as the problem being fixed, but the intent is clear enough to hand to an agent."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The task requires understanding uvicorn's proxy headers trust model, implementing conservative `_parse_host_port()` logic covering IPv4 `host:port`, bracketed IPv6 `[host]:port`, bare IPv6, and malformed inputs, then threading the port return value through `get_trusted_client_address()`. It's a genuine engineering task requiring multi-format address parsing knowledge, but the scope is narrow and the logic fits comfortably in ~40 lines. Not trivial but well within the sweet spot for measurable agent performance."
+      }
+    }
+  },
+  {
+    "candidate_id": "uvicorn_pr_2905",
+    "repo": "encode/uvicorn",
+    "pr_number": 2905,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "A tightly scoped, well-tested feature addition that broadens `log_config` to accept `pathlib.Path` objects. The PR is clear, focused, and contains meaningful Python application code with type annotations and a direct test, making it a solid candidate for the degradation experiment. Complexity is in the desirable moderate range.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely focused change: adds `os.PathLike[str]` to the type annotation of `log_config` in both `Config.__init__` and `run()`, plus a 3-line normalization block in `configure_logging`. Touches exactly two source files and one test file, all for the same single purpose."
+      },
+      "test_coverage": {
+        "score": 4,
+        "reasoning": "A dedicated test `test_log_config_pathlike` is added that creates a real `tmp_path / 'log_config.json'` Path object, passes it as `log_config`, calls `config.load()`, and asserts both that `open` was called with the fspath string and that `dictConfig` received the correct dict. This directly validates the new code path. Slightly short of 5 because it mocks `open` rather than doing a true end-to-end file read, but it clearly verifies the core fix."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The changed source code is real application logic in `uvicorn/config.py` and `uvicorn/main.py` \u2014 Python with type annotations (`dict[str, Any] | str | os.PathLike[str] | ...`), a descriptive function name (`configure_logging`), and meaningful control-flow. The test uses type hints, fixtures with clear names, and a docstring. Good material for degradation experiments on naming, type hints, and docstrings, though the patch itself is small (no large docblock or complex naming to degrade)."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly states what is being added (accept `os.PathLike` for `log_config`), why (normalize via `os.fspath` so existing string branches keep working), and even references the parent PR (#2786). The test plan checkbox is filled. A coding agent could understand the task from the description alone without reading the diff, though reproduction steps aren't explicitly listed."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The fix is straightforward: add the type to the union annotation and insert a 3-line `isinstance` guard. It requires understanding uvicorn's `configure_logging` flow and the PathLike protocol, but the actual solution is not algorithmically complex. It sits at moderate complexity \u2014 not a one-liner, but also not something that requires deep architectural reasoning. A good 'medium' task for an agent."
+      }
+    }
+  }
+]

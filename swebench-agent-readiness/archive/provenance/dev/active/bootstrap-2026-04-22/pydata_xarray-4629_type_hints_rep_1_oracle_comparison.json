@@ -1,0 +1,96 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pydata__xarray-4629",
+  "repo": "pydata/xarray",
+  "harness": "codex-cli",
+  "chosen_condition": "type_hints",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 0.775,
+    "changed_files": [
+      "xarray/core/merge.py",
+      "xarray/tests/test_merge.py"
+    ]
+  },
+  "degraded": {
+    "condition": "type_hints",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 0.757,
+    "changed_files": [
+      "xarray/core/merge.py",
+      "xarray/tests/test_merge.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": -0.018000000000000016
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 1,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4629/codex-cli/clean/rep_1/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4629/codex-cli/type_hints/rep_1/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "xarray/core/merge.py",
+        "xarray/tests/test_merge.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "xarray/core/merge.py",
+        "xarray/tests/test_merge.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 195312,
+      "cached_input_tokens": 137856,
+      "output_tokens": 2149,
+      "total_tokens": 197461
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "xarray/core/merge.py",
+        "xarray/tests/test_merge.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "xarray/core/merge.py",
+        "xarray/tests/test_merge.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 254107,
+      "cached_input_tokens": 230912,
+      "output_tokens": 2126,
+      "total_tokens": 256233
+    }
+  }
+}

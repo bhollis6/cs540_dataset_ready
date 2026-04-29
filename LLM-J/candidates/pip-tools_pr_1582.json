@@ -1,0 +1,30 @@
+{
+  "candidate_id": "pip-tools_pr_1582",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1582,
+  "title": "Direct references show extra requirements in .txt files",
+  "description": "I am adding the missing extra requirements for direct references. I think it's better to keep consistency with how the rest of pip-tools works.\r\n\r\nRefs #1613.\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Provided the tests for the changes.\r\n- [x] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [x] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/utils.py b/piptools/utils.py\nindex 402175347..fdfba40e7 100644\n--- a/piptools/utils.py\n+++ b/piptools/utils.py\n@@ -155,7 +155,9 @@ def _build_direct_reference_best_efforts(ireq: InstallRequirement) -> str:\n \n     # If we get here then we have a requirement that supports direct reference.\n     # We need to remove the egg if it exists and keep the rest of the fragments.\n-    direct_reference = f\"{ireq.name.lower()} @ {ireq.link.url_without_fragment}\"\n+    lowered_ireq_name = canonicalize_name(ireq.name)\n+    extras = f\"[{','.join(sorted(ireq.extras))}]\" if ireq.extras else \"\"\n+    direct_reference = f\"{lowered_ireq_name}{extras} @ {ireq.link.url_without_fragment}\"\n     fragments = []\n \n     # Check if there is any fragment to add to the URI.\n",
+  "test_diff": "diff --git a/tests/test_cli_compile.py b/tests/test_cli_compile.py\nindex ac75927ea..498b4a80b 100644\n--- a/tests/test_cli_compile.py\n+++ b/tests/test_cli_compile.py\n@@ -779,7 +779,10 @@ def test_direct_reference_with_extras(runner):\n         )\n     out = runner.invoke(cli, [\"-n\", \"--rebuild\", \"--no-build-isolation\"])\n     assert out.exit_code == 0\n-    assert \"pip-tools @ git+https://github.com/jazzband/pip-tools@6.2.0\" in out.stderr\n+    assert (\n+        \"pip-tools[coverage,testing] @ git+https://github.com/jazzband/pip-tools@6.2.0\"\n+        in out.stderr\n+    )\n     assert \"pytest==\" in out.stderr\n     assert \"pytest-cov==\" in out.stderr\n \n@@ -2955,7 +2958,7 @@ def test_compile_recursive_extras(runner, tmp_path, current_resolver):\n             os.fspath(tmp_path / \"pyproject.toml\"),\n         ],\n     )\n-    expected = rf\"\"\"foo @ {tmp_path.as_uri()}\n+    expected = rf\"\"\"foo[footest] @ {tmp_path.as_uri()}\n small-fake-a==0.2\n small-fake-b==0.3\n \"\"\"\ndiff --git a/tests/test_utils.py b/tests/test_utils.py\nindex c549a0b71..c89461fe0 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -79,6 +79,11 @@ def test_format_requirement(from_line):\n             \"example @ https://example.com/example.zip?egg=test\",\n             id=\"direct reference with egg in query\",\n         ),\n+        pytest.param(\n+            \"example[b,c,a] @ https://example.com/example.zip\",\n+            \"example[a,b,c] @ https://example.com/example.zip\",\n+            id=\"direct reference with optional dependency\",\n+        ),\n         pytest.param(\n             \"file:./vendor/package.zip\",\n             \"file:./vendor/package.zip\",\n",
+  "files_changed": [
+    "piptools/utils.py",
+    "tests/test_cli_compile.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "piptools/utils.py"
+  ],
+  "test_files": [
+    "tests/test_cli_compile.py",
+    "tests/test_utils.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 13,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "19db87553e3cfc8ed32d2220ef8df3f8367033b2",
+  "base_commit_sha": "9e4aeff8f3b5518586091700bec9bbb570154a38",
+  "env_commit_sha": "9e4aeff8f3b5518586091700bec9bbb570154a38",
+  "head_commit_sha": "3b19f6d656ec76eb5b0d0318f4296ccd85391ff3",
+  "merged_at": "2023-08-07T11:13:45Z"
+}

@@ -177,6 +177,14 @@ The packet combines:
 
 This packet is the intended human-review artifact before approving downstream degradation and agent-run stages.
 
+Once the packet is approved, Stage 5 planning now flows through:
+
+- `python -m src.cli build-run-plan --repo owner/name --deep-results-dir ./deep_results --packet-dir ./packets --candidates-dir ./candidates --output-dir ./run_plans`
+- `python -m src.cli materialize-runs --repo owner/name --run-plan-dir ./run_plans --clones-dir ./clones --output-dir .`
+- `python -m src.cli execute-runs --repo owner/name --run-plan-dir ./run_plans --clones-dir ./clones --output-dir .`
+
+See [docs/agent_run_contract.md](agent_run_contract.md) for the current Stage 5 plan schema.
+
 Current admission rubric dimensions:
 
 - repo static surface viability
@@ -194,5 +202,6 @@ These are meant to standardize human review, not replace it.
 
 ## Open Follow-On Work
 
-- Wire the eventual Stage 4 harness to consume `degradation_targets` directly instead of recomputing policy.
 - Continue hardening naming obfuscation so the intervention matches the intended experimental strength across real repos.
+- Consider adding cached task/condition workspaces once live Stage 5 execution exists and materialization cost is better understood.
+- Improve harness log richness and normalization so Stage 6 parsing can compare Claude and Codex using one schema.

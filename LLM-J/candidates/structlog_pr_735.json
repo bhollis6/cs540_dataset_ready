@@ -1,0 +1,29 @@
+{
+  "candidate_id": "structlog_pr_735",
+  "repo": "hynek/structlog",
+  "pr_number": 735,
+  "title": "Raise useful error if trying to use RichTracebackFormatter w/o Rich",
+  "description": "Fixes #733\r\n\r\nLike this @agriffin-grow?",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex c38ddd2f..14e0dcc9 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -27,6 +27,12 @@ You can find our backwards-compatibility policy [here](https://github.com/hynek/\n   [#717](https://github.com/hynek/structlog/pull/717)\n \n \n+### Changed\n+\n+- `structlog.dev.rich_traceback()` now throws a more helpful error when Rich is missing.\n+  [#735](https://github.com/hynek/structlog/pull/735)\n+\n+\n ## [25.4.0](https://github.com/hynek/structlog/compare/25.3.0...25.4.0) - 2025-06-02\n \n ### Added\ndiff --git a/src/structlog/dev.py b/src/structlog/dev.py\nindex beac9bb7..f49b38a0 100644\n--- a/src/structlog/dev.py\n+++ b/src/structlog/dev.py\n@@ -412,17 +412,26 @@ def __call__(self, sio: TextIO, exc_info: ExcInfo) -> None:\n         console.print(tb)\n \n \n-rich_traceback = RichTracebackFormatter()\n-\"\"\"\n-Pretty-print *exc_info* to *sio* using the Rich package.\n+if rich is None:\n \n-To be passed into `ConsoleRenderer`'s ``exception_formatter`` argument.\n+    def rich_traceback(*args, **kw):\n+        raise ModuleNotFoundError(\n+            \"RichTracebackFormatter requires Rich to be installed.\",\n+            name=\"rich\",\n+        )\n \n-This is a `RichTracebackFormatter` with default arguments and used by default\n-if Rich is installed.\n+else:\n+    rich_traceback = RichTracebackFormatter()\n+    \"\"\"\n+    Pretty-print *exc_info* to *sio* using the Rich package.\n \n-.. versionadded:: 21.2.0\n-\"\"\"\n+    To be passed into `ConsoleRenderer`'s ``exception_formatter`` argument.\n+\n+    This is a `RichTracebackFormatter` with default arguments and used by default\n+    if Rich is installed.\n+\n+    .. versionadded:: 21.2.0\n+    \"\"\"\n \n \n def better_traceback(sio: TextIO, exc_info: ExcInfo) -> None:\n",
+  "test_diff": "diff --git a/tests/test_dev.py b/tests/test_dev.py\nindex 9af2e5b6..558d4016 100644\n--- a/tests/test_dev.py\n+++ b/tests/test_dev.py\n@@ -649,6 +649,19 @@ def test_set_it(self):\n         assert {\"exc_info\": True} == dev.set_exc_info(None, \"exception\", {})\n \n \n+@pytest.mark.skipif(dev.rich is not None, reason=\"Needs missing Rich.\")\n+def test_rich_traceback_formatter_no_rich():\n+    \"\"\"\n+    Trying to use RichTracebackFormatter without Rich should raise an helpful\n+    error.\n+    \"\"\"\n+    with pytest.raises(\n+        ModuleNotFoundError,\n+        match=\"RichTracebackFormatter requires Rich to be installed.\",\n+    ):\n+        dev.rich_traceback(StringIO(), sys.exc_info())\n+\n+\n @pytest.mark.skipif(dev.rich is None, reason=\"Needs Rich.\")\n class TestRichTracebackFormatter:\n     def test_default(self):\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "src/structlog/dev.py",
+    "tests/test_dev.py"
+  ],
+  "source_files": [
+    "src/structlog/dev.py"
+  ],
+  "test_files": [
+    "tests/test_dev.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 36,
+  "lines_removed": 8,
+  "has_test_changes": true,
+  "merge_commit_sha": "1f7765e7645e42cdf0f228cc75d531ace3d31e92",
+  "base_commit_sha": "65636b30feeb261c3289ca96e699a9b51d4d554c",
+  "env_commit_sha": "65636b30feeb261c3289ca96e699a9b51d4d554c",
+  "head_commit_sha": "48359a46cb55dc27741aa788a9aa480c3a1d1820",
+  "merged_at": "2025-07-29T15:13:24Z"
+}

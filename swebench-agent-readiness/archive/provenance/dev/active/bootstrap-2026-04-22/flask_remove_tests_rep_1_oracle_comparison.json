@@ -1,0 +1,104 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pallets__flask-5014",
+  "repo": "pallets/flask",
+  "harness": "codex-cli",
+  "chosen_condition": "remove_tests",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 0.771,
+    "changed_files": [
+      "src/flask/blueprints.py",
+      "tests/test_blueprints.py"
+    ]
+  },
+  "degraded": {
+    "condition": "remove_tests",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.25,
+    "total_duration_seconds": 0.733,
+    "changed_files": [
+      "src/flask/blueprints.py",
+      "tests/test_basic.py",
+      "tests/test_blueprints.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 2,
+    "exploration_efficiency_delta": -0.75,
+    "total_duration_seconds_delta": -0.038000000000000034
+  },
+  "notes": [
+    "Visible validation rerun: clean returned 0 on tests/test_blueprints.py.",
+    "Visible validation rerun: degraded returned 0 on tests/test_basic.py -k blueprint_name_must_not_be_empty.",
+    "remove_tests deleted tests/test_blueprints.py before the degraded Codex run, and the agent relocated its regression to tests/test_basic.py.",
+    "The degraded run saw unrelated pre-existing session-cookie failures when it tried the full tests/test_basic.py module, so the visible rerun uses the targeted relocated regression slice instead."
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 1,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/clean/rep_1/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/remove_tests/rep_1/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "src/flask/blueprints.py",
+        "tests/test_blueprints.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/flask/blueprints.py",
+        "tests/test_blueprints.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 179157,
+      "cached_input_tokens": 162688,
+      "output_tokens": 2536,
+      "total_tokens": 181693
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "src/flask/blueprints.py",
+        "src/flask/app.py",
+        "tests/test_basic.py",
+        ".pilot-venv-py311/bin/python"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "src/flask/blueprints.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        ".pilot-venv-py311/bin/python",
+        "src/flask/app.py",
+        "tests/test_basic.py"
+      ],
+      "exploration_efficiency": 0.25,
+      "first_edit_detected": true,
+      "input_tokens": 309379,
+      "cached_input_tokens": 285952,
+      "output_tokens": 4325,
+      "total_tokens": 313704
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "candidate_id": "uvicorn_pr_2906",
+  "repo": "encode/uvicorn",
+  "pr_number": 2906,
+  "title": "Raise helpful `ImportError` when PyYAML is missing for YAML log config",
+  "description": "## Summary\n\n- Wrap the YAML `import yaml` in a `try/except ImportError` and re-raise with a message pointing users at `PyYAML` / `uvicorn[standard]`.\n- Previously users got a bare `ModuleNotFoundError: No module named 'yaml'` with no hint.\n\nSplit out from #2786.\n\nCo-authored-by: Nuno Andr\u00e9 <mail@nunoand.re>\n\n## Test plan\n\n- [x] New `test_log_config_yaml_missing_pyyaml` patches `sys.modules[\"yaml\"] = None` and asserts the helpful message.\n\n## AI Disclaimer\n\nThis PR was developed with the assistance of either Claude or Codex. I take full ownership of it.",
+  "patch_diff": "diff --git a/uvicorn/config.py b/uvicorn/config.py\nindex 12ea55379..2a5b089d1 100644\n--- a/uvicorn/config.py\n+++ b/uvicorn/config.py\n@@ -378,9 +378,12 @@ def configure_logging(self) -> None:\n                     loaded_config = json.load(file)\n                     logging.config.dictConfig(loaded_config)\n             elif isinstance(self.log_config, str) and self.log_config.endswith((\".yaml\", \".yml\")):\n-                # Install the PyYAML package or the uvicorn[standard] optional\n-                # dependencies to enable this functionality.\n-                import yaml\n+                try:\n+                    import yaml\n+                except ImportError as e:\n+                    raise ImportError(\n+                        \"Install the PyYAML package or uvicorn[standard] to use `--log-config` with YAML files.\"\n+                    ) from e\n \n                 with open(self.log_config) as file:\n                     loaded_config = yaml.safe_load(file)\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex 13e7c134b..db7586620 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -366,6 +366,15 @@ def test_log_config_yaml(\n     mocked_logging_config_module.dictConfig.assert_called_once_with(logging_config)\n \n \n+def test_log_config_yaml_missing_pyyaml(mocked_logging_config_module: MagicMock, mocker: MockerFixture) -> None:\n+    \"\"\"\n+    Test that a helpful error is raised when PyYAML is not installed.\n+    \"\"\"\n+    mocker.patch.dict(sys.modules, {\"yaml\": None})\n+    with pytest.raises(ImportError, match=r\"Install the PyYAML package or uvicorn\\[standard\\]\"):\n+        Config(app=asgi_app, log_config=\"log_config.yaml\")\n+\n+\n def test_log_config_pathlike(\n     mocked_logging_config_module: MagicMock,\n     logging_config: dict[str, Any],\n",
+  "files_changed": [
+    "tests/test_config.py",
+    "uvicorn/config.py"
+  ],
+  "source_files": [
+    "uvicorn/config.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 15,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "850d92656de0cb5859ee5f6ba252e19ad3d38989",
+  "base_commit_sha": "fdcacb4b83bc686ea1ba9e50ffe5b8cfe49b3e00",
+  "env_commit_sha": "fdcacb4b83bc686ea1ba9e50ffe5b8cfe49b3e00",
+  "head_commit_sha": "361051bfd3fcdf99e81f4c64ef6e9175b80b90bf",
+  "merged_at": "2026-04-19T10:06:45Z"
+}

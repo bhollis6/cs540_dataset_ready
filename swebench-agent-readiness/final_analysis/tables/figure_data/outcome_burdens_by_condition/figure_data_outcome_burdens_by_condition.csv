@@ -1,0 +1,5 @@
+condition,clean_success_to_degraded_failure,fail_to_pass_delta_sum,pass_to_pass_delta_sum,pass_to_pass_damage_rows
+naming,11,9,94,10
+type_hints,0,-1,0,0
+comments_docstrings,0,0,8,1
+remove_tests,0,0,0,0

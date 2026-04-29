@@ -1,0 +1,12 @@
+repo,rows,unique_tasks,complete_all_four_tasks,fully_complete_repo,clean_success_rate_pct,degraded_success_rate_pct,clean_success_to_degraded_failure,baseline_hard_rows,fail_to_pass_delta_sum,pass_to_pass_delta_sum,pass_to_pass_damage_rows,mean_token_delta,median_token_delta
+astropy/astropy,12,3,3,True,66.7,58.3,1,4,1,8,1,184408.8,113009.0
+django/django,12,3,3,True,66.7,66.7,0,4,0,0,0,68679.1,221008.5
+matplotlib/matplotlib,12,3,3,True,66.7,58.3,1,4,1,53,2,268384.8,106762.0
+pallets/flask,3,1,0,False,100.0,100.0,0,0,0,0,0,43387.0,18215.0
+psf/requests,12,3,3,True,75.0,58.3,3,3,1,5,2,26089.2,4505.0
+pydata/xarray,12,3,3,True,100.0,75.0,3,0,4,26,3,128138.1,114688.0
+pylint-dev/pylint,12,3,3,True,33.3,33.3,0,8,0,0,0,21680.4,39199.0
+pytest-dev/pytest,14,3,3,True,71.4,71.4,0,4,0,0,0,35607.8,30731.5
+scikit-learn/scikit-learn,15,4,3,True,100.0,93.3,1,0,0,1,1,120737.7,65029.0
+sphinx-doc/sphinx,12,3,3,True,100.0,100.0,0,0,0,0,0,133110.2,104198.0
+sympy/sympy,12,3,3,True,100.0,83.3,2,0,1,9,2,251572.1,157609.5

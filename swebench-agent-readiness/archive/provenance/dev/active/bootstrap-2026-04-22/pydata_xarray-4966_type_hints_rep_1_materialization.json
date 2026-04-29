@@ -1,0 +1,14 @@
+{
+  "instance_id": "pydata__xarray-4966",
+  "repo": "pydata/xarray",
+  "base_commit": "37522e991a32ee3c0ad1a5ff8afe8e3eb1885550",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "xarray/coding/variables.py",
+      "xarray/tests/test_coding.py"
+    ]
+  }
+}

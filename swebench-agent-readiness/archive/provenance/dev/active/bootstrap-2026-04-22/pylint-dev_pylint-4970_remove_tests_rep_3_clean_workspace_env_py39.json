@@ -1,0 +1,22 @@
+{
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/clean/rep_3/workspace",
+  "venv_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/clean/rep_3/workspace/.pilot-venv-py39",
+  "python_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/clean/rep_3/workspace/.pilot-venv-py39/bin/python",
+  "python_version": "3.9",
+  "package_installs": [
+    [
+      "pytest"
+    ],
+    [
+      "setuptools==70.0.0"
+    ],
+    [
+      "-r",
+      "$HOME/requirements.txt"
+    ],
+    [
+      "-e",
+      "."
+    ]
+  ]
+}

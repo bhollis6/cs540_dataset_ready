@@ -1,0 +1,29 @@
+{
+  "candidate_id": "click_pr_2940",
+  "repo": "pallets/click",
+  "pr_number": 2940,
+  "title": "testing/CliRunner: Fix regression related to EOF introduced in 262bdf0",
+  "description": "Commit 262bdf0 ensured to raise an `EOFError` exception on end of input to simulate tty behavior and avoid blocking prompt during tests when no more input is available.\r\n\r\nHowever the introduced implementation has a side effect when testing a click command having a `File` type option or argument and when it is set to `stdin`: the command ends up with error due to the `Abort` exception being raised when the stdin `EOFError` exception is caught.\r\n\r\nTo prevent this undesirable side effect, prefer to raise the `EOFError` exceptions directly from the prompts functions inside the `CliRunner` class instead of doing it in the method overriding the iterator protcol for the` _NamedTextIOWrapper` class.\r\n\r\nRestore previous implementation of a test broken by changes of 262bdf0.\r\n\r\nFixes #2939.\r\n\r\n<!--\r\nBefore opening a PR, open a ticket describing the issue or feature the\r\nPR will address. An issue is not required for fixing typos in\r\ndocumentation, or other simple non-code changes.\r\n\r\nReplace this comment with a description of the change. Describe how it\r\naddresses the linked ticket.\r\n-->\r\n\r\n<!--\r\nLink to relevant issues or previous PRs, one per line. Use \"fixes\" to\r\nautomatically close an issue.\r\n\r\nfixes #<issue number>\r\n-->\r\n\r\n<!--\r\nEnsure each step in CONTRIBUTING.rst is complete, especially the following:\r\n\r\n- Add tests that demonstrate the correct behavior of the change. Tests\r\n  should fail without the change.\r\n- Add or update relevant docs, in the docs folder and in code.\r\n- Add an entry in CHANGES.rst summarizing the change and linking to the issue.\r\n- Add `.. versionchanged::` entries in any relevant code docs.\r\n-->\r\n",
+  "patch_diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex d2d25705d2..dcd93e4b48 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -24,6 +24,7 @@ Unreleased\n -   Lazily import ``shutil``. :pr:`3023`\n -   Properly forward exception information to resources registered with\n     ``click.core.Context.with_resource()``. :issue:`2447` :pr:`3058`\n+-   Fix regression related to EOF handling in CliRunner. :issue:`2939`:pr:`2940`\n \n Version 8.2.2\n -------------\ndiff --git a/src/click/testing.py b/src/click/testing.py\nindex 3d3cb1701c..f6f60b809a 100644\n--- a/src/click/testing.py\n+++ b/src/click/testing.py\n@@ -127,13 +127,6 @@ def name(self) -> str:\n     def mode(self) -> str:\n         return self._mode\n \n-    def __next__(self) -> str:  # type: ignore\n-        try:\n-            line = super().__next__()\n-        except StopIteration as e:\n-            raise EOFError() from e\n-        return line\n-\n \n def make_input_stream(\n     input: str | bytes | t.IO[t.Any] | None, charset: str\n@@ -359,7 +352,10 @@ def isolation(\n         @_pause_echo(echo_input)  # type: ignore\n         def visible_input(prompt: str | None = None) -> str:\n             sys.stdout.write(prompt or \"\")\n-            val = next(text_input).rstrip(\"\\r\\n\")\n+            try:\n+                val = next(text_input).rstrip(\"\\r\\n\")\n+            except StopIteration as e:\n+                raise EOFError() from e\n             sys.stdout.write(f\"{val}\\n\")\n             sys.stdout.flush()\n             return val\n@@ -368,7 +364,10 @@ def visible_input(prompt: str | None = None) -> str:\n         def hidden_input(prompt: str | None = None) -> str:\n             sys.stdout.write(f\"{prompt or ''}\\n\")\n             sys.stdout.flush()\n-            return next(text_input).rstrip(\"\\r\\n\")\n+            try:\n+                return next(text_input).rstrip(\"\\r\\n\")\n+            except StopIteration as e:\n+                raise EOFError() from e\n \n         @_pause_echo(echo_input)  # type: ignore\n         def _getchar(echo: bool) -> str:\n",
+  "test_diff": "diff --git a/tests/test_chain.py b/tests/test_chain.py\nindex ba11b7e2ae..702eaaa3e1 100644\n--- a/tests/test_chain.py\n+++ b/tests/test_chain.py\n@@ -163,8 +163,8 @@ def processor(iterator):\n         return processor\n \n     result = runner.invoke(cli, args, input=input)\n-    # last two lines are '' and 'Aborted!'\n-    assert result.output.splitlines()[:-2] == expect\n+    assert not result.exception\n+    assert result.output.splitlines() == expect\n \n \n def test_args_and_chain(runner):\n",
+  "files_changed": [
+    "CHANGES.rst",
+    "src/click/testing.py",
+    "tests/test_chain.py"
+  ],
+  "source_files": [
+    "src/click/testing.py"
+  ],
+  "test_files": [
+    "tests/test_chain.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 11,
+  "lines_removed": 11,
+  "has_test_changes": true,
+  "merge_commit_sha": "2a0e3ba907927ade6951d5732b775f11b54cb766",
+  "base_commit_sha": "36deba8a95a2585de1a2aa4475b7f054f52830ac",
+  "env_commit_sha": "36deba8a95a2585de1a2aa4475b7f054f52830ac",
+  "head_commit_sha": "e11a1efc3395e998a1521a0dc35672a799e78d30",
+  "merged_at": "2025-09-13T04:36:16Z"
+}

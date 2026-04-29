@@ -1,0 +1,30 @@
+# Local secrets and virtual environments
+.env
+.venv/
+
+# Python/build caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.uv-cache/
+*.egg-info/
+
+# Local Codex/runtime state
+.codex
+.codex-stage5-home/
+
+# Raw experiment workspaces and heavyweight local artifacts
+clones/
+runs/
+comparison_slices/
+container_probe_bundles/
+probe_results/
+
+# Local packaged/exported scratch files
+*.zip
+.ipynb_checkpoints/
+
+# Generated editor/OS clutter
+.DS_Store
+Thumbs.db

@@ -1,0 +1,66 @@
+{
+  "repo": "copier-org/copier",
+  "profile_version": 1,
+  "runtime": {
+    "os": "ubuntu-22.04",
+    "arch": "x86_64",
+    "python": "3.11",
+    "package_manager": "uv"
+  },
+  "environment": {
+    "env_commit_strategy": "base_or_override",
+    "system_packages": [
+      "git",
+      "openssh-client"
+    ],
+    "env_vars": {
+      "SETUPTOOLS_SCM_PRETEND_VERSION": "9.14.3",
+      "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_COPIER": "9.14.3"
+    },
+    "pre_install": [],
+    "install_commands": [
+      "uv pip install -e ."
+    ],
+    "install_fallbacks": [
+      "pip install -e ."
+    ],
+    "post_install": [
+      "python -m pip install pytest pytest-cov pytest-gitconfig pytest-xdist pexpect inline-snapshot plumbum poethepoet"
+    ],
+    "dependency_pins": {}
+  },
+  "test": {
+    "command": "pytest -q",
+    "selection_mode": "explicit_nodeids",
+    "plugin_policy": {
+      "mode": "explicit_only",
+      "explicit_plugins": [
+        "pytest_gitconfig.plugin",
+        "xdist.plugin"
+      ]
+    },
+    "env_vars": {}
+  },
+  "historical_quirks": {
+    "known_break_windows": [],
+    "notes": [
+      "Initial RQ1 scale-out profile.",
+      "The project declares test dependencies in dependency-groups rather than package extras, so install pytest-gitconfig, xdist, pexpect, inline-snapshot, plumbum, and poethepoet explicitly.",
+      "Stage 2 container bundles install from git archives without .git metadata; set pretend version variables so hatch-vcs/setuptools-scm version resolution remains stable.",
+      "Selected candidates exercise git checkout/update behavior, so container probes need the git executable available."
+    ]
+  },
+  "degradation": {
+    "supported_conditions": [
+      "type_hints",
+      "naming",
+      "comments_docstrings",
+      "remove_tests"
+    ],
+    "test_support_globs": []
+  },
+  "admission": {
+    "pilot_probe_target": 3,
+    "pilot_min_verified_tasks": 2
+  }
+}

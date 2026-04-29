@@ -1,0 +1,145 @@
+{
+  "generated_at": "2026-04-23T03:32:16.543463+00:00",
+  "repo": "encode/httpx",
+  "repo_short": "httpx",
+  "candidate_id": "httpx_pr_2423",
+  "harness": "codex_cli",
+  "source_stage7_summary": "httpx_stage7_analysis.json",
+  "overview": {
+    "total_conditions": 2,
+    "success_count": 1,
+    "failure_count": 1,
+    "error_count": 0,
+    "conditions": [
+      "clean",
+      "naming"
+    ]
+  },
+  "conditions": [
+    {
+      "condition": "clean",
+      "status": "SUCCESS",
+      "completion_reason": "oracle_pass",
+      "task_success": true,
+      "harness": {
+        "id": "codex_cli",
+        "family": "codex",
+        "runner": "codex-cli",
+        "access_mode": "subscription_cli",
+        "model_strategy": "subscription_default",
+        "reason": "Frontier Codex agent runs using the user's subscription access."
+      },
+      "bootstrap": {
+        "files_opened_before_first_edit": 4,
+        "dead_end_file_opens": 1,
+        "relevant_files_opened": 3,
+        "exploration_efficiency": 0.75,
+        "time_to_first_edit_seconds": null
+      },
+      "execution": {
+        "edits_applied": 3,
+        "test_commands_run": 1,
+        "total_tokens": null,
+        "total_cost_usd": null
+      },
+      "durations": {
+        "agent_duration_seconds": 176.28844618797302,
+        "oracle_duration_seconds": 63.18749403953552,
+        "total_duration_seconds": 239.47594022750854
+      },
+      "oracle": {
+        "reason": "oracle_pass",
+        "task_success": true,
+        "fail_to_pass_total": 6,
+        "fail_to_pass_passed_count": 6,
+        "pass_to_pass_total": 135,
+        "pass_to_pass_passed_count": 135,
+        "fail_to_pass_failed_count": 0,
+        "pass_to_pass_failed_count": 0,
+        "missing_targets_count": 0,
+        "fail_to_pass_failed": [],
+        "pass_to_pass_failed": [],
+        "missing_targets": []
+      },
+      "result_path": "runs/httpx/httpx_pr_2423/codex_cli/clean/rep_1/result.json"
+    },
+    {
+      "condition": "naming",
+      "status": "FAIL",
+      "completion_reason": "oracle_fail",
+      "task_success": false,
+      "harness": {
+        "id": "codex_cli",
+        "family": "codex",
+        "runner": "codex-cli",
+        "access_mode": "subscription_cli",
+        "model_strategy": "subscription_default",
+        "reason": "Frontier Codex agent runs using the user's subscription access."
+      },
+      "bootstrap": {
+        "files_opened_before_first_edit": 4,
+        "dead_end_file_opens": 1,
+        "relevant_files_opened": 3,
+        "exploration_efficiency": 0.75,
+        "time_to_first_edit_seconds": null
+      },
+      "execution": {
+        "edits_applied": 3,
+        "test_commands_run": 1,
+        "total_tokens": null,
+        "total_cost_usd": null
+      },
+      "durations": {
+        "agent_duration_seconds": 234.59045338630676,
+        "oracle_duration_seconds": 77.57029342651367,
+        "total_duration_seconds": 312.16074681282043
+      },
+      "oracle": {
+        "reason": "oracle_fail",
+        "task_success": false,
+        "fail_to_pass_total": 6,
+        "fail_to_pass_passed_count": 6,
+        "pass_to_pass_total": 135,
+        "pass_to_pass_passed_count": 109,
+        "fail_to_pass_failed_count": 0,
+        "pass_to_pass_failed_count": 26,
+        "missing_targets_count": 0,
+        "fail_to_pass_failed": [],
+        "pass_to_pass_failed": [
+          "tests/models/test_responses.py::test_decode_error_with_request[br]",
+          "tests/models/test_responses.py::test_decode_error_with_request[deflate]",
+          "tests/models/test_responses.py::test_decode_error_with_request[gzip]",
+          "tests/models/test_responses.py::test_value_error_without_request[br]",
+          "tests/models/test_responses.py::test_value_error_without_request[deflate]",
+          "tests/models/test_responses.py::test_value_error_without_request[gzip]",
+          "tests/test_decoders.py::test_brotli",
+          "tests/test_decoders.py::test_byte_chunker",
+          "tests/test_decoders.py::test_decoders_empty_cases[br]",
+          "tests/test_decoders.py::test_decoders_empty_cases[deflate]"
+        ],
+        "missing_targets": []
+      },
+      "result_path": "runs/httpx/httpx_pr_2423/codex_cli/naming/rep_1/result.json"
+    }
+  ],
+  "deltas_vs_clean": [
+    {
+      "harness_id": "codex_cli",
+      "candidate_id": "httpx_pr_2423",
+      "condition": "naming",
+      "run_count": 1,
+      "delta_success_rate": -1.0,
+      "delta_exploration_efficiency": 0.0,
+      "delta_files_opened_before_first_edit": 0.0,
+      "delta_edits_applied": 0.0,
+      "delta_total_duration_seconds": 72.6848,
+      "clean_success_rate": 1.0,
+      "condition_success_rate": 0.0
+    }
+  ],
+  "findings": [
+    "Clean baseline passed with 4 pre-edit file opens and exploration_efficiency=0.75.",
+    "`naming` failed with completion_reason=oracle_fail; FAIL_TO_PASS failures=0, PASS_TO_PASS regressions=26.",
+    "`naming` reduced success_rate by 1.0 versus clean for this task."
+  ]
+}

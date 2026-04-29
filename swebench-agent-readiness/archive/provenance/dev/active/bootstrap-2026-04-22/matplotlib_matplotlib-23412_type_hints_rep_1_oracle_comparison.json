@@ -1,0 +1,124 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "matplotlib__matplotlib-23412",
+  "repo": "matplotlib/matplotlib",
+  "harness": "codex-cli",
+  "chosen_condition": "type_hints",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 7,
+    "exploration_efficiency": 0.2857,
+    "total_duration_seconds": 1.916,
+    "changed_files": [
+      "lib/matplotlib/patches.py",
+      "lib/matplotlib/tests/test_patches.py"
+    ]
+  },
+  "degraded": {
+    "condition": "type_hints",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 6,
+    "exploration_efficiency": 0.3333,
+    "total_duration_seconds": 1.983,
+    "changed_files": [
+      "lib/matplotlib/mpl-data/images/back-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/filesave-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/forward-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/help-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/home-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/move-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/subplots-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/zoom_to_rect-symbolic.svg",
+      "lib/matplotlib/patches.py",
+      "lib/matplotlib/tests/test_patches.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": -1,
+    "exploration_efficiency_delta": 0.047599999999999976,
+    "total_duration_seconds_delta": 0.06700000000000017
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 1,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-23412/codex-cli/clean/rep_1/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-23412/codex-cli/type_hints/rep_1/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 7,
+      "opened_files_before_first_edit": [
+        "lib/matplotlib/patches.py",
+        "lib/matplotlib/tests/test_patches.py",
+        "lib/matplotlib/patheffects.py",
+        "lib/matplotlib/lines.py",
+        "lib/matplotlib/backend_bases.py",
+        "doc/users/next_whats_new/README.rst",
+        "doc/users/next_whats_new/striped_lines.rst"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "lib/matplotlib/patches.py",
+        "lib/matplotlib/tests/test_patches.py"
+      ],
+      "dead_end_file_opens": 5,
+      "dead_end_opened_files": [
+        "doc/users/next_whats_new/README.rst",
+        "doc/users/next_whats_new/striped_lines.rst",
+        "lib/matplotlib/backend_bases.py",
+        "lib/matplotlib/lines.py",
+        "lib/matplotlib/patheffects.py"
+      ],
+      "exploration_efficiency": 0.2857,
+      "first_edit_detected": true,
+      "input_tokens": 789133,
+      "cached_input_tokens": 735104,
+      "output_tokens": 4512,
+      "total_tokens": 793645
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 6,
+      "opened_files_before_first_edit": [
+        "lib/matplotlib/patches.py",
+        "lib/matplotlib/tests/test_axes.py",
+        "lib/matplotlib/tests/test_patches.py",
+        "lib/matplotlib/backend_bases.py",
+        "lib/matplotlib/lines.py",
+        "doc/api/next_api_changes/behavior/23371-AL.rst"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "lib/matplotlib/patches.py",
+        "lib/matplotlib/tests/test_patches.py"
+      ],
+      "dead_end_file_opens": 4,
+      "dead_end_opened_files": [
+        "doc/api/next_api_changes/behavior/23371-AL.rst",
+        "lib/matplotlib/backend_bases.py",
+        "lib/matplotlib/lines.py",
+        "lib/matplotlib/tests/test_axes.py"
+      ],
+      "exploration_efficiency": 0.3333,
+      "first_edit_detected": true,
+      "input_tokens": 781916,
+      "cached_input_tokens": 737408,
+      "output_tokens": 5081,
+      "total_tokens": 786997
+    }
+  }
+}

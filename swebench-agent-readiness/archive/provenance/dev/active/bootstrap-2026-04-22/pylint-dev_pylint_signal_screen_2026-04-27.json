@@ -1,0 +1,130 @@
+[
+  {
+    "instance_id": "pylint-dev__pylint-4551",
+    "repo": "pylint-dev/pylint",
+    "base_commit": "99589b08de8c5a2c6cc61e13a37420a868c80599",
+    "version": "2.9",
+    "source_files": [
+      "pylint/pyreverse/diagrams.py",
+      "pylint/pyreverse/inspector.py",
+      "pylint/pyreverse/utils.py",
+      "pylint/pyreverse/writer.py"
+    ],
+    "test_files": [
+      "tests/unittest_pyreverse_writer.py"
+    ],
+    "fail_to_pass_count": 10,
+    "pass_to_pass_count": 0,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 81,
+      "comments": 106,
+      "name_candidates": 296,
+      "classes": 15,
+      "functions": 84,
+      "variables": 197,
+      "total": 296
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.137,
+      "test_command": "pytest -rA tests/unittest_pyreverse_writer.py"
+    }
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4604",
+    "repo": "pylint-dev/pylint",
+    "base_commit": "1e55ae64624d28c5fe8b63ad7979880ee2e6ef3f",
+    "version": "2.9",
+    "source_files": [
+      "pylint/checkers/variables.py",
+      "pylint/constants.py"
+    ],
+    "test_files": [
+      "tests/checkers/unittest_variables.py"
+    ],
+    "fail_to_pass_count": 21,
+    "pass_to_pass_count": 0,
+    "signals": {
+      "annotations": 3,
+      "docstrings": 49,
+      "comments": 311,
+      "name_candidates": 419,
+      "classes": 3,
+      "functions": 79,
+      "variables": 337,
+      "total": 419
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.293,
+      "test_command": "pytest -rA tests/checkers/unittest_variables.py"
+    }
+  },
+  {
+    "instance_id": "pylint-dev__pylint-4970",
+    "repo": "pylint-dev/pylint",
+    "base_commit": "40cc2ffd7887959157aaf469e09585ec2be7f528",
+    "version": "2.10",
+    "source_files": [
+      "pylint/checkers/similar.py"
+    ],
+    "test_files": [
+      "tests/checkers/unittest_similar.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 17,
+    "signals": {
+      "annotations": 118,
+      "docstrings": 20,
+      "comments": 70,
+      "name_candidates": 303,
+      "classes": 9,
+      "functions": 50,
+      "variables": 244,
+      "total": 303
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.029,
+      "test_command": "pytest -rA tests/checkers/unittest_similar.py"
+    }
+  },
+  {
+    "instance_id": "pylint-dev__pylint-6903",
+    "repo": "pylint-dev/pylint",
+    "base_commit": "ca80f03a43bc39e4cc2c67dc99817b3c9f13b8a6",
+    "version": "2.15",
+    "source_files": [
+      "pylint/lint/run.py"
+    ],
+    "test_files": [
+      "tests/test_pylint_runners.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 8,
+    "signals": {
+      "annotations": 19,
+      "docstrings": 2,
+      "comments": 28,
+      "name_candidates": 42,
+      "classes": 2,
+      "functions": 3,
+      "variables": 37,
+      "total": 42
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 8.743,
+      "test_command": "pytest -rA tests/test_pylint_runners.py"
+    }
+  }
+]

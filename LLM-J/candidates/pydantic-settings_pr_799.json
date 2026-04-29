@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_799",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 799,
+  "title": "fix: resolve KeyError in run_subcommand for underscore field names",
+  "description": "run_subcommand (added in #759) built the `_parser_map` lookup key using the kebab-cased `subcommand_alias `(e.g. \"foo-bar\"), but parser construction keys the map using `arg.dest` which preserves the original field name (e.g. \"foo_bar\"). At the second nesting level this mismatch causes a `KeyError`.\r\n\r\nUse `subcommand_arg.dest` to build the next `subcommand_dest`, matching how the map was keyed during construction. This also removes the now unused `subcommand_alias` local variable.\n\nSelected Reviewer: @samuelcolvin",
+  "patch_diff": "diff --git a/pydantic_settings/main.py b/pydantic_settings/main.py\nindex 8e0270dc..9c7ce91c 100644\n--- a/pydantic_settings/main.py\n+++ b/pydantic_settings/main.py\n@@ -787,8 +787,7 @@ def run_subcommand(\n \n         subcommand_cls = cast(type[BaseModel], type(subcommand))\n         subcommand_arg = cli_settings_source._parser_map[subcommand_dest][subcommand_cls]\n-        subcommand_alias = subcommand_arg.subcommand_alias(subcommand_cls)\n-        subcommand_dest = f'{subcommand_dest.split(\":\")[0]}{subcommand_alias}.:subcommand'\n+        subcommand_dest = f'{subcommand_arg.dest}.:subcommand'\n         subcommand_parser = subcommand_arg.parser\n         CliApp._subcommand_stack[id(subcommand)] = (cli_settings_source, subcommand_parser, subcommand_dest)\n         try:\n",
+  "test_diff": "diff --git a/tests/test_source_cli.py b/tests/test_source_cli.py\nindex 75e1198e..f5989c4b 100644\n--- a/tests/test_source_cli.py\n+++ b/tests/test_source_cli.py\n@@ -3265,3 +3265,31 @@ def cli_cmd(self) -> None:\n \n     result = CliApp.run(Settings, cli_args=[])\n     assert result.test == 'from dotenv'\n+\n+\n+def test_cli_app_run_subcommand_underscore_field_name():\n+    class Leaf(BaseModel):\n+        name: str\n+\n+        def cli_cmd(self) -> None:\n+            self.name = f'Hello {self.name}'\n+\n+    class MiddleCommands(BaseModel):\n+        baz: CliSubCommand[Leaf]\n+\n+        def cli_cmd(self) -> None:\n+            CliApp.run_subcommand(self)\n+\n+    class RootApp(BaseModel):\n+        # Underscore in the field name triggers the bug\n+        foo_bar: CliSubCommand[MiddleCommands]\n+\n+        def cli_cmd(self) -> None:\n+            CliApp.run_subcommand(self)\n+\n+    result = CliApp.run(RootApp, cli_args=['foo-bar', 'baz', '--name=world'])\n+    assert result.model_dump() == {\n+        'foo_bar': {\n+            'baz': {'name': 'Hello world'},\n+        },\n+    }\n",
+  "files_changed": [
+    "pydantic_settings/main.py",
+    "tests/test_source_cli.py"
+  ],
+  "source_files": [
+    "pydantic_settings/main.py"
+  ],
+  "test_files": [
+    "tests/test_source_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 29,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "e12599752b7ab396157e5f034b71e173335d24e5",
+  "base_commit_sha": "04067fa9c91e170a1f9e232ed9b2707616efd178",
+  "env_commit_sha": "04067fa9c91e170a1f9e232ed9b2707616efd178",
+  "head_commit_sha": "e2b0edf27db2b95192352d911a2fa53b730d6935",
+  "merged_at": "2026-03-12T15:00:56Z"
+}

@@ -14,6 +14,7 @@ from src.output.manifest import write_manifest
 def test_build_stage4_handoff_emits_explicit_degradation_targets():
     handoff = build_stage4_handoff({
         "base_commit_sha": "base123",
+        "env_commit_sha": "env123",
         "merge_commit_sha": "merge123",
         "head_commit_sha": "head123",
         "source_files": ["src/app.py"],
@@ -23,6 +24,7 @@ def test_build_stage4_handoff_emits_explicit_degradation_targets():
 
     assert handoff["source_files"] == ["src/app.py"]
     assert handoff["test_files"] == ["tests/test_app.py"]
+    assert handoff["env_commit_sha"] == "env123"
     assert handoff["test_support_files"] == [
         "tests/conftest.py",
         "tests/fixtures/example.json",
@@ -42,12 +44,38 @@ def test_build_stage4_handoff_rejects_overlapping_file_groups():
     with pytest.raises(ValueError, match="overlap"):
         build_stage4_handoff({
             "base_commit_sha": "base123",
+            "env_commit_sha": "env123",
             "merge_commit_sha": "merge123",
             "head_commit_sha": "head123",
             "source_files": ["src/app.py", "tests/test_app.py"],
             "test_files": ["tests/test_app.py"],
             "test_support_files": [],
         })
+
+
+def test_build_stage4_handoff_reclassifies_legacy_candidate_file_groups():
+    handoff = build_stage4_handoff({
+        "base_commit_sha": "base123",
+        "env_commit_sha": "env123",
+        "merge_commit_sha": "merge123",
+        "head_commit_sha": "head123",
+        "files_changed": [
+            "httpx/_utils.py",
+            "tests/test_utils.py",
+            "tests/utils.py",
+        ],
+        "source_files": ["httpx/_utils.py"],
+        "test_files": ["tests/test_utils.py", "tests/utils.py"],
+        "test_support_files": [],
+    })
+
+    assert handoff["source_files"] == ["httpx/_utils.py"]
+    assert handoff["test_files"] == ["tests/test_utils.py"]
+    assert handoff["test_support_files"] == ["tests/utils.py"]
+    assert handoff["degradation_targets"]["remove_tests"] == {
+        "delete_files": ["tests/test_utils.py"],
+        "preserve_files": ["tests/utils.py"],
+    }
 
 
 def test_write_manifest_emits_degradation_targets(tmp_path: Path):
@@ -72,6 +100,7 @@ def test_write_manifest_emits_degradation_targets(tmp_path: Path):
         "has_test_changes": True,
         "merge_commit_sha": "merge123",
         "base_commit_sha": "base123",
+        "env_commit_sha": "env123",
         "head_commit_sha": "head123",
         "merged_at": "2026-04-21T00:00:00Z",
     }))
@@ -102,6 +131,7 @@ def test_write_manifest_emits_degradation_targets(tmp_path: Path):
     manifest = json.loads((output_dir / "repo_selected_prs.json").read_text())
     entry = manifest["selected_prs"][0]
 
+    assert entry["env_commit_sha"] == "env123"
     assert entry["test_support_files"] == [
         "tests/conftest.py",
         "tests/fixtures/example.json",

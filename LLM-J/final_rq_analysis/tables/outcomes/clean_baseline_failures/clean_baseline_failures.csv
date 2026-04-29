@@ -1,0 +1,10 @@
+repo,candidate_id,failure_mode,hidden_bug_fix_tests_failed,previously_passing_tests_failed
+cattrs,cattrs_pr_142,regression_only_failure,0,1
+click,click_pr_2816,hidden_bug_fix_only_failure,1,0
+click,click_pr_3004,regression_only_failure,0,2
+copier,copier_pr_2587,hidden_bug_fix_only_failure,1,0
+pip-tools,pip-tools_pr_1893,hidden_bug_fix_only_failure,39,0
+pip-tools,pip-tools_pr_2087,hidden_bug_fix_only_failure,1,0
+pydantic-settings,pydantic-settings_pr_730,hidden_bug_fix_only_failure,3,0
+pydantic-settings,pydantic-settings_pr_773,hidden_bug_fix_only_failure,2,0
+starlette,starlette_pr_2422,hidden_bug_fix_only_failure,1,0

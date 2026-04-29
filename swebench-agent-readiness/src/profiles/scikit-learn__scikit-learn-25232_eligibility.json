@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "scikit-learn__scikit-learn-25232",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "f7eea978097085a6781a0e92fc14ba7712a52d75",
+  "changed_source_files": [
+    "sklearn/impute/_iterative.py"
+  ],
+  "changed_test_files": [
+    "sklearn/impute/tests/test_impute.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 214 PASS_TO_PASS.",
+    "evidence": [
+      "pytest -rA sklearn/impute/tests/test_impute.py"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "low",
+        "rationale": "Target surface has 1 annotation node(s); weak but nonzero type-hint signal.",
+        "evidence": [
+          "sklearn/impute/_iterative.py",
+          "sklearn/impute/tests/test_impute.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files; keep this condition as weak-signal but eligible for all-four coverage."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 336 local rename candidates before safety filtering.",
+        "evidence": [
+          "sklearn/impute/_iterative.py",
+          "sklearn/impute/tests/test_impute.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve pytest/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 20 docstrings and 146 comments.",
+        "evidence": [
+          "sklearn/impute/_iterative.py",
+          "sklearn/impute/tests/test_impute.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Official oracle has 1 FAIL_TO_PASS and 214 PASS_TO_PASS targets in compact changed test files.",
+        "evidence": [
+          "sklearn/impute/tests/test_impute.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as one of the two additional scikit-learn tasks for the proper RQ1 matrix after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/rq1_all_degradations_signal_screen_2026-04-23.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn__scikit-learn-25232_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn__scikit-learn-25232_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": [
+    "Type-hint signal is weak but nonzero; selected to preserve all-four degradation coverage in scikit-learn.",
+    "Host-local gold preflight is authoritative for admission despite heavy editable build cost."
+  ]
+}

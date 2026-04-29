@@ -1,0 +1,198 @@
+# Tasks
+
+## Completed
+
+- [x] Create the SWE-bench pivot workspace.
+- [x] Record architecture and eligibility-filter docs.
+- [x] Record the first pilot milestone and non-goals.
+- [x] Decide how SWE-bench will be consumed.
+- [x] Define the machine-readable eligibility schema.
+- [x] Choose the first pilot SWE-bench Verified task.
+- [x] Define what code to port or reimplement first from `LLM-J`.
+- [x] Install and pin the upstream `swebench` dependency for the pilot environment.
+- [x] Fetch the official row for `pytest-dev__pytest-7432` and confirm the task metadata.
+- [x] Materialize clean and degraded workspaces for the first pilot.
+- [x] Implement the minimal non-interactive Codex runner contract.
+- [x] Prepare Python `3.9` workspace-local envs for the clean and degraded workspaces.
+- [x] Execute one real clean Codex run and capture the resulting patch/log artifacts.
+- [x] Rematerialize a fresh clean workspace and rerun Codex with the env-aware exec spec.
+- [x] Run the degraded Codex condition with the same env-aware exec spec.
+- [x] Emit the first visible comparison artifact from real run outputs.
+- [x] Implement host-local oracle replay/scoring.
+- [x] Emit the final oracle-backed comparison artifact from real run outputs.
+- [x] Backfill Codex bootstrap/exploration metrics into the oracle-backed packet.
+- [x] Run a second clean-vs-degraded replication for `comments_docstrings`.
+- [x] Emit a replication-stability summary across `rep_1` and `rep_2`.
+- [x] Choose `remove_tests` as the next degradation to widen the pilot matrix on the same task.
+- [x] Implement `remove_tests` workspace materialization in the pilot harness.
+- [x] Execute the first clean-vs-`remove_tests` pilot on `pytest-dev__pytest-7432`.
+- [x] Run a second clean-vs-`remove_tests` replication on `pytest-dev__pytest-7432`.
+- [x] Emit a remove-tests stability summary across `rep_3` and `rep_4`.
+- [x] Trial `psf__requests-2317` as a second-task visible-run candidate.
+- [x] Tighten the Requests prompt/env contract so Codex uses the workspace-local pytest path.
+- [x] Run clean and `comments_docstrings` Requests `rep_2` visible validations.
+- [x] Update the second-task rule to require a trustworthy oracle-backed replay path.
+- [x] Inspect the replacement shortlist for `comments_docstrings` fit.
+- [x] Record the Astropy host-build blocker after a real env-prep attempt.
+- [x] Choose `scikit-learn__scikit-learn-26194` as the new oracle-backed second task.
+- [x] Record the scikit-learn task-two eligibility profile.
+- [x] Write the official scikit-learn task snapshot and materialize the first clean-vs-`comments_docstrings` pair.
+- [x] Prepare clean and degraded scikit-learn workspace-local envs under the host-local policy.
+- [x] Execute the clean scikit-learn Codex run.
+- [x] Execute the degraded scikit-learn Codex run.
+- [x] Replay the official scikit-learn oracle and emit the first task-two comparison artifact.
+- [x] Choose `pallets__flask-5014` as the fastest credible third oracle-backed repo.
+- [x] Record the Flask task-three eligibility profile.
+- [x] Execute the first clean-vs-`comments_docstrings` Flask pair and emit the oracle-backed comparison artifact.
+- [x] Execute the first clean-vs-`remove_tests` Flask pair and emit the oracle-backed comparison artifact.
+- [x] Fix the prompt contract so workspace validation guidance no longer hard-codes `.pilot-venv-py39`.
+- [x] Write a teammate-facing initial RQ1 findings note covering the completed three-repo matrix.
+- [x] Decide that the next evidence point should deepen the strongest existing behavioral signal rather than widen to a fourth repo.
+- [x] Execute `pallets__flask-5014` x `remove_tests` x `rep_2` and emit the oracle-backed comparison artifact.
+- [x] Emit a Flask remove-tests stability summary across `rep_1` and `rep_2`.
+- [x] Generate aggregate RQ1 metrics across the current oracle-backed matrix.
+- [x] Write a presentation-ready initial RQ1 snapshot with hypotheses and limits.
+- [x] Implement and test `type_hints` degradation materialization.
+- [x] Implement and test scope-limited `naming` degradation materialization.
+- [x] Choose Sphinx as the replacement third repo candidate for the proper `3 repos x 3 PRs x all degradations` matrix.
+- [x] Gold-preflight `sphinx-doc__sphinx-9367` as the first accepted Sphinx task candidate.
+- [x] Reject `sphinx-doc__sphinx-10323` for now after host-local gold preflight produced PASS_TO_PASS drift.
+- [x] Execute `pytest-dev__pytest-7432` x `type_hints` x `rep_5` and emit the oracle-backed comparison artifact.
+- [x] Execute `pytest-dev__pytest-7432` x `naming` x `rep_6` and emit the oracle-backed comparison artifact.
+- [x] Refresh aggregate RQ1 metrics and notes after adding the first `type_hints` and `naming` cells.
+- [x] Gold-preflight `pytest-dev__pytest-10081` as the second selected pytest proper-matrix task.
+- [x] Gold-preflight `pytest-dev__pytest-10356` as the third selected pytest proper-matrix task.
+- [x] Record eligibility profiles for the two added pytest tasks.
+- [x] Gold-preflight `scikit-learn__scikit-learn-25232` as the second selected sklearn proper-matrix task.
+- [x] Gold-preflight `scikit-learn__scikit-learn-25931` as the third selected sklearn proper-matrix task.
+- [x] Record eligibility profiles for the two added sklearn tasks.
+- [x] Gold-preflight `sphinx-doc__sphinx-10449` as the second selected Sphinx proper-matrix task.
+- [x] Reject/block `sphinx-doc__sphinx-7757`, `sphinx-doc__sphinx-8265`, and `sphinx-doc__sphinx-9281` under the historical MarkupSafe resolver conflict.
+- [x] Reject `sphinx-doc__sphinx-10435` after gold replay failed the FAIL_TO_PASS target.
+- [x] Add a narrow MarkupSafe compatibility pin for historical Sphinx 4.x tasks and cover it in tests.
+- [x] Gold-preflight `sphinx-doc__sphinx-9673` as the third selected Sphinx proper-matrix task.
+- [x] Record eligibility profiles for the selected Sphinx tasks.
+- [x] Pause experiment execution and write a current teammate-facing RQ1 findings memo from all completed oracle-backed cells.
+- [x] Update the RQ1 plan from a `3 repos x 3 PRs` endpoint to a Phase 1 tranche under the larger `10 repos x 3-5 PRs` target.
+- [x] Execute `sphinx-doc__sphinx-9367` x `naming` x `rep_0` and emit the official-test-scored comparison artifact.
+- [x] Execute `sphinx-doc__sphinx-9367` x `remove_tests` x `rep_3` and emit the official-test-scored comparison artifact.
+- [x] Execute `sphinx-doc__sphinx-9367` x `type_hints` x `rep_1` and emit the official-test-scored comparison artifact.
+- [x] Execute `sphinx-doc__sphinx-9367` x `comments_docstrings` x `rep_2` and complete the first Sphinx PR across all four degradations.
+- [x] Execute `sphinx-doc__sphinx-10449` x `naming` x `rep_0` and emit the official-test-scored comparison artifact.
+- [x] Run an integrity check across all comparison JSON artifacts and focused harness tests.
+- [x] Execute `sphinx-doc__sphinx-10449` x `remove_tests` x `rep_3` and emit the official-test-scored comparison artifact.
+- [x] Pause `sphinx-doc__sphinx-10449` x `type_hints` x `rep_1` after the token metric sanity concern.
+- [x] Correct Codex token accounting from `input + cached_input + output` to `input + output`.
+- [x] Repair existing comparison JSON artifacts with corrected `total_tokens`.
+- [x] Add `docs/rq1_token_metric_correction_2026-04-26.md`.
+- [x] Spot-check one passed comparison and one failed comparison for outcome validity.
+- [x] Add `docs/rq1_validity_spotcheck_2026-04-26.md`.
+- [x] Export flat plot-ready RQ1 tables to `results/rq1_comparisons_2026-04-26.csv` and `.json`.
+- [x] Add `docs/rq2_readiness_2026-04-26.md`.
+- [x] Extend flat exports with changed-file, opened-file, and dead-end exploration fields useful for RQ2.
+- [x] Correct `docs/rq2_readiness_2026-04-26.md` against the original `LLM-J/docs/experimental_pipeline.md` definition of RQ2.
+- [x] Generate recoverable RQ2 phase metrics from existing Codex JSONL logs without rerunning comparisons.
+- [x] Reposition RQ2 as supporting phase/process analysis while RQ1 remains the main matrix priority.
+- [x] Execute `sphinx-doc__sphinx-10449` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Resume and complete `sphinx-doc__sphinx-10449` x `type_hints` x `rep_1`, then refresh RQ1/RQ2 exports.
+- [x] Execute `sphinx-doc__sphinx-9673` x `naming` x `rep_0` and refresh RQ1/RQ2 exports.
+- [x] Execute `sphinx-doc__sphinx-9673` x `type_hints` x `rep_1` and refresh RQ1/RQ2 exports.
+- [x] Execute `sphinx-doc__sphinx-9673` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `sphinx-doc__sphinx-9673` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete Sphinx as the second full Phase 1 repo.
+- [x] Execute `scikit-learn__scikit-learn-25232` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the valid supporting sklearn cell.
+- [x] Abort unscored `scikit-learn__scikit-learn-25232` x `type_hints` x `rep_1` during clean env prep after confirming sklearn build cost is too high for the immediate checkpoint.
+- [x] Screen PyLint as a non-sklearn replacement repo and reject it for the full checkpoint because only `pylint-4970` and `pylint-6903` passed gold; `pylint-7080` and `pylint-7277` had PASS_TO_PASS drift.
+- [x] Preserve optional SWE-bench snapshot metadata, including `environment_setup_commit`, so xarray test specs can be reconstructed from local snapshots.
+- [x] Gold-preflight `pydata__xarray-3677`, `pydata__xarray-4629`, and `pydata__xarray-4966` as the replacement third repo task set.
+- [x] Record eligibility profiles for the selected xarray tasks.
+- [x] Execute `pydata__xarray-3677` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the first clean-success to degraded-failure transition.
+- [x] Execute `pydata__xarray-3677` x `type_hints` x `rep_1` and refresh RQ1/RQ2 exports.
+- [x] Execute `pydata__xarray-3677` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `pydata__xarray-3677` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete the first xarray task across all four degradations.
+- [x] Execute `pydata__xarray-4629` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the second xarray naming regression-damage transition.
+- [x] Add `dev/active/bootstrap-2026-04-22/refresh_exports.py` to keep RQ1/RQ2 export refreshes reproducible from comparison JSON and Codex logs.
+- [x] Execute `pydata__xarray-4629` x `type_hints` x `rep_1` and refresh RQ1/RQ2 exports.
+- [x] Execute `pydata__xarray-4629` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `pydata__xarray-4629` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete the second xarray task across all four degradations.
+- [x] Execute `pydata__xarray-4966` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the third repeated xarray naming transition.
+- [x] Execute `pydata__xarray-4966` x `type_hints` x `rep_1` and refresh RQ1/RQ2 exports.
+- [x] Execute `pydata__xarray-4966` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `pydata__xarray-4966` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete xarray as the third full Phase 1 repo.
+- [x] Add `dev/active/bootstrap-2026-04-22/screen_repo_tasks.py` for reproducible light-build repo screening and eligibility-profile writes.
+- [x] Fix oracle replay for SWE-bench commands with leading environment assignments, needed for historical Sympy `PYTHONWARNINGS=... bin/test ...` commands.
+- [x] Screen Sympy and gold-preflight `sympy__sympy-11618`, `sympy__sympy-12096`, `sympy__sympy-12419`, `sympy__sympy-12481`, and `sympy__sympy-12489`.
+- [x] Record Sympy eligibility profiles; note that selected Sympy cells have strong naming/comments/remove-tests surfaces but `0` annotation nodes, so `type_hints` is a matrix-completeness/low-signal condition.
+- [x] Execute `sympy__sympy-11618` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the fourth clean-success to degraded-failure transition.
+- [x] Execute `sympy__sympy-11618` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `sympy__sympy-11618` x `remove_tests` x `rep_3` and refresh RQ1/RQ2 exports.
+- [x] Execute `sympy__sympy-11618` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and complete the first Sympy task across all four degradations.
+- [x] Execute `sympy__sympy-12096` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record a broad patch-shape/cost increase without official outcome damage.
+- [x] Execute `sympy__sympy-12096` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `sympy__sympy-12096` x `remove_tests` x `rep_3` and refresh RQ1/RQ2 exports.
+- [x] Execute `sympy__sympy-12096` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and complete the second Sympy task across all four degradations.
+- [x] Execute `sympy__sympy-12419` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the fifth clean-success to degraded-failure transition.
+- [x] Execute `sympy__sympy-12419` x `comments_docstrings` x `rep_2` and refresh RQ1/RQ2 exports.
+- [x] Execute `sympy__sympy-12419` x `remove_tests` x `rep_3` and refresh RQ1/RQ2 exports.
+- [x] Execute `sympy__sympy-12419` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and complete Sympy as the fourth full Phase 1 repo.
+
+## Next Work
+
+- [x] Choose the next breadth point on `scikit-learn__scikit-learn-26194`: a second `comments_docstrings` replication before widening to another degradation.
+- [x] Finish the scikit-learn `rep_1` workspace prep and execute the clean/degraded `comments_docstrings` pair.
+- [x] Replay the official scikit-learn `rep_1` oracle and emit the replication artifact.
+- [x] Finish the clean-vs-`remove_tests` scikit-learn pair.
+- [x] Replay the official scikit-learn `remove_tests` oracle and emit the comparison artifact.
+- [x] Refresh the initial RQ1 note once the sklearn `remove_tests` cell is scored.
+- [x] Decide whether the next breadth point is a fourth repo or deeper replications on the most interesting existing cells.
+- [x] Turn the current initial RQ1 note into a more formal cross-task analysis now that the `3 repo x 2 condition` slice plus one targeted replication exists.
+- [x] Start and complete proper-matrix Codex runs for `pytest-dev__pytest-10081` and `pytest-dev__pytest-10356`.
+- [x] Choose a non-sklearn replacement repo for the third fully complete Phase 1 checkpoint; require light setup, file-scoped oracle replay, and all-four-degradation eligibility before launching Codex cells.
+- [x] Screen and run Django as the fifth full Phase 1 repo across `django__django-16502`, `django__django-16527`, and `django__django-16631`.
+- [x] Screen Requests as the sixth full Phase 1 repo, avoiding the known-hanging `psf__requests-2317` oracle path.
+- [x] Execute `psf__requests-1142`, `psf__requests-1724`, and `psf__requests-1921` across all four degradation families, refresh RQ1/RQ2 exports, and reach six fully complete repos.
+- [x] Run focused harness/degradation tests after helper updates: `19 passed, 1 warning`.
+- [x] Triage naming-transition failure modes into target misses vs PASS_TO_PASS regressions and record the result in `context.md`.
+- [x] Summarize RQ2 phase/process deltas after the six-repo checkpoint and record the result in `context.md`.
+- [x] Screen matplotlib as the seventh full-repo candidate and gold-preflight `matplotlib__matplotlib-20676`, `matplotlib__matplotlib-23412`, and `matplotlib__matplotlib-26291`.
+- [x] Fix host-local env prep for pytest-based oracles whose setup scripts omit pytest; verify focused helper tests with `20 passed`.
+- [x] Execute `matplotlib__matplotlib-20676` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the naming regression-damage result.
+- [x] Execute `matplotlib__matplotlib-20676` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and record the process-heavy outcome-stable result.
+- [x] Execute `matplotlib__matplotlib-20676` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and record the cheaper outcome-stable result.
+- [x] Execute `matplotlib__matplotlib-20676` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and complete the first matplotlib task across all four degradations.
+- [x] Execute `matplotlib__matplotlib-23412` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the ninth clean-success to degraded-failure transition.
+- [x] Execute `matplotlib__matplotlib-23412` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and record the outcome-stable low-signal cell.
+- [x] Execute `matplotlib__matplotlib-23412` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and record the outcome-stable process/patch-breadth cell.
+- [x] Execute `matplotlib__matplotlib-23412` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete the second matplotlib task across all four degradations.
+- [x] Execute `matplotlib__matplotlib-26291` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the outcome-stable patch-breadth/cost result.
+- [x] Execute `matplotlib__matplotlib-26291` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and record the outcome-stable low-signal cell.
+- [x] Execute `matplotlib__matplotlib-26291` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and record the outcome-stable patch-breadth cell.
+- [x] Execute `matplotlib__matplotlib-26291` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete matplotlib as the seventh full repo.
+- [x] Fix PyLint env prep blockers found during fresh screening: tolerate unmatched eval quotes and install checkout-local astroid constraints before editable install.
+- [x] Verify PyLint env-prep helper fixes with `tests/test_python_env.py`: `16 passed`.
+- [x] Fresh-screen PyLint candidates and select `pylint-dev__pylint-4970`, `pylint-dev__pylint-6903`, and `pylint-dev__pylint-4604` for the next full repo.
+- [x] Execute `pylint-dev__pylint-4970` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the baseline-hard cost/friction result.
+- [x] Execute `pylint-dev__pylint-4970` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and record the baseline-hard cheaper-degraded result.
+- [x] Execute `pylint-dev__pylint-4970` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and record the baseline-hard cost/friction result.
+- [x] Execute `pylint-dev__pylint-4970` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete the first PyLint task across all four degradations.
+- [x] Execute `pylint-dev__pylint-6903` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the outcome-stable cost/patch-breadth result.
+- [x] Execute `pylint-dev__pylint-6903` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and record the outcome-stable cheaper-degraded result.
+- [x] Execute `pylint-dev__pylint-6903` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and record the outcome-stable cost/patch-breadth result.
+- [x] Execute `pylint-dev__pylint-6903` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete the second PyLint task across all four degradations.
+- [x] Execute `pylint-dev__pylint-4604` x `naming` x `rep_0`, refresh RQ1/RQ2 exports, and record the baseline-hard naming cost result.
+- [x] Execute `pylint-dev__pylint-4604` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and record the baseline-hard cheaper-degraded result.
+- [x] Execute `pylint-dev__pylint-4604` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and record the baseline-hard cost/patch-breadth result.
+- [x] Execute `pylint-dev__pylint-4604` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete PyLint as the eighth full repo.
+- [x] Recheck Astropy after PyLint and confirm the host-local editable C-extension build blocker is still present.
+- [x] Execute `scikit-learn__scikit-learn-25232` x `type_hints` x `rep_1`, refresh RQ1/RQ2 exports, and record the outcome-stable low-signal result.
+- [x] Execute `scikit-learn__scikit-learn-25232` x `comments_docstrings` x `rep_2`, refresh RQ1/RQ2 exports, and continue the strict sklearn full-repo matrix.
+- [x] Execute `scikit-learn__scikit-learn-25232` x `remove_tests` x `rep_3`, refresh RQ1/RQ2 exports, and complete the first strict sklearn task across all four degradation families.
+- [x] Execute `scikit-learn__scikit-learn-25931` across `naming`, `type_hints`, `comments_docstrings`, and `remove_tests`, refresh RQ1/RQ2 exports, and complete the second strict sklearn task across all four degradation families.
+- [x] Document why `scikit-learn__scikit-learn-26194` is not valid for strict all-four sklearn completion and select `scikit-learn__scikit-learn-25973` as the third strict task after gold preflight/all-four eligibility screening.
+- [x] Execute strict-current-family cells for `scikit-learn__scikit-learn-25973` across `naming`, `type_hints`, `comments_docstrings`, and `remove_tests`, refresh RQ1/RQ2 exports, and complete scikit-learn as the ninth full repo.
+- [x] Add a narrow Astropy host-local env compatibility rule, verify it with `tests/test_python_env.py`, and gold-preflight three compact Astropy tasks.
+- [x] Execute `astropy__astropy-14365`, `astropy__astropy-14182`, and `astropy__astropy-14539` across `naming`, `type_hints`, `comments_docstrings`, and `remove_tests` to reach the tenth full repo.
+- [ ] After Phase 1 has six complete repos, promote the current aggregate into the next RQ1 analysis note and decide whether to continue toward `10` repos or deepen replications on naming-transition cells.
+- [ ] After Phase 1 has meaningful Sphinx/sklearn completion, screen additional repos in batches until the RQ1 target reaches `10` repos with `3-5` PRs each.
+- [ ] Consider a second `scikit-learn__scikit-learn-26194` `remove_tests` replication only if the proper-matrix task selection stalls.
+- [ ] Add patch-shape summaries to future aggregate analysis so the narrower-vs-broader fix distinction is tracked systematically.
+- [ ] Promote the quick RQ2 phase export into a reusable Stage 6 parser and refresh it after each completed batch.

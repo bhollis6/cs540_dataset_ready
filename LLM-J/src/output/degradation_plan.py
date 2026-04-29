@@ -8,6 +8,7 @@ from typing import Any, Mapping
 
 from src.scraper.models import (
     _is_executable_test_file,
+    _is_non_code_file,
     _is_test_related_file,
     _is_test_support_file,
 )
@@ -43,9 +44,7 @@ def load_candidate_handoff(candidate_file: Path) -> dict[str, Any]:
 
 def build_stage4_handoff(candidate_data: Mapping[str, Any]) -> dict[str, Any]:
     """Build a validated Stage 4 handoff with explicit degradation targets."""
-    source_files = _normalize_paths(candidate_data.get("source_files", []))
-    test_files = _normalize_paths(candidate_data.get("test_files", []))
-    test_support_files = _normalize_paths(candidate_data.get("test_support_files", []))
+    source_files, test_files, test_support_files = _extract_file_groups(candidate_data)
 
     _validate_file_groups(
         source_files=source_files,
@@ -65,6 +64,7 @@ def build_stage4_handoff(candidate_data: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "merge_commit_sha": candidate_data.get("merge_commit_sha"),
         "base_commit_sha": candidate_data.get("base_commit_sha"),
+        "env_commit_sha": candidate_data.get("env_commit_sha", candidate_data.get("base_commit_sha")),
         "head_commit_sha": candidate_data.get("head_commit_sha"),
         "source_files": source_files,
         "test_files": test_files,
@@ -79,6 +79,35 @@ def build_stage4_handoff(candidate_data: Mapping[str, Any]) -> dict[str, Any]:
             },
         },
     }
+
+
+def _extract_file_groups(candidate_data: Mapping[str, Any]) -> tuple[list[str], list[str], list[str]]:
+    explicit_source_files = _normalize_paths(candidate_data.get("source_files", []))
+    explicit_test_files = _normalize_paths(candidate_data.get("test_files", []))
+    explicit_test_support_files = _normalize_paths(candidate_data.get("test_support_files", []))
+
+    files_changed = candidate_data.get("files_changed")
+    if isinstance(files_changed, list):
+        normalized_files = _normalize_paths(files_changed)
+        source_files = {
+            path for path in normalized_files
+            if not _is_test_related_file(path) and not _is_non_code_file(path)
+        }
+        test_files = {path for path in normalized_files if _is_executable_test_file(path)}
+        test_support_files = {path for path in normalized_files if _is_test_support_file(path)}
+
+        source_files.update(
+            path for path in explicit_source_files
+            if not _is_test_related_file(path) and not _is_non_code_file(path)
+        )
+        test_files.update(path for path in explicit_test_files if _is_executable_test_file(path))
+        test_support_files.update(
+            path for path in explicit_test_support_files if _is_test_support_file(path)
+        )
+
+        return sorted(source_files), sorted(test_files), sorted(test_support_files)
+
+    return explicit_source_files, explicit_test_files, explicit_test_support_files
 
 
 def _normalize_paths(paths: Any) -> list[str]:

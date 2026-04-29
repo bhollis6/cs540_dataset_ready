@@ -1,0 +1,429 @@
+{
+  "repo": "pallets/click",
+  "selection_timestamp": "2026-04-27T19:39:37.996957+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 12,
+  "accepted": 8,
+  "review": 2,
+  "rejected": 2,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "click_pr_2846",
+      "pr_number": 2846,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate. This is a focused, well-explained bug fix with exemplary test coverage that would cleanly serve as a pass/fail signal. The code involves typed methods, descriptive naming, and explanatory comments \u2014 ideal for mutation experiments. The moderate complexity (requires understanding an interface contract between two systems, but the actual fix is compact) makes it well-suited for measuring agent performance across clean vs. degraded codebase conditions.",
+      "merge_commit_sha": "a1235aacb1be55dc66ddcfefbf64dec44b6ab54d",
+      "base_commit_sha": "565f36d5bc4a15d304337b749e113fb4477b1843",
+      "env_commit_sha": "565f36d5bc4a15d304337b749e113fb4477b1843",
+      "head_commit_sha": "9e301756ca01af55881f2615075006d311bd54f3",
+      "source_files": [
+        "src/click/shell_completion.py"
+      ],
+      "test_files": [
+        "tests/test_shell_completion.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_shell_completion.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_2816",
+      "pr_number": 2816,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong experimental candidate. The fix is a focused single-line change to Click's shell completion logic with a directly validating test. The affected code is well-typed, meaningfully named application logic that will yield clear mutation signals. The bug requires understanding control flow semantics rather than being trivially obvious, placing it in the ideal complexity range for measuring agent performance under codebase degradation.",
+      "merge_commit_sha": "4f936ac1981645488f396953bc59e50445de00b6",
+      "base_commit_sha": "1c68e531ef5e45f6facdb777c720d0f984614b81",
+      "env_commit_sha": "1c68e531ef5e45f6facdb777c720d0f984614b81",
+      "head_commit_sha": "c03b461e6713a53849134fe186feeea0efd1244d",
+      "source_files": [
+        "src/click/shell_completion.py"
+      ],
+      "test_files": [
+        "tests/test_shell_completion.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_shell_completion.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_3004",
+      "pr_number": 3004,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Solid, well-contained bug fix with exemplary test coverage that directly validates the change. The PR is tightly scoped to a single behavioral fix in Click's help rendering, and the tests serve as clear pass/fail oracles. Slightly on the simpler side for complexity (2-line patch once the right location is found), but the need to navigate the codebase and understand enum semantics keeps it out of the trivial category. Good experimental candidate.",
+      "merge_commit_sha": "eaf33a957975e7d0943fad8d2b4b905b6bd98cb9",
+      "base_commit_sha": "a1235aacb1be55dc66ddcfefbf64dec44b6ab54d",
+      "env_commit_sha": "a1235aacb1be55dc66ddcfefbf64dec44b6ab54d",
+      "head_commit_sha": "fe3677f85644434d67506ac92a3df6d08a96c764",
+      "source_files": [
+        "src/click/core.py"
+      ],
+      "test_files": [
+        "tests/test_options.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/core.py",
+            "tests/test_options.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/core.py",
+            "tests/test_options.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/core.py",
+            "tests/test_options.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_options.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_3021",
+      "pr_number": 3021,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, well-documented bug fix for an edge case in click's prompt rendering when `prompt_suffix=''`. Strong test coverage with clear pass/fail signals, core application code with type hints and meaningful comments, and a thorough PR description. Moderate complexity \u2014 simple implementation once the problem is understood, but requires grasping the readline workaround context. A solid experimental candidate.",
+      "merge_commit_sha": "8533c966b84783718e74286aa7b098f3ff1e9221",
+      "base_commit_sha": "27aaed3fe5bcd6adedd6e91de234914af9859cf1",
+      "env_commit_sha": "27aaed3fe5bcd6adedd6e91de234914af9859cf1",
+      "head_commit_sha": "27de74af68bfd967c639ad4beb330fa4ed0d470f",
+      "source_files": [
+        "src/click/termui.py"
+      ],
+      "test_files": [
+        "tests/test_utils.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/termui.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/termui.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/termui.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_utils.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_2940",
+      "pr_number": 2940,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a well-scoped, clearly described regression fix in Click's CliRunner. The PR fixes a subtle exception propagation bug (EOFError raised too early in the iterator protocol, causing spurious Abort exceptions). It has a meaningful test change that serves as a clear pass/fail signal, touches real application logic with type annotations and descriptive naming, and sits at a comfortable complexity level for an AI agent experiment. The only minor weaknesses are the absence of a dedicated test for the File-type stdin scenario and that reproduction steps aren't fully spelled out in the description.",
+      "merge_commit_sha": "2a0e3ba907927ade6951d5732b775f11b54cb766",
+      "base_commit_sha": "36deba8a95a2585de1a2aa4475b7f054f52830ac",
+      "env_commit_sha": "36deba8a95a2585de1a2aa4475b7f054f52830ac",
+      "head_commit_sha": "e11a1efc3395e998a1521a0dc35672a799e78d30",
+      "source_files": [
+        "src/click/testing.py"
+      ],
+      "test_files": [
+        "tests/test_chain.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/testing.py",
+            "tests/test_chain.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/testing.py",
+            "tests/test_chain.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/testing.py",
+            "tests/test_chain.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_chain.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_2421",
+      "pr_number": 2421,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is a clean, well-tested, narrowly scoped fix, but it's too trivially simple to be a strong experiment candidate. The actual source change is three lines (TypeVar definition, updated signature, `return cls`), and the solution is immediately obvious from the problem statement. An AI agent would almost certainly solve this correctly in either clean or degraded codebase conditions, producing no meaningful signal difference. The test coverage is excellent (score 5) and would give a clear FAIL_TO_PASS signal, but the complexity is too low (score 2) to expose performance differences across experimental conditions.",
+      "merge_commit_sha": "e002dbc40ceb6a7e78dbe5e5868744690ba3120f",
+      "base_commit_sha": "eb1d760fb433d08278816d7ba49477ce86b691a7",
+      "env_commit_sha": "eb1d760fb433d08278816d7ba49477ce86b691a7",
+      "head_commit_sha": "cc9a52c4d3c645be1fa7817986bf277773639f5a",
+      "source_files": [
+        "src/click/shell_completion.py"
+      ],
+      "test_files": [
+        "tests/test_shell_completion.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/shell_completion.py",
+            "tests/test_shell_completion.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_shell_completion.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_2972",
+      "pr_number": 2972,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a clean, well-tested, tightly scoped PR, but it is too simple to be a useful experimental candidate. The fix is a single-condition one-liner that any agent would produce correctly regardless of codebase quality degradation. The complexity score of 2 makes it a poor fit for measuring agent performance differences \u2014 we need PRs in the 3-4 range where reasoning and navigation actually matter.",
+      "merge_commit_sha": "0be2bd385064053bb75f92db317de128db729d52",
+      "base_commit_sha": "c88f333de440c5066ff563f784a6561f4713cf78",
+      "env_commit_sha": "c88f333de440c5066ff563f784a6561f4713cf78",
+      "head_commit_sha": "d1f865142812584b9a1630106cce3f2309751e71",
+      "source_files": [
+        "src/click/core.py"
+      ],
+      "test_files": [
+        "tests/test_options.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/core.py",
+            "tests/test_options.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/core.py",
+            "tests/test_options.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/core.py",
+            "tests/test_options.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_options.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "click_pr_3023",
+      "pr_number": 3023,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 2,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is clean and well-validated, but it is too simple and mutation-poor for the experiment. The changed lines are purely import statement relocations with no type hints, docstrings, or meaningful names to degrade. An agent would trivially solve this even under severe codebase degradation, making it a poor discriminator between clean and degraded conditions. Recommend excluding.",
+      "merge_commit_sha": "1f4002096439d6661f1df5ceff7eccd3862153ac",
+      "base_commit_sha": "4f936ac1981645488f396953bc59e50445de00b6",
+      "env_commit_sha": "4f936ac1981645488f396953bc59e50445de00b6",
+      "head_commit_sha": "6f6cbbb370e66ea29592d93e11848e01039a49a4",
+      "source_files": [
+        "src/click/_termui_impl.py",
+        "src/click/formatting.py",
+        "src/click/testing.py"
+      ],
+      "test_files": [
+        "tests/test_imports.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/click/_termui_impl.py",
+            "src/click/formatting.py",
+            "src/click/testing.py",
+            "tests/test_imports.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/click/_termui_impl.py",
+            "src/click/formatting.py",
+            "src/click/testing.py",
+            "tests/test_imports.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/click/_termui_impl.py",
+            "src/click/formatting.py",
+            "src/click/testing.py",
+            "tests/test_imports.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_imports.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

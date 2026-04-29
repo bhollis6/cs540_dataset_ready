@@ -1,331 +1,331 @@
 [
   {
-    "candidate_id": "httpx_pr_1574",
-    "repo": "encode/httpx",
-    "pr_number": 1574,
+    "candidate_id": "copier_pr_2427",
+    "repo": "copier-org/copier",
+    "pr_number": 2427,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
     "total_score": 21,
     "recommendation": "ACCEPT",
-    "summary": "This is a high-quality candidate PR. It is tightly scoped around a single API deprecation decision, has excellent test coverage with a direct pass/fail signal via pytest.warns, touches real typed application code, and is clearly described. Complexity is moderate \u2014 an agent needs to understand the httpx request pipeline but the actual implementation is not deeply algorithmic. Strong candidate for the experiment.",
+    "summary": "Strong candidate. Single-purpose, well-scoped bug fix with excellent test coverage that directly validates the broken operation (`run_update` on symlinked-outside paths). The core logic requires real reasoning about symlink and path resolution semantics, putting it in the ideal complexity sweet spot. The main drawback is the terse PR description requiring external context, but the inline comment and test structure compensate well. High experimental value.",
     "scores": {
       "scope": {
         "score": 5,
-        "reasoning": "The PR is entirely focused on a single coherent API change: deprecating per-request cookies. Every file touched (docs/compatibility.md, httpx/_api.py, httpx/_client.py, tests/client/test_cookies.py) directly relates to this one change. No unrelated cleanup or bundled features."
+        "reasoning": "Single focused bug fix touching exactly two files: one source file (`copier/_main.py`) with a ~15-line change to `_render_template`, and one test file (`tests/test_symlinks.py`) adding two new test functions. Both changes are tightly coupled to the same issue \u2014 no unrelated cleanup or bundled changes."
       },
       "test_coverage": {
         "score": 5,
-        "reasoning": "A dedicated new test `test_set_per_request_cookie_is_deprecated()` is added that uses `pytest.warns(DeprecationWarning)` to directly verify the deprecation warning fires when cookies are passed per-request. This is an unambiguous pass/fail signal. Existing tests are also updated to use the new preferred API, reinforcing correctness on both sides of the change."
+        "reasoning": "Two new test functions added \u2014 `test_symlinked_to_outside_destination_absolute` and `test_symlinked_to_outside_destination_relative` \u2014 each exercising both `run_copy` and `run_update` with symlinks pointing outside the destination directory. The `run_update` call is exactly the operation that was broken, and the assertions directly verify symlink integrity after the update. These tests serve as clear pass/fail signal for the fix."
       },
       "mutation_relevance": {
         "score": 4,
-        "reasoning": "The changes touch core application code in httpx/_client.py and httpx/_api.py, both of which in the httpx codebase use type annotations extensively. The warning logic, parameter handling, and test assertions all involve typed Python code with descriptive naming. Not the deepest algorithmic logic, but firmly application-level code rather than boilerplate or config."
+        "reasoning": "Touches core application logic in `_render_template` within `_main.py`. The fix uses descriptive variable names (`dst_root`, `dst_abspath`, `dst_realpath`), employs `Path` type annotations throughout, and includes a meaningful multi-line comment explaining *why* symlinks should not be resolved through themselves when `preserve_symlinks` is True. The test file uses well-named test functions and clear setup/assertion patterns. Rich signals available for degradation experiments."
       },
       "clarity": {
-        "score": 4,
-        "reasoning": "The PR description clearly states the change, provides explicit before/after Python code examples, and explains the rationale (ambiguous cookie persistence during redirects). The title is precise. An AI agent could understand the task from the description alone without needing to read the diff first. Slightly below 5 because there are no reproduction steps \u2014 it's an API design decision rather than a bug fix, so no error message or failing test exists prior to the PR."
-      },
-      "complexity": {
         "score": 3,
-        "reasoning": "The implementation requires understanding httpx's client architecture (where cookies flow through the request pipeline), knowing the Python warnings module, and recognizing two separate call sites in _api.py that both need the cookies parameter moved. Not a trivial one-liner, but also not deep \u2014 once the design is understood, the code changes are mechanical. Test changes are similarly moderate. Sits squarely in the desired 3-4 sweet spot."
-      }
-    }
-  },
-  {
-    "candidate_id": "httpx_pr_2026",
-    "repo": "encode/httpx",
-    "pr_number": 2026,
-    "run_number": 1,
-    "model": "claude-sonnet-4-6",
-    "provider": "claude-code",
-    "total_score": 15,
-    "recommendation": "REVIEW",
-    "summary": "This PR is clean and well-described but is a poor candidate for the experiment. It is purely a code deletion (two `__del__` methods removed), making it trivial to re-implement (score 1 on complexity), leaving no new code to degrade via mutation (score 2 on mutation relevance), and providing no positive test signal \u2014 only test removal (score 2 on test coverage). The PR would not produce meaningful differentiation between clean and degraded codebase conditions.",
-    "scores": {
-      "scope": {
-        "score": 5,
-        "reasoning": "Extremely focused: removes `__del__` from exactly two related classes (`Client` and `AsyncClient`) for a single, well-articulated reason. No unrelated changes, no cleanup, no refactoring bundled in."
-      },
-      "test_coverage": {
-        "score": 2,
-        "reasoning": "The test diff only removes an existing test (`test_deleting_unclosed_async_client_causes_warning`) that verified the old warning behavior. There is no new test added to positively assert the new behavior (e.g., that deleting an unclosed client no longer raises warnings or errors). The change is deletion-aligned but provides no new pass/fail signal for the experiment."
-      },
-      "mutation_relevance": {
-        "score": 2,
-        "reasoning": "The PR touches `httpx/_client.py`, which is core application code with type hints and descriptive naming. However, the change is purely deletion \u2014 both the source and test diffs only remove code. No new code with type annotations, docstrings, or named variables is introduced, leaving very little content to degrade in a mutation experiment. The surrounding file has relevant properties, but the PR's diff itself has almost nothing to mutate."
-      },
-      "clarity": {
-        "score": 5,
-        "reasoning": "The description is thorough: it references prior discussions (#1951, #2024), explains the old behavior for both sync and async clients, details why it's unreliable (atexit edge cases, stdlib unavailability, intenum access failures), and states the decision clearly. More than sufficient context to hand to an AI agent as a task prompt."
+        "reasoning": "The PR description is minimal \u2014 just a link to issue #2426 with no inline explanation. The PR title ('Re-enable updating of symlinks to outside subproject') gives a reasonable hint, and the inline comment in the diff explains the reasoning well. However, to construct a complete agent task prompt you'd need to read the linked issue or infer from the diff. Not quite self-contained as a standalone description."
       },
       "complexity": {
-        "score": 1,
-        "reasoning": "This is a pure deletion PR \u2014 removing two short `__del__` method blocks. The motivation requires non-trivial understanding of Python runtime internals, but the implementation is trivially simple: delete the two methods and their corresponding test. An agent tasked with re-implementing this change would complete it in one step with no architectural reasoning required. This falls well below the useful complexity threshold for the experiment."
-      }
-    }
-  },
-  {
-    "candidate_id": "httpx_pr_2423",
-    "repo": "encode/httpx",
-    "pr_number": 2423,
-    "run_number": 1,
-    "model": "claude-sonnet-4-6",
-    "provider": "claude-code",
-    "total_score": 22,
-    "recommendation": "ACCEPT",
-    "summary": "Strong experimental candidate. Tightly scoped rewrite of a single class with excellent test coverage directly validating the behavioral contract. Core application code rich in type annotations and descriptive naming makes it ideal for mutation degradation experiments. Complexity is in the sweet spot: requires real understanding of chunked line parsing edge cases without being overwhelming.",
-    "scores": {
-      "scope": {
-        "score": 5,
-        "reasoning": "Single class (`LineDecoder`) modified in one source file (`httpx/_decoders.py`), with two test files updated purely to reflect the behavior change. No unrelated cleanup or side changes. Extremely tight scope."
-      },
-      "test_coverage": {
-        "score": 5,
-        "reasoning": "Test changes in `tests/test_decoders.py` directly exercise `LineDecoder` across all three line-ending styles (`\\n`, `\\r`, `\\r\\n`) including chunk-boundary edge cases. Tests in `tests/models/test_responses.py` validate the end-to-end `iter_lines()`/`aiter_lines()` behavior change. The before/after expected values serve as a clear pass/fail signal for the exact behavioral contract being changed."
-      },
-      "mutation_relevance": {
-        "score": 5,
-        "reasoning": "The modified code in `httpx/_decoders.py` is core application logic with explicit type annotations (`typing.List[str]`, `bool`, return types), descriptive variable names (`trailing_cr`, `trailing_newline`, `NEWLINE_CHARS`), a class docstring, and inline explanatory comments. Highly amenable to the planned degradations (removing type hints, renaming variables, removing docstrings)."
-      },
-      "clarity": {
         "score": 4,
-        "reasoning": "The PR title clearly states both the mechanism ('match stdlib splitlines') and the outcome ('significant speed up'). The body references issue #2422 and gives a concrete usage example (`Response(...).iter_lines()`). An AI agent could derive the task from title + test diffs alone, though a reproduction benchmark or explicit description of the old vs new behavior contract would push this to a 5."
-      },
-      "complexity": {
-        "score": 3,
-        "reasoning": "The change is non-trivial: it requires understanding chunked streaming, the `\\r`-at-boundary edge case requiring the `trailing_cr` flag, buffering logic with `List[str]`, and how Python's `splitlines()` behaves vs the original loop. However, the core insight is contained (~25 lines) and the logic is self-contained within one class. Not trivially simple, but also not sprawling\u2014solidly in the target 3-4 range."
+        "reasoning": "The fix requires understanding path resolution semantics, the difference between `Path.cwd()` and `self.dst_path.resolve()`, and the subtle edge case where resolving a symlink itself (versus its parent) changes containment checks. Non-trivial reasoning is needed to see why `parent.resolve() / name` is correct vs. `full_path.resolve()`. The test scaffolding involves setting up git repos, multiple temp directories, and symlink hierarchies. This sits solidly in the 'solid engineering task requiring navigation and reasoning' range \u2014 not a one-liner, not overwhelming."
       }
     }
   },
   {
-    "candidate_id": "httpx_pr_2523",
-    "repo": "encode/httpx",
-    "pr_number": 2523,
+    "candidate_id": "copier_pr_2432",
+    "repo": "copier-org/copier",
+    "pr_number": 2432,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
     "total_score": 21,
     "recommendation": "ACCEPT",
-    "summary": "A beautifully clean, well-described, and well-tested PR that is almost too simple for this experiment. It scores perfectly on scope, test coverage, and clarity, but the core change is just a guard clause addition \u2014 a few lines with an obvious solution. An AI agent in almost any codebase condition would likely find and fix this correctly, reducing the experimental signal. The low complexity (score 2) is the primary concern; this PR may not produce meaningful differentiation across degraded conditions.",
+    "summary": "A well-scoped, clearly described bug fix with a direct pass/fail test. The PR is ideal in terms of scope, clarity, and test quality. The main limitation for the experiment is that the actual source code change is very small (one git call expanded), which limits how much naming/type-hint degradation could affect an agent's ability to find and apply the fix. However, the test scaffolding and surrounding context in the test file provide decent mutation surface, making this a reasonable but not exceptional candidate.",
     "scores": {
       "scope": {
         "score": 5,
-        "reasoning": "Extremely focused: one source file changed (httpx/_utils.py, 5 lines), one test file changed (7 lines added). Single clear purpose: raise TypeError on invalid query param types instead of silently coercing. No unrelated cleanup or bundled changes."
+        "reasoning": "Single, tightly scoped fix: adds `-c core.hooksPath=/dev/null` to a single `git checkout` call in `_apply_update` to suppress git hooks during conflict resolution. One logical change, one source file touched."
       },
       "test_coverage": {
         "score": 5,
-        "reasoning": "The test directly and precisely validates the fix \u2014 it constructs a QueryParams with a bytes value and asserts the exact TypeError message is raised. This is a clean pass/fail signal perfectly aligned with the behavior change. Could serve as the experiment's oracle with no ambiguity."
+        "reasoning": "The test `test_post_checkout_hook_ignored` directly validates the fix: it creates a post-checkout hook that exits with code 1, introduces a conflict, runs `run_update`, and asserts no error is raised. This is a clear pass/fail signal \u2014 without the fix the hook would fire and cause a ProcessExecutionError."
       },
       "mutation_relevance": {
-        "score": 4,
-        "reasoning": "The changed function `primitive_value_to_str` uses a forward-reference type annotation (`'PrimitiveData'`), descriptive parameter naming, and is part of a well-structured utility module in a mature library. The fix itself uses isinstance checks with explicit type mentions. Good application code with type annotations, though the patch is small enough that there's limited surface area for degradation experiments."
+        "score": 3,
+        "reasoning": "The source change is minimal (a single git call expanded with an extra flag). The test file is where the bulk of the new code lives and it has reasonable naming and docstring. However, the core application logic touched is very thin \u2014 no type annotations in the diff, no complex logic, mostly a git invocation tweak. Mutation of naming or type hints in this specific change would have limited experimental signal."
       },
       "clarity": {
         "score": 5,
-        "reasoning": "The PR description is exemplary: it references the motivating issue, closes an older issue, and provides a concrete before/after code snippet showing the exact behavior change and the exact error message produced. An AI agent can be handed this description verbatim and know exactly what to implement."
-      },
-      "complexity": {
-        "score": 2,
-        "reasoning": "This is a simple but real fix \u2014 add a type guard to an existing utility function and raise a TypeError with a descriptive message. Once an agent locates `primitive_value_to_str`, the solution is immediately obvious. It requires minimal reasoning, no architectural decisions, and the diff is 5 lines. This sits at the low end of the desired 3-4 range, making it potentially too trivial to distinguish clean vs. degraded codebase performance."
-      }
-    }
-  },
-  {
-    "candidate_id": "httpx_pr_2535",
-    "repo": "encode/httpx",
-    "pr_number": 2535,
-    "run_number": 1,
-    "model": "claude-sonnet-4-6",
-    "provider": "claude-code",
-    "total_score": 22,
-    "recommendation": "ACCEPT",
-    "summary": "This is a high-quality experimental candidate. The PR is tightly scoped, has excellent test coverage that provides clear pass/fail signals, touches core application code rich with type annotations and descriptive naming, has an exceptionally clear description, and sits at moderate complexity. It cleanly represents a real-world feature addition following established patterns \u2014 the kind of task where codebase quality degradations (poor naming, removed type hints, disrupted structure) would meaningfully affect agent performance.",
-    "scores": {
-      "scope": {
-        "score": 5,
-        "reasoning": "The PR is laser-focused on a single coherent change: replacing implicitly baked-in netrc authentication with an explicit `NetRCAuth()` class. Every file touched \u2014 `_auth.py` (add class), `_utils.py` (remove old class), `_client.py` (remove implicit usage), `__init__.py` (export), docs, and tests \u2014 directly serves this one purpose. There is no unrelated cleanup or bundled features."
-      },
-      "test_coverage": {
-        "score": 5,
-        "reasoning": "The test changes are comprehensive and directly validate the new class: `test_netrc_auth_credentials_exist` covers the happy path, `test_netrc_auth_credentials_do_not_exist` covers missing host, `test_netrc_auth_nopassword` and `test_netrc_auth_nopassword_parse_error` cover the version-dependent edge case with no password. Each test has a docstring explaining what it validates, and together they provide unambiguous pass/fail signals for whether `NetRCAuth` behaves correctly."
-      },
-      "mutation_relevance": {
-        "score": 4,
-        "reasoning": "The core change lives in `httpx/_auth.py`, which is application-level code with type annotations (`typing.Optional[str]`, `typing.Union[str, bytes]`, `typing.Generator[Request, Response, None]`), a class docstring, and descriptive variable names (`auth_info`, `userpass`, `token`). The removed `NetRCInfo` class in `_utils.py` also had type hints and structured logic. This is solid mutation target territory \u2014 type hints, naming, and structure are all present and degradable."
-      },
-      "clarity": {
-        "score": 5,
-        "reasoning": "The PR description is exceptionally clear: it explains the existing behavior, the motivation for the change (alignment with curl behavior, explicit over implicit), provides 5+ concrete usage examples, and includes a checked TODO list. An AI agent could be handed this description almost verbatim as a task prompt and understand exactly what needs to be built."
+        "reasoning": "The description includes a concrete error message reproduction, explains the triggering conditions (post-checkout hooks + conflicts + updated .pre-commit-hooks.yaml), and the fix is self-evident from the description. An AI agent could understand and implement this from the issue alone."
       },
       "complexity": {
         "score": 3,
-        "reasoning": "The implementation requires navigating several files, understanding the existing `Auth` class hierarchy, knowing how Python's `netrc` module works, removing old logic from `_client.py` and `_utils.py`, and implementing the new class following established patterns. It's non-trivial but the solution is guided strongly by existing patterns (`BasicAuth` is nearly identical in structure). A capable AI agent should be able to complete this without it being too easy or too hard \u2014 solidly in the sweet spot's lower half."
+        "reasoning": "Moderate complexity: requires understanding copier's update/conflict resolution flow, knowing the git `-c core.hooksPath` mechanism to suppress hooks, and writing a multi-step integration test that sets up template versions and simulates a conflict. Not trivial, but the solution is a well-known git pattern and the fix is only ~8 lines. Solidly in the 3-4 sweet spot."
       }
     }
   },
   {
-    "candidate_id": "httpx_pr_2539",
-    "repo": "encode/httpx",
-    "pr_number": 2539,
+    "candidate_id": "copier_pr_2456",
+    "repo": "copier-org/copier",
+    "pr_number": 2456,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
     "total_score": 19,
     "recommendation": "ACCEPT",
-    "summary": "This PR is extremely clean and well-scoped with perfect test coverage alignment, but it's too simple to be useful for the experiment. The actual code change is just 4 lines deleted and 1 line added \u2014 a revert of a trivial type guard. There's insufficient complexity to measure meaningful performance differences between clean and degraded codebase conditions. The mutation relevance is also limited since the touched code has minimal type annotations and structure to degrade.",
+    "summary": "This is a well-scoped security fix with excellent test coverage and moderate complexity sitting in the sweet spot for our experiment. The main weakness is the nearly empty PR description, which would make it difficult to hand to an AI agent as a task prompt without supplementing it with information derived from the diff or linked issues. The test signal is strong and the code has good mutation surface. If we can reconstruct a task description from the title and code context, this is a solid candidate; as-is, the clarity score is a meaningful limitation.",
     "scores": {
       "scope": {
         "score": 5,
-        "reasoning": "This PR does exactly one thing: reverts a single prior commit that added TypeError validation for query params. It touches exactly one source file and one test file, both tightly coupled to the single change being reverted."
+        "reasoning": "The PR is extremely tightly scoped: one source file change (14 lines added in `_main.py`) and one test file change. The change addresses a single, coherent security concern \u2014 preventing symlink-based path traversal outside the template root. No unrelated cleanup or refactoring is included."
       },
       "test_coverage": {
         "score": 5,
-        "reasoning": "The test diff directly mirrors the code change \u2014 the test `test_invalid_query_params` that validated the TypeError behavior is removed alongside the code that raised it. The test change is a precise, 1-to-1 signal for the behavior change, making it an ideal pass/fail signal for an experiment."
+        "reasoning": "Two new test functions are added: one for relative symlinks and one for absolute symlinks pointing outside the template root. Both tests set up the exact scenario the fix addresses, assert `ForbiddenPathError` is raised with the correct message, and verify the destination file does not exist after the error. These tests directly validate the fix and could serve as unambiguous pass/fail signals."
       },
       "mutation_relevance": {
-        "score": 3,
-        "reasoning": "The source file `httpx/_utils.py` contains a typed utility function `primitive_value_to_str` with a `PrimitiveData` type annotation, which is relevant. However, the actual change is extremely minimal (removing a type guard and error raise), so there is limited surface area for meaningful degradation of type hints, naming, or docstrings."
+        "score": 4,
+        "reasoning": "The source change includes meaningful inline comments explaining the 'why' of the check, uses descriptive variable names (`src_abspath`, `template_copy_root`, `local_abspath`), and is embedded in a type-annotated Python codebase. The test code uses descriptive function names, clear variable names, and a notable HACK comment explaining subtle internal behavior. There is good mutation surface across naming, the conditional logic, and the comment explaining the forbidden case."
       },
       "clarity": {
-        "score": 4,
-        "reasoning": "The PR description clearly states what it does (reverts a prior PR), why (potentially breaking change), and when it might be reconsidered (0.24.0 release). There is a link to the discussion. However, an AI agent tasked with 're-solving' this would need to understand it's a revert of a revert \u2014 the task would be to re-introduce the TypeError behavior, which requires some inference about the original intent."
+        "score": 2,
+        "reasoning": "The PR description is essentially empty \u2014 just 'WDYT @cbrown1234?' directed at a reviewer with no context. The title 'fix: disallow symlink-based includes outside template root' gives a directional hint, but there is no explanation of the vulnerability, no reproduction steps, no expected vs. actual behavior, and no linked issue. An AI agent would need to infer the full task from the title and the diff alone, which substantially increases ambiguity."
       },
       "complexity": {
-        "score": 2,
-        "reasoning": "The change is trivially simple: remove a type check and an error raise (4 lines deleted, 1 line added). Even accounting for needing to understand the context, any competent agent would solve this in seconds. This is too simple for meaningful experimental differentiation between clean and degraded codebases."
+        "score": 3,
+        "reasoning": "The fix is 14 lines but requires non-trivial codebase knowledge: understanding the distinction between `template_copy_root` and `template.local_abspath`, how `follow_symlinks` interacts with `preserve_symlinks`, where `ForbiddenPathError` is defined and how it's used elsewhere, and the overall flow of `_render_template`. Not a one-liner, but also not architecturally complex \u2014 a solid moderate-complexity task that requires navigating the codebase and understanding semantics without being overwhelming."
       }
     }
   },
   {
-    "candidate_id": "httpx_pr_2543",
-    "repo": "encode/httpx",
-    "pr_number": 2543,
+    "candidate_id": "copier_pr_2538",
+    "repo": "copier-org/copier",
+    "pr_number": 2538,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 18,
+    "recommendation": "ACCEPT",
+    "summary": "This PR is clean, well-tested, and clearly described, but it is too simple to be a useful experimental candidate. The entire source fix is a single regex change on one line, leaving almost no code surface to degrade meaningfully. An AI agent would either get it right or wrong regardless of codebase quality conditions, making it a poor discriminator for the experiment. The mutation relevance is also very low since there's minimal application logic, type usage, or documentation in the changed code path.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Single, tightly scoped fix: one regex change in one function (`get_git_version`) in one source file (`copier/_vcs.py`). The test file addition is directly related. No unrelated cleanup or bundled changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The PR adds a parametrized test with two cases: the standard `2.53.0` format and the vendor-suffixed `2.53.GIT` format. It uses `mock.patch` to isolate `get_git_version()` from the real git binary, and asserts the exact expected `Version` object. This directly validates the fix and would serve as a clean pass/fail signal."
+      },
+      "mutation_relevance": {
+        "score": 2,
+        "reasoning": "The actual source change is a single regex string literal on one line. The function has a return type annotation (`-> Version`) and a one-line docstring, but there are essentially no meaningful variable names, comments, or logic branches to degrade. The test file has type annotations (`git_version_output: str, expected_version: Version`) and descriptive naming, but the tiny surface area of changed code means there's very little to mutate in a way that would produce rich experimental signals."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The description clearly states the bug (Git reports `2.53.GIT`, causing `get_git_version()` to fail), the fix (regex updated to handle optional patch component), and references an issue (#2537). The expected behavior is clear. It lacks explicit reproduction steps, but the description is sufficient for an agent to understand the task without deep code reading."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The fix is a single-character regex change (`\\d+\\.\\d+\\.\\d+` \u2192 `\\d+\\.\\d+(?:\\.\\d+)?`). An agent needs to understand what Git version strings look like and how `packaging.version.Version` handles partial versions, but the solution path is essentially a one-liner. This is at the lower boundary of 'simple but real fix' \u2014 barely above a trivial change."
+      }
+    }
+  },
+  {
+    "candidate_id": "copier_pr_2545",
+    "repo": "copier-org/copier",
+    "pr_number": 2545,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 19,
+    "recommendation": "ACCEPT",
+    "summary": "A clean, well-described bug fix with an excellent snapshot test that serves as a direct pass/fail signal. However, the complexity is too low (simple parent class swap) to be a strong experimental candidate \u2014 the fix is nearly mechanical once the problem is understood, limiting the signal we could measure between clean and degraded conditions. The bulk of the diff is lock file noise. Good test hygiene and clarity, but marginal experimental value due to low implementation complexity.",
+    "scores": {
+      "scope": {
+        "score": 4,
+        "reasoning": "The change is tightly focused: one-line inheritance fix in `_cli.py`, adding the two correct flags that were missing from `CopierCheckUpdateSubApp`, and a snapshot test. The `uv.lock` and `pyproject.toml` changes are necessary noise from adding `inline-snapshot` as a dev dependency, not unrelated work. Minor deduction for the lock file bulk."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "`test_check_update_help` directly validates the fix by capturing the exact help output and comparing it via inline-snapshot. Before the fix, `check-update --help` would show unsupported flags inherited from `_Subcommand`; after the fix, only the correct flags appear. The snapshot serves as an unambiguous pass/fail signal for the exact behavior being corrected."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The touched code in `copier/_cli.py` is core application logic \u2014 a CLI framework class with descriptive flag definitions, docstrings, and type annotations (the `# type: ignore[misc]` comment indicates a typed codebase). Flag help strings and class docstrings are meaningful candidates for comment/naming degradation. The inline-snapshot test is highly readable and would expose behavioral regressions. Slight deduction because the fix itself is one-liners rather than a dense logic block."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The description clearly states the root cause (wrong parent class accidentally subclassed in #2463), the fix (change parent, add the actually-supported flags), and the guard added (snapshot test). References to the original PR and issue #2544 provide context. Reproduction is straightforward (`copier check-update --help`). Loses one point because reproduction steps aren't explicitly stated, but the intent is entirely clear."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The fix is a single inheritance change (`_Subcommand` \u2192 `cli.Application`) plus copying two flag definitions to the correct class. Once the bug is identified, the solution is obvious. While it requires familiarity with the plumbum CLI framework and the class hierarchy, the actual implementation is minimal (~10 meaningful lines). This is below the sweet spot (3-4) for experimental usefulness \u2014 it's too simple to meaningfully differentiate agent performance under degraded codebase conditions."
+      }
+    }
+  },
+  {
+    "candidate_id": "copier_pr_2547",
+    "repo": "copier-org/copier",
+    "pr_number": 2547,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
     "total_score": 21,
     "recommendation": "ACCEPT",
-    "summary": "A high-quality, tightly scoped PR fixing a specific URL encoding behavior. It has clear, directly validating tests, touches well-annotated core application code, and is described clearly enough to serve as an agent task prompt. Complexity sits in the ideal range for measuring degradation effects. Strong experimental candidate.",
+    "summary": "A well-scoped, clearly described bug fix with excellent test coverage that directly validates the regression. The code is real application logic with type hints, docstrings, and descriptive naming\u2014all four degradable properties are present and meaningful. Moderate complexity (requires understanding git VCS flow and ref-resolution ordering) puts it in the ideal difficulty range for the experiment. Strong candidate overall.",
     "scores": {
       "scope": {
         "score": 5,
-        "reasoning": "Extremely focused change: replaces stdlib `urlencode` with a custom implementation to switch from `+` encoding for spaces to `%20`, and treat `/` as a safe character. Touches exactly 2 source files and 1 test file, all changes directly related to this single behavioral fix."
+        "reasoning": "Single, tightly scoped bug fix: `DirtyLocalWarning` incorrectly raised for tagged releases. The changes touch exactly two source files (`_template.py`, `_vcs.py`) and two test files. The refactoring of `checkout_latest_tag` \u2192 `get_latest_tag` is directly motivated by the fix (moving tag resolution before clone). No unrelated cleanup bundled in."
       },
       "test_coverage": {
         "score": 5,
-        "reasoning": "The added test `test_url_query_encoding()` directly validates the fix with two assertions: one for a raw URL string input and one for params-dict input. Both check the exact expected `raw_path` output (`%20` for spaces, `/` unescaped). The test has a docstring explaining the rationale and links to the issue. This is a clear pass/fail signal for an agent's solution."
+        "reasoning": "Two targeted new tests are added: `test_copy_with_tag` verifies that when a tag exists and `vcs_ref=None`, untracked files are NOT included and no warning fires (directly validates the fix); `test_copy_with_tag_and_ref_head` verifies that `vcs_ref='HEAD'` still includes dirty files and emits `DirtyLocalWarning` (validates preserved behavior). Both are clear pass/fail signals for exactly the bug being fixed. The existing `test_invalid_version` is also updated to match the renamed function."
       },
       "mutation_relevance": {
         "score": 4,
-        "reasoning": "The new `urlencode` function in `_urlparse.py` has type annotations (`typing.List[typing.Tuple[str, str]] -> str`), a detailed docstring explaining design decisions, and descriptive variable names. The `__str__` method in `_urls.py` also gains a docstring. This is core application logic with good annotation density \u2014 solid target for type-hint and naming degradations."
+        "reasoning": "Core application code with meaningful type hints (`url: str`, `use_prereleases: OptBool`, `local_repo: StrOrPath`, return types), descriptive naming (`all_tags`, `sorted_tags`, `url_abspath`, `is_dirty`), and docstrings with parameter/return documentation. Test names clearly communicate intent (`test_copy_with_tag_and_ref_head`). Degrading type hints would obscure the `OptBool` parameter, degrading names would obscure the `ref`/`url` distinction, degrading docstrings would hide the return contract. Not the absolute richest business logic, but solid application code with all four degradable properties present."
       },
       "clarity": {
         "score": 4,
-        "reasoning": "The PR description clearly states the behavioral change (from `+`/`%2F` to `%20`/unescaped `/`), references the linked issue for background, and includes a checklist confirming a failing test was added before the fix. The rationale (matching browser behavior, differing from `requests`) is documented in both the PR and inline comments. Sufficient to hand to an agent without extensive code reading."
+        "reasoning": "Description clearly states the bug (warning fires for tagged release), root cause (dirty check ran before revision was resolved), and the fix (warn only when HEAD is used). Links to the discussion providing reproduction context. An AI agent can understand the task from the description alone without deep code reading. Slightly short of a 5 because it lacks explicit reproduction steps or a minimal example, but the causal chain is well explained."
       },
       "complexity": {
         "score": 3,
-        "reasoning": "This is a moderate-complexity fix: it requires understanding URL encoding standards, recognizing why stdlib `urlencode` is unsuitable, and implementing a custom replacement that reuses the existing `quote` helper. The actual code change is small (~15 lines added), but getting there requires understanding the URL parsing module's structure and the encoding semantics. Well within the sweet spot \u2014 not trivially obvious, not overwhelmingly large."
+        "reasoning": "Moderate complexity: the agent needs to understand the clone\u2192checkout_latest_tag flow, why resolving the tag before cloning fixes the bug, the switch from local `git tag` to `git ls-remote --tags` (and why that's necessary), and how the dirty-check condition must change from `ref in {None, 'HEAD'}` to `ref == 'HEAD'`. Requires navigating 2-3 files and understanding control flow. Not trivial (can't be done mechanically), but also not complex enough to take a human hours\u2014sits squarely in the 3-4 sweet spot for our experiment. I score 3 because the refactoring is elegant and the conceptual leap, once understood, is not large."
       }
     }
   },
   {
-    "candidate_id": "httpx_pr_2547",
-    "repo": "encode/httpx",
-    "pr_number": 2547,
+    "candidate_id": "copier_pr_2548",
+    "repo": "copier-org/copier",
+    "pr_number": 2548,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "A clean, well-scoped feature PR that threads a new CLI flag through multiple architectural layers with strong tests that directly validate the before/after behavior. The main weakness is a sparse PR description that requires reading the linked issue for full context. Complexity sits in the desirable 3-4 range: requires navigating copier's CLI-to-Worker pipeline but is bounded and comprehensible. Good experimental candidate overall.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely tight scope: adds a single `--answers-file` flag to the `check-update` subcommand. Changes touch exactly 2 source files (`_cli.py`, `_main.py`) and 2 test files. Nothing unrelated is included."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The new test `test_with_custom_answers_file_path_opt` directly validates the core behavior: it copies a project with a custom answers file, shows that `check-update` *without* `--answers-file` returns exit code 1 (can't locate answers), then shows it returns exit code 0 with correct output *with* the flag. This is a clear pass/fail signal that directly exercises the new code path. The help text test also confirms the flag is wired into the CLI surface."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The source changes include explicit type annotations (`Path | str | None = None`, `tuple[bool, str, str]`), descriptive parameter names (`answers_file`, `dst_path`, `use_prereleases`), and a docstring reference in `get_update_data`. The conditional `RelativePath` conversion logic is meaningful application code. Not the richest code in the codebase for mutation signals, but solid \u2014 type hint removal or name obfuscation would meaningfully degrade agent signal."
+      },
+      "clarity": {
+        "score": 3,
+        "reasoning": "The PR description is sparse: 'I've added the `-a, --answers-file` flag to the `check-update` command. Closes #2544.' It references an issue but doesn't reproduce the problem statement or explain why the flag is needed. The title is clear and the diff is self-evident, but an AI agent without access to #2544 would need to infer intent from the code and tests rather than a written specification."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The change requires understanding copier's multi-layer architecture: CLI attribute \u2192 `main()` method \u2192 `get_update_data()` \u2192 `Worker` context manager, plus knowing when to wrap in `RelativePath` vs pass as-is. It's more than trivial parameter threading, but once the pattern is understood (which is well-established in the existing codebase), the solution is moderate and bounded. Sits in the sweet spot \u2014 not a one-liner, but won't take hours."
+      }
+    }
+  },
+  {
+    "candidate_id": "copier_pr_2584",
+    "repo": "copier-org/copier",
+    "pr_number": 2584,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
     "total_score": 22,
     "recommendation": "ACCEPT",
-    "summary": "Strong candidate for the experiment. This is a focused, well-documented logging refactor with excellent test coverage using caplog's exact record_tuple assertions as a clean pass/fail signal. The PR touches real application code with type hints and descriptive naming suitable for mutation, the task description is immediately actionable as an agent prompt, and the complexity is in the moderate sweet spot \u2014 requiring multi-file coordination and contextual understanding without being overwhelming.",
+    "summary": "This is an excellent experimental candidate. It's a tightly scoped bug fix with a clear description, meaningful test coverage that directly validates the fix across multiple parametrized cases, and touches real application logic with type hints and descriptive naming. The complexity is in the sweet spot \u2014 requires contextual understanding of Jinja configuration but is not sprawling. High confidence this would produce clean pass/fail signal under codebase degradation.",
     "scores": {
       "scope": {
         "score": 5,
-        "reasoning": "The PR is laser-focused on a single coherent change: replacing httpx's custom logging infrastructure (custom TRACE level, get_logger function, HTTPX_LOG_LEVEL env var) with standard Python logging. All changed files \u2014 _client.py, _config.py, _utils.py, docs, tests \u2014 are directly part of this single migration. No unrelated cleanup or tangential changes."
+        "reasoning": "The PR addresses a single, precise bug: hardcoded Jinja delimiters in the default migration condition. Only one source file (copier/_template.py) and one test file (tests/test_migrations.py) are touched. No unrelated cleanup or refactoring is bundled in."
       },
       "test_coverage": {
         "score": 5,
-        "reasoning": "The test changes are thorough and directly validate the new behavior. Three new tests (test_logging_request, test_logging_redirect_chain, test_logging_ssl) use pytest's caplog fixture and assert exact record_tuples \u2014 checking logger name ('httpx'), log level (logging.INFO or logging.DEBUG), and message format with precision. These serve as an excellent binary pass/fail signal: an agent's implementation either produces the exact expected log records or it doesn't. The old tests relying on capsys and override_log_level are cleanly replaced."
+        "reasoning": "The test additions directly validate the fix. The parametrized test `test_post_migration_by_default` runs with both default delimiters (`{}`) and alternative bracket delimiters (`BRACKET_ENVOPS`), across all four command formats (string, list, dict-string, dict-list). The assertions verify migrations don't run on initial copy but do run on update \u2014 exactly the behavior the bug broke. This could serve directly as a pass/fail signal."
       },
       "mutation_relevance": {
         "score": 4,
-        "reasoning": "The PR touches real application code in core modules. _utils.py contained a Logger class stub with type annotations (typing.Any, typing.Optional), a docstring on get_logger, and a complex global initialization pattern. _config.py and _client.py use type hints throughout and have descriptive naming. The code is real application logic (SSL context loading, HTTP request dispatching) not boilerplate. Slight deduction because the specific changed lines are mostly logging calls rather than business logic, limiting how much type hint / variable name degradation affects the key functionality."
+        "reasoning": "The changed source code in `_template.py` is core application logic with meaningful variable names (`v_start`, `v_end`, `default_condition`, `migration`, `extra_vars`). The test file uses type hints (`Mapping[str, Any]`, `str | Sequence[str] | Mapping[str, Any]`), descriptive test names, and docstrings. There are no complex type annotations in the source diff itself, but the surrounding context in `_template.py` likely has them. Degrading naming or type hints here would meaningfully impact an agent's ability to reconstruct the fix."
       },
       "clarity": {
         "score": 5,
-        "reasoning": "The PR description is exceptional \u2014 it clearly states the goal (drop custom logging, use standard Python logging), provides before/after code examples with expected console output, explains the level changes (TRACE\u2192DEBUG for SSL, DEBUG\u2192INFO for requests), includes a TODO checklist, and references related issues. An AI agent could receive this description directly as a task prompt with full understanding of what to implement."
+        "reasoning": "The PR description clearly explains the bug (hardcoded `{{`/`}}` delimiters in default migration condition), the trigger condition (template using `_envops` with alternative delimiters), and the fix (resolve delimiters from `_envops` settings with fallback). A concrete example of the misconfiguration is provided. An AI agent could be handed this description directly as a task prompt."
       },
       "complexity": {
         "score": 3,
-        "reasoning": "The task requires understanding the existing custom logging infrastructure (get_logger, _LOGGER_INITIALIZED global, Logger stub class, trace method injection), then making coordinated changes across three source files and the test suite. It's moderately complex \u2014 not a one-liner, but also not architecturally deep. The solution path is clear once you understand the existing setup: remove the custom helpers, swap in logging.getLogger('httpx'), update log levels, update tests to use caplog. This sits at the desired sweet spot for the experiment."
+        "reasoning": "The fix itself is modest \u2014 three lines added to extract delimiter config and use it in two places. However, understanding the fix requires knowing: how `_envops` configures Jinja, how `migration_tasks` constructs `Task` objects, and the distinction between old/new migration config formats. This makes it a genuine reasoning task (not trivial) but far from overwhelming. Sits solidly in the sweet spot."
       }
     }
   },
   {
-    "candidate_id": "httpx_pr_2572",
-    "repo": "encode/httpx",
-    "pr_number": 2572,
+    "candidate_id": "copier_pr_2587",
+    "repo": "copier-org/copier",
+    "pr_number": 2587,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
-    "total_score": 15,
-    "recommendation": "REVIEW",
-    "summary": "This is a mechanical test-refactoring PR that replaces ~40 private `urlparse()` calls with the public `httpx.URL()` API. While it touches real application code and is clearly scoped, the task is essentially a bulk find-and-replace with minor value-type adjustments (str vs bytes). The complexity is too low (score 2) to produce meaningful experimental signal \u2014 an agent would likely succeed regardless of codebase quality degradation. The lack of a substantive 'fix' also makes test coverage weak as a pass/fail signal. Not a good candidate for the experiment.",
+    "total_score": 21,
+    "recommendation": "ACCEPT",
+    "summary": "A well-scoped, cleanly implemented feature PR with excellent test coverage across all behavioral paths. The focused change to `_main.py` adds Jinja2 strict undefined support in ~10 lines, and the four new tests directly validate each code path. Moderate complexity (requires Jinja2 and copier envops context but is not architecturally complex), making it a good candidate for the experiment. The tests serve as clear pass/fail signals, the code has descriptive naming and type annotations, and the task description is clear enough to hand to an agent.",
     "scores": {
       "scope": {
-        "score": 4,
-        "reasoning": "The PR has a single, coherent purpose: replacing private `urlparse()` imports in tests with the public `httpx.URL()` API. The source change in `_urlparse.py` (removing keyword validation) is directly related to this refactor since that validation moves to `httpx.URL()`. Minor scope expansion only in the form of expected-value adjustments (str vs bytes) necessitated by API differences."
+        "score": 5,
+        "reasoning": "The PR is tightly focused on a single feature: adding support for configuring Jinja2's `undefined` behavior via `_envops` in copier.yaml. All changes (source logic in `_main.py`, docs in `configuring.md`, new test file) are directly related to this one feature. No unrelated cleanup or bundled changes."
       },
       "test_coverage": {
-        "score": 2,
-        "reasoning": "The test file changes are a refactoring of existing tests rather than new coverage for a bug fix. Tests are updated to call `httpx.URL()` instead of private `urlparse()`, with some value adjustments (e.g. `b''` instead of `''`). There is no newly introduced bug being caught; `test_urlparse_with_invalid_component` updated its expected error message but doesn't clearly validate any new fix. This is test maintenance, not test addition."
+        "score": 5,
+        "reasoning": "The new test file `tests/test_jinja2_undefined.py` contains four well-defined tests that directly validate all aspects of the feature: (1) default behavior still works, (2) invalid value raises `ConfigFileError`, (3) explicit `jinja2.Undefined` works like default, (4) `jinja2.StrictUndefined` raises `UndefinedError` for undefined variables. Each test maps precisely to a code path introduced by the PR and could serve as a clear pass/fail signal."
       },
       "mutation_relevance": {
         "score": 4,
-        "reasoning": "`httpx/_urlparse.py` is core application code with type annotations (`typing.Optional[str]`), meaningful function/variable names, and structured logic. The test file is substantive application-level testing. Removing a validation block in a URL parsing function touches real logic. This is not config/boilerplate \u2014 it's core URL processing code with good naming and typing conventions that can be meaningfully degraded."
+        "reasoning": "The source code uses descriptive variable names (`undefined_class`, `envops`), Python type hints are present in the test signatures (`pytest.TempPathFactory`), and the walrus-operator pattern is idiomatic and readable. The test file has meaningful function names that describe behavior. The code touches core application logic (Jinja environment construction) rather than config or boilerplate. Slightly below 5 because the actual implementation patch is small (~10 lines) with limited docstrings/comments to degrade."
       },
       "clarity": {
-        "score": 3,
-        "reasoning": "The title 'Drop private imports from test_urlparse.py' is descriptive of the mechanical action but the description is sparse \u2014 it references issue #2492 without explaining the underlying motivation clearly, and notes one exception (`._uri_reference`) without explaining the broader context of the refactor. An AI agent would need to read the diff to understand what 'use httpx.URL()' entails in terms of API differences."
+        "score": 4,
+        "reasoning": "The description clearly states the purpose (fail fast on undefined variables, avoid custom extension), references the closing issue (#1522), and the docs diff adds a concrete YAML example. An AI agent could reconstruct the task from the description and the closed issue reference. Loses one point because it lacks reproduction steps or detailed context about the existing `envops` architecture an agent would need to navigate without reading code."
       },
       "complexity": {
-        "score": 2,
-        "reasoning": "The change is predominantly a mechanical bulk find-and-replace of `urlparse(...)` with `httpx.URL(...)` across ~40 test sites, plus minor expected-value adjustments where the public API returns bytes vs. strings. The source change is a simple 12-line block deletion. While understanding the semantic differences between the private and public API adds a small amount of reasoning, this is a straightforward refactor that an agent could accomplish with simple pattern matching. Too simple to produce meaningful experimental signal."
+        "score": 3,
+        "reasoning": "The implementation is ~10 lines of new logic: checking the `undefined` key in envops, converting string to class via `import_string`, and raising an error for unsupported values. It requires understanding Jinja2 environment construction, the `envops` passthrough pattern in copier, and why YAML values must be string-converted. Not trivial, but a focused engineer could implement it in under an hour. Sits at the lower end of the sweet spot \u2014 straightforward once context is understood."
       }
     }
   },
   {
-    "candidate_id": "httpx_pr_2648",
-    "repo": "encode/httpx",
-    "pr_number": 2648,
+    "candidate_id": "copier_pr_2605",
+    "repo": "copier-org/copier",
+    "pr_number": 2605,
     "run_number": 1,
     "model": "claude-sonnet-4-6",
     "provider": "claude-code",
-    "total_score": 10,
-    "recommendation": "REJECT",
-    "summary": "This PR is a poor candidate for the experiment. It is primarily a tooling/configuration migration (flake8 \u2192 ruff) with minimal application code changes. The 'test changes' are just linter suppression comments, not actual test logic. There is no clear behavioral fix being validated, the description provides no actionable task for an AI agent, and the code touched is mostly boilerplate configuration rather than core application logic with type hints and meaningful structure. This PR would not produce meaningful signal in an experiment studying how codebase quality affects agent performance.",
+    "total_score": 23,
+    "recommendation": "ACCEPT",
+    "summary": "A strong experimental candidate. The PR fixes a single well-defined bug with rich type annotations, descriptive naming, meaningful docstrings, and comprehensive regression tests that serve as clear pass/fail signals. The complexity is in the sweet spot: requires real git internals knowledge and multi-path reasoning, but the detailed description makes it tractable for an AI agent. Degrading any of the target properties (type hints, naming, comments, tests) would meaningfully impact an agent's ability to correctly implement all three failure modes, especially the critical `--cacheinfo` vs `--chmod` ordering constraint.",
     "scores": {
       "scope": {
-        "score": 2,
-        "reasoning": "The PR bundles two distinct changes: (1) replacing flake8/autoflake/isort with ruff as the linting toolchain (a pure tooling/config change), and (2) making actual code changes driven by ruff's stricter checks \u2014 removing unused imports/variables in _urls.py and adding `# noqa: B018` comments plus a type annotation fix in test files. These are loosely related but represent different concerns: tooling migration vs. code correctness fixes."
+        "score": 4,
+        "reasoning": "The PR addresses a single coherent bug \u2014 executable-bit propagation on `copier update` \u2014 across three interrelated failure modes. All changes in `_main.py`, `_template.py`, and the test file are directly tied to this one issue. There is no unrelated cleanup or bundled features. Slightly below 5 because three distinct failure modes require non-trivial new code (a new method `_sync_git_index_executable_bit`, a new cached property `git_index_modes`, and a parameter addition to `_render_allowed`), but they are all facets of the same bug."
       },
       "test_coverage": {
-        "score": 2,
-        "reasoning": "The test file changes are not adding new tests or verifying a fix \u2014 they are merely adding `# noqa: B018` suppression comments to silence a ruff linter warning about useless property access statements, and one minor type annotation fix (`server_port: str` \u2192 `server_port: typing.Optional[str] = None`). These changes don't verify any core behavioral fix; they are cosmetic adjustments to satisfy the new linter rules."
+        "score": 5,
+        "reasoning": "The PR adds four regression tests that directly validate every described failure mode: (1) mode-only executable bit addition parametrized over `core.fileMode`, (2) symmetric removal test, (3) a Windows-specific end-to-end test for the `Template.git_index_modes` code path, and (4) a merge-conflict ordering guard. Tests check both on-disk mode bits and git index state (`ls-files --stage`), and the conflict test uses `inline_snapshot` to lock in exact expected output. These tests serve as clear pass/fail signals for the fix."
       },
       "mutation_relevance": {
-        "score": 2,
-        "reasoning": "The majority of the PR touches configuration files (pyproject.toml, setup.cfg, requirements.txt) and shell scripts (scripts/check, scripts/lint). The actual source code changes are minimal: two lines removed from _urls.py (one unused import, one unused variable annotation). The test changes are just noqa comments. There is very little application logic code with meaningful type hints, docstrings, or variable naming that could be meaningfully degraded."
+        "score": 5,
+        "reasoning": "The changed source files are core application logic with rich type annotations (`expected_mode: int | None`, `Mapping[PurePosixPath, int]`, `int | None`), descriptive variable names (`desired_executable`, `current_executable`, `file_mode_setting`, `current_index_sha`), and detailed docstrings that explain *why* design decisions were made (e.g., the `--cacheinfo` vs `--chmod` rationale, the fallback chain). Tests are comprehensive and expose behavioral context. Degrading naming, type hints, comments, or test surface here would meaningfully change signal."
       },
       "clarity": {
-        "score": 2,
-        "reasoning": "The description is extremely sparse \u2014 just 'Ref.: [discussion link]' with no explanation of what is being changed or why. Without reading the diff, it's impossible to understand what task an AI agent would need to perform. Even with the diff, an agent would need to understand the full context of the linting migration to reconstruct this PR correctly."
+        "score": 5,
+        "reasoning": "The PR description is exemplary: it names each failure mode with a numbered list, explains the root cause of each, documents every code change with its rationale, provides a table of new tests and what each covers, and includes a full test plan with platform verification results. An AI agent could use this description as a near-complete specification. Issue #2604 is referenced for additional context."
       },
       "complexity": {
-        "score": 2,
-        "reasoning": "The changes are largely mechanical: swap tool references in config files and scripts, remove deprecated config sections, and clean up a few linter-flagged code issues. There's no algorithmic complexity or design reasoning required. The code changes in _urls.py are trivial (removing unused import and unused type annotation). This is a tooling migration that is straightforward to execute but doesn't require meaningful engineering judgment."
+        "score": 4,
+        "reasoning": "This is a solid engineering task: it requires understanding git index internals (`--cacheinfo` vs `--chmod`, conflict stages, `core.fileMode`), platform-specific filesystem behavior, and a critical ordering constraint (`_sync_git_index_executable_bit` must run before conflict registration in `_apply_update`). The `_sync_git_index_executable_bit` method alone is ~90 lines. However, the PR description effectively maps out the solution \u2014 an agent that reads it carefully has the information needed to implement the fix. Not so large as to be unreasonably complex. Sits comfortably in the desired 3-4 range."
       }
     }
   }

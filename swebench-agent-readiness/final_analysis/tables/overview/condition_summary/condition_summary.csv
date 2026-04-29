@@ -1,0 +1,5 @@
+condition,n,unique_tasks,repos,clean_success_rate_pct,degraded_success_rate_pct,degraded_success_ci95_low_pct,degraded_success_ci95_high_pct,paired_success_rate_delta_pct,risk_ratio_degraded_vs_clean,odds_ratio_degraded_vs_clean,clean_success_to_degraded_failure,clean_failure_to_degraded_success,baseline_hard_rows,fail_to_pass_delta_sum,pass_to_pass_delta_sum,pass_to_pass_damage_rows,mean_token_delta,median_token_delta,degraded_tokens_higher_rows,degraded_tokens_lower_rows,mean_changed_file_delta,median_changed_file_delta,mean_files_opened_delta,mean_exploration_efficiency_delta,mean_dead_end_file_opens_delta
+naming,30,30,10,80.0,43.3,27.4,60.8,-36.7,0.542,0.205,11,0,6,9,94,10,304500.7,220810.0,25,5,3.73,1.0,0.3,-0.051,0.27
+type_hints,30,30,10,73.3,76.7,59.1,88.2,3.3,1.045,1.184,0,1,8,-1,0,0,-28337.0,-29116.0,10,20,1.33,0.0,0.03,0.012,0.03
+comments_docstrings,34,32,11,79.4,79.4,63.2,89.7,0.0,1.0,1.0,0,0,7,0,8,1,155158.2,73070.5,27,7,1.24,0.0,0.26,-0.033,0.32
+remove_tests,34,32,11,82.4,82.4,66.5,91.7,0.0,1.0,1.0,0,0,6,0,0,0,54829.3,58239.5,22,12,1.71,1.0,0.44,-0.212,1.15

@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from src.workflow.stage2_runtime import summarize_stage2_runtime
+
 
 def build_repo_experiment_packet(
     *,
@@ -16,6 +18,8 @@ def build_repo_experiment_packet(
     readiness_dir: Path,
     naming_audit_dir: Path | None,
     output_dir: Path,
+    host_probe_root: Path | None = Path("probe_results/host_stage2_compare"),
+    container_bundle_root: Path | None = Path("container_probe_bundles"),
 ) -> Path:
     """Combine readiness, naming, and task manifests into one review packet."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -31,6 +35,11 @@ def build_repo_experiment_packet(
     verified = _load_json(verified_path)
     readiness = _load_json(readiness_path)
     naming = _load_json(naming_path)
+    stage2_runtime = summarize_stage2_runtime(
+        repo=repo,
+        host_probe_root=host_probe_root,
+        container_bundle_root=container_bundle_root,
+    )
 
     packet = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -41,10 +50,13 @@ def build_repo_experiment_packet(
             "verified_manifest": _artifact_ref(verified_path, verified),
             "repo_readiness": _artifact_ref(readiness_path, readiness),
             "naming_readiness": _artifact_ref(naming_path, naming),
+            "stage2_host_probe": stage2_runtime["artifacts"]["host_probe_report"],
+            "stage2_container_bundle": stage2_runtime["artifacts"]["container_bundle_report"],
         },
         "summary": {
             "stage1": _summarize_stage1(selected),
             "stage2": _summarize_stage2(verified),
+            "stage2_runtime": stage2_runtime,
             "repo_readiness": _summarize_repo_readiness(readiness),
             "naming_audit": _summarize_naming_audit(naming),
         },
@@ -114,6 +126,7 @@ def _summarize_stage2(verified: dict[str, Any] | None) -> dict[str, Any]:
             "verified_count": 0,
             "preflight_passed": verified.get("preflight_passed", 0),
             "llm_stage2_accepted": verified.get("llm_stage2_accepted", 0),
+            "admission_mode": verified.get("admission_mode"),
             "navigation_depth_threshold": verified.get("navigation_depth_threshold"),
             "top_verified": [],
         }
@@ -124,6 +137,7 @@ def _summarize_stage2(verified: dict[str, Any] | None) -> dict[str, Any]:
         "verified_count": verified.get("stage2_accepted", 0),
         "preflight_passed": verified.get("preflight_passed", 0),
         "llm_stage2_accepted": verified.get("llm_stage2_accepted", 0),
+        "admission_mode": verified.get("admission_mode"),
         "navigation_depth_threshold": verified.get("navigation_depth_threshold"),
         "top_verified": top_verified,
     }
@@ -180,6 +194,7 @@ def _summarize_naming_audit(naming: dict[str, Any] | None) -> dict[str, Any]:
 def _build_admission_rubric(summary: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     stage1 = summary["stage1"]
     stage2 = summary["stage2"]
+    stage2_runtime = summary["stage2_runtime"]
     repo_readiness = summary["repo_readiness"]
     naming_audit = summary["naming_audit"]
 
@@ -187,6 +202,7 @@ def _build_admission_rubric(summary: dict[str, dict[str, Any]]) -> list[dict[str
         {
             "id": "repo_static_surface",
             "title": "Repo Static Surface",
+            "scope": "repo_admission",
             "gate": "hard",
             "status": _normalize_status(repo_readiness["status"]),
             "reason": repo_readiness["reason"],
@@ -199,8 +215,28 @@ def _build_admission_rubric(summary: dict[str, dict[str, Any]]) -> list[dict[str
             ),
         },
         {
+            "id": "stage2_runtime_probe",
+            "title": "Stage 2 Runtime Probe",
+            "scope": "repo_admission",
+            "gate": "hard",
+            "status": _normalize_status(stage2_runtime["status"]),
+            "reason": stage2_runtime["reason"],
+            "evidence": {
+                "authority_source": stage2_runtime.get("authority_source"),
+                "host_probe_role": stage2_runtime.get("host_probe_role"),
+                "container_status": stage2_runtime.get("container_probe", {}).get("overall_status"),
+                "host_status": stage2_runtime.get("host_probe", {}).get("overall_status"),
+                "compared_commits": stage2_runtime.get("compared_commits", []),
+            },
+            "review_prompt": (
+                "Did the container-backed Stage 2 probe succeed for the repo profile, or is repo "
+                "runtime viability still unproven on the admission substrate?"
+            ),
+        },
+        {
             "id": "stage1_task_pool",
             "title": "Stage 1 Task Pool",
+            "scope": "task_admission",
             "gate": "soft",
             "status": _stage1_pool_status(stage1),
             "reason": _stage1_pool_reason(stage1),
@@ -217,6 +253,7 @@ def _build_admission_rubric(summary: dict[str, dict[str, Any]]) -> list[dict[str
         {
             "id": "stage2_verified_tasks",
             "title": "Stage 2 Verified Tasks",
+            "scope": "task_admission",
             "gate": "hard",
             "status": _stage2_verified_status(stage2),
             "reason": _stage2_verified_reason(stage2),
@@ -234,6 +271,7 @@ def _build_admission_rubric(summary: dict[str, dict[str, Any]]) -> list[dict[str
         {
             "id": "naming_live_audit",
             "title": "Naming Live Audit",
+            "scope": "repo_admission",
             "gate": "hard",
             "status": _naming_gate_status(naming_audit),
             "reason": _naming_gate_reason(naming_audit),
@@ -377,12 +415,12 @@ def _render_packet_markdown(packet: dict[str, Any]) -> str:
         "",
         "## Admission Rubric",
         "",
-        "| Criterion | Gate | Status | Reason |",
-        "|---|---|---|---|",
+        "| Criterion | Scope | Gate | Status | Reason |",
+        "|---|---|---|---|---|",
     ]
     for criterion in packet["admission_rubric"]:
         lines.append(
-            f"| {criterion['title']} | {criterion['gate']} | "
+            f"| {criterion['title']} | {criterion['scope']} | {criterion['gate']} | "
             f"`{criterion['status']}` | {criterion['reason']} |"
         )
 
@@ -400,6 +438,7 @@ def _render_packet_markdown(packet: dict[str, Any]) -> str:
         "",
         f"- Stage 1: `{summary['stage1']['status']}` — {summary['stage1']['reason']}",
         f"- Stage 2: `{summary['stage2']['status']}` — {summary['stage2']['reason']}",
+        f"- Stage 2 runtime: `{summary['stage2_runtime']['status']}` — {summary['stage2_runtime']['reason']}",
         f"- Repo readiness: `{summary['repo_readiness']['status']}` — {summary['repo_readiness']['reason']}",
         f"- Naming audit: `{summary['naming_audit']['status']}` — {summary['naming_audit']['reason']}",
         "",

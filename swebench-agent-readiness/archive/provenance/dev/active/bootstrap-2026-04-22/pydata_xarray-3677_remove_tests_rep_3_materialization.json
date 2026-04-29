@@ -1,0 +1,14 @@
+{
+  "instance_id": "pydata__xarray-3677",
+  "repo": "pydata/xarray",
+  "base_commit": "ef6e6a7b86f8479b9a1fecf15ad5b88a2326b31e",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/codex-cli/clean/rep_3/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/codex-cli/remove_tests/rep_3/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "xarray/tests/test_merge.py"
+    ],
+    "preserve_files": []
+  }
+}

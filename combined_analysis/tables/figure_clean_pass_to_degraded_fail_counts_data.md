@@ -1,0 +1,14 @@
+| backend | condition | clean_success_to_degraded_failure |
+| --- | --- | --- |
+| Custom repos | Naming | 8 |
+| Custom repos | Type hints | 2 |
+| Custom repos | Comments/docstrings | 3 |
+| Custom repos | Remove tests | 1 |
+| SWE-bench | Naming | 11 |
+| SWE-bench | Type hints | 0 |
+| SWE-bench | Comments/docstrings | 0 |
+| SWE-bench | Remove tests | 0 |
+| Combined | Naming | 19 |
+| Combined | Type hints | 2 |
+| Combined | Comments/docstrings | 3 |
+| Combined | Remove tests | 1 |

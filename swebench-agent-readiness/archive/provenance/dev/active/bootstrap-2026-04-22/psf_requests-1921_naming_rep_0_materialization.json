@@ -1,0 +1,14 @@
+{
+  "instance_id": "psf__requests-1921",
+  "repo": "psf/requests",
+  "base_commit": "3c88e520da24ae6f736929a750876e7654accc3d",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1921/codex-cli/clean/rep_0/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1921/codex-cli/naming/rep_0/workspace",
+  "degraded_condition": "naming",
+  "degraded_targets": {
+    "target_files": [
+      "requests/sessions.py",
+      "test_requests.py"
+    ]
+  }
+}

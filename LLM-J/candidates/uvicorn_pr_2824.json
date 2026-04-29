@@ -1,0 +1,28 @@
+{
+  "candidate_id": "uvicorn_pr_2824",
+  "repo": "encode/uvicorn",
+  "pr_number": 2824,
+  "title": "Escape brackets and backslash in httptools HEADER_RE regex",
+  "description": "The `HEADER_RE` regex used for header name validation in `httptools_impl.py` has a broken character class:\n\n```python\nHEADER_RE = re.compile(b'[\\x00-\\x1f\\x7f()<>@,;:[]={} \\t\\\\\"]')\n```\n\nThe `]` after `:` is unescaped, which prematurely closes the character class. After Python string processing, the regex engine sees:\n- Character class: `[\\x00-\\x1f\\x7f()<>@,;:[]` (closes at first unescaped `]`)  \n- Followed by literal sequence: `={} \\t\\\"` then `]`\n\nThis means the regex effectively never matches because the literal sequence after the class requires those exact bytes in order. I tested it \u2014 the old regex fails to detect **every** invalid header name character including control bytes, spaces, brackets, equals, braces, quotes, and backslashes.\n\nFixed by properly escaping `[`, `]`, and `\\` inside the character class:\n\n```python\nHEADER_RE = re.compile(b'[\\x00-\\x1f\\x7f()<>@,;:\\\\[\\\\]={} \\t\\\\\\\\\"]')\n```\n\nQuick test showing the difference:\n```\nb'bad header'    old=False  new=True\nb'bad[header'    old=False  new=True\nb'bad]header'    old=False  new=True\nb'bad=header'    old=False  new=True\nb'\\x00h'         old=False  new=True\nb'\"bad\"'         old=False  new=True\n```\n",
+  "patch_diff": "diff --git a/uvicorn/protocols/http/httptools_impl.py b/uvicorn/protocols/http/httptools_impl.py\nindex 0c9c20f1c..d6c976222 100644\n--- a/uvicorn/protocols/http/httptools_impl.py\n+++ b/uvicorn/protocols/http/httptools_impl.py\n@@ -27,7 +27,7 @@\n from uvicorn.protocols.utils import get_client_addr, get_local_addr, get_path_with_query_string, get_remote_addr, is_ssl\n from uvicorn.server import ServerState\n \n-HEADER_RE = re.compile(b'[\\x00-\\x1f\\x7f()<>@,;:[]={} \\t\\\\\"]')\n+HEADER_RE = re.compile(b'[\\x00-\\x1f\\x7f()<>@,;:\\\\[\\\\]={} \\t\\\\\\\\\"]')\n HEADER_VALUE_RE = re.compile(b\"[\\x00-\\x08\\x0a-\\x1f\\x7f]\")\n \n \n",
+  "test_diff": "diff --git a/tests/protocols/test_http.py b/tests/protocols/test_http.py\nindex 16b47cd0e..34ad2c75c 100644\n--- a/tests/protocols/test_http.py\n+++ b/tests/protocols/test_http.py\n@@ -306,6 +306,42 @@ async def test_header_value_allowed_characters(http_protocol_cls: type[HTTPProto\n     assert b\"Hello, world\" in protocol.transport.buffer\n \n \n+@pytest.mark.parametrize(\n+    \"name\",\n+    [\n+        pytest.param(\"bad header\", id=\"reject_space\"),\n+        pytest.param(\"bad\\x00header\", id=\"reject_null\"),\n+        pytest.param(\"bad(header\", id=\"reject_open_paren\"),\n+        pytest.param(\"bad)header\", id=\"reject_close_paren\"),\n+        pytest.param(\"bad<header\", id=\"reject_less_than\"),\n+        pytest.param(\"bad>header\", id=\"reject_greater_than\"),\n+        pytest.param(\"bad@header\", id=\"reject_at\"),\n+        pytest.param(\"bad,header\", id=\"reject_comma\"),\n+        pytest.param(\"bad;header\", id=\"reject_semicolon\"),\n+        pytest.param(\"bad:header\", id=\"reject_colon\"),\n+        pytest.param(\"bad[header\", id=\"reject_open_bracket\"),\n+        pytest.param(\"bad]header\", id=\"reject_close_bracket\"),\n+        pytest.param(\"bad{header\", id=\"reject_open_brace\"),\n+        pytest.param(\"bad}header\", id=\"reject_close_brace\"),\n+        pytest.param(\"bad=header\", id=\"reject_equals\"),\n+        pytest.param('bad\"header', id=\"reject_double_quote\"),\n+        pytest.param(\"bad\\\\header\", id=\"reject_backslash\"),\n+        pytest.param(\"bad\\theader\", id=\"reject_tab\"),\n+        pytest.param(\"bad\\x7fheader\", id=\"reject_del\"),\n+    ],\n+)\n+async def test_invalid_header_name(http_protocol_cls: type[HTTPProtocol], name: str):\n+    app = Response(\"Hello, world\", media_type=\"text/plain\", headers={name: \"value\"})\n+    protocol = get_connected_protocol(app, http_protocol_cls)\n+    protocol.data_received(SIMPLE_GET_REQUEST)\n+    await protocol.loop.run_one()\n+    # No 500 is sent because `response_started` is set before header validation,\n+    # so the error handler just closes the connection.\n+    assert b\"HTTP/1.1 500 Internal Server Error\" not in protocol.transport.buffer\n+    assert name.encode() not in protocol.transport.buffer\n+    assert protocol.transport.is_closing()\n+\n+\n @pytest.mark.parametrize(\"path\", [\"/\", \"/?foo\", \"/?foo=bar\", \"/?foo=bar&baz=1\"])\n async def test_request_logging(path: str, http_protocol_cls: type[HTTPProtocol], caplog: pytest.LogCaptureFixture):\n     get_request_with_query_string = b\"\\r\\n\".join(\n",
+  "files_changed": [
+    "tests/protocols/test_http.py",
+    "uvicorn/protocols/http/httptools_impl.py"
+  ],
+  "source_files": [
+    "uvicorn/protocols/http/httptools_impl.py"
+  ],
+  "test_files": [
+    "tests/protocols/test_http.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 37,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "1fa697651bacf10d72f74de104ead814ce6fcdc0",
+  "base_commit_sha": "59ec1de7a4f07afbd139812f033f3af8b784de74",
+  "env_commit_sha": "59ec1de7a4f07afbd139812f033f3af8b784de74",
+  "head_commit_sha": "0fa82bdd97b01c7d9b3eef5bc84c94f5b94f1e99",
+  "merged_at": "2026-03-15T14:00:30Z"
+}

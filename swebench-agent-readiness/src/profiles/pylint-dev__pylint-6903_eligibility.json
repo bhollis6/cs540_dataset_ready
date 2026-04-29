@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "pylint-dev__pylint-6903",
+  "repo": "pylint-dev/pylint",
+  "base_commit": "ca80f03a43bc39e4cc2c67dc99817b3c9f13b8a6",
+  "changed_source_files": [
+    "pylint/lint/run.py"
+  ],
+  "changed_test_files": [
+    "tests/test_pylint_runners.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 8 PASS_TO_PASS.",
+    "evidence": [
+      "pytest -rA tests/test_pylint_runners.py"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 19 annotation nodes.",
+        "evidence": [
+          "pylint/lint/run.py",
+          "tests/test_pylint_runners.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 42 local rename candidates before safety filtering.",
+        "evidence": [
+          "pylint/lint/run.py",
+          "tests/test_pylint_runners.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve public/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 2 docstrings and 28 comments.",
+        "evidence": [
+          "pylint/lint/run.py",
+          "tests/test_pylint_runners.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Gold preflight passed 1 FAIL_TO_PASS and 8 PASS_TO_PASS targets.",
+        "evidence": [
+          "tests/test_pylint_runners.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as a pylint-dev/pylint task for the next Phase 1 repo after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/pylint-dev_pylint_signal_screen_2026-04-27.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/pylint-dev__pylint-6903_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/pylint-dev__pylint-6903_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": []
+}

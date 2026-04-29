@@ -1,0 +1,29 @@
+{
+  "candidate_id": "marshmallow_pr_2806",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2806,
+  "title": "Fix types for class Meta options",
+  "description": "closes https://github.com/marshmallow-code/marshmallow/issues/2804",
+  "patch_diff": "diff --git a/CHANGELOG.rst b/CHANGELOG.rst\nindex a716531b2..6e575f5a9 100644\n--- a/CHANGELOG.rst\n+++ b/CHANGELOG.rst\n@@ -4,6 +4,11 @@ Changelog\n (unreleased)\n ************\n \n+Bug fixes:\n+\n+- Typing: Fix type annotations for `class Meta <marshmallow.Schema.Meta>` options (:issue:`2804`).\n+  Thanks :user:`lawrence-law` for reporting.\n+\n Other changes:\n \n - Remove default value for the ``data`` param of `Nested._deserialize <marshmallow.fields.Nested._deserialize>` (:issue:`2802`).\ndiff --git a/src/marshmallow/schema.py b/src/marshmallow/schema.py\nindex 828bb1f01..50fb5c492 100644\n--- a/src/marshmallow/schema.py\n+++ b/src/marshmallow/schema.py\n@@ -384,9 +384,9 @@ class Meta(Schema.Opts):\n         .. versionchanged:: 3.26.0 Deprecate `ordered`. Field order is preserved by default.\n         \"\"\"\n \n-        fields: typing.ClassVar[tuple[Field] | list[Field]]\n+        fields: typing.ClassVar[tuple[str, ...] | list[str]]\n         \"\"\"Fields to include in the (de)serialized result\"\"\"\n-        additional: typing.ClassVar[tuple[Field] | list[Field]]\n+        additional: typing.ClassVar[tuple[str, ...] | list[str]]\n         \"\"\"Fields to include in addition to the explicitly declared fields.\n         `additional <marshmallow.Schema.Meta.additional>` and `fields <marshmallow.Schema.Meta.fields>`\n         are mutually-exclusive options.\n@@ -396,7 +396,7 @@ class Meta(Schema.Opts):\n         usually better to define fields as class variables, but you may need to\n         use this option, e.g., if your fields are Python keywords.\n         \"\"\"\n-        exclude: typing.ClassVar[tuple[Field] | list[Field]]\n+        exclude: typing.ClassVar[tuple[str, ...] | list[str]]\n         \"\"\"Fields to exclude in the serialized result.\n         Nested fields can be represented with dot delimiters.\n         \"\"\"\n@@ -408,7 +408,10 @@ class Meta(Schema.Opts):\n         \"\"\"Default format for `DateTime <marshmallow.fields.DateTime>` fields.\"\"\"\n         timeformat: typing.ClassVar[str]\n         \"\"\"Default format for `Time <marshmallow.fields.Time>` fields.\"\"\"\n-        render_module: typing.ClassVar[types.RenderModule]\n+\n+        # FIXME: Use a more constrained type here.\n+        # ClassVar[RenderModule] doesn't work.\n+        render_module: typing.Any\n         \"\"\" Module to use for `loads <marshmallow.Schema.loads>` and `dumps <marshmallow.Schema.dumps>`.\n         Defaults to `json` from the standard library.\n         \"\"\"\n@@ -416,9 +419,9 @@ class Meta(Schema.Opts):\n         \"\"\"If `True`, `Schema.dump <marshmallow.Schema.dump>` is a `collections.OrderedDict`.\"\"\"\n         index_errors: typing.ClassVar[bool]\n         \"\"\"If `True`, errors dictionaries will include the index of invalid items in a collection.\"\"\"\n-        load_only: typing.ClassVar[tuple[Field] | list[Field]]\n+        load_only: typing.ClassVar[tuple[str, ...] | list[str]]\n         \"\"\"Fields to exclude from serialized results\"\"\"\n-        dump_only: typing.ClassVar[tuple[Field] | list[Field]]\n+        dump_only: typing.ClassVar[tuple[str, ...] | list[str]]\n         \"\"\"Fields to exclude from serialized results\"\"\"\n         unknown: typing.ClassVar[str]\n         \"\"\"Whether to exclude, include, or raise an error for unknown fields in the data.\n",
+  "test_diff": "diff --git a/tests/mypy_test_cases/test_schema.py b/tests/mypy_test_cases/test_schema.py\nnew file mode 100644\nindex 000000000..e13637862\n--- /dev/null\n+++ b/tests/mypy_test_cases/test_schema.py\n@@ -0,0 +1,29 @@\n+import json\n+\n+from marshmallow import EXCLUDE, Schema\n+from marshmallow.fields import Integer, String\n+\n+\n+# Test that valid `Meta` class attributes pass type checking\n+class MySchema(Schema):\n+    foo = String()\n+    bar = Integer()\n+\n+    class Meta(Schema.Meta):\n+        fields = (\"foo\", \"bar\")\n+        additional = (\"baz\", \"qux\")\n+        include = {\n+            \"foo2\": String(),\n+        }\n+        exclude = (\"bar\", \"baz\")\n+        many = True\n+        dateformat = \"%Y-%m-%d\"\n+        datetimeformat = \"%Y-%m-%dT%H:%M:%S\"\n+        timeformat = \"%H:%M:%S\"\n+        render_module = json\n+        ordered = False\n+        index_errors = True\n+        load_only = (\"foo\", \"bar\")\n+        dump_only = (\"baz\", \"qux\")\n+        unknown = EXCLUDE\n+        register = False\n",
+  "files_changed": [
+    "CHANGELOG.rst",
+    "src/marshmallow/schema.py",
+    "tests/mypy_test_cases/test_schema.py"
+  ],
+  "source_files": [
+    "src/marshmallow/schema.py"
+  ],
+  "test_files": [
+    "tests/mypy_test_cases/test_schema.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 43,
+  "lines_removed": 6,
+  "has_test_changes": true,
+  "merge_commit_sha": "c83679506045fe7aea4fb7270235f20a2f8641b2",
+  "base_commit_sha": "7d15bae7cb558351d6d95ffd2e5ead73719a7a80",
+  "env_commit_sha": "7d15bae7cb558351d6d95ffd2e5ead73719a7a80",
+  "head_commit_sha": "681dd27354740791a837f5d64b57efed63009ca7",
+  "merged_at": "2025-02-03T15:30:24Z"
+}

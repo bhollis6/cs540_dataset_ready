@@ -1,0 +1,28 @@
+{
+  "candidate_id": "click_pr_2991",
+  "repo": "pallets/click",
+  "pr_number": 2991,
+  "title": "fix a race in `click.testing.StreamMixer`'s finalization, seen in a multi-threaded context",
+  "description": "xref https://github.com/python/cpython/issues/136248\r\nxref https://github.com/neutrinoceros/inifix/issues/421\r\n\r\nThe reproducer I used to work on this involves `typer` and multi-threading, and isn't *consistently* failing: I originally only hit the race about once in 10k tries, so this seems difficult to test systematically.\r\nI also am not sure this rare bug warrents an entry in `CHANGES.rst`, but I'm glad to add it if needed.\r\n\r\n\r\nupdate: scratch that, this is a similar looking but different error. My patch doesn't fix the reproducer from https://github.com/pallets/click/issues/824#issuecomment-3027263262\r\n\r\nupdate 2: close #2993\r\n\r\n<!--\r\nEnsure each step in CONTRIBUTING.rst is complete, especially the following:\r\n\r\n- Add tests that demonstrate the correct behavior of the change. Tests\r\n  should fail without the change.\r\n- Add or update relevant docs, in the docs folder and in code.\r\n- Add an entry in CHANGES.rst summarizing the change and linking to the issue.\r\n- Add `.. versionchanged::` entries in any relevant code docs.\r\n-->\r\n",
+  "patch_diff": "diff --git a/src/click/testing.py b/src/click/testing.py\nindex 7c0e8741e2..04d263eeac 100644\n--- a/src/click/testing.py\n+++ b/src/click/testing.py\n@@ -99,6 +99,18 @@ def __init__(self) -> None:\n         self.stdout: io.BytesIO = BytesIOCopy(copy_to=self.output)\n         self.stderr: io.BytesIO = BytesIOCopy(copy_to=self.output)\n \n+    def __del__(self) -> None:\n+        \"\"\"\n+        Guarantee that embedded file-like objects are closed in a\n+        predictable order, protecting against races between\n+        self.output being closed and other streams being flushed on close\n+\n+        .. versionadded:: 8.2.2\n+        \"\"\"\n+        self.stderr.close()\n+        self.stdout.close()\n+        self.output.close()\n+\n \n class _NamedTextIOWrapper(io.TextIOWrapper):\n     def __init__(\n",
+  "test_diff": "diff --git a/tests/test_testing.py b/tests/test_testing.py\nindex 0fd6973ae8..11fe29dc5d 100644\n--- a/tests/test_testing.py\n+++ b/tests/test_testing.py\n@@ -448,8 +448,7 @@ def test_isolation_stderr_errors():\n \n     with runner.isolation() as (_, err, _):\n         click.echo(\"\\udce2\", err=True, nl=False)\n-\n-    assert err.getvalue() == b\"\\\\udce2\"\n+        assert err.getvalue() == b\"\\\\udce2\"\n \n \n def test_isolation_flushes_unflushed_stderr():\n@@ -460,8 +459,7 @@ def test_isolation_flushes_unflushed_stderr():\n \n     with runner.isolation() as (_, err, _):\n         click.echo(\"\\udce2\", err=True, nl=False)\n-\n-    assert err.getvalue() == b\"\\\\udce2\"\n+        assert err.getvalue() == b\"\\\\udce2\"\n \n     @click.command()\n     def cli():\n",
+  "files_changed": [
+    "src/click/testing.py",
+    "tests/test_testing.py"
+  ],
+  "source_files": [
+    "src/click/testing.py"
+  ],
+  "test_files": [
+    "tests/test_testing.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 14,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "737bfbd3122d96d41924323a3f45a8021c30d4c8",
+  "base_commit_sha": "565f36d5bc4a15d304337b749e113fb4477b1843",
+  "env_commit_sha": "565f36d5bc4a15d304337b749e113fb4477b1843",
+  "head_commit_sha": "4679b1cbc35d05e1c250affaf8a3b7156bad6319",
+  "merged_at": "2025-07-22T08:28:36Z"
+}

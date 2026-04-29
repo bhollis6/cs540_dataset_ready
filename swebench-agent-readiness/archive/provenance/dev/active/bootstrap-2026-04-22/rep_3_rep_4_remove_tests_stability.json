@@ -1,0 +1,34 @@
+{
+  "instance_id": "pytest-dev__pytest-7432",
+  "chosen_condition": "remove_tests",
+  "replications": [
+    3,
+    4
+  ],
+  "oracle_success_consistent": true,
+  "clean_changed_files_consistent": true,
+  "degraded_changed_files_consistent": true,
+  "clean_changed_files": [
+    "src/_pytest/skipping.py",
+    "testing/test_skipping.py"
+  ],
+  "degraded_changed_files": [
+    "src/_pytest/skipping.py",
+    "testing/test_skipping.py",
+    "testing/test_terminal.py"
+  ],
+  "clean_exploration_efficiency": {
+    "rep_3": 0.6667,
+    "rep_4": 0.6667
+  },
+  "degraded_exploration_efficiency": {
+    "rep_3": 1.0,
+    "rep_4": 0.6667
+  },
+  "notes": [
+    "Rep 3 and rep 4 both yielded oracle success for clean and remove_tests.",
+    "The clean runs were consistent across replications: source fix plus regression in testing/test_skipping.py.",
+    "The degraded runs were also consistent in changed-file shape: source fix plus terminal-surface regression, with testing/test_skipping.py absent from the starting workspace.",
+    "Exploration-efficiency direction was not stable across replications, so remove_tests currently shows a stable strategy shift but not a stable efficiency effect."
+  ]
+}

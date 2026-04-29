@@ -1,0 +1,12 @@
+repo,instance_id,condition,replication_index,fail_to_pass_failed_count_delta,pass_to_pass_failed_count_delta,total_tokens_corrected_delta,changed_file_count_delta,files_opened_before_first_edit_delta,exploration_efficiency_delta,comparison_path
+astropy/astropy,astropy__astropy-14182,naming,0,1,0,311568,0,1,-0.1666999999999999,archive/provenance/dev/active/bootstrap-2026-04-22/astropy_astropy-14182_naming_rep_0_oracle_comparison.json
+matplotlib/matplotlib,matplotlib__matplotlib-23412,naming,0,1,21,1302387,34,-2,0.0635,archive/provenance/dev/active/bootstrap-2026-04-22/matplotlib_matplotlib-23412_naming_rep_0_oracle_comparison.json
+psf/requests,psf__requests-1142,naming,0,1,0,165431,0,2,-0.25,archive/provenance/dev/active/bootstrap-2026-04-22/psf_requests-1142_naming_rep_0_oracle_comparison.json
+psf/requests,psf__requests-1724,naming,0,0,1,170381,1,0,0.0,archive/provenance/dev/active/bootstrap-2026-04-22/psf_requests-1724_naming_rep_0_oracle_comparison.json
+psf/requests,psf__requests-1921,naming,0,1,4,87581,0,0,0.0,archive/provenance/dev/active/bootstrap-2026-04-22/psf_requests-1921_naming_rep_0_oracle_comparison.json
+pydata/xarray,pydata__xarray-3677,naming,0,0,8,271338,14,2,-0.2666999999999999,archive/provenance/dev/active/bootstrap-2026-04-22/pydata_xarray-3677_naming_rep_0_oracle_comparison.json
+pydata/xarray,pydata__xarray-4629,naming,0,0,1,194022,0,0,0.0,archive/provenance/dev/active/bootstrap-2026-04-22/pydata_xarray-4629_naming_rep_0_oracle_comparison.json
+pydata/xarray,pydata__xarray-4966,naming,0,4,17,471093,2,0,0.0,archive/provenance/dev/active/bootstrap-2026-04-22/pydata_xarray-4966_naming_rep_0_oracle_comparison.json
+scikit-learn/scikit-learn,scikit-learn__scikit-learn-25931,naming,0,0,1,244183,0,1,-0.3333,archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn_scikit-learn-25931_naming_rep_0_oracle_comparison.json
+sympy/sympy,sympy__sympy-11618,naming,0,0,2,-5543,3,0,0.0,archive/provenance/dev/active/bootstrap-2026-04-22/sympy_sympy-11618_naming_rep_0_oracle_comparison.json
+sympy/sympy,sympy__sympy-12419,naming,0,1,7,202821,4,1,-0.1666999999999999,archive/provenance/dev/active/bootstrap-2026-04-22/sympy_sympy-12419_naming_rep_0_oracle_comparison.json

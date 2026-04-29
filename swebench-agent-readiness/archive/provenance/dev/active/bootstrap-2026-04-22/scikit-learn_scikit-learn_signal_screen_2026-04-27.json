@@ -1,0 +1,33 @@
+[
+  {
+    "instance_id": "scikit-learn__scikit-learn-25973",
+    "repo": "scikit-learn/scikit-learn",
+    "base_commit": "10dbc142bd17ccf7bd38eec2ac04b52ce0d1009e",
+    "version": "1.3",
+    "source_files": [
+      "sklearn/feature_selection/_sequential.py"
+    ],
+    "test_files": [
+      "sklearn/feature_selection/tests/test_sequential.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 72,
+    "signals": {
+      "annotations": 1,
+      "docstrings": 8,
+      "comments": 31,
+      "name_candidates": 105,
+      "classes": 1,
+      "functions": 5,
+      "variables": 99,
+      "total": 105
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 7.432,
+      "test_command": "pytest -rA sklearn/feature_selection/tests/test_sequential.py"
+    }
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_839",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 839,
+  "title": "Fix CliPositionalArg[list[CustomType]] crash for custom types",
+  "description": "## Summary\n- Fix `CliPositionalArg[list[CustomType]]` crashing when the custom type's validator raises a non-`ValidationError` exception (e.g. plain `Exception`, `ValueError`, `TypeError`)\n- The `_merged_list_to_str` method probes the inner type by calling `validate_python(['1'])` \u2014 if this fails for any reason, the safe fallback is `is_num_type_str = None`. Widened the `except` clause from `(StopIteration, ValidationError)` to `Exception`\n- Added regression test with a custom `str` subclass that raises plain `Exception`\n\nFixes #823\n\n## Test plan\n- [x] New test `test_cli_variadic_positional_arg_custom_type` passes\n- [x] All 177 existing CLI tests pass (176 + 1 new)\n- [ ] CI passes\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "patch_diff": "diff --git a/pydantic_settings/sources/providers/cli.py b/pydantic_settings/sources/providers/cli.py\nindex 304022d4..ead315c4 100644\n--- a/pydantic_settings/sources/providers/cli.py\n+++ b/pydantic_settings/sources/providers/cli.py\n@@ -37,7 +37,7 @@\n     overload,\n )\n \n-from pydantic import AliasChoices, AliasPath, BaseModel, Field, PrivateAttr, TypeAdapter, ValidationError\n+from pydantic import AliasChoices, AliasPath, BaseModel, Field, PrivateAttr, TypeAdapter\n from pydantic._internal._repr import Representation\n from pydantic._internal._utils import is_model_class\n from pydantic.dataclasses import is_pydantic_dataclass\n@@ -637,7 +637,7 @@ def _merged_list_to_str(self, merged_list: list[str], field_name: str) -> str:\n         try:\n             list_adapter: Any = TypeAdapter(next(iter(cli_arg_map.values())).field_info.annotation)\n             is_num_type_str = type(next(iter(list_adapter.validate_python(['1'])))) is str\n-        except (StopIteration, ValidationError):\n+        except Exception:\n             is_num_type_str = None\n         for index, item in enumerate(merged_list):\n             cli_arg = cli_arg_map.get(index)\n",
+  "test_diff": "diff --git a/tests/test_source_cli.py b/tests/test_source_cli.py\nindex 50a579f8..ee7e2156 100644\n--- a/tests/test_source_cli.py\n+++ b/tests/test_source_cli.py\n@@ -19,6 +19,7 @@\n     DirectoryPath,\n     Discriminator,\n     Field,\n+    GetCoreSchemaHandler,\n     RootModel,\n     Tag,\n     ValidationError,\n@@ -29,6 +30,7 @@\n     dataclasses as pydantic_dataclasses,\n )\n from pydantic._internal._repr import Representation\n+from pydantic_core import CoreSchema, core_schema\n \n from pydantic_settings import (\n     BaseSettings,\n@@ -1565,6 +1567,37 @@ class MainOptional(MainRequired):\n     assert CliApp.run(MainRequired, cli_args=['7', '8', '9']).model_dump() == {'values': [7, 8, 9]}\n \n \n+def test_cli_variadic_positional_arg_custom_type():\n+    \"\"\"Test that CliPositionalArg[list[CustomType]] works with custom types that raise non-ValidationError exceptions.\n+\n+    Regression test for https://github.com/pydantic/pydantic-settings/issues/823\n+    \"\"\"\n+    from string import ascii_letters\n+\n+    class AsciiLetters(str):\n+        def __new__(cls, content: object) -> 'AsciiLetters':\n+            if not all(c in ascii_letters for c in str(content)):\n+                raise Exception('Non-ascii letter')\n+            return super().__new__(cls, content)\n+\n+        @classmethod\n+        def __get_pydantic_core_schema__(\n+            cls,\n+            source_type: Any,\n+            handler: GetCoreSchemaHandler,\n+        ) -> CoreSchema:\n+            return core_schema.no_info_plain_validator_function(\n+                cls,\n+                serialization=core_schema.to_string_ser_schema(),\n+            )\n+\n+    class App(BaseSettings):\n+        args: CliPositionalArg[list[AsciiLetters]]\n+\n+    assert CliApp.run(App, cli_args=['a', 'b']).model_dump() == {'args': ['a', 'b']}\n+    assert CliApp.run(App, cli_args=['hello']).model_dump() == {'args': ['hello']}\n+\n+\n def test_cli_enums(capsys, monkeypatch):\n     class Pet(IntEnum):\n         dog = 0\n",
+  "files_changed": [
+    "pydantic_settings/sources/providers/cli.py",
+    "tests/test_source_cli.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/providers/cli.py"
+  ],
+  "test_files": [
+    "tests/test_source_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 35,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "2355bc54e9d442ca7916f02de28d0c936e75441c",
+  "base_commit_sha": "16bd6fd230d6280d52db6ce2a0ffef8f908cc89d",
+  "env_commit_sha": "16bd6fd230d6280d52db6ce2a0ffef8f908cc89d",
+  "head_commit_sha": "1a1dca80e8d6d9750e705d8387148e88833dff1e",
+  "merged_at": "2026-04-07T07:04:51Z"
+}

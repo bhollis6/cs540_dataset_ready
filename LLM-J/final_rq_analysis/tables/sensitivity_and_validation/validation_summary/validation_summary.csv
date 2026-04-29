@@ -1,0 +1,9 @@
+check,expected,observed,passed,notes
+Matrix row count,150,150,True,One run per repo/candidate/condition.
+Unique repositories,10,10,True,
+Unique historical PR tasks,30,30,True,
+Duplicate repo/candidate/condition rows,0,0,True,
+Harness ERROR rows,0,0,True,Known invalid artifacts are excluded from the final matrix.
+Token coverage,150/150,150/150,True,Totals include cached input tokens where labeled.
+Success/failure count,101 SUCCESS / 49 FAIL,101 SUCCESS / 49 FAIL,True,
+Process-log coverage,150/150,150/150,True,Required for enriched process metrics.

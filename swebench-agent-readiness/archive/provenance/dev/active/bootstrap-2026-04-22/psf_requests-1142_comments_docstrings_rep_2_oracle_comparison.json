@@ -1,0 +1,106 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "psf__requests-1142",
+  "repo": "psf/requests",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.25,
+    "total_duration_seconds": 0.47,
+    "changed_files": [
+      "requests/models.py",
+      "test_requests.py"
+    ]
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.25,
+    "total_duration_seconds": 0.479,
+    "changed_files": [
+      "requests/models.py",
+      "test_requests.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 0.009000000000000008
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 2,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1142/codex-cli/clean/rep_2/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1142/codex-cli/comments_docstrings/rep_2/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "requests/models.py",
+        ".pilot-venv-py39/bin/python",
+        "requests/structures.py",
+        "requests/auth.py"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "requests/models.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        ".pilot-venv-py39/bin/python",
+        "requests/auth.py",
+        "requests/structures.py"
+      ],
+      "exploration_efficiency": 0.25,
+      "first_edit_detected": true,
+      "input_tokens": 439460,
+      "cached_input_tokens": 355840,
+      "output_tokens": 4333,
+      "total_tokens": 443793
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "requests/models.py",
+        "requests/utils.py",
+        "requests/adapters.py",
+        "requests/sessions.py"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "requests/models.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        "requests/adapters.py",
+        "requests/sessions.py",
+        "requests/utils.py"
+      ],
+      "exploration_efficiency": 0.25,
+      "first_edit_detected": true,
+      "input_tokens": 834179,
+      "cached_input_tokens": 741120,
+      "output_tokens": 6564,
+      "total_tokens": 840743
+    }
+  }
+}

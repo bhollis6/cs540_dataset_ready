@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "harness": "codex-cli",
+  "integration_strategy": "pypi_dependency",
+  "eligibility_path": "src/profiles/first_pilot_eligibility.json",
+  "chosen_condition": "comments_docstrings",
+  "clean": {
+    "condition": "clean",
+    "replication_index": 2,
+    "run_root": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2",
+    "workspace_dir": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/workspace",
+    "oracle_workspace_dir": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/oracle_workspace",
+    "logs_dir": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/logs",
+    "metadata_path": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/metadata.json",
+    "prompt_path": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/issue_prompt.md",
+    "result_path": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/result.json",
+    "metrics_path": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/metrics.json",
+    "degradation_targets": {}
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "replication_index": 2,
+    "run_root": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2",
+    "workspace_dir": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/workspace",
+    "oracle_workspace_dir": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/oracle_workspace",
+    "logs_dir": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/logs",
+    "metadata_path": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/metadata.json",
+    "prompt_path": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/issue_prompt.md",
+    "result_path": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/result.json",
+    "metrics_path": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/metrics.json",
+    "degradation_targets": {
+      "target_files": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py"
+      ]
+    }
+  },
+  "comparison_artifact_path": "runs/pytest-dev__pytest-7432/codex-cli/comparison.json"
+}

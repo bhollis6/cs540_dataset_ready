@@ -1,0 +1,5 @@
+condition,n,clean_files_opened_mean,degraded_files_opened_mean,files_opened_delta_mean,clean_efficiency_mean,degraded_efficiency_mean,efficiency_delta_mean,dead_end_file_opens_delta_mean,changed_file_delta_mean
+naming,30,3.6,3.9,0.3,0.613,0.562,-0.051,0.27,3.73
+type_hints,30,3.5,3.53,0.03,0.634,0.645,0.012,0.03,1.33
+comments_docstrings,34,3.65,3.91,0.26,0.62,0.587,-0.033,0.32,1.24
+remove_tests,34,3.38,3.82,0.44,0.646,0.434,-0.212,1.15,1.71

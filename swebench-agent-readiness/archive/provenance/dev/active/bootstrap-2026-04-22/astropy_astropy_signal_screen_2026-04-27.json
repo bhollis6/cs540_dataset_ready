@@ -1,0 +1,95 @@
+[
+  {
+    "instance_id": "astropy__astropy-14365",
+    "repo": "astropy/astropy",
+    "base_commit": "7269fa3e33e8d02485a647da91a5a2a60a06af61",
+    "version": "5.1",
+    "source_files": [
+      "astropy/io/ascii/qdp.py"
+    ],
+    "test_files": [
+      "astropy/io/ascii/tests/test_qdp.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 8,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 12,
+      "comments": 19,
+      "name_candidates": 182,
+      "classes": 4,
+      "functions": 11,
+      "variables": 167,
+      "total": 182
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.545,
+      "test_command": "pytest -rA astropy/io/ascii/tests/test_qdp.py"
+    }
+  },
+  {
+    "instance_id": "astropy__astropy-14182",
+    "repo": "astropy/astropy",
+    "base_commit": "a5917978be39d13cd90b517e1de4e7a539ffaa48",
+    "version": "5.1",
+    "source_files": [
+      "astropy/io/ascii/rst.py"
+    ],
+    "test_files": [
+      "astropy/io/ascii/tests/test_rst.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 9,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 11,
+      "comments": 5,
+      "name_candidates": 50,
+      "classes": 3,
+      "functions": 4,
+      "variables": 43,
+      "total": 50
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.6,
+      "test_command": "pytest -rA astropy/io/ascii/tests/test_rst.py"
+    }
+  },
+  {
+    "instance_id": "astropy__astropy-14539",
+    "repo": "astropy/astropy",
+    "base_commit": "c0a24c1dc957a3b565294213f435fefb2ec99714",
+    "version": "5.1",
+    "source_files": [
+      "astropy/io/fits/diff.py"
+    ],
+    "test_files": [
+      "astropy/io/fits/tests/test_diff.py"
+    ],
+    "fail_to_pass_count": 2,
+    "pass_to_pass_count": 46,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 35,
+      "comments": 149,
+      "name_candidates": 523,
+      "classes": 8,
+      "functions": 30,
+      "variables": 485,
+      "total": 523
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.85,
+      "test_command": "pytest -rA astropy/io/fits/tests/test_diff.py"
+    }
+  }
+]

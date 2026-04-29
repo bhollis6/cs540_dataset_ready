@@ -1,0 +1,29 @@
+{
+  "candidate_id": "marshmallow_pr_2928",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2928,
+  "title": "Add support for IDNs to validate.URL",
+  "description": "closes https://github.com/marshmallow-code/marshmallow/issues/2821\r\nalternative to https://github.com/marshmallow-code/marshmallow/pull/2927\r\n\r\nthis adapts [Django's approach](https://github.com/django/django/blob/f6167b8bc881babd19b67c004e8f37954afc192e/django/core/validators.py#L71-L85) of accepting unicode chars in its regex ",
+  "patch_diff": "diff --git a/CHANGELOG.rst b/CHANGELOG.rst\nindex 4bd21685a..67a724fe5 100644\n--- a/CHANGELOG.rst\n+++ b/CHANGELOG.rst\n@@ -1,6 +1,14 @@\n Changelog\n =========\n \n+(unreleased)\n+------------\n+\n+Bug fixes:\n+\n+- `marshmallow.validate.URL` accepts Internationalized Domain Names (IDNs) (:issue:`2821`).\n+  Thanks :user:`touhidurrr` for the report.\n+\n 4.2.3 (2026-03-25)\n ------------------\n \ndiff --git a/src/marshmallow/validate.py b/src/marshmallow/validate.py\nindex abe3f9dcb..3d2ce4424 100644\n--- a/src/marshmallow/validate.py\n+++ b/src/marshmallow/validate.py\n@@ -103,12 +103,24 @@ def __init__(self):\n         def _regex_generator(\n             self, *, relative: bool, absolute: bool, require_tld: bool\n         ) -> typing.Pattern:\n+            unicode_letters = \"\\u00a1-\\uffff\"\n             hostname_variants = [\n-                # a normal domain name, expressed in [A-Z0-9] chars with hyphens allowed only in the middle\n+                # a normal domain name, expressed in [A-Z0-9] chars (plus unicode letters)\n+                # with hyphens allowed only in the middle\n                 # note that the regex will be compiled with IGNORECASE, so these are upper and lowercase chars\n                 (\n-                    r\"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.)+\"\n-                    r\"(?:[A-Z]{2,6}\\.?|[A-Z0-9-]{2,}\\.?)\"\n+                    r\"(?:[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"](?:[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"-]{0,61}[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"])?\\.)+\"\n+                    r\"(?:[A-Z\"\n+                    + unicode_letters\n+                    + r\"]{2,6}\\.?|[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"-]{2,}\\.?)\"\n                 ),\n                 # or the special string 'localhost'\n                 r\"localhost\",\n@@ -119,7 +131,15 @@ def _regex_generator(\n             ]\n             if not require_tld:\n                 # allow dotless hostnames\n-                hostname_variants.append(r\"(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\\.?)\")\n+                hostname_variants.append(\n+                    r\"(?:[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"](?:[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"-]{0,61}[A-Z0-9\"\n+                    + unicode_letters\n+                    + r\"])?\\.?)\"\n+                )\n \n             absolute_part = \"\".join(\n                 (\n",
+  "test_diff": "diff --git a/tests/test_validate.py b/tests/test_validate.py\nindex d2a28c8fc..00fca55bf 100644\n--- a/tests/test_validate.py\n+++ b/tests/test_validate.py\n@@ -292,6 +292,35 @@ def test_url_rejects_invalid_relative_usage():\n         validate.URL(relative=False, absolute=False)\n \n \n+@pytest.mark.parametrize(\n+    \"valid_url\",\n+    [\n+        \"https://\u09a4\u09cc\u09b9\u09bf\u09a6\u09c1\u09b0.\u09ac\u09be\u0982\u09b2\u09be\",\n+        \"https://m\u00fcnchen.de\",\n+        \"https://\u4f8b\u3048.jp/path\",\n+        \"http://\u0645\u062b\u0627\u0644.\u0625\u062e\u062a\u0628\u0627\u0631\",\n+        \"https://\u00fc\u00f1\u00ee\u00e7\u00f6d\u00e9.com/path?q=1#frag\",\n+        \"http://www.\u0627\u062e\u062a\u0628\u0627\u0631.com:8080/path\",\n+    ],\n+)\n+def test_url_idn_valid(valid_url):\n+    validator = validate.URL()\n+    assert validator(valid_url) == valid_url\n+\n+\n+@pytest.mark.parametrize(\n+    \"invalid_url\",\n+    [\n+        \"m\u00fcnchen.de\",\n+        \"\u09a4\u09cc\u09b9\u09bf\u09a6\u09c1\u09b0.\u09ac\u09be\u0982\u09b2\u09be\",\n+    ],\n+)\n+def test_url_idn_invalid(invalid_url):\n+    validator = validate.URL()\n+    with pytest.raises(ValidationError):\n+        validator(invalid_url)\n+\n+\n @pytest.mark.parametrize(\n     \"valid_email\",\n     [\n",
+  "files_changed": [
+    "CHANGELOG.rst",
+    "src/marshmallow/validate.py",
+    "tests/test_validate.py"
+  ],
+  "source_files": [
+    "src/marshmallow/validate.py"
+  ],
+  "test_files": [
+    "tests/test_validate.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 61,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "c1e727e16bed9851c6e77dde0119ee2d4f1ba08d",
+  "base_commit_sha": "dd20a8092a8b9bf1f780ab97b13c222f37bb603b",
+  "env_commit_sha": "dd20a8092a8b9bf1f780ab97b13c222f37bb603b",
+  "head_commit_sha": "fa0ef1b282046c09f5c79d859e02227969cac7cb",
+  "merged_at": "2026-04-01T12:20:20Z"
+}

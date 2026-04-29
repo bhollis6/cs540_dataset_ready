@@ -1,0 +1,29 @@
+{
+  "candidate_id": "pydantic-settings_pr_776",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 776,
+  "title": "Support reading .env files from FIFOs (e.g. 1Password Environments)",
+  "description": "1Password Environments mounts `.env` files as named pipes (FIFOs). These were previously skipped because the `is_file()` check returns `False` for FIFOs. This adds an `is_fifo()` check so they are read normally.\r\n\r\nhttps://developer.1password.com/docs/environments\r\n\r\nCloses #771",
+  "patch_diff": "diff --git a/docs/index.md b/docs/index.md\nindex 324451e0..8c609e20 100644\n--- a/docs/index.md\n+++ b/docs/index.md\n@@ -663,6 +663,11 @@ validating them.\n     If a filename is specified for `env_file`, Pydantic will only check the current working directory and\n     won't check any parent directories for the `.env` file.\n \n+!!! tip\n+    Named pipes (FIFOs) are also supported as dotenv files. This is useful for tools like\n+    [1Password Environments](https://developer.1password.com/docs/environments), which mount `.env` files as\n+    named pipes to provide secrets on demand without writing them to disk.\n+\n Even when using a dotenv file, *pydantic* will still read environment variables as well as the dotenv file,\n **environment variables will always take priority over values loaded from a dotenv file**.\n \ndiff --git a/pydantic_settings/sources/providers/dotenv.py b/pydantic_settings/sources/providers/dotenv.py\nindex 2b6f4fdf..3b1f7181 100644\n--- a/pydantic_settings/sources/providers/dotenv.py\n+++ b/pydantic_settings/sources/providers/dotenv.py\n@@ -99,7 +99,7 @@ def _read_env_files(self) -> Mapping[str, str | None]:\n         dotenv_vars: dict[str, str | None] = {}\n         for env_file in env_files:\n             env_path = Path(env_file).expanduser()\n-            if env_path.is_file():\n+            if env_path.is_file() or env_path.is_fifo():\n                 dotenv_vars.update(self._read_env_file(env_path))\n \n         return dotenv_vars\n",
+  "test_diff": "diff --git a/tests/test_settings.py b/tests/test_settings.py\nindex 6f317e5a..963a1078 100644\n--- a/tests/test_settings.py\n+++ b/tests/test_settings.py\n@@ -1596,6 +1596,34 @@ def test_read_dotenv_vars(tmp_path):\n     }\n \n \n+@pytest.mark.skipif(not hasattr(os, 'mkfifo'), reason='requires os.mkfifo (Unix)')\n+def test_read_dotenv_vars_from_fifo(tmp_path):\n+    \"\"\"Named pipes / FIFOs (e.g. 1Password Environments) should be read as env files.\"\"\"\n+    import threading\n+\n+    env_content = 'KEY=value\\nOTHER=123'\n+    fifo_path = tmp_path / '.env'\n+    os.mkfifo(fifo_path)\n+\n+    def write_to_fifo():\n+        with fifo_path.open('w') as f:\n+            f.write(env_content)\n+\n+    thread = threading.Thread(target=write_to_fifo)\n+    thread.start()\n+\n+    try:\n+        source = DotEnvSettingsSource(\n+            BaseSettings(), env_file=fifo_path, env_file_encoding='utf8', case_sensitive=False\n+        )\n+        assert dict(source.env_vars) == {'key': 'value', 'other': '123'}\n+    finally:\n+        thread.join(timeout=1)\n+        if thread.is_alive():\n+            fifo_path.read_text()  # writer may be blocked without a read\n+            thread.join(timeout=1)\n+\n+\n def test_read_dotenv_vars_when_env_file_is_none():\n     assert (\n         DotEnvSettingsSource(\n",
+  "files_changed": [
+    "docs/index.md",
+    "pydantic_settings/sources/providers/dotenv.py",
+    "tests/test_settings.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/providers/dotenv.py"
+  ],
+  "test_files": [
+    "tests/test_settings.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 34,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "04d2cd60fe309ad22f15a4054193cfff5dd33ee0",
+  "base_commit_sha": "43348a9e605b8dcd5748f2cc7d675296f3ea21ac",
+  "env_commit_sha": "43348a9e605b8dcd5748f2cc7d675296f3ea21ac",
+  "head_commit_sha": "38a7b56889f5b7ac007094f1e99c3522219ed994",
+  "merged_at": "2026-03-08T12:56:33Z"
+}

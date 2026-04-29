@@ -1,0 +1,28 @@
+{
+  "candidate_id": "copier_pr_2584",
+  "repo": "copier-org/copier",
+  "pr_number": 2584,
+  "title": "fix(migrations): use configurable Jinja delimiters for default migration condition",
+  "description": "I've fixed a bug related to rendering the default migration condition.\r\n\r\nThe default migration condition (`{{ _stage == \"after\" }}`) was built with hardcoded `{{` and `}}` as variable start/end strings. When a template configured alternative delimiters via `_envops` such as\r\n\r\n```yaml\r\n_envops:\r\n  variable_start_string: \"[[\"\r\n  variable_end_string: \"]]\"\r\n```\r\n\r\nthe default condition would contain the wrong delimiters and fail to render correctly.\r\n\r\nThe condition is now constructed using the delimiters resolved from the `_envops` settings in `copier.yml`, falling back to `{{` and `}}` when not overridden.",
+  "patch_diff": "diff --git a/copier/_template.py b/copier/_template.py\nindex 6a5762e31..7650e6662 100644\n--- a/copier/_template.py\n+++ b/copier/_template.py\n@@ -424,16 +424,19 @@ def migration_tasks(\n                     )\n             else:\n                 # New configuration format\n+                v_start = self.envops.get(\"variable_start_string\", \"{{\")\n+                v_end = self.envops.get(\"variable_end_string\", \"}}\")\n+                default_condition = f'{v_start} _stage == \"after\" {v_end}'\n                 if isinstance(migration, (str, list)):\n                     result.append(\n                         Task(\n                             cmd=migration,\n                             extra_vars=extra_vars,\n-                            condition='{{ _stage == \"after\" }}',\n+                            condition=default_condition,\n                         )\n                     )\n                 else:\n-                    condition = migration.get(\"when\", '{{ _stage == \"after\" }}')\n+                    condition = migration.get(\"when\", default_condition)\n                     working_directory = Path(migration.get(\"working_directory\", \".\"))\n                     if \"version\" in migration:\n                         current = parse(migration[\"version\"])\n",
+  "test_diff": "diff --git a/tests/test_migrations.py b/tests/test_migrations.py\nindex 4ea8c934c..73863556e 100644\n--- a/tests/test_migrations.py\n+++ b/tests/test_migrations.py\n@@ -1,4 +1,7 @@\n+import json\n+from collections.abc import Mapping, Sequence\n from pathlib import Path\n+from typing import Any\n \n import pytest\n from plumbum import local\n@@ -8,6 +11,7 @@\n from copier.errors import UnsafeTemplateError, UserMessageError\n \n from .helpers import (\n+    BRACKET_ENVOPS,\n     COPIER_ANSWERS_FILE,\n     PROJECT_TEMPLATE,\n     build_file_tree,\n@@ -49,6 +53,57 @@ def test_basic_migration(tmp_path_factory: pytest.TempPathFactory) -> None:\n     assert (dst / \"foo\").is_file()\n \n \n+@pytest.mark.parametrize(\n+    \"command\",\n+    [\n+        \"touch foo\",\n+        [\"touch\", \"foo\"],\n+        {\"command\": \"touch foo\"},\n+        {\"command\": [\"touch\", \"foo\"]},\n+    ],\n+)\n+@pytest.mark.parametrize(\"envops\", [{}, BRACKET_ENVOPS])\n+def test_post_migration_by_default(\n+    tmp_path_factory: pytest.TempPathFactory,\n+    envops: Mapping[str, Any],\n+    command: str | Sequence[str] | Mapping[str, Any],\n+) -> None:\n+    \"\"\"Test a basic migration running on every version\"\"\"\n+    src, dst = map(tmp_path_factory.mktemp, (\"src\", \"dst\"))\n+\n+    v_start = envops.get(\"variable_start_string\", \"{{\")\n+    v_end = envops.get(\"variable_end_string\", \"}}\")\n+\n+    with local.cwd(src):\n+        build_file_tree(\n+            {\n+                f\"{v_start} _copier_conf.answers_file {v_end}.jinja\": (\n+                    f\"{v_start} _copier_answers|tojson {v_end}\"\n+                ),\n+                \"copier.yml\": (\n+                    f\"\"\"\\\n+                    _envops: {json.dumps(envops)}\n+                    _migrations:\n+                        - {json.dumps(command)}\n+                    \"\"\"\n+                ),\n+            }\n+        )\n+        git_save(tag=\"v1\")\n+    with local.cwd(dst):\n+        run_copy(src_path=str(src))\n+        git_save()\n+\n+    assert not (dst / \"foo\").exists()  # Migrations don't run on initial copy\n+\n+    with local.cwd(src):\n+        git(\"tag\", \"v2\")\n+    with local.cwd(dst):\n+        run_update(defaults=True, overwrite=True, unsafe=True)\n+\n+    assert (dst / \"foo\").is_file()\n+\n+\n def test_requires_unsafe(tmp_path_factory: pytest.TempPathFactory) -> None:\n     \"\"\"Tests that migrations require the unsafe flag to be passed\"\"\"\n     src, dst = map(tmp_path_factory.mktemp, (\"src\", \"dst\"))\n",
+  "files_changed": [
+    "copier/_template.py",
+    "tests/test_migrations.py"
+  ],
+  "source_files": [
+    "copier/_template.py"
+  ],
+  "test_files": [
+    "tests/test_migrations.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 60,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "0b714d5be859a686e5558176c8a666d4ae2079db",
+  "base_commit_sha": "f6ac94689a0a672ae1a53d442740fb85dbd4004f",
+  "env_commit_sha": "f6ac94689a0a672ae1a53d442740fb85dbd4004f",
+  "head_commit_sha": "769a1a7476f309697371e521b1d1fc2a8b632f94",
+  "merged_at": "2026-03-31T14:54:38Z"
+}

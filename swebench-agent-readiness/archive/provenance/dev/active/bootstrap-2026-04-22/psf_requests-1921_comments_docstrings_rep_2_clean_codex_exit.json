@@ -1,0 +1,6 @@
+{
+  "returncode": 0,
+  "stdout_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1921/codex-cli/clean/rep_2/logs/agent_stdout.jsonl",
+  "stderr_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1921/codex-cli/clean/rep_2/logs/agent_stderr.log",
+  "last_message_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1921/codex-cli/clean/rep_2/logs/last_message.md"
+}

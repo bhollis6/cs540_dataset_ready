@@ -1,0 +1,31 @@
+{
+  "candidate_id": "marshmallow_pr_2904",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2904,
+  "title": "Reject booleans in from_timestamp_ms, consistent with from_timestamp",
+  "description": "## Summary\n\n`from_timestamp_ms` doesn't reject boolean values, unlike `from_timestamp`. This allows `DateTime(format=\"timestamp_ms\")` to silently accept `True`/`False` as valid timestamps.\n\n## Problem\n\n`from_timestamp` has an explicit boolean guard:\n```python\ndef from_timestamp(value):\n    if value is True or value is False:\n        raise ValueError(\"Not a valid POSIX timestamp\")\n    value = float(value)\n    ...\n```\n\nBut `from_timestamp_ms` converts to float first:\n```python\ndef from_timestamp_ms(value):\n    value = float(value)          # float(True) = 1.0, float(False) = 0.0\n    return from_timestamp(value / 1000)  # boolean check sees 0.001, not True\n```\n\nSince `float(True)` produces `1.0`, by the time `from_timestamp` is called, the value is already a float and the `value is True` identity check fails. This means:\n- `DateTime(format=\"timestamp\")` correctly rejects `True`/`False`\n- `DateTime(format=\"timestamp_ms\")` silently accepts them, deserializing `True` as a datetime\n\n## Fix\n\nAdd the same boolean rejection to `from_timestamp_ms` before the `float()` conversion.\n",
+  "patch_diff": "diff --git a/CHANGELOG.rst b/CHANGELOG.rst\nindex be6fd72fc..76621a8bb 100644\n--- a/CHANGELOG.rst\n+++ b/CHANGELOG.rst\n@@ -16,6 +16,8 @@ Bug fixes:\n   Thanks :user:`bysiber` for the PR.\n - Fix Enum field by-name lookup to only return actual members (:pr:`2902`).\n   Thanks :user:`bysiber` for the PR.\n+- `marshmallow.fields.DateTime` with ``format=\"timestamp_ms\"`` properly\n+  rejects bool values (:pr:`2904`). Thanks :user:`bysiber` for the PR.\n \n 4.2.2 (2026-02-04)\n ------------------\ndiff --git a/src/marshmallow/utils.py b/src/marshmallow/utils.py\nindex ee24e5e56..bda3c06fc 100644\n--- a/src/marshmallow/utils.py\n+++ b/src/marshmallow/utils.py\n@@ -55,6 +55,8 @@ def from_timestamp(value: typing.Any) -> dt.datetime:\n \n \n def from_timestamp_ms(value: typing.Any) -> dt.datetime:\n+    if value is True or value is False:\n+        raise ValueError(\"Not a valid POSIX timestamp\")\n     value = float(value)\n     return from_timestamp(value / 1000)\n \n",
+  "test_diff": "diff --git a/tests/test_deserialization.py b/tests/test_deserialization.py\nindex c64ba3fd4..89abe19fa 100644\n--- a/tests/test_deserialization.py\n+++ b/tests/test_deserialization.py\n@@ -588,6 +588,13 @@ def test_timestamp_field_deserialization(self, fmt, value, expected):\n         expected_aware = expected.replace(tzinfo=central)\n         assert field.deserialize(value) == expected_aware\n \n+    @pytest.mark.parametrize(\"fmt\", [\"timestamp\", \"timestamp_ms\"])\n+    @pytest.mark.parametrize(\"in_value\", [True, False])\n+    def test_boolean_timestamp_field_deserialization(self, fmt, in_value):\n+        field = fields.DateTime(format=fmt)\n+        with pytest.raises(ValidationError, match=\"Not a valid datetime.\"):\n+            field.deserialize(in_value)\n+\n     @pytest.mark.parametrize(\"fmt\", [\"timestamp\", \"timestamp_ms\"])\n     @pytest.mark.parametrize(\n         \"in_value\",\ndiff --git a/tests/test_utils.py b/tests/test_utils.py\nindex bb22a2a54..26c12f6a7 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -128,6 +128,25 @@ def test_from_timestamp_with_overflow_value():\n         utils.from_timestamp(value)\n \n \n+@pytest.mark.parametrize(\n+    (\"value\", \"expected\"),\n+    [\n+        (1676386740000, dt.datetime(2023, 2, 14, 14, 59, 00)),\n+        (1000, dt.datetime(1970, 1, 1, 0, 0, 1)),\n+    ],\n+)\n+def test_from_timestamp_ms(value, expected):\n+    result = utils.from_timestamp_ms(value)\n+    assert type(result) is dt.datetime\n+    assert result == expected\n+\n+\n+@pytest.mark.parametrize(\"value\", [True, False])\n+def test_from_timestamp_ms_rejects_booleans(value):\n+    with pytest.raises(ValueError, match=r\"Not a valid POSIX timestamp\"):\n+        utils.from_timestamp_ms(value)\n+\n+\n # Regression test for https://github.com/marshmallow-code/marshmallow/issues/540\n def test_function_field_using_type_annotation():\n     def get_split_words(value: str):\n",
+  "files_changed": [
+    "CHANGELOG.rst",
+    "src/marshmallow/utils.py",
+    "tests/test_deserialization.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "src/marshmallow/utils.py"
+  ],
+  "test_files": [
+    "tests/test_deserialization.py",
+    "tests/test_utils.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 30,
+  "lines_removed": 0,
+  "has_test_changes": true,
+  "merge_commit_sha": "72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+  "base_commit_sha": "024b5d09e9f026f0f96d220e243be69346687ce0",
+  "env_commit_sha": "024b5d09e9f026f0f96d220e243be69346687ce0",
+  "head_commit_sha": "488c2882048deed37f4703b2da7a340f38616386",
+  "merged_at": "2026-03-25T22:33:36Z"
+}

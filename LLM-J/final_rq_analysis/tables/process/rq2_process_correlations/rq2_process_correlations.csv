@@ -1,0 +1,11 @@
+metric,pearson_corr_with_success
+files_opened_before_first_edit,-0.0421
+exploration_efficiency,0.0474
+total_duration_seconds,-0.0625
+total_tokens_including_cache,-0.1315
+command_count_before_first_edit,-0.1899
+command_count_after_first_edit,-0.0642
+validation_test_command_count,0.0109
+failed_validation_test_command_count,0.0576
+failed_command_count,0.0109
+edit_test_edit_loop_proxy_count,-0.0353

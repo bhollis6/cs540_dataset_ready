@@ -1,0 +1,28 @@
+{
+  "candidate_id": "structlog_pr_531",
+  "repo": "hynek/structlog",
+  "pr_number": 531,
+  "title": "Allow positional args in `exception`",
+  "description": "Possible solution for https://github.com/hynek/structlog/issues/530\r\n\r\n",
+  "patch_diff": "diff --git a/src/structlog/_log_levels.py b/src/structlog/_log_levels.py\nindex d3863a02..8a3a384f 100644\n--- a/src/structlog/_log_levels.py\n+++ b/src/structlog/_log_levels.py\n@@ -80,13 +80,17 @@ async def _anop(self: Any, event: str, *args: Any, **kw: Any) -> Any:\n     return None\n \n \n-def exception(self: FilteringBoundLogger, event: str, **kw: Any) -> Any:\n+def exception(\n+    self: FilteringBoundLogger, event: str, *args: Any, **kw: Any\n+) -> Any:\n     kw.setdefault(\"exc_info\", True)\n \n-    return self.error(event, **kw)\n+    return self.error(event, *args, **kw)\n \n \n-async def aexception(self: FilteringBoundLogger, event: str, **kw: Any) -> Any:\n+async def aexception(\n+    self: FilteringBoundLogger, event: str, *args: Any, **kw: Any\n+) -> Any:\n     # Exception info has to be extracted this early, because it is no longer\n     # available once control is passed to the executor.\n     if kw.get(\"exc_info\", True) is True:\n@@ -95,7 +99,7 @@ async def aexception(self: FilteringBoundLogger, event: str, **kw: Any) -> Any:\n     ctx = contextvars.copy_context()\n     return await asyncio.get_running_loop().run_in_executor(\n         None,\n-        lambda: ctx.run(lambda: self.error(event, **kw)),\n+        lambda: ctx.run(lambda: self.error(event, *args, **kw)),\n     )\n \n \n",
+  "test_diff": "diff --git a/tests/test_log_levels.py b/tests/test_log_levels.py\nindex fb4075af..f04e5103 100644\n--- a/tests/test_log_levels.py\n+++ b/tests/test_log_levels.py\n@@ -195,6 +195,24 @@ async def test_async_exception(self, bl, cl):\n         assert isinstance(cl.calls[0][2][\"exc_info\"], tuple)\n         assert exc == cl.calls[0][2][\"exc_info\"][1]\n \n+    def test_exception_positional_args(self, bl, cl):\n+        \"\"\"\n+        exception allows for positional args\n+        \"\"\"\n+        bl.exception(\"%s %s\", \"boom\", \"bastic\")\n+\n+        assert [\n+            (\"error\", (), {\"event\": \"boom bastic\", \"exc_info\": True})\n+        ] == cl.calls\n+\n+    async def test_aexception_positional_args(self, bl, cl):\n+        \"\"\"\n+        aexception allows for positional args\n+        \"\"\"\n+        await bl.aexception(\"%s %s\", \"boom\", \"bastic\")\n+        assert 1 == len(cl.calls)\n+        assert \"boom bastic\" == cl.calls[0][2][\"event\"]\n+\n     async def test_async_exception_true(self, bl, cl):\n         \"\"\"\n         aexception replaces exc_info with current exception info, if exc_info\n",
+  "files_changed": [
+    "src/structlog/_log_levels.py",
+    "tests/test_log_levels.py"
+  ],
+  "source_files": [
+    "src/structlog/_log_levels.py"
+  ],
+  "test_files": [
+    "tests/test_log_levels.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 26,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "ea950f6638daf332d5bc1c29a25f20e032798351",
+  "base_commit_sha": "ec810c50e124a58ec5ecfc07bd119c7e4c87950f",
+  "env_commit_sha": "ec810c50e124a58ec5ecfc07bd119c7e4c87950f",
+  "head_commit_sha": "7a12eae6d0edafcb88b02c81a5bea01bfec2f148",
+  "merged_at": "2023-07-22T10:46:08Z"
+}

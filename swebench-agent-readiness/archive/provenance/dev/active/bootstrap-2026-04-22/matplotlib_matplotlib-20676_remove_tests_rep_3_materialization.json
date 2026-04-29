@@ -1,0 +1,14 @@
+{
+  "instance_id": "matplotlib__matplotlib-20676",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "6786f437df54ca7780a047203cbcfaa1db8dc542",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/clean/rep_3/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/remove_tests/rep_3/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "lib/matplotlib/tests/test_widgets.py"
+    ],
+    "preserve_files": []
+  }
+}

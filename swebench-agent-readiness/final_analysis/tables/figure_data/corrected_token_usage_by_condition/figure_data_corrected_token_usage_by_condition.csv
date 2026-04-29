@@ -1,0 +1,5 @@
+condition,clean_total_tokens_corrected,degraded_total_tokens_corrected
+naming,416947.0,634909.0
+type_hints,505020.0,461054.0
+comments_docstrings,460179.0,556967.0
+remove_tests,462521.5,511336.0

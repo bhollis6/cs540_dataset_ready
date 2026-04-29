@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "scikit-learn__scikit-learn-25973",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "10dbc142bd17ccf7bd38eec2ac04b52ce0d1009e",
+  "changed_source_files": [
+    "sklearn/feature_selection/_sequential.py"
+  ],
+  "changed_test_files": [
+    "sklearn/feature_selection/tests/test_sequential.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 72 PASS_TO_PASS.",
+    "evidence": [
+      "pytest -rA sklearn/feature_selection/tests/test_sequential.py"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 1 annotation nodes.",
+        "evidence": [
+          "sklearn/feature_selection/_sequential.py",
+          "sklearn/feature_selection/tests/test_sequential.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 105 local rename candidates before safety filtering.",
+        "evidence": [
+          "sklearn/feature_selection/_sequential.py",
+          "sklearn/feature_selection/tests/test_sequential.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve public/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 8 docstrings and 31 comments.",
+        "evidence": [
+          "sklearn/feature_selection/_sequential.py",
+          "sklearn/feature_selection/tests/test_sequential.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Gold preflight passed 1 FAIL_TO_PASS and 72 PASS_TO_PASS targets.",
+        "evidence": [
+          "sklearn/feature_selection/tests/test_sequential.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as a scikit-learn/scikit-learn task for the next Phase 1 repo after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn_scikit-learn_signal_screen_2026-04-27.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn__scikit-learn-25973_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn__scikit-learn-25973_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": []
+}

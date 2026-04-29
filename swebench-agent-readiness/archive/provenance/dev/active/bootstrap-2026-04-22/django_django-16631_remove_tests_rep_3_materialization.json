@@ -1,0 +1,14 @@
+{
+  "instance_id": "django__django-16631",
+  "repo": "django/django",
+  "base_commit": "9b224579875e30203d079cc2fee83b116d98eb78",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/clean/rep_3/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/remove_tests/rep_3/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "tests/auth_tests/test_basic.py"
+    ],
+    "preserve_files": []
+  }
+}

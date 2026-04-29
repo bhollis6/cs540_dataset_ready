@@ -1,0 +1,28 @@
+{
+  "candidate_id": "copier_pr_2456",
+  "repo": "copier-org/copier",
+  "pr_number": 2456,
+  "title": "fix: disallow symlink-based includes outside template root",
+  "description": "WDYT @cbrown1234?",
+  "patch_diff": "diff --git a/copier/_main.py b/copier/_main.py\nindex fabbe2c2f..5329f532b 100644\n--- a/copier/_main.py\n+++ b/copier/_main.py\n@@ -718,6 +718,20 @@ def _render_template(self) -> None:\n         dst_root = self.dst_path.resolve()\n         for src in scantree(str(self.template_copy_root), follow_symlinks):\n             src_abspath = Path(src.path)\n+            # If the source is a symlink, we are not preserving symlinks, and the\n+            # symlink target is outside the template root, this means that we are\n+            # copying a file/directory from outside the template, which is\n+            # forbidden, so raise an error.\n+            if (\n+                src_abspath.is_symlink()\n+                and not self.template.preserve_symlinks\n+                and not (src_abspath.resolve()).is_relative_to(\n+                    self.template.local_abspath\n+                )\n+            ):\n+                raise ForbiddenPathError(\n+                    path=src_abspath.relative_to(self.template_copy_root)\n+                )\n             src_relpath = Path(src_abspath).relative_to(self.template.local_abspath)\n             dst_relpaths_ctxs = self._render_path(\n                 Path(src_abspath).relative_to(self.template_copy_root)\n",
+  "test_diff": "diff --git a/tests/test_symlinks.py b/tests/test_symlinks.py\nindex 0113ed538..721344dd7 100644\n--- a/tests/test_symlinks.py\n+++ b/tests/test_symlinks.py\n@@ -1,11 +1,13 @@\n import os\n+import re\n from pathlib import Path\n+from tempfile import gettempdir\n \n import pytest\n from plumbum import local\n \n from copier import run_copy, run_update\n-from copier.errors import DirtyLocalWarning\n+from copier.errors import DirtyLocalWarning, ForbiddenPathError\n \n from .helpers import build_file_tree, git\n \n@@ -569,3 +571,78 @@ def test_symlinked_to_outside_destination_relative(\n     assert (dst / \"symlink_dir\" / \"outside.txt\").read_text() == \"outside\"\n     assert (dst / \"a_symlink.txt\").is_symlink()\n     assert (dst / \"a_symlink.txt\").read_text() == \"outside\"\n+\n+\n+def test_resolve_relative_symlink_outside_template_root_raises_error(\n+    tmp_path_factory: pytest.TempPathFactory,\n+) -> None:\n+    src, dst, other = map(tmp_path_factory.mktemp, (\"src\", \"dst\", \"other\"))\n+\n+    build_file_tree(\n+        {\n+            src / \".copier-answers.yml.jinja\": \"\"\"\\\n+            # Changes here will be overwritten by Copier\n+            {{ _copier_answers|to_nice_yaml }}\n+            \"\"\",\n+            src / \"copier.yaml\": \"\"\"\\\n+            _preserve_symlinks: false\n+            \"\"\",\n+            src / \"symlink.txt\": Path(\n+                # HACK: This is the path to `outside.txt` relative to  the location the\n+                # symlink file in the template's local clone location. To construct\n+                # this path dynamically, we rely on internal knowledge where Copier\n+                # clones the template.\n+                os.path.relpath(other, start=Path(gettempdir(), \"template-clone\")),\n+                \"outside.txt\",\n+            ),\n+            other / \"outside.txt\": \"outside\",\n+        }\n+    )\n+\n+    with local.cwd(src):\n+        git(\"init\")\n+        git(\"add\", \"-A\")\n+        git(\"commit\", \"-m\", \"init\")\n+\n+    with pytest.raises(\n+        ForbiddenPathError,\n+        match=re.escape('\"symlink.txt\" is forbidden'),\n+    ):\n+        run_copy(str(src), dst, defaults=True, overwrite=True, cleanup_on_error=False)\n+\n+    assert not (dst / \"symlink.txt\").exists()\n+\n+\n+@pytest.mark.skipif(\n+    os.name == \"nt\", reason=\"Absolute paths not created as symlinks on Windows\"\n+)\n+def test_resolve_absolute_symlink_outside_template_root_raises_error(\n+    tmp_path_factory: pytest.TempPathFactory,\n+) -> None:\n+    src, dst, other = map(tmp_path_factory.mktemp, (\"src\", \"dst\", \"other\"))\n+    build_file_tree(\n+        {\n+            src / \".copier-answers.yml.jinja\": \"\"\"\\\n+            # Changes here will be overwritten by Copier\n+            {{ _copier_answers|to_nice_yaml }}\n+            \"\"\",\n+            src / \"copier.yaml\": \"\"\"\\\n+            _preserve_symlinks: false\n+            \"\"\",\n+            src / \"symlink.txt\": other / \"outside.txt\",\n+            other / \"outside.txt\": \"outside\",\n+        }\n+    )\n+\n+    with local.cwd(src):\n+        git(\"init\")\n+        git(\"add\", \"-A\")\n+        git(\"commit\", \"-m\", \"init\")\n+\n+    with pytest.raises(\n+        ForbiddenPathError,\n+        match=re.escape('\"symlink.txt\" is forbidden'),\n+    ):\n+        run_copy(str(src), dst, defaults=True, overwrite=True)\n+\n+    assert not (dst / \"symlink.txt\").exists()\n",
+  "files_changed": [
+    "copier/_main.py",
+    "tests/test_symlinks.py"
+  ],
+  "source_files": [
+    "copier/_main.py"
+  ],
+  "test_files": [
+    "tests/test_symlinks.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 92,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "b3a7b3772d17cf0e7a4481978188c9f536c8d8f6",
+  "base_commit_sha": "41cb45c9649782150c01886bc52bee5eddb655b9",
+  "env_commit_sha": "41cb45c9649782150c01886bc52bee5eddb655b9",
+  "head_commit_sha": "f55429c6b5c14cf5c718f7686fe7f5abc6ad7ec8",
+  "merged_at": "2026-01-20T08:31:56Z"
+}

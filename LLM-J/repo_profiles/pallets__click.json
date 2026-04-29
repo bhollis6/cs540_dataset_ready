@@ -1,0 +1,55 @@
+{
+  "repo": "pallets/click",
+  "profile_version": 1,
+  "runtime": {
+    "os": "ubuntu-22.04",
+    "arch": "x86_64",
+    "python": "3.11",
+    "package_manager": "uv"
+  },
+  "environment": {
+    "env_commit_strategy": "base_or_override",
+    "system_packages": [],
+    "env_vars": {},
+    "pre_install": [],
+    "install_commands": [
+      "uv pip install -e ."
+    ],
+    "install_fallbacks": [
+      "pip install -e ."
+    ],
+    "post_install": [
+      "python -m pip install pytest"
+    ],
+    "dependency_pins": {}
+  },
+  "test": {
+    "command": "pytest -q",
+    "selection_mode": "explicit_nodeids",
+    "plugin_policy": {
+      "mode": "explicit_only",
+      "explicit_plugins": []
+    },
+    "env_vars": {}
+  },
+  "historical_quirks": {
+    "known_break_windows": [],
+    "notes": [
+      "Initial RQ1 scale-out profile.",
+      "Current Click test dependency group is pytest-only for ordinary tests; stress and random test extras are outside RQ1 explicit-nodeid oracle runs."
+    ]
+  },
+  "degradation": {
+    "supported_conditions": [
+      "type_hints",
+      "naming",
+      "comments_docstrings",
+      "remove_tests"
+    ],
+    "test_support_globs": []
+  },
+  "admission": {
+    "pilot_probe_target": 3,
+    "pilot_min_verified_tasks": 2
+  }
+}

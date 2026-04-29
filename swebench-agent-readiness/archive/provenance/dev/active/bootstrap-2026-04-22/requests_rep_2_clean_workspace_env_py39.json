@@ -1,0 +1,14 @@
+{
+  "workspace_dir": "runs/psf__requests-2317/codex-cli/clean/rep_2/workspace",
+  "venv_dir": "runs/psf__requests-2317/codex-cli/clean/rep_2/workspace/.pilot-venv-py39",
+  "python_path": "runs/psf__requests-2317/codex-cli/clean/rep_2/workspace/.pilot-venv-py39/bin/python",
+  "python_version": "3.9",
+  "package_installs": [
+    [
+      "pytest"
+    ],
+    [
+      "."
+    ]
+  ]
+}

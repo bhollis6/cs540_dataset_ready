@@ -1,0 +1,7 @@
+category,count
+"Clean passed,
+degraded failed",11
+"Clean already
+failed",27
+Outcome stable clean pass,90
+"Clean failure, degraded success",1

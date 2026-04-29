@@ -1,0 +1,30 @@
+{
+  "candidate_id": "uvicorn_pr_2513",
+  "repo": "encode/uvicorn",
+  "pr_number": 2513,
+  "title": "Drop ASGI spec version to 2.3 on HTTP",
+  "description": "When we accepted https://github.com/encode/uvicorn/pull/2276, we didn't undo the version of the spec.",
+  "patch_diff": "diff --git a/uvicorn/protocols/http/h11_impl.py b/uvicorn/protocols/http/h11_impl.py\nindex 932ddf62b..b8cdde3ab 100644\n--- a/uvicorn/protocols/http/h11_impl.py\n+++ b/uvicorn/protocols/http/h11_impl.py\n@@ -200,10 +200,7 @@ def handle_events(self) -> None:\n                 full_raw_path = self.root_path.encode(\"ascii\") + raw_path\n                 self.scope = {\n                     \"type\": \"http\",\n-                    \"asgi\": {\n-                        \"version\": self.config.asgi_version,\n-                        \"spec_version\": \"2.4\",\n-                    },\n+                    \"asgi\": {\"version\": self.config.asgi_version, \"spec_version\": \"2.3\"},\n                     \"http_version\": event.http_version.decode(\"ascii\"),\n                     \"server\": self.server,\n                     \"client\": self.client,\ndiff --git a/uvicorn/protocols/http/httptools_impl.py b/uvicorn/protocols/http/httptools_impl.py\nindex f3396a768..e8795ed35 100644\n--- a/uvicorn/protocols/http/httptools_impl.py\n+++ b/uvicorn/protocols/http/httptools_impl.py\n@@ -222,7 +222,7 @@ def on_message_begin(self) -> None:\n         self.headers = []\n         self.scope = {  # type: ignore[typeddict-item]\n             \"type\": \"http\",\n-            \"asgi\": {\"version\": self.config.asgi_version, \"spec_version\": \"2.4\"},\n+            \"asgi\": {\"version\": self.config.asgi_version, \"spec_version\": \"2.3\"},\n             \"http_version\": \"1.1\",\n             \"server\": self.server,\n             \"client\": self.client,\n",
+  "test_diff": "diff --git a/tests/protocols/test_http.py b/tests/protocols/test_http.py\nindex b3b060b0f..d8711af5b 100644\n--- a/tests/protocols/test_http.py\n+++ b/tests/protocols/test_http.py\n@@ -860,8 +860,8 @@ async def asgi(receive: ASGIReceiveCallable, send: ASGISendCallable):\n @pytest.mark.parametrize(\n     \"asgi2or3_app, expected_scopes\",\n     [\n-        (asgi3app, {\"version\": \"3.0\", \"spec_version\": \"2.4\"}),\n-        (asgi2app, {\"version\": \"2.0\", \"spec_version\": \"2.4\"}),\n+        (asgi3app, {\"version\": \"3.0\", \"spec_version\": \"2.3\"}),\n+        (asgi2app, {\"version\": \"2.0\", \"spec_version\": \"2.3\"}),\n     ],\n )\n async def test_scopes(\n",
+  "files_changed": [
+    "tests/protocols/test_http.py",
+    "uvicorn/protocols/http/h11_impl.py",
+    "uvicorn/protocols/http/httptools_impl.py"
+  ],
+  "source_files": [
+    "uvicorn/protocols/http/h11_impl.py",
+    "uvicorn/protocols/http/httptools_impl.py"
+  ],
+  "test_files": [
+    "tests/protocols/test_http.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 4,
+  "lines_removed": 7,
+  "has_test_changes": true,
+  "merge_commit_sha": "fc6c51b8bba48454685907ba629ca404543e9f42",
+  "base_commit_sha": "2aea8354ea60c1ec906905ca006fd4d4c928fe63",
+  "env_commit_sha": "2aea8354ea60c1ec906905ca006fd4d4c928fe63",
+  "head_commit_sha": "68ba9dd9f6c6af2e5ab21ff2dad9540a0d39a0ce",
+  "merged_at": "2024-11-20T19:19:24Z"
+}

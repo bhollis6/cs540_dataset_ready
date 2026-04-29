@@ -1,0 +1,110 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pylint-dev__pylint-4970",
+  "repo": "pylint-dev/pylint",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 0.498,
+    "changed_files": [
+      "pylint/checkers/similar.py",
+      "tests/checkers/unittest_similar.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 6,
+    "exploration_efficiency": 0.3333,
+    "total_duration_seconds": 0.523,
+    "changed_files": [
+      "pylint/checkers/similar.py",
+      "tests/checkers/unittest_similar.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 2,
+    "exploration_efficiency_delta": -0.16670000000000001,
+    "total_duration_seconds_delta": 0.025000000000000022
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "pylint/checkers/similar.py",
+        "tests/checkers/unittest_similar.py",
+        "tests/test_self.py",
+        "tests/checkers/conftest.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "pylint/checkers/similar.py",
+        "tests/checkers/unittest_similar.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "tests/checkers/conftest.py",
+        "tests/test_self.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 592076,
+      "cached_input_tokens": 491904,
+      "output_tokens": 4030,
+      "total_tokens": 596106
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 6,
+      "opened_files_before_first_edit": [
+        "pylint/checkers/similar.py",
+        "tests/checkers/unittest_similar.py",
+        "tests/lint/unittest_lint.py",
+        "tests/test_self.py",
+        "pylint/testutils/reporter_for_tests.py",
+        "tests/checkers/unittest_format.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "pylint/checkers/similar.py",
+        "tests/checkers/unittest_similar.py"
+      ],
+      "dead_end_file_opens": 4,
+      "dead_end_opened_files": [
+        "pylint/testutils/reporter_for_tests.py",
+        "tests/checkers/unittest_format.py",
+        "tests/lint/unittest_lint.py",
+        "tests/test_self.py"
+      ],
+      "exploration_efficiency": 0.3333,
+      "first_edit_detected": true,
+      "input_tokens": 1204522,
+      "cached_input_tokens": 1146880,
+      "output_tokens": 8775,
+      "total_tokens": 1213297
+    }
+  }
+}

@@ -14,6 +14,7 @@
   "has_test_changes": true,
   "merge_commit_sha": "abc123def456",
   "base_commit_sha": "def456ghi789",
+  "env_commit_sha": "def456ghi789",
   "head_commit_sha": "ghi789jkl012",
   "merged_at": "2024-03-15T10:30:00Z"
 }

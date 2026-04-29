@@ -1,0 +1,5 @@
+condition,n,clean_total_tokens_mean,degraded_total_tokens_mean,delta_mean,delta_median,delta_min,delta_max,degraded_higher_count,degraded_lower_count
+naming,30,550886.4,855387.2,304500.7,220810.0,-785242,1323511,25,5
+type_hints,30,619968.1,591631.1,-28337.0,-29116.0,-543644,309896,10,20
+comments_docstrings,34,557877.9,713036.1,155158.2,73070.5,-590973,1111918,27,7
+remove_tests,34,553479.3,608308.6,54829.3,58239.5,-675973,938401,22,12

@@ -1,0 +1,33 @@
+{
+  "candidate_id": "pydantic-settings_pr_767",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 767,
+  "title": "fix: Only override preferred_key when no value was found",
+  "description": "When using AliasChoices with AliasPath as the first choice, the env source incorrectly used the first element of the AliasPath as the key in the returned dict, even when a different alias string actually matched.\r\n\r\nFixes https://github.com/pydantic/pydantic-settings/issues/766",
+  "patch_diff": "diff --git a/pydantic_settings/sources/base.py b/pydantic_settings/sources/base.py\nindex d94f1ad7..9ad1b7e0 100644\n--- a/pydantic_settings/sources/base.py\n+++ b/pydantic_settings/sources/base.py\n@@ -522,7 +522,8 @@ def _get_resolved_field_value(self, field: FieldInfo, field_name: str) -> tuple[\n             A tuple that contains the value, preferred key and a flag to determine whether value is complex.\n         \"\"\"\n         field_value, field_key, value_is_complex = self.get_field_value(field, field_name)\n-        if not (\n+        # Only use preferred_key when no value was found; otherwise preserve the key that matched\n+        if field_value is None and not (\n             value_is_complex\n             or (\n                 (self.config.get('populate_by_name', False) or self.config.get('validate_by_name', False))\ndiff --git a/pydantic_settings/sources/providers/gcp.py b/pydantic_settings/sources/providers/gcp.py\nindex 9feba510..47e01913 100644\n--- a/pydantic_settings/sources/providers/gcp.py\n+++ b/pydantic_settings/sources/providers/gcp.py\n@@ -208,7 +208,11 @@ def get_field_value(self, field: FieldInfo, field_name: str) -> tuple[Any, str,\n                 if gcp_secret_name:\n                     env_val = self.env_vars._get_secret_value(gcp_secret_name, secret_version)\n                     if env_val is not None:\n-                        return env_val, field_name, value_is_complex\n+                        # If populate_by_name is enabled, return field_name to allow multiple fields\n+                        # with the same alias but different versions to be distinguished\n+                        if self.settings_cls.model_config.get('populate_by_name'):\n+                            return env_val, field_name, value_is_complex\n+                        return env_val, field_key, value_is_complex\n \n             # If a secret version is specified but not found, we should not fall back to \"latest\" (default behavior)\n             # as that would be incorrect. We return None to indicate the value was not found.\n",
+  "test_diff": "diff --git a/tests/conftest.py b/tests/conftest.py\nindex 1878e81d..34dd49b2 100644\n--- a/tests/conftest.py\n+++ b/tests/conftest.py\n@@ -100,6 +100,13 @@ def docs_test_env():\n     setenv.set('GENERATION_LLM_API_KEY', 'your-api-key')\n     setenv.set('GENERATION_LLM_API_VERSION', '2024-03-15')\n \n+    # Variables from index.md that need to be cleaned up\n+    setenv.set('FooAlias', '')\n+    setenv.set('BAR', '')\n+    setenv.set('TARGET_BAR', '')\n+    setenv.set('TARGET_ALL_FooAlias', '')\n+    setenv.set('TARGET_ALIAS_FooAliase', '')\n+\n     yield setenv\n \n     setenv.clear()\ndiff --git a/tests/test_settings.py b/tests/test_settings.py\nindex eb1caa2c..25f50a45 100644\n--- a/tests/test_settings.py\n+++ b/tests/test_settings.py\n@@ -936,6 +936,25 @@ class Settings(BaseSettings):\n     assert Settings().foobar == 'val3'\n \n \n+def test_validation_alias_alias_choices_with_alias_path_first(env):\n+    \"\"\"Test that AliasPath in AliasChoices doesn't interfere with env var lookup.\n+\n+    Regression test for https://github.com/pydantic/pydantic-settings/issues/766\n+    When AliasChoices has AliasPath as first choice, the env source should not use\n+    the AliasPath's first element as the key when a string alias matches.\n+    \"\"\"\n+\n+    class Settings(BaseSettings):\n+        my_field: str = Field(\n+            default='default-value',\n+            validation_alias=AliasChoices(AliasPath('nested', 'key'), 'MY_FIELD'),\n+        )\n+\n+    # The env var MY_FIELD should be used, not 'nested' from the AliasPath\n+    env.set('MY_FIELD', 'env-value')\n+    assert Settings().my_field == 'env-value'\n+\n+\n def test_validation_alias_with_env_prefix(env):\n     class Settings(BaseSettings):\n         foobar: str = Field(validation_alias='foo')\n",
+  "files_changed": [
+    "pydantic_settings/sources/base.py",
+    "pydantic_settings/sources/providers/gcp.py",
+    "tests/conftest.py",
+    "tests/test_settings.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/base.py",
+    "pydantic_settings/sources/providers/gcp.py"
+  ],
+  "test_files": [
+    "tests/test_settings.py"
+  ],
+  "test_support_files": [
+    "tests/conftest.py"
+  ],
+  "lines_added": 33,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "a04b03450e62f583cdaee2d93df693b991aeb319",
+  "base_commit_sha": "f6ddaee324a6f35e418505a0222bd26f1894446e",
+  "env_commit_sha": "f6ddaee324a6f35e418505a0222bd26f1894446e",
+  "head_commit_sha": "05f6de1b6c33de860d5fbb4730d2448d4a1ff0f4",
+  "merged_at": "2026-01-29T20:41:58Z"
+}

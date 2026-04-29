@@ -1,0 +1,94 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "scikit-learn__scikit-learn-25931",
+  "repo": "scikit-learn/scikit-learn",
+  "harness": "codex-cli",
+  "chosen_condition": "remove_tests",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 3.474,
+    "changed_files": [
+      "sklearn/ensemble/_iforest.py",
+      "sklearn/ensemble/tests/test_iforest.py"
+    ]
+  },
+  "degraded": {
+    "condition": "remove_tests",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 1,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 3.381,
+    "changed_files": [
+      "sklearn/ensemble/_iforest.py",
+      "sklearn/ensemble/tests/test_iforest.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": -1,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": -0.09300000000000042
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 3,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/codex-cli/clean/rep_3/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/codex-cli/remove_tests/rep_3/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "sklearn/ensemble/_iforest.py",
+        "sklearn/ensemble/tests/test_iforest.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sklearn/ensemble/_iforest.py",
+        "sklearn/ensemble/tests/test_iforest.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 452006,
+      "cached_input_tokens": 380288,
+      "output_tokens": 3754,
+      "total_tokens": 455760
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 1,
+      "opened_files_before_first_edit": [
+        "sklearn/ensemble/_iforest.py"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "sklearn/ensemble/_iforest.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 562718,
+      "cached_input_tokens": 493440,
+      "output_tokens": 5154,
+      "total_tokens": 567872
+    }
+  }
+}

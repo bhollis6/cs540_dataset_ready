@@ -1,0 +1,59 @@
+{
+  "repo": "jazzband/pip-tools",
+  "profile_version": 1,
+  "runtime": {
+    "os": "ubuntu-22.04",
+    "arch": "x86_64",
+    "python": "3.11",
+    "package_manager": "uv"
+  },
+  "environment": {
+    "env_commit_strategy": "base_or_override",
+    "system_packages": [],
+    "env_vars": {
+      "SETUPTOOLS_SCM_PRETEND_VERSION": "7.0.0",
+      "SETUPTOOLS_SCM_PRETEND_VERSION_FOR_PIP_TOOLS": "7.0.0"
+    },
+    "pre_install": [],
+    "install_commands": [
+      "uv pip install -e .[testing]"
+    ],
+    "install_fallbacks": [
+      "pip install -e .[testing]"
+    ],
+    "post_install": [],
+    "dependency_pins": {}
+  },
+  "test": {
+    "command": "pytest -q",
+    "selection_mode": "explicit_nodeids",
+    "plugin_policy": {
+      "mode": "explicit_only",
+      "explicit_plugins": [
+        "xdist.plugin"
+      ]
+    },
+    "env_vars": {}
+  },
+  "historical_quirks": {
+    "known_break_windows": [],
+    "notes": [
+      "Initial RQ1 scale-out profile.",
+      "Historical pyproject pytest config uses xdist --numprocesses=auto, so keep xdist installed and explicitly loaded while plugin autoload is disabled.",
+      "Install the testing extra because CLI and resolver tests depend on pytest-xdist, pytest-rerunfailures, tomli-w, and build backend fixtures."
+    ]
+  },
+  "degradation": {
+    "supported_conditions": [
+      "type_hints",
+      "naming",
+      "comments_docstrings",
+      "remove_tests"
+    ],
+    "test_support_globs": []
+  },
+  "admission": {
+    "pilot_probe_target": 3,
+    "pilot_min_verified_tasks": 2
+  }
+}

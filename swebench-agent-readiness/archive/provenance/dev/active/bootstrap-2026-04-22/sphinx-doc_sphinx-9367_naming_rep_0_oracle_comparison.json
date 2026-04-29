@@ -1,0 +1,103 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sphinx-doc__sphinx-9367",
+  "repo": "sphinx-doc/sphinx",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 2.322,
+    "changed_files": [
+      "setup.py",
+      "sphinx/pycode/ast.py",
+      "tests/test_pycode_ast.py",
+      "tox.ini"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 2.249,
+    "changed_files": [
+      "setup.py",
+      "sphinx/pycode/ast.py",
+      "tests/test_pycode_ast.py",
+      "tox.ini"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 1,
+    "exploration_efficiency_delta": -0.33330000000000004,
+    "total_duration_seconds_delta": -0.07299999999999995
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-9367/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-9367/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "tests/test_pycode_ast.py",
+        "sphinx/pycode/ast.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sphinx/pycode/ast.py",
+        "tests/test_pycode_ast.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 174863,
+      "cached_input_tokens": 144128,
+      "output_tokens": 1642,
+      "total_tokens": 176505
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "sphinx/pycode/ast.py",
+        "tests/test_pycode_ast.py",
+        ".pilot-venv-py39/bin/python"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sphinx/pycode/ast.py",
+        "tests/test_pycode_ast.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        ".pilot-venv-py39/bin/python"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 309837,
+      "cached_input_tokens": 272896,
+      "output_tokens": 3440,
+      "total_tokens": 313277
+    }
+  }
+}

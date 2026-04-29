@@ -68,6 +68,7 @@ def fetch_pr_diff(
         has_test_changes=pr_metadata.has_test_changes,
         merge_commit_sha=pr_metadata.merge_commit_sha,
         base_commit_sha=pr_metadata.base_commit_sha,
+        env_commit_sha=pr_metadata.base_commit_sha,
         head_commit_sha=pr_metadata.head_commit_sha,
         merged_at=pr_metadata.merged_at,
     )

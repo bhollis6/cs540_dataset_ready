@@ -1,0 +1,29 @@
+{
+  "candidate_id": "structlog_pr_790",
+  "repo": "hynek/structlog",
+  "pr_number": 790,
+  "title": "dev: don't raise warning on rendered exceptions",
+  "description": "Apparently there are valid use-cases.\r\n\r\nfixes #775\r\n",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 5952e405..07cd14b4 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -19,6 +19,11 @@ You can find our backwards-compatibility policy [here](https://github.com/hynek/\n \n - Python 3.8 support.\n \n+### Changed\n+\n+- `structlog.dev.ConsoleRenderer` does not warn anymore when the `exception` key has a rendered value despite having a fancy formatter configured.\n+  [#790](https://github.com/hynek/structlog/pull/790)\n+\n \n ## [25.5.0](https://github.com/hynek/structlog/compare/25.4.0...25.5.0) - 2025-10-27\n \ndiff --git a/src/structlog/dev.py b/src/structlog/dev.py\nindex 110cdb51..b14eb39a 100644\n--- a/src/structlog/dev.py\n+++ b/src/structlog/dev.py\n@@ -915,13 +915,6 @@ def __call__(\n         if exc_info:\n             self._exception_formatter(sio, exc_info)\n         elif exc is not None:\n-            if self._exception_formatter is not plain_traceback:\n-                warnings.warn(\n-                    \"Remove `format_exc_info` from your processor chain \"\n-                    \"if you want pretty exceptions.\",\n-                    stacklevel=2,\n-                )\n-\n             sio.write(\"\\n\" + exc)\n \n         return sio.getvalue()\n",
+  "test_diff": "diff --git a/tests/test_dev.py b/tests/test_dev.py\nindex fc825d8f..7c6a20ba 100644\n--- a/tests/test_dev.py\n+++ b/tests/test_dev.py\n@@ -358,37 +358,17 @@ def test_key_values_unsorted(self, styles, padded):\n             + styles.reset\n         ) == rv\n \n-    @pytest.mark.parametrize(\"wrap\", [True, False])\n-    def test_exception_rendered(\n-        self, cr, recwarn, wrap, styles, padded, monkeypatch\n-    ):\n+    def test_exception_rendered(self, cr, styles, padded):\n         \"\"\"\n         Exceptions are rendered after a new line if they are already rendered\n         in the event dict.\n-\n-        A warning is emitted if exception printing is \"customized\".\n         \"\"\"\n         exc = \"Traceback:\\nFake traceback...\\nFakeError: yolo\"\n \n-        # Wrap the formatter to provoke the warning.\n-        if wrap:\n-            monkeypatch.setattr(\n-                cr,\n-                \"_exception_formatter\",\n-                lambda s, ei: dev.plain_traceback(s, ei),  # noqa: PLW0108\n-            )\n-\n         rv = cr(None, None, {\"event\": \"test\", \"exception\": exc})\n \n         assert (f\"{padded}\\n\" + exc) == rv\n \n-        if wrap:\n-            (w,) = recwarn.list\n-            assert (\n-                \"Remove `format_exc_info` from your processor chain \"\n-                \"if you want pretty exceptions.\",\n-            ) == w.message.args\n-\n     def test_stack_info(self, cr, styles, padded):\n         \"\"\"\n         Stack traces are rendered after a new line.\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "src/structlog/dev.py",
+    "tests/test_dev.py"
+  ],
+  "source_files": [
+    "src/structlog/dev.py"
+  ],
+  "test_files": [
+    "tests/test_dev.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 6,
+  "lines_removed": 28,
+  "has_test_changes": true,
+  "merge_commit_sha": "abd263899e5ed04ea780b425dafc6ee87fc756f3",
+  "base_commit_sha": "7401cc4d004a7bac2f5c70cfa938d4a6289f2d90",
+  "env_commit_sha": "7401cc4d004a7bac2f5c70cfa938d4a6289f2d90",
+  "head_commit_sha": "ea3cf94b31bf3f6d1b4c7b461bcaa624f6679ae2",
+  "merged_at": "2026-03-04T05:46:42Z"
+}

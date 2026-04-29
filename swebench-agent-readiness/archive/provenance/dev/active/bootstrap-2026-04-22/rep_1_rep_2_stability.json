@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pytest-dev__pytest-7432",
+  "chosen_condition": "comments_docstrings",
+  "replications": [
+    1,
+    2
+  ],
+  "oracle_success_consistent": true,
+  "clean_changed_files_consistent": true,
+  "degraded_changed_files_consistent": true,
+  "exploration_efficiency": {
+    "rep_1_clean": 1.0,
+    "rep_1_degraded": 0.6667,
+    "rep_2_clean": 1.0,
+    "rep_2_degraded": 0.6667
+  },
+  "notes": [
+    "Rep 1 and rep 2 both yielded oracle success for clean and comments_docstrings.",
+    "Both replications preserved the same clean-vs-degraded changed-file pattern.",
+    "The degraded run showed lower exploration efficiency in both replications."
+  ]
+}

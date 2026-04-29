@@ -1,0 +1,343 @@
+{
+  "repo": "marshmallow-code/marshmallow",
+  "selection_timestamp": "2026-04-27T18:24:01.910944+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 12,
+  "accepted": 6,
+  "review": 6,
+  "rejected": 0,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "marshmallow_pr_2792",
+      "pr_number": 2792,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is an excellent experimental candidate. It's a well-scoped bug fix with a direct, verifiable test, touches meaningful application code with rich typing and naming, and is moderately complex \u2014 requiring understanding of marshmallow's field/data_key internals without being overwhelming. The test provides a clear pass/fail oracle for the fix.",
+      "merge_commit_sha": "9f751e1cef943e2ca1a77f93d3483b4a171d4303",
+      "base_commit_sha": "a578ed23092bd558acfbd9cd09a164108689326d",
+      "env_commit_sha": "a578ed23092bd558acfbd9cd09a164108689326d",
+      "head_commit_sha": "d90b41ec004a7e7fc870e3df11c4a0ae2f3468ff",
+      "source_files": [
+        "src/marshmallow/decorators.py",
+        "src/marshmallow/schema.py",
+        "src/marshmallow/types.py"
+      ],
+      "test_files": [
+        "tests/test_decorators.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/marshmallow/decorators.py",
+            "src/marshmallow/schema.py",
+            "src/marshmallow/types.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/marshmallow/decorators.py",
+            "src/marshmallow/schema.py",
+            "src/marshmallow/types.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/marshmallow/decorators.py",
+            "src/marshmallow/schema.py",
+            "src/marshmallow/types.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_decorators.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "marshmallow_pr_1632",
+      "pr_number": 1632,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate PR. It is tightly scoped, tests directly validate the fix and could serve as a reliable pass/fail signal, and the changed code is core application logic rich in type annotations and descriptive naming. The problem statement is clear with a concrete repro. Complexity sits at the sweet spot: an agent must understand the loading pipeline to know where to thread the new argument, but the solution follows a consistent, learnable pattern. The minor test logic bug (if vs elif) is a small blemish but does not undermine overall quality.",
+      "merge_commit_sha": "356e21b9ee5a9f8a0a739b96a1bc58fc073e53ab",
+      "base_commit_sha": "c4bb15aee0f40c8672c7d5ff77aa95f464a131d8",
+      "env_commit_sha": "c4bb15aee0f40c8672c7d5ff77aa95f464a131d8",
+      "head_commit_sha": "a029efba6922d69474865d9dc9d20d9650efc6d3",
+      "source_files": [
+        "src/marshmallow/decorators.py",
+        "src/marshmallow/schema.py"
+      ],
+      "test_files": [
+        "tests/test_decorators.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/marshmallow/decorators.py",
+            "src/marshmallow/schema.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/marshmallow/decorators.py",
+            "src/marshmallow/schema.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/marshmallow/decorators.py",
+            "src/marshmallow/schema.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_decorators.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "marshmallow_pr_2772",
+      "pr_number": 2772,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, tightly scoped PR that moves error detection earlier in marshmallow's schema lifecycle. Strong test coverage with a test that directly validates the behavioral change (error fires at class declaration, not at dump/load time). Touches meaningful application code with good typing and naming. Description is brief but the intent is clear from the diff. Complexity is solidly in the 3-4 range \u2014 understanding the metaclass execution order is required but the actual implementation delta is small. Good candidate for the experiment.",
+      "merge_commit_sha": "de5e842aeaf7eacfa42e9231f8b18e0792851c45",
+      "base_commit_sha": "c7152171fbe7c12f5ac77800a43dc7ad8ae2e2cf",
+      "env_commit_sha": "c7152171fbe7c12f5ac77800a43dc7ad8ae2e2cf",
+      "head_commit_sha": "52d46ad39af8026c7622bac9769f21c59c4b6abb",
+      "source_files": [
+        "src/marshmallow/schema.py",
+        "src/marshmallow/utils.py"
+      ],
+      "test_files": [
+        "tests/test_schema.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "src/marshmallow/utils.py",
+            "tests/test_schema.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "src/marshmallow/utils.py",
+            "tests/test_schema.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "src/marshmallow/utils.py",
+            "tests/test_schema.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_schema.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "marshmallow_pr_2762",
+      "pr_number": 2762,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A tightly scoped, well-tested deprecation warning PR. The test coverage is excellent and serves as a clear pass/fail signal. However, the implementation is very simple (a single hasattr guard + warnings.warn call), making it a weak candidate for measuring the effect of codebase degradation \u2014 the fix is so straightforward that agents are likely to solve it correctly even under degraded conditions. Useful as a sanity-check or baseline task, but not ideal for measuring meaningful performance differences.",
+      "merge_commit_sha": "4113c8ac3f5234130776c21c33207f1de9b09c05",
+      "base_commit_sha": "0ebc9508a1e6a0441350595e0bc89760c037010d",
+      "env_commit_sha": "0ebc9508a1e6a0441350595e0bc89760c037010d",
+      "head_commit_sha": "60d983a6c16ffed275216e514995f853d622a97b",
+      "source_files": [
+        "src/marshmallow/schema.py"
+      ],
+      "test_files": [
+        "tests/test_options.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "tests/test_options.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "tests/test_options.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "tests/test_options.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_options.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "marshmallow_pr_2795",
+      "pr_number": 2795,
+      "total_score": 18,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 2,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a clear, well-scoped bug fix for a silent failure in marshmallow's schema validation when generators are passed with many=True. The PR has excellent clarity (reproduction case, before/after behavior) and touches core application code with good type annotations and naming. The critical weakness is test coverage \u2014 the test diff only adjusts existing tests (set\u2192tuple in parametrize) without adding any test that directly validates generator rejection or the validator-calling fix. This weakens the pass/fail signal needed for the experiment. Borderline acceptable; the mutation relevance and clarity are strong, but an agent could pass the existing tests without actually fixing the bug since no new test directly validates the core behavior change.",
+      "merge_commit_sha": "9cddff67b733987fedc0ae37c1a4ed2eb61e89cb",
+      "base_commit_sha": "bc5cde04330ae53f7a23e6990f9a0ce9d9891a4a",
+      "env_commit_sha": "bc5cde04330ae53f7a23e6990f9a0ce9d9891a4a",
+      "head_commit_sha": "5573d3160ff96c07b5fe3667273e29646bada8db",
+      "source_files": [
+        "src/marshmallow/fields.py",
+        "src/marshmallow/schema.py",
+        "src/marshmallow/utils.py"
+      ],
+      "test_files": [
+        "tests/test_schema.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/marshmallow/fields.py",
+            "src/marshmallow/schema.py",
+            "src/marshmallow/utils.py",
+            "tests/test_schema.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/marshmallow/fields.py",
+            "src/marshmallow/schema.py",
+            "src/marshmallow/utils.py",
+            "tests/test_schema.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/marshmallow/fields.py",
+            "src/marshmallow/schema.py",
+            "src/marshmallow/utils.py",
+            "tests/test_schema.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_schema.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "marshmallow_pr_2797",
+      "pr_number": 2797,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 3,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a clean, well-scoped, and well-tested bug fix with an excellent pass/fail test signal. Its main weakness as an experimental candidate is complexity: the entire production change is one word (`zip` \u2192 `zip_longest`) plus one import. An AI agent that locates `_invoke_processors` will almost trivially produce the correct fix, leaving little room to measure how codebase degradation (naming, type hints, docstrings) affects agent performance. The PR description is also thin, requiring test/issue reading to fully understand the task. Good structural quality, but likely too simple to yield meaningful differential signal across degraded vs. clean conditions.",
+      "merge_commit_sha": "94234acd1a98e5fd8b21ba3e8f78ac87a4996949",
+      "base_commit_sha": "0f073e6413f3ace8d44e3c7be55df02b696eb30f",
+      "env_commit_sha": "0f073e6413f3ace8d44e3c7be55df02b696eb30f",
+      "head_commit_sha": "843113e9ee77dcc5f8cd2fb202b98ced420ce447",
+      "source_files": [
+        "src/marshmallow/schema.py"
+      ],
+      "test_files": [
+        "tests/test_decorators.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/marshmallow/schema.py",
+            "tests/test_decorators.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_decorators.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

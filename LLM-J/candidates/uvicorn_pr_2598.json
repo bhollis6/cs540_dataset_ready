@@ -1,0 +1,30 @@
+{
+  "candidate_id": "uvicorn_pr_2598",
+  "repo": "encode/uvicorn",
+  "pr_number": 2598,
+  "title": "Don't include `cwd()` when non-empty `--reload-dirs` is passed",
+  "description": "<!-- Thanks for contributing to Uvicorn! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83d\ude01 -->\r\n\r\n# Summary\r\n\r\n<!-- Write a small summary about what is happening here. -->\r\n\r\nThis PR fixes the behavior of `--reload-dir` to match the documentation. The documentation states:\r\n\r\n```\r\n  --reload-dir PATH               Set reload directories explicitly, instead\r\n                                  of using the current working directory.\r\n```\r\n\r\nalso:\r\n\r\n> `--reload-dir <path>` - Specify which directories to watch for python file changes. May be used multiple times. If unused, then by default the whole current directory will be watched. If you are running programmatically use `reload_dirs=[]` and pass a list of strings.\r\n\r\nHowever, the current implementation always adds `Path.cwd()` to list of watched directories. This is undesirable and contradicts the documentation. `Path.cwd()` should only be added as a default when no `--reload-dir` is specified.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] <!-- I've updated the documentation accordingly. --> No documentation update is required.",
+  "patch_diff": "diff --git a/uvicorn/config.py b/uvicorn/config.py\nindex ae996c1cb..60b533e84 100644\n--- a/uvicorn/config.py\n+++ b/uvicorn/config.py\n@@ -313,7 +313,7 @@ def __init__(\n                         + \"directories, watching current working directory.\",\n                         reload_dirs,\n                     )\n-                self.reload_dirs = [Path(os.getcwd())]\n+                self.reload_dirs = [Path.cwd()]\n \n             logger.info(\n                 \"Will watch for changes in these directories: %s\",\ndiff --git a/uvicorn/supervisors/watchfilesreload.py b/uvicorn/supervisors/watchfilesreload.py\nindex 0d3b9b77e..c13dc745a 100644\n--- a/uvicorn/supervisors/watchfilesreload.py\n+++ b/uvicorn/supervisors/watchfilesreload.py\n@@ -63,10 +63,7 @@ def __init__(\n         self.reloader_name = \"WatchFiles\"\n         self.reload_dirs = []\n         for directory in config.reload_dirs:\n-            if Path.cwd() not in directory.parents:\n-                self.reload_dirs.append(directory)\n-        if Path.cwd() not in self.reload_dirs:\n-            self.reload_dirs.append(Path.cwd())\n+            self.reload_dirs.append(directory)\n \n         self.watch_filter = FileFilter(config)\n         self.watcher = watch(\n",
+  "test_diff": "diff --git a/tests/supervisors/test_reload.py b/tests/supervisors/test_reload.py\nindex bd40e7230..4380cbd94 100644\n--- a/tests/supervisors/test_reload.py\n+++ b/tests/supervisors/test_reload.py\n@@ -306,24 +306,17 @@ def test_watchfiles_no_changes(self) -> None:\n \n \n @pytest.mark.skipif(WatchFilesReload is None, reason=\"watchfiles not available\")\n-def test_should_watch_one_dir_cwd(mocker: MockerFixture, reload_directory_structure: Path):\n+def test_should_watch_cwd(mocker: MockerFixture, reload_directory_structure: Path):\n     mock_watch = mocker.patch(\"uvicorn.supervisors.watchfilesreload.watch\")\n-    app_dir = reload_directory_structure / \"app\"\n-    app_first_dir = reload_directory_structure / \"app_first\"\n \n-    with as_cwd(reload_directory_structure):\n-        config = Config(\n-            app=\"tests.test_config:asgi_app\",\n-            reload=True,\n-            reload_dirs=[str(app_dir), str(app_first_dir)],\n-        )\n-        WatchFilesReload(config, target=run, sockets=[])\n-        mock_watch.assert_called_once()\n-        assert mock_watch.call_args[0] == (Path.cwd(),)\n+    config = Config(app=\"tests.test_config:asgi_app\", reload=True, reload_dirs=[])\n+    WatchFilesReload(config, target=run, sockets=[])\n+    mock_watch.assert_called_once()\n+    assert mock_watch.call_args[0] == (Path.cwd(),)\n \n \n @pytest.mark.skipif(WatchFilesReload is None, reason=\"watchfiles not available\")\n-def test_should_watch_separate_dirs_outside_cwd(mocker: MockerFixture, reload_directory_structure: Path):\n+def test_should_watch_multiple_dirs(mocker: MockerFixture, reload_directory_structure: Path):\n     mock_watch = mocker.patch(\"uvicorn.supervisors.watchfilesreload.watch\")\n     app_dir = reload_directory_structure / \"app\"\n     app_first_dir = reload_directory_structure / \"app_first\"\n@@ -337,7 +330,6 @@ def test_should_watch_separate_dirs_outside_cwd(mocker: MockerFixture, reload_di\n     assert set(mock_watch.call_args[0]) == {\n         app_dir,\n         app_first_dir,\n-        Path.cwd(),\n     }\n \n \n",
+  "files_changed": [
+    "tests/supervisors/test_reload.py",
+    "uvicorn/config.py",
+    "uvicorn/supervisors/watchfilesreload.py"
+  ],
+  "source_files": [
+    "uvicorn/config.py",
+    "uvicorn/supervisors/watchfilesreload.py"
+  ],
+  "test_files": [
+    "tests/supervisors/test_reload.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 8,
+  "lines_removed": 19,
+  "has_test_changes": true,
+  "merge_commit_sha": "56a9f68c1654ef9b69647924f179803d95a4c3c5",
+  "base_commit_sha": "bdf95fd3e71f5f904dc6f7f1194a5fe23d1c3f2f",
+  "env_commit_sha": "bdf95fd3e71f5f904dc6f7f1194a5fe23d1c3f2f",
+  "head_commit_sha": "a512e0887eef0a8b5eb401993c291754102aff28",
+  "merged_at": "2025-04-19T06:08:51Z"
+}

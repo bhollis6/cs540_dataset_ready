@@ -1,0 +1,27 @@
+[project]
+name = "swebench-agent-readiness"
+version = "0.1.0"
+description = "SWE-bench paired degradation study for agent-readiness analysis"
+requires-python = ">=3.10"
+dependencies = [
+    "datasets>=4.8.4",
+    "libcst>=1.5.0",
+    "matplotlib>=3.8.0",
+    "numpy>=1.26.0",
+    "pandas>=2.0.0",
+    "rope>=1.13.0",
+    "swebench==4.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.4.0",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,14 @@
+{
+  "instance_id": "django__django-11728",
+  "repo": "django/django",
+  "base_commit": "05457817647368be4b019314fcc655445a5b4c0c",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-11728/codex-cli/clean/rep_0/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-11728/codex-cli/comments_docstrings/rep_0/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "django/contrib/admindocs/utils.py",
+      "tests/admin_docs/test_views.py"
+    ]
+  }
+}

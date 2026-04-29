@@ -1,0 +1,105 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sympy__sympy-11618",
+  "repo": "sympy/sympy",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 0.768,
+    "changed_files": [
+      "sympy/geometry/point.py",
+      "sympy/geometry/tests/test_point.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 2,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 0.536,
+    "changed_files": [
+      "sympy/geometry/line3d.py",
+      "sympy/geometry/plane.py",
+      "sympy/geometry/point.py",
+      "sympy/geometry/tests/test_point.py",
+      "sympy/geometry/util.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": true,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 2,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": -0.23199999999999998
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "sympy/geometry/point.py",
+        "sympy/geometry/tests/test_point.py",
+        "sympy/core/compatibility.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sympy/geometry/point.py",
+        "sympy/geometry/tests/test_point.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "sympy/core/compatibility.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 522946,
+      "cached_input_tokens": 482432,
+      "output_tokens": 3608,
+      "total_tokens": 526554
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "sympy/geometry/tests/test_point.py",
+        "sympy/geometry/point.py",
+        "sympy/core/compatibility.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sympy/geometry/point.py",
+        "sympy/geometry/tests/test_point.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "sympy/core/compatibility.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 517495,
+      "cached_input_tokens": 461952,
+      "output_tokens": 3516,
+      "total_tokens": 521011
+    }
+  }
+}

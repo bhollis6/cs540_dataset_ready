@@ -1,0 +1,135 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "django__django-16631",
+  "repo": "django/django",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 8,
+    "exploration_efficiency": 0.375,
+    "total_duration_seconds": 0.31,
+    "changed_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py",
+      "tests/auth_tests/test_basic.py",
+      "tests/auth_tests/test_views.py"
+    ]
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 11,
+    "exploration_efficiency": 0.2727,
+    "total_duration_seconds": 0.309,
+    "changed_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py",
+      "docs/_theme/djangodocs-epub/static/docicons-behindscenes.png",
+      "docs/_theme/djangodocs-epub/static/docicons-note.png",
+      "docs/_theme/djangodocs-epub/static/docicons-philosophy.png",
+      "docs/_theme/djangodocs-epub/static/docicons-warning.png",
+      "tests/auth_tests/test_basic.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 3,
+    "exploration_efficiency_delta": -0.1023,
+    "total_duration_seconds_delta": -0.0010000000000000009
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 2,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/clean/rep_2/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/comments_docstrings/rep_2/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 8,
+      "opened_files_before_first_edit": [
+        "django/contrib/auth/__init__.py",
+        "tests/auth_tests/test_tokens.py",
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_views.py",
+        "tests/auth_tests/test_basic.py",
+        "tests/auth_tests/test_middleware.py",
+        "django/utils/crypto.py",
+        "tests/auth_tests/test_auth_backends.py"
+      ],
+      "relevant_files_opened": 3,
+      "relevant_opened_files": [
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_basic.py"
+      ],
+      "dead_end_file_opens": 5,
+      "dead_end_opened_files": [
+        "django/utils/crypto.py",
+        "tests/auth_tests/test_auth_backends.py",
+        "tests/auth_tests/test_middleware.py",
+        "tests/auth_tests/test_tokens.py",
+        "tests/auth_tests/test_views.py"
+      ],
+      "exploration_efficiency": 0.375,
+      "first_edit_detected": true,
+      "input_tokens": 1437922,
+      "cached_input_tokens": 1337856,
+      "output_tokens": 9205,
+      "total_tokens": 1447127
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 11,
+      "opened_files_before_first_edit": [
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_basic.py",
+        "django/contrib/auth/__init__.py",
+        "tests/auth_tests/test_tokens.py",
+        ".pilot-venv-py39/bin/python",
+        "django/utils/crypto.py",
+        "django/contrib/auth/tokens.py",
+        "tests/auth_tests/test_middleware.py",
+        "django/contrib/sessions/backends/base.py",
+        "tests/auth_tests/test_auth_backends.py",
+        "tests/auth_tests/test_views.py"
+      ],
+      "relevant_files_opened": 3,
+      "relevant_opened_files": [
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_basic.py"
+      ],
+      "dead_end_file_opens": 8,
+      "dead_end_opened_files": [
+        ".pilot-venv-py39/bin/python",
+        "django/contrib/auth/tokens.py",
+        "django/contrib/sessions/backends/base.py",
+        "django/utils/crypto.py",
+        "tests/auth_tests/test_auth_backends.py",
+        "tests/auth_tests/test_middleware.py",
+        "tests/auth_tests/test_tokens.py",
+        "tests/auth_tests/test_views.py"
+      ],
+      "exploration_efficiency": 0.2727,
+      "first_edit_detected": true,
+      "input_tokens": 1641373,
+      "cached_input_tokens": 1509248,
+      "output_tokens": 8972,
+      "total_tokens": 1650345
+    }
+  }
+}

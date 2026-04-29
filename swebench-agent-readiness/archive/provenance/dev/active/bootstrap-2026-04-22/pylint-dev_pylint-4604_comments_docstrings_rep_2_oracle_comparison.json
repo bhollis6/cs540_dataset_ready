@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pylint-dev__pylint-4604",
+  "repo": "pylint-dev/pylint",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 21,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 0.525,
+    "changed_files": [
+      "pylint/checkers/variables.py",
+      "tests/functional/u/unused/unused_typing_imports.py"
+    ]
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 21,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.3333,
+    "total_duration_seconds": 0.549,
+    "changed_files": [
+      "pylint/checkers/variables.py",
+      "pylint/constants.py",
+      "tests/checkers/unittest_variables.py",
+      "tests/functional/u/unused/unused_typing_imports.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 1,
+    "exploration_efficiency_delta": -0.16670000000000001,
+    "total_duration_seconds_delta": 0.02400000000000002
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 2,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4604/codex-cli/clean/rep_2/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4604/codex-cli/comments_docstrings/rep_2/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "pylint/checkers/variables.py",
+        "tests/functional/u/unused/unused_typing_imports.py"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "pylint/checkers/variables.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "tests/functional/u/unused/unused_typing_imports.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 508544,
+      "cached_input_tokens": 460288,
+      "output_tokens": 4007,
+      "total_tokens": 512551
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "pylint/checkers/variables.py",
+        "tests/functional/u/unused/unused_typing_imports.py",
+        "tests/functional/u/unused/unused_typing_imports.rc"
+      ],
+      "relevant_files_opened": 1,
+      "relevant_opened_files": [
+        "pylint/checkers/variables.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "tests/functional/u/unused/unused_typing_imports.py",
+        "tests/functional/u/unused/unused_typing_imports.rc"
+      ],
+      "exploration_efficiency": 0.3333,
+      "first_edit_detected": true,
+      "input_tokens": 541551,
+      "cached_input_tokens": 492032,
+      "output_tokens": 4543,
+      "total_tokens": 546094
+    }
+  }
+}

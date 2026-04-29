@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pip-tools_pr_1822",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1822,
+  "title": "Log a warning if the user specifies `-P` and the output file is present but empty",
+  "description": "When the user runs a command like\r\n\r\n```\r\npip-compile -P some_package requirements.in\r\n```\r\n\r\nthe expected behavior is that only `some_package` should be updated to a new version.\r\n\r\nIf the user errs by redirecting `pip-compile`'s stdout to the target file:\r\n\r\n```\r\npip-compile -P some_package requirements.in > requirements.txt\r\n```\r\n\r\ninstead of either using `-o` or allowing `pip-compile` to infer the target file name, the target file is truncated by the shell before `pip-compile` executes. This results in `pip-compile` actually updating _all_ dependencies, because while the target file is present, it's not a valid source of version constraints.\r\n\r\nThis PR adds a check in the code to detect this situation, which is almost certainly undesired, and redirect the user to a more appropriate command.\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Provided the tests for the changes.\r\n- [x] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/scripts/compile.py b/piptools/scripts/compile.py\nindex b87f3a1ce..b36ef8b30 100755\n--- a/piptools/scripts/compile.py\n+++ b/piptools/scripts/compile.py\n@@ -443,7 +443,18 @@ def cli(\n \n     # Proxy with a LocalRequirementsRepository if --upgrade is not specified\n     # (= default invocation)\n-    if not upgrade and os.path.exists(output_file.name):\n+    output_file_exists = os.path.exists(output_file.name)\n+    if not upgrade and output_file_exists:\n+        output_file_is_empty = os.path.getsize(output_file.name) == 0\n+        if upgrade_install_reqs and output_file_is_empty:\n+            log.warning(\n+                f\"WARNING: the output file {output_file.name} exists but is empty. \"\n+                \"Pip-tools cannot upgrade only specific packages (using -P/--upgrade-package) \"\n+                \"without an existing pin file to provide constraints. \"\n+                \"This often occurs if you redirect standard output to your output file, \"\n+                \"as any existing content is truncated.\"\n+            )\n+\n         # Use a temporary repository to ensure outdated(removed) options from\n         # existing requirements.txt wouldn't get into the current repository.\n         tmp_repository = PyPIRepository(pip_args, cache_dir=cache_dir)\n",
+  "test_diff": "diff --git a/tests/test_cli_compile.py b/tests/test_cli_compile.py\nindex e15ec6ed0..2650af2f6 100644\n--- a/tests/test_cli_compile.py\n+++ b/tests/test_cli_compile.py\n@@ -858,6 +858,27 @@ def test_upgrade_packages_option_no_existing_file(pip_conf, runner):\n     assert out.exit_code == 0\n     assert \"small-fake-a==0.2\" in out.stderr.splitlines()\n     assert \"small-fake-b==0.3\" in out.stderr.splitlines()\n+    assert (\n+        \"WARNING: the output file requirements.txt exists but is empty\"\n+        not in out.stderr\n+    )\n+\n+\n+def test_upgrade_packages_empty_target_file_warning(pip_conf, runner):\n+    \"\"\"\n+    piptools warns the user if --upgrade-package/-P is specified and the\n+    output file exists, but is empty.\n+    \"\"\"\n+    with open(\"requirements.in\", \"w\") as req_in:\n+        req_in.write(\"small-fake-a==0.2\")\n+    with open(\"requirements.txt\", \"w\") as req_txt:\n+        req_txt.write(\"\")\n+\n+    out = runner.invoke(cli, [\"--no-annotate\", \"-P\", \"small-fake-a\"])\n+\n+    assert out.exit_code == 0\n+    assert \"small-fake-a==0.2\" in out.stderr.splitlines()\n+    assert \"WARNING: the output file requirements.txt exists but is empty\" in out.stderr\n \n \n @pytest.mark.parametrize(\n",
+  "files_changed": [
+    "piptools/scripts/compile.py",
+    "tests/test_cli_compile.py"
+  ],
+  "source_files": [
+    "piptools/scripts/compile.py"
+  ],
+  "test_files": [
+    "tests/test_cli_compile.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 33,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "41f4b666785f101987ef3d97de24b0fb099b73cb",
+  "base_commit_sha": "244ac038556d3f15bf40e237d93bff08df62343a",
+  "env_commit_sha": "244ac038556d3f15bf40e237d93bff08df62343a",
+  "head_commit_sha": "6bd95b9ea54c9f6b01615d15034c2430e20b45bf",
+  "merged_at": "2023-05-15T18:01:59Z"
+}
