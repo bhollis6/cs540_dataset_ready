@@ -1,0 +1,19 @@
+{
+  "workspace_dir": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/workspace",
+  "venv_dir": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/workspace/.pilot-venv-py39",
+  "python_path": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/workspace/.pilot-venv-py39/bin/python",
+  "python_version": "3.9",
+  "package_installs": [
+    [
+      "py==1.11.0",
+      "packaging==23.1",
+      "attrs==23.1.0",
+      "more-itertools==10.1.0",
+      "pluggy==0.13.1"
+    ],
+    [
+      "-e",
+      "."
+    ]
+  ]
+}

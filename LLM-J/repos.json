@@ -17,6 +17,48 @@
       "domain": "data serialization/conversion",
       "approx_loc": "8-12k",
       "rationale": "Very active, 52+ test files, type-annotation heavy, different domain from web projects"
+    },
+    {
+      "name": "encode/uvicorn",
+      "domain": "ASGI server",
+      "approx_loc": "10k",
+      "rationale": "Compact ASGI server with coverage enforcement, modern type hints, and substantive PRs with tests"
+    },
+    {
+      "name": "marshmallow-code/marshmallow",
+      "domain": "object serialization/validation",
+      "approx_loc": "10k",
+      "rationale": "Mature serialization library with rich tests, type hints, and a large historical PR pool"
+    },
+    {
+      "name": "pallets/click",
+      "domain": "CLI framework",
+      "approx_loc": "17k",
+      "rationale": "Foundational CLI framework with clean modules, type hints, and test-backed feature/bugfix PRs"
+    },
+    {
+      "name": "jazzband/pip-tools",
+      "domain": "dependency management CLI",
+      "approx_loc": "11k",
+      "rationale": "CLI dependency tooling with strong PR/test discipline and typed package structure"
+    },
+    {
+      "name": "hynek/structlog",
+      "domain": "structured logging",
+      "approx_loc": "6k",
+      "rationale": "Small, typed, dependency-light logging library with strict typing and modular processor architecture"
+    },
+    {
+      "name": "pydantic/pydantic-settings",
+      "domain": "settings/configuration",
+      "approx_loc": "6k",
+      "rationale": "Typed settings loader with strict type checking and focused configuration behavior"
+    },
+    {
+      "name": "copier-org/copier",
+      "domain": "project templating CLI",
+      "approx_loc": "16k",
+      "rationale": "Template rendering CLI/library with modern typing, docstrings, and human-authored test-backed PRs"
     }
   ]
 }

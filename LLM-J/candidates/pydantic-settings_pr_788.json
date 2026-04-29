@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_788",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 788,
+  "title": "Fix CLI parsing error for set field types since 2.13.0 (#787)",
+  "description": "Fixes #787\n\n## Summary\n- Fix `SettingsError: 'set' object is not subscriptable` when using `set[str]` or `set[int]` fields with `cli_parse_args=True`\n- The numeric type coercion added in #769 used `[0]` to index the result of `validate_python`, which fails for `set` types since sets are not subscriptable\n- Use `next(iter(...))` instead which works for any iterable (lists, sets, frozensets, etc.)\n\n## Test plan\n- [x] Added `test_cli_set_arg` covering `set[str]` and `set[int]` CLI argument parsing\n- [x] All 166 CLI tests pass\n- [x] `make format` clean\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "patch_diff": "diff --git a/pydantic_settings/sources/providers/cli.py b/pydantic_settings/sources/providers/cli.py\nindex 112d2c93..e1cf2b8c 100644\n--- a/pydantic_settings/sources/providers/cli.py\n+++ b/pydantic_settings/sources/providers/cli.py\n@@ -621,7 +621,7 @@ def _merged_list_to_str(self, merged_list: list[str], field_name: str) -> str:\n         cli_arg_map = self._parser_map.get(field_name, {})\n         try:\n             list_adapter: Any = TypeAdapter(next(iter(cli_arg_map.values())).field_info.annotation)\n-            is_num_type_str = type(list_adapter.validate_python(['1'])[0]) is str\n+            is_num_type_str = type(next(iter(list_adapter.validate_python(['1'])))) is str\n         except (StopIteration, ValidationError):\n             is_num_type_str = None\n         for index, item in enumerate(merged_list):\n",
+  "test_diff": "diff --git a/tests/test_source_cli.py b/tests/test_source_cli.py\nindex 079d30f7..082ad96f 100644\n--- a/tests/test_source_cli.py\n+++ b/tests/test_source_cli.py\n@@ -812,6 +812,18 @@ def check_answer(cfg, prefix, expected):\n     check_answer(cfg, prefix, expected)\n \n \n+def test_cli_set_arg():\n+    class Cfg(BaseSettings):\n+        str_set: set[str] | None = None\n+        num_set: set[int] | None = None\n+\n+    cfg = CliApp.run(Cfg, cli_args=['--str_set', 'a,b', '--str_set', 'c'])\n+    assert cfg.model_dump() == {'str_set': {'a', 'b', 'c'}, 'num_set': None}\n+\n+    cfg = CliApp.run(Cfg, cli_args=['--num_set', '1,2', '--num_set', '3'])\n+    assert cfg.model_dump() == {'str_set': None, 'num_set': {1, 2, 3}}\n+\n+\n @pytest.mark.parametrize('arg_spaces', [no_add_cli_arg_spaces, add_cli_arg_spaces])\n def test_cli_list_json_value_parsing(arg_spaces):\n     class Cfg(BaseSettings):\n",
+  "files_changed": [
+    "pydantic_settings/sources/providers/cli.py",
+    "tests/test_source_cli.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/providers/cli.py"
+  ],
+  "test_files": [
+    "tests/test_source_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 13,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "4933f06402ed55e32bcdcefd6c8f59ffe1fefd24",
+  "base_commit_sha": "bd0ebe6215cf215d716e33d833cc2589a1d00a17",
+  "env_commit_sha": "bd0ebe6215cf215d716e33d833cc2589a1d00a17",
+  "head_commit_sha": "7475ae5dd4fc36db9c70ef4d6fbb63b3e37535fd",
+  "merged_at": "2026-02-18T08:17:53Z"
+}

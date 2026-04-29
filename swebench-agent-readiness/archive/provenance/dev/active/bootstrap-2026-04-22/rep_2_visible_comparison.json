@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1.0",
+  "comparison_type": "pilot_visible_validation",
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "replication_index": 2,
+  "clean": {
+    "run_root": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2",
+    "codex_returncode": 0,
+    "changed_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_terminal.py"
+    ],
+    "last_message_path": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_2/logs/last_message.md",
+    "visible_validation": {
+      "command": "./.pilot-venv-py39/bin/python -m pytest testing/test_terminal.py -k summary_s_alias && ./.pilot-venv-py39/bin/python -m pytest testing/test_skipping.py",
+      "passed": true,
+      "tests_passed": 79,
+      "tests_failed": 0
+    }
+  },
+  "degraded": {
+    "run_root": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2",
+    "codex_returncode": 0,
+    "changed_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_skipping.py"
+    ],
+    "last_message_path": "runs/pytest-dev__pytest-7432/codex-cli/comments_docstrings/rep_2/logs/last_message.md",
+    "visible_validation": {
+      "command": "./.pilot-venv-py39/bin/python -m pytest testing/test_terminal.py -k summary_s_alias && ./.pilot-venv-py39/bin/python -m pytest testing/test_skipping.py",
+      "passed": true,
+      "tests_passed": 79,
+      "tests_failed": 0
+    }
+  }
+}

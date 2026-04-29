@@ -1,0 +1,80 @@
+{
+  "selection_goal": "Widen beyond pytest-dev__pytest-7432 with the smallest second SWE-bench task that supports the current degradations and also has a trustworthy oracle-backed replay path in this environment.",
+  "requests_trial": {
+    "instance_id": "psf__requests-2317",
+    "repo": "psf/requests",
+    "status": "blocked_for_oracle_backed_matrix",
+    "what_worked": [
+      "The clean and comments_docstrings Codex runs both completed successfully on rep_2.",
+      "Both clean and degraded runs used the workspace-local pytest path after the prompt/env contract fix.",
+      "Focused visible validation passed on both sides."
+    ],
+    "blockers": [
+      "The official SWE-bench oracle command is `pytest -rA test_requests.py`, which replays a live-network-heavy full file rather than a bounded local slice.",
+      "The first host-local oracle replay hung for several minutes on the clean condition, which makes this task a poor fit for the oracle-backed lane."
+    ]
+  },
+  "replacement_shortlist": [
+    {
+      "instance_id": "astropy__astropy-14539",
+      "repo": "astropy/astropy",
+      "status": "blocked",
+      "why": [
+        "Python 3.9 in the official SWE-bench spec, so it is runnable in the current host environment.",
+        "One changed source file and one changed test file keep the degradation/readout compact.",
+        "The oracle command is a bounded file-scoped pytest invocation: `pytest -rA astropy/io/fits/tests/test_diff.py`.",
+        "The task carries 2 FAIL_TO_PASS and 46 PASS_TO_PASS, which is enough for a small but usable oracle-backed pilot.",
+        "The touched source region in `astropy/io/fits/diff.py` still has explanatory inline comments, so `comments_docstrings` removes real guidance without deleting the visible tests."
+      ],
+      "blockers": [
+        "The host-local editable install for the historical Astropy checkout fails during compiled extension build on this machine.",
+        "That makes Astropy a poor immediate task-two choice even though the oracle shape and degradation fit are good."
+      ]
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-26194",
+      "repo": "scikit-learn/scikit-learn",
+      "status": "selected",
+      "why": [
+        "Python 3.9 in the official SWE-bench spec.",
+        "One changed source file and one changed test file preserve a tight source/test surface.",
+        "The oracle command is also file-scoped: `pytest -rA sklearn/metrics/tests/test_ranking.py`.",
+        "It has stronger PASS_TO_PASS coverage than the astropy option: 2 FAIL_TO_PASS and 186 PASS_TO_PASS.",
+        "The touched source diff is directly inside the `roc_curve` docstring and nearby explanatory notes, which makes comments_docstrings especially well aligned."
+      ]
+    },
+    {
+      "instance_id": "pytest-dev__pytest-7205",
+      "repo": "pytest-dev/pytest",
+      "status": "fallback",
+      "why": [
+        "If widening to a second repo stalls again, this is the safest oracle-backed fallback.",
+        "It has a single changed source file, a single changed test file, and a bounded pytest command.",
+        "It carries 10 FAIL_TO_PASS and 16 PASS_TO_PASS."
+      ]
+    }
+  ],
+  "blocked_candidates": [
+    {
+      "instance_id": "django__django-11728",
+      "repo": "django/django",
+      "blocker": "Requires Python 3.6, which is not available through uv or the current host toolchain."
+    },
+    {
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "repo": "scikit-learn/scikit-learn",
+      "blocker": "Also requires Python 3.6 in the current SWE-bench spec, so it hits the same environment blocker."
+    }
+  ],
+  "selected_task": {
+    "instance_id": "scikit-learn__scikit-learn-26194",
+    "repo": "scikit-learn/scikit-learn",
+    "chosen_condition": "comments_docstrings",
+    "why_now": [
+      "It preserves the desired repo widening beyond pytest without the Requests oracle blocker or the Astropy editable-build blocker.",
+      "The source/test surface is still compact enough for the next pilot comparison.",
+      "The source region has an even stronger comments_docstrings fit because the touched change is embedded in the `roc_curve` docstring."
+    ]
+  },
+  "selection_rule": "Prefer a Python 3.9+ task with a compact source/test surface, a file-scoped pytest oracle, no known live-network dependence in the official command, and a source region that still meaningfully supports comments_docstrings."
+}

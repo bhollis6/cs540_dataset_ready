@@ -1,0 +1,5 @@
+condition,mean_corrected_token_delta_pct,median_corrected_token_delta_pct,token_higher_pairs
+Naming,0.6001,0.4792,46
+Type hints,0.1884,0.0755,32
+Comments/docstrings,0.3447,0.2076,47
+Remove tests,0.2177,0.0947,36

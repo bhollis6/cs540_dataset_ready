@@ -1,0 +1,14 @@
+{
+  "instance_id": "astropy__astropy-14365",
+  "repo": "astropy/astropy",
+  "base_commit": "7269fa3e33e8d02485a647da91a5a2a60a06af61",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "astropy/io/ascii/qdp.py",
+      "astropy/io/ascii/tests/test_qdp.py"
+    ]
+  }
+}

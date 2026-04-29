@@ -1,0 +1,14 @@
+{
+  "instance_id": "psf__requests-2317",
+  "repo": "psf/requests",
+  "base_commit": "091991be0da19de9108dbe5e3752917fea3d7fdc",
+  "clean_workspace": "runs/psf__requests-2317/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "requests/sessions.py",
+      "test_requests.py"
+    ]
+  }
+}

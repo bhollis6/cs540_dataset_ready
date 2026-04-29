@@ -1,0 +1,32 @@
+{
+  "candidate_id": "pip-tools_pr_1894",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1894,
+  "title": "Downgrade log level for configuration defaults message",
+  "description": "Resolves https://github.com/jazzband/pip-tools/pull/1863#issuecomment-1611728125\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Provided the tests for the changes.\r\n- [x] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/scripts/compile.py b/piptools/scripts/compile.py\nindex 837bb0f23..35476ec4b 100755\n--- a/piptools/scripts/compile.py\n+++ b/piptools/scripts/compile.py\n@@ -410,7 +410,7 @@ def cli(\n         )\n \n     if config:\n-        log.info(f\"Using pip-tools configuration defaults found in '{config !s}'.\")\n+        log.debug(f\"Using pip-tools configuration defaults found in '{config !s}'.\")\n \n     if resolver_name == \"legacy\":\n         log.warning(\ndiff --git a/piptools/scripts/sync.py b/piptools/scripts/sync.py\nindex d504d889a..63e4eb816 100755\n--- a/piptools/scripts/sync.py\n+++ b/piptools/scripts/sync.py\n@@ -147,7 +147,7 @@ def cli(\n             sys.exit(2)\n \n     if config:\n-        log.info(f\"Using pip-tools configuration defaults found in '{config !s}'.\")\n+        log.debug(f\"Using pip-tools configuration defaults found in '{config !s}'.\")\n \n     if python_executable:\n         _validate_python_executable(python_executable)\n",
+  "test_diff": "diff --git a/tests/test_cli_compile.py b/tests/test_cli_compile.py\nindex 2650af2f6..df677d8d6 100644\n--- a/tests/test_cli_compile.py\n+++ b/tests/test_cli_compile.py\n@@ -2925,3 +2925,15 @@ def test_compile_recursive_extras(runner, tmp_path, current_resolver):\n \"\"\"\n     assert out.exit_code == 0\n     assert expected == out.stderr\n+\n+\n+def test_config_option(pip_conf, runner, tmp_path, make_config_file):\n+    config_file = make_config_file(\"dry-run\", True)\n+\n+    req_in = tmp_path / \"requirements.in\"\n+    req_in.touch()\n+\n+    out = runner.invoke(cli, [req_in.as_posix(), \"--config\", config_file.as_posix()])\n+\n+    assert out.exit_code == 0\n+    assert \"Dry-run, so nothing updated\" in out.stderr\ndiff --git a/tests/test_cli_sync.py b/tests/test_cli_sync.py\nindex 78f5637d1..e7ec3c43f 100644\n--- a/tests/test_cli_sync.py\n+++ b/tests/test_cli_sync.py\n@@ -372,3 +372,16 @@ def test_default_python_executable_option(run, runner):\n             \"-r\",\n         ]\n     ]\n+\n+\n+@mock.patch(\"piptools.sync.run\")\n+def test_config_option(run, runner, make_config_file):\n+    config_file = make_config_file(\"dry-run\", True)\n+\n+    with open(sync.DEFAULT_REQUIREMENTS_FILE, \"w\") as reqs_txt:\n+        reqs_txt.write(\"six==1.10.0\")\n+\n+    out = runner.invoke(cli, [\"--config\", config_file.as_posix()])\n+\n+    assert out.exit_code == 1\n+    assert \"Would install:\" in out.stdout\n",
+  "files_changed": [
+    "piptools/scripts/compile.py",
+    "piptools/scripts/sync.py",
+    "tests/test_cli_compile.py",
+    "tests/test_cli_sync.py"
+  ],
+  "source_files": [
+    "piptools/scripts/compile.py",
+    "piptools/scripts/sync.py"
+  ],
+  "test_files": [
+    "tests/test_cli_compile.py",
+    "tests/test_cli_sync.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 27,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "e14c4cd023b2b1670f55448d78fea30cd9b67c09",
+  "base_commit_sha": "e8b8ce71268f1f5dd193eac8d38071e02ad7b91f",
+  "env_commit_sha": "e8b8ce71268f1f5dd193eac8d38071e02ad7b91f",
+  "head_commit_sha": "e6256950a3f5408216cf3e25b25660e695d65e72",
+  "merged_at": "2023-07-01T07:10:59Z"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "placeholder_clean_result",
+    "target_success": null,
+    "fail_to_pass_failed_count": null,
+    "pass_to_pass_failed_count": null,
+    "files_opened_before_first_edit": null,
+    "exploration_efficiency": null,
+    "total_duration_seconds": null,
+    "changed_files": []
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "placeholder_degraded_result",
+    "target_success": null,
+    "fail_to_pass_failed_count": null,
+    "pass_to_pass_failed_count": null,
+    "files_opened_before_first_edit": null,
+    "exploration_efficiency": null,
+    "total_duration_seconds": null,
+    "changed_files": []
+  },
+  "deltas": {
+    "target_success_changed": null,
+    "fail_to_pass_failed_count_delta": null,
+    "pass_to_pass_failed_count_delta": null,
+    "files_opened_before_first_edit_delta": null,
+    "exploration_efficiency_delta": null,
+    "total_duration_seconds_delta": null
+  },
+  "notes": [
+    "Placeholder packet shape for the first real clean-vs-degraded run."
+  ]
+}

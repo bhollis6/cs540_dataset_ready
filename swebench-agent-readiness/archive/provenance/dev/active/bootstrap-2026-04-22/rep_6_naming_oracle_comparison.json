@@ -1,0 +1,101 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 7.06,
+    "changed_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_skipping.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 7.475,
+    "changed_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_skipping.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": -2,
+    "exploration_efficiency_delta": 0.5,
+    "total_duration_seconds_delta": 0.41500000000000004
+  },
+  "notes": [
+    "Fourth degradation family on the first pytest task; identifier names were scope-locally obfuscated in the target source/test files before the degraded run.",
+    "Official oracle replay used the existing workspace-local Python 3.9 environment."
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 6,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/clean/rep_6/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/naming/rep_6/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py",
+        "testing/test_terminal.py",
+        ".pilot-venv-py39/bin/python"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        ".pilot-venv-py39/bin/python",
+        "testing/test_terminal.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 412472,
+      "cached_input_tokens": 339072,
+      "output_tokens": 5408,
+      "total_tokens": 417880
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 451420,
+      "cached_input_tokens": 397440,
+      "output_tokens": 5376,
+      "total_tokens": 456796
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "candidate_id": "click_pr_3079",
+  "repo": "pallets/click",
+  "pr_number": 3079,
+  "title": "Fix default handling to defer `UNSET` normalization",
+  "description": "When options are being parsed, multiple options may evaluate to have defaults of `UNSET`, and some may evaluate to have explicitly set defaults of `None`. The normalization of `UNSET -> None` is now deferred until all options have been parsed, so that it is possible to accurately evaluate and save the first non-UNSET default value.\r\n\r\nA new test exercises this functionality by pointing two flags at the same parameter declaration, and showing that their behavior is not order sensitive when only one of the flags has a default.\r\n\r\nresolves #3071\r\n\r\n---\r\n\r\nThe PR template says to add a note in `CHANGES.rst` for the change, but there's no header for the next release, so I wasn't sure where to put a change note. If a maintainer gives me a pointer in terms of what to do, I'm happy to amend with a change note. :slightly_smiling_face: ",
+  "patch_diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 95395eb28b..95d6556dfd 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -9,6 +9,8 @@ Unreleased\n     :pr:`3055`\n -   Replace ``Sentinel.UNSET`` default values by ``None`` as they're passed through\n     the ``Context.invoke()`` method. :issue:`3066` :issue:`3065` :pr:`3068`\n+-   Fix conversion of ``Sentinel.UNSET`` happening too early, which caused incorrect\n+    behavior for multiple parameters using the same name. :issue:`3071` :pr:`3079`\n \n Version 8.3.0\n --------------\ndiff --git a/src/click/core.py b/src/click/core.py\nindex cd8052f7d3..5f47287176 100644\n--- a/src/click/core.py\n+++ b/src/click/core.py\n@@ -1226,6 +1226,19 @@ def parse_args(self, ctx: Context, args: list[str]) -> list[str]:\n         for param in iter_params_for_processing(param_order, self.get_params(ctx)):\n             _, args = param.handle_parse_result(ctx, opts, args)\n \n+        # We now have all parameters' values into `ctx.params`, but the data may contain\n+        # the `UNSET` sentinel.\n+        # Convert `UNSET` to `None` to ensure that the user doesn't see `UNSET`.\n+        #\n+        # Waiting until after the initial parse to convert allows us to treat `UNSET`\n+        # more like a missing value when multiple params use the same name.\n+        # Refs:\n+        # https://github.com/pallets/click/issues/3071\n+        # https://github.com/pallets/click/pull/3079\n+        for name, value in ctx.params.items():\n+            if value is UNSET:\n+                ctx.params[name] = None\n+\n         if args and not ctx.allow_extra_args and not ctx.resilient_parsing:\n             ctx.fail(\n                 ngettext(\n@@ -2538,17 +2551,14 @@ def handle_parse_result(\n             # We skip adding the value if it was previously set by another parameter\n             # targeting the same variable name. This prevents parameters competing for\n             # the same name to override each other.\n-            and self.name not in ctx.params\n+            and (self.name not in ctx.params or ctx.params[self.name] is UNSET)\n         ):\n             # Click is logically enforcing that the name is None if the parameter is\n             # not to be exposed. We still assert it here to please the type checker.\n             assert self.name is not None, (\n                 f\"{self!r} parameter's name should not be None when exposing value.\"\n             )\n-            # Normalize UNSET values to None, as we're about to pass them to the\n-            # command function and move them to the pure-Python realm of user-written\n-            # code.\n-            ctx.params[self.name] = value if value is not UNSET else None\n+            ctx.params[self.name] = value\n \n         return value, args\n \n",
+  "test_diff": "diff --git a/tests/test_defaults.py b/tests/test_defaults.py\nindex 3f293e8816..31eee844b9 100644\n--- a/tests/test_defaults.py\n+++ b/tests/test_defaults.py\n@@ -84,3 +84,29 @@ def foo(name):\n \n     result = runner.invoke(cli, [\"foo\", \"--help\"], default_map={\"foo\": {\"name\": True}})\n     assert \"default: name\" in result.output\n+\n+\n+def test_shared_param_prefers_first_default(runner):\n+    \"\"\"test that the first default is chosen when multiple flags share a param name\"\"\"\n+\n+    @click.command\n+    @click.option(\"--red\", \"color\", flag_value=\"red\")\n+    @click.option(\"--green\", \"color\", flag_value=\"green\", default=True)\n+    def prefers_green(color):\n+        click.echo(color)\n+\n+    @click.command\n+    @click.option(\"--red\", \"color\", flag_value=\"red\", default=True)\n+    @click.option(\"--green\", \"color\", flag_value=\"green\")\n+    def prefers_red(color):\n+        click.echo(color)\n+\n+    result = runner.invoke(prefers_green, [])\n+    assert \"green\" in result.output\n+    result = runner.invoke(prefers_green, [\"--red\"])\n+    assert \"red\" in result.output\n+\n+    result = runner.invoke(prefers_red, [])\n+    assert \"red\" in result.output\n+    result = runner.invoke(prefers_red, [\"--green\"])\n+    assert \"green\" in result.output\n",
+  "files_changed": [
+    "CHANGES.rst",
+    "src/click/core.py",
+    "tests/test_defaults.py"
+  ],
+  "source_files": [
+    "src/click/core.py"
+  ],
+  "test_files": [
+    "tests/test_defaults.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 43,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "27aaed3fe5bcd6adedd6e91de234914af9859cf1",
+  "base_commit_sha": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+  "env_commit_sha": "6a1c0d077311f180b356965914e2de5b9e0fdb44",
+  "head_commit_sha": "189068aa606b3b1042b312b7e964a1fbf915727e",
+  "merged_at": "2025-09-24T17:07:42Z"
+}

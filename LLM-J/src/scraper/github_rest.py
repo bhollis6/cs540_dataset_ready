@@ -62,11 +62,13 @@ def fetch_pr_diff(
         files_changed=pr_metadata.file_paths,
         source_files=pr_metadata.source_files,
         test_files=pr_metadata.test_files,
+        test_support_files=pr_metadata.test_support_files,
         lines_added=pr_metadata.additions,
         lines_removed=pr_metadata.deletions,
         has_test_changes=pr_metadata.has_test_changes,
         merge_commit_sha=pr_metadata.merge_commit_sha,
         base_commit_sha=pr_metadata.base_commit_sha,
+        env_commit_sha=pr_metadata.base_commit_sha,
         head_commit_sha=pr_metadata.head_commit_sha,
         merged_at=pr_metadata.merged_at,
     )

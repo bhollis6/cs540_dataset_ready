@@ -1,0 +1,59 @@
+{
+  "repo": "pydantic/pydantic-settings",
+  "profile_version": 1,
+  "runtime": {
+    "os": "ubuntu-22.04",
+    "arch": "x86_64",
+    "python": "3.11",
+    "package_manager": "uv"
+  },
+  "environment": {
+    "env_commit_strategy": "base_or_override",
+    "system_packages": [],
+    "env_vars": {},
+    "pre_install": [],
+    "install_commands": [
+      "uv pip install -e .[yaml,toml,azure-key-vault,aws-secrets-manager,gcp-secret-manager]"
+    ],
+    "install_fallbacks": [
+      "pip install -e .[yaml,toml,azure-key-vault,aws-secrets-manager,gcp-secret-manager]"
+    ],
+    "post_install": [
+      "python -m pip install pytest pytest-mock pytest-examples pytest-pretty moto[secretsmanager] chardet"
+    ],
+    "dependency_pins": {}
+  },
+  "test": {
+    "command": "pytest -q",
+    "selection_mode": "explicit_nodeids",
+    "plugin_policy": {
+      "mode": "explicit_only",
+      "explicit_plugins": [
+        "pytest_mock",
+        "pytest_examples"
+      ]
+    },
+    "env_vars": {}
+  },
+  "historical_quirks": {
+    "known_break_windows": [],
+    "notes": [
+      "Initial RQ1 scale-out profile.",
+      "Historical candidates touch CLI, env, TOML/YAML, AWS, Azure, and GCP settings sources; install optional provider extras so focused tests can import provider clients across admitted PRs.",
+      "The repository declares test dependencies in dependency-groups rather than package extras, so install pytest-mock, pytest-examples, pytest-pretty, moto, and chardet explicitly for historical commits."
+    ]
+  },
+  "degradation": {
+    "supported_conditions": [
+      "type_hints",
+      "naming",
+      "comments_docstrings",
+      "remove_tests"
+    ],
+    "test_support_globs": []
+  },
+  "admission": {
+    "pilot_probe_target": 3,
+    "pilot_min_verified_tasks": 2
+  }
+}

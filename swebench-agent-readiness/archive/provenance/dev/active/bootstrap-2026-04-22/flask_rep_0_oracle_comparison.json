@@ -1,0 +1,102 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pallets__flask-5014",
+  "repo": "pallets/flask",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 0.925,
+    "changed_files": [
+      "src/flask/blueprints.py",
+      "tests/test_blueprints.py"
+    ]
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 0.869,
+    "changed_files": [
+      "src/flask/blueprints.py",
+      "tests/test_blueprints.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": -2,
+    "exploration_efficiency_delta": 0.5,
+    "total_duration_seconds_delta": -0.05600000000000005
+  },
+  "notes": [
+    "Visible validation rerun: clean returned 0 on tests/test_blueprints.py.",
+    "Visible validation rerun: degraded returned 0 on tests/test_blueprints.py.",
+    "Clean added both constructor-time and registration-time empty-name guards, while degraded only added the constructor-time guard."
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/comments_docstrings/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "src/flask/blueprints.py",
+        "src/flask/scaffold.py",
+        "tests/test_blueprints.py",
+        "src/flask/app.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/flask/blueprints.py",
+        "tests/test_blueprints.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "src/flask/app.py",
+        "src/flask/scaffold.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 310793,
+      "cached_input_tokens": 280704,
+      "output_tokens": 4534,
+      "total_tokens": 315327
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "src/flask/blueprints.py",
+        "tests/test_blueprints.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/flask/blueprints.py",
+        "tests/test_blueprints.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 291713,
+      "cached_input_tokens": 256128,
+      "output_tokens": 3549,
+      "total_tokens": 295262
+    }
+  }
+}

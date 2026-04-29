@@ -1,0 +1,14 @@
+{
+  "instance_id": "sympy__sympy-11618",
+  "repo": "sympy/sympy",
+  "base_commit": "360290c4c401e386db60723ddb0109ed499c9f6e",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "sympy/geometry/point.py",
+      "sympy/geometry/tests/test_point.py"
+    ]
+  }
+}

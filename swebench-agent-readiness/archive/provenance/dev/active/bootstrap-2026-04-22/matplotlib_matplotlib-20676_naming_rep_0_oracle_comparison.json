@@ -1,0 +1,116 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "matplotlib__matplotlib-20676",
+  "repo": "matplotlib/matplotlib",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 2,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 17.706,
+    "changed_files": [
+      "lib/matplotlib/tests/test_widgets.py",
+      "lib/matplotlib/widgets.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 2,
+    "pass_to_pass_failed_count": 32,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 24.18,
+    "changed_files": [
+      "examples/widgets/annotated_cursor.py",
+      "examples/widgets/lasso_selector_demo_sgskip.py",
+      "examples/widgets/polygon_selector_demo.py",
+      "examples/widgets/radio_buttons.py",
+      "examples/widgets/textbox.py",
+      "lib/matplotlib/artist.py",
+      "lib/matplotlib/backend_bases.py",
+      "lib/matplotlib/backend_managers.py",
+      "lib/matplotlib/cbook/__init__.py",
+      "lib/matplotlib/mpl-data/images/back-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/filesave-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/forward-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/help-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/home-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/move-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/subplots-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/zoom_to_rect-symbolic.svg",
+      "lib/matplotlib/projections/polar.py",
+      "lib/matplotlib/tests/test_cbook.py",
+      "lib/matplotlib/tests/test_widgets.py",
+      "lib/matplotlib/widgets.py",
+      "lib/mpl_toolkits/mplot3d/axis3d.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 32,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 6.474
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "lib/matplotlib/widgets.py",
+        "lib/matplotlib/tests/test_widgets.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/widgets.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 740665,
+      "cached_input_tokens": 630144,
+      "output_tokens": 5153,
+      "total_tokens": 745818
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/widgets.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/widgets.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 1164639,
+      "cached_input_tokens": 1080704,
+      "output_tokens": 8047,
+      "total_tokens": 1172686
+    }
+  }
+}

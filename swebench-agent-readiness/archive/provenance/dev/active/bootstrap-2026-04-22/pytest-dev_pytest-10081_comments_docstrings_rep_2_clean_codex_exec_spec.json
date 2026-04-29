@@ -1,0 +1,10 @@
+{
+  "condition": "clean",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/workspace",
+  "prompt_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/issue_prompt.md",
+  "stdout_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/logs/agent_stdout.jsonl",
+  "stderr_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/logs/agent_stderr.log",
+  "output_last_message_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/logs/last_message.md",
+  "sandbox_mode": "workspace-write",
+  "env_bin_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-10081/codex-cli/clean/rep_2/workspace/.pilot-venv-py39/bin"
+}

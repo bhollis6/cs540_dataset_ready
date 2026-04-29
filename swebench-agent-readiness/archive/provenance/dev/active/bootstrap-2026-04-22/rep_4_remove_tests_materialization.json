@@ -1,0 +1,14 @@
+{
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "e6e300e729dd33956e5448d8be9a0b1540b4e53a",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/clean/rep_4/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/remove_tests/rep_4/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "testing/test_skipping.py"
+    ],
+    "preserve_files": []
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sympy__sympy-11618",
+  "repo": "sympy/sympy",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-11618/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/geometry/tests/test_point.py",
+  "command_returncode": 1,
+  "duration_seconds": 1.693,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "test_issue_11617"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 4,
+  "pass_to_pass_passed": [
+    "test_point3D",
+    "test_Point2D",
+    "test_issue_9214",
+    "test_transform"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "sympy/geometry/point.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

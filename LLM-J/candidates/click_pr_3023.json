@@ -1,0 +1,32 @@
+{
+  "candidate_id": "click_pr_3023",
+  "repo": "pallets/click",
+  "pr_number": 3023,
+  "title": "Properly lazily import shutil",
+  "description": "I agree with the intention to lazily import but it wasn't actually happening. Locally I get the following on Python 3.12:\r\n\r\n```\r\n\u276f python -m timeit -n 1 -r 1 \"import shutil\"\r\n1 loop, best of 1: 8.09 msec per loop\r\n```",
+  "patch_diff": "diff --git a/src/click/_termui_impl.py b/src/click/_termui_impl.py\nindex b8f23a55ee..47f87b861f 100644\n--- a/src/click/_termui_impl.py\n+++ b/src/click/_termui_impl.py\n@@ -17,7 +17,6 @@\n from gettext import gettext as _\n from io import StringIO\n from pathlib import Path\n-from shutil import which\n from types import TracebackType\n \n from ._compat import _default_text_stdout\n@@ -235,8 +234,6 @@ def format_progress_line(self) -> str:\n         ).rstrip()\n \n     def render_progress(self) -> None:\n-        import shutil\n-\n         if self.hidden:\n             return\n \n@@ -250,6 +247,8 @@ def render_progress(self) -> None:\n         buf = []\n         # Update width in case the terminal has been resized\n         if self.autowidth:\n+            import shutil\n+\n             old_width = self.width\n             self.width = 0\n             clutter_length = term_len(self.format_progress_line())\n@@ -421,10 +420,13 @@ def _pipepager(\n     # Split the command into the invoked CLI and its parameters.\n     if not cmd_parts:\n         return False\n+\n+    import shutil\n+\n     cmd = cmd_parts[0]\n     cmd_params = cmd_parts[1:]\n \n-    cmd_filepath = which(cmd)\n+    cmd_filepath = shutil.which(cmd)\n     if not cmd_filepath:\n         return False\n     # Resolves symlinks and produces a normalized absolute path string.\n@@ -510,9 +512,12 @@ def _tempfilepager(\n     # Split the command into the invoked CLI and its parameters.\n     if not cmd_parts:\n         return False\n+\n+    import shutil\n+\n     cmd = cmd_parts[0]\n \n-    cmd_filepath = which(cmd)\n+    cmd_filepath = shutil.which(cmd)\n     if not cmd_filepath:\n         return False\n     # Resolves symlinks and produces a normalized absolute path string.\n@@ -573,6 +578,9 @@ def get_editor(self) -> str:\n                 return rv\n         if WIN:\n             return \"notepad\"\n+\n+        from shutil import which\n+\n         for editor in \"sensible-editor\", \"vim\", \"nano\":\n             if which(editor) is not None:\n                 return editor\ndiff --git a/src/click/formatting.py b/src/click/formatting.py\nindex 9891f8809f..0b64f831b5 100644\n--- a/src/click/formatting.py\n+++ b/src/click/formatting.py\n@@ -119,12 +119,12 @@ def __init__(\n         width: int | None = None,\n         max_width: int | None = None,\n     ) -> None:\n-        import shutil\n-\n         self.indent_increment = indent_increment\n         if max_width is None:\n             max_width = 80\n         if width is None:\n+            import shutil\n+\n             width = FORCED_WIDTH\n             if width is None:\n                 width = max(min(shutil.get_terminal_size().columns, max_width) - 2, 50)\ndiff --git a/src/click/testing.py b/src/click/testing.py\nindex 04d263eeac..3d3cb1701c 100644\n--- a/src/click/testing.py\n+++ b/src/click/testing.py\n@@ -5,7 +5,6 @@\n import io\n import os\n import shlex\n-import shutil\n import sys\n import tempfile\n import typing as t\n@@ -571,6 +570,8 @@ def isolated_filesystem(\n             os.chdir(cwd)\n \n             if temp_dir is None:\n+                import shutil\n+\n                 try:\n                     shutil.rmtree(dt)\n                 except OSError:\n",
+  "test_diff": "diff --git a/tests/test_imports.py b/tests/test_imports.py\nindex 6b44c39898..7b13f909ce 100644\n--- a/tests/test_imports.py\n+++ b/tests/test_imports.py\n@@ -43,7 +43,6 @@ def tracking_import(module, locals=None, globals=None, fromlist=None,\n     \"itertools\",\n     \"os\",\n     \"re\",\n-    \"shutil\",\n     \"stat\",\n     \"struct\",\n     \"sys\",\n",
+  "files_changed": [
+    "src/click/_termui_impl.py",
+    "src/click/formatting.py",
+    "src/click/testing.py",
+    "tests/test_imports.py"
+  ],
+  "source_files": [
+    "src/click/_termui_impl.py",
+    "src/click/formatting.py",
+    "src/click/testing.py"
+  ],
+  "test_files": [
+    "tests/test_imports.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 17,
+  "lines_removed": 9,
+  "has_test_changes": true,
+  "merge_commit_sha": "1f4002096439d6661f1df5ceff7eccd3862153ac",
+  "base_commit_sha": "4f936ac1981645488f396953bc59e50445de00b6",
+  "env_commit_sha": "4f936ac1981645488f396953bc59e50445de00b6",
+  "head_commit_sha": "6f6cbbb370e66ea29592d93e11848e01039a49a4",
+  "merged_at": "2025-08-08T19:59:24Z"
+}

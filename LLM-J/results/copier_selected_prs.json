@@ -1,0 +1,549 @@
+{
+  "repo": "copier-org/copier",
+  "selection_timestamp": "2026-04-28T05:49:02.326910+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 10,
+  "accepted": 10,
+  "review": 0,
+  "rejected": 0,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "copier_pr_2605",
+      "pr_number": 2605,
+      "total_score": 23,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 5,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A strong experimental candidate. The PR fixes a single well-defined bug with rich type annotations, descriptive naming, meaningful docstrings, and comprehensive regression tests that serve as clear pass/fail signals. The complexity is in the sweet spot: requires real git internals knowledge and multi-path reasoning, but the detailed description makes it tractable for an AI agent. Degrading any of the target properties (type hints, naming, comments, tests) would meaningfully impact an agent's ability to correctly implement all three failure modes, especially the critical `--cacheinfo` vs `--chmod` ordering constraint.",
+      "merge_commit_sha": "785cf604f193e300ce2312cd50fff1b796913d2f",
+      "base_commit_sha": "62dd8054460e42daf964ef5b1f72d1b429c4d11c",
+      "env_commit_sha": "62dd8054460e42daf964ef5b1f72d1b429c4d11c",
+      "head_commit_sha": "f74eb385292bdc1eb0a50c13554ee09fa647531d",
+      "source_files": [
+        "copier/_main.py",
+        "copier/_template.py"
+      ],
+      "test_files": [
+        "tests/test_updatediff.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_main.py",
+            "copier/_template.py",
+            "tests/test_updatediff.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_main.py",
+            "copier/_template.py",
+            "tests/test_updatediff.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_main.py",
+            "copier/_template.py",
+            "tests/test_updatediff.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_updatediff.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2584",
+      "pr_number": 2584,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is an excellent experimental candidate. It's a tightly scoped bug fix with a clear description, meaningful test coverage that directly validates the fix across multiple parametrized cases, and touches real application logic with type hints and descriptive naming. The complexity is in the sweet spot \u2014 requires contextual understanding of Jinja configuration but is not sprawling. High confidence this would produce clean pass/fail signal under codebase degradation.",
+      "merge_commit_sha": "0b714d5be859a686e5558176c8a666d4ae2079db",
+      "base_commit_sha": "f6ac94689a0a672ae1a53d442740fb85dbd4004f",
+      "env_commit_sha": "f6ac94689a0a672ae1a53d442740fb85dbd4004f",
+      "head_commit_sha": "769a1a7476f309697371e521b1d1fc2a8b632f94",
+      "source_files": [
+        "copier/_template.py"
+      ],
+      "test_files": [
+        "tests/test_migrations.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_template.py",
+            "tests/test_migrations.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_template.py",
+            "tests/test_migrations.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_template.py",
+            "tests/test_migrations.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_migrations.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2427",
+      "pr_number": 2427,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate. Single-purpose, well-scoped bug fix with excellent test coverage that directly validates the broken operation (`run_update` on symlinked-outside paths). The core logic requires real reasoning about symlink and path resolution semantics, putting it in the ideal complexity sweet spot. The main drawback is the terse PR description requiring external context, but the inline comment and test structure compensate well. High experimental value.",
+      "merge_commit_sha": "41cb45c9649782150c01886bc52bee5eddb655b9",
+      "base_commit_sha": "3ae340d2247331c80aa9bfc3d421c3e9fda75ad8",
+      "env_commit_sha": "3ae340d2247331c80aa9bfc3d421c3e9fda75ad8",
+      "head_commit_sha": "184d6ddaad00915dcd7ed485d740d3670b1d7efa",
+      "source_files": [
+        "copier/_main.py"
+      ],
+      "test_files": [
+        "tests/test_symlinks.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_symlinks.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_symlinks.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_symlinks.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_symlinks.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2432",
+      "pr_number": 2432,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, clearly described bug fix with a direct pass/fail test. The PR is ideal in terms of scope, clarity, and test quality. The main limitation for the experiment is that the actual source code change is very small (one git call expanded), which limits how much naming/type-hint degradation could affect an agent's ability to find and apply the fix. However, the test scaffolding and surrounding context in the test file provide decent mutation surface, making this a reasonable but not exceptional candidate.",
+      "merge_commit_sha": "b14f8bade6c1bdb3dc339e030f2809c7a743f726",
+      "base_commit_sha": "3abf23606408bae501457b84b4056bad504fd388",
+      "env_commit_sha": "3abf23606408bae501457b84b4056bad504fd388",
+      "head_commit_sha": "c847a56c515a1bce500e955b30d3071439bc6d37",
+      "source_files": [
+        "copier/_main.py"
+      ],
+      "test_files": [
+        "tests/test_updatediff.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_updatediff.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_updatediff.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_updatediff.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_updatediff.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2547",
+      "pr_number": 2547,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, clearly described bug fix with excellent test coverage that directly validates the regression. The code is real application logic with type hints, docstrings, and descriptive naming\u2014all four degradable properties are present and meaningful. Moderate complexity (requires understanding git VCS flow and ref-resolution ordering) puts it in the ideal difficulty range for the experiment. Strong candidate overall.",
+      "merge_commit_sha": "4c419a823b7262ca8c4c4378938fbf5cd08fc8f3",
+      "base_commit_sha": "4381df2845bf124ab965e05b4e27ab81711e6076",
+      "env_commit_sha": "4381df2845bf124ab965e05b4e27ab81711e6076",
+      "head_commit_sha": "492fd8ae9782a06f7875f5700ecb66534936c5c8",
+      "source_files": [
+        "copier/_template.py",
+        "copier/_vcs.py"
+      ],
+      "test_files": [
+        "tests/test_dirty_local.py",
+        "tests/test_vcs.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_template.py",
+            "copier/_vcs.py",
+            "tests/test_dirty_local.py",
+            "tests/test_vcs.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_template.py",
+            "copier/_vcs.py",
+            "tests/test_dirty_local.py",
+            "tests/test_vcs.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_template.py",
+            "copier/_vcs.py",
+            "tests/test_dirty_local.py",
+            "tests/test_vcs.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_dirty_local.py",
+            "tests/test_vcs.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2587",
+      "pr_number": 2587,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, cleanly implemented feature PR with excellent test coverage across all behavioral paths. The focused change to `_main.py` adds Jinja2 strict undefined support in ~10 lines, and the four new tests directly validate each code path. Moderate complexity (requires Jinja2 and copier envops context but is not architecturally complex), making it a good candidate for the experiment. The tests serve as clear pass/fail signals, the code has descriptive naming and type annotations, and the task description is clear enough to hand to an agent.",
+      "merge_commit_sha": "387791a3fe9e4407e580a7420f97ac93dc46c23e",
+      "base_commit_sha": "e3efdafe16eed093e30e68ab14c6800718db0e35",
+      "env_commit_sha": "e3efdafe16eed093e30e68ab14c6800718db0e35",
+      "head_commit_sha": "416e6ba2db9cce44fe8d4bfa295be70748d9bbc5",
+      "source_files": [
+        "copier/_main.py"
+      ],
+      "test_files": [
+        "tests/test_jinja2_undefined.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_jinja2_undefined.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_jinja2_undefined.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_jinja2_undefined.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_jinja2_undefined.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2548",
+      "pr_number": 2548,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-scoped feature PR that threads a new CLI flag through multiple architectural layers with strong tests that directly validate the before/after behavior. The main weakness is a sparse PR description that requires reading the linked issue for full context. Complexity sits in the desirable 3-4 range: requires navigating copier's CLI-to-Worker pipeline but is bounded and comprehensible. Good experimental candidate overall.",
+      "merge_commit_sha": "7ac0ca45d20aa69b5a6ce0f1922838f3b9a8d58f",
+      "base_commit_sha": "4c419a823b7262ca8c4c4378938fbf5cd08fc8f3",
+      "env_commit_sha": "4c419a823b7262ca8c4c4378938fbf5cd08fc8f3",
+      "head_commit_sha": "94e7162ceb2fdd905f3f1fa0eb30e08e5f25a813",
+      "source_files": [
+        "copier/_cli.py",
+        "copier/_main.py"
+      ],
+      "test_files": [
+        "tests/test_check_update.py",
+        "tests/test_cli.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_cli.py",
+            "copier/_main.py",
+            "tests/test_check_update.py",
+            "tests/test_cli.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_cli.py",
+            "copier/_main.py",
+            "tests/test_check_update.py",
+            "tests/test_cli.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_cli.py",
+            "copier/_main.py",
+            "tests/test_check_update.py",
+            "tests/test_cli.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_check_update.py",
+            "tests/test_cli.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2456",
+      "pr_number": 2456,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 2,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a well-scoped security fix with excellent test coverage and moderate complexity sitting in the sweet spot for our experiment. The main weakness is the nearly empty PR description, which would make it difficult to hand to an AI agent as a task prompt without supplementing it with information derived from the diff or linked issues. The test signal is strong and the code has good mutation surface. If we can reconstruct a task description from the title and code context, this is a solid candidate; as-is, the clarity score is a meaningful limitation.",
+      "merge_commit_sha": "b3a7b3772d17cf0e7a4481978188c9f536c8d8f6",
+      "base_commit_sha": "41cb45c9649782150c01886bc52bee5eddb655b9",
+      "env_commit_sha": "41cb45c9649782150c01886bc52bee5eddb655b9",
+      "head_commit_sha": "f55429c6b5c14cf5c718f7686fe7f5abc6ad7ec8",
+      "source_files": [
+        "copier/_main.py"
+      ],
+      "test_files": [
+        "tests/test_symlinks.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_symlinks.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_symlinks.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_main.py",
+            "tests/test_symlinks.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_symlinks.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2545",
+      "pr_number": 2545,
+      "total_score": 19,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-described bug fix with an excellent snapshot test that serves as a direct pass/fail signal. However, the complexity is too low (simple parent class swap) to be a strong experimental candidate \u2014 the fix is nearly mechanical once the problem is understood, limiting the signal we could measure between clean and degraded conditions. The bulk of the diff is lock file noise. Good test hygiene and clarity, but marginal experimental value due to low implementation complexity.",
+      "merge_commit_sha": "4381df2845bf124ab965e05b4e27ab81711e6076",
+      "base_commit_sha": "99dc1a074c9f7aa003a64b151e441730fae724f8",
+      "env_commit_sha": "99dc1a074c9f7aa003a64b151e441730fae724f8",
+      "head_commit_sha": "b63675725e9e30ee0d3f2934000efb7b2ca796b3",
+      "source_files": [
+        "copier/_cli.py",
+        "uv.lock"
+      ],
+      "test_files": [
+        "tests/test_cli.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_cli.py",
+            "tests/test_cli.py",
+            "uv.lock"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_cli.py",
+            "tests/test_cli.py",
+            "uv.lock"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_cli.py",
+            "tests/test_cli.py",
+            "uv.lock"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "copier_pr_2538",
+      "pr_number": 2538,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 2,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is clean, well-tested, and clearly described, but it is too simple to be a useful experimental candidate. The entire source fix is a single regex change on one line, leaving almost no code surface to degrade meaningfully. An AI agent would either get it right or wrong regardless of codebase quality conditions, making it a poor discriminator for the experiment. The mutation relevance is also very low since there's minimal application logic, type usage, or documentation in the changed code path.",
+      "merge_commit_sha": "1ba971c0865c2dcfd5a519d3338d212cb71c1776",
+      "base_commit_sha": "128f0003ad295d89cedf41001b64bc6108afac57",
+      "env_commit_sha": "128f0003ad295d89cedf41001b64bc6108afac57",
+      "head_commit_sha": "5b7372002eba1ae32a07f6f6ac15ec1f1c7a9f6c",
+      "source_files": [
+        "copier/_vcs.py"
+      ],
+      "test_files": [
+        "tests/test_vcs.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "copier/_vcs.py",
+            "tests/test_vcs.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "copier/_vcs.py",
+            "tests/test_vcs.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "copier/_vcs.py",
+            "tests/test_vcs.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_vcs.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

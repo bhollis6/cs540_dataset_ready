@@ -1,0 +1,14 @@
+{
+  "instance_id": "matplotlib__matplotlib-26291",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "fa68f46289adf4a8a4bc7ba97ded8258ec9d079c",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-26291/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-26291/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "lib/mpl_toolkits/axes_grid1/inset_locator.py",
+      "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+    ]
+  }
+}

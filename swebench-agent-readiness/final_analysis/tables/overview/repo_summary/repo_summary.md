@@ -1,0 +1,13 @@
+| repo | rows | unique_tasks | complete_all_four_tasks | fully_complete_repo | clean_success_rate_pct | degraded_success_rate_pct | clean_success_to_degraded_failure | baseline_hard_rows | fail_to_pass_delta_sum | pass_to_pass_delta_sum | pass_to_pass_damage_rows | mean_token_delta | median_token_delta |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| astropy/astropy | 12 | 3 | 3 | True | 66.700 | 58.300 | 1 | 4 | 1 | 8 | 1 | 184408.800 | 113009 |
+| django/django | 12 | 3 | 3 | True | 66.700 | 66.700 | 0 | 4 | 0 | 0 | 0 | 68679.100 | 221008.500 |
+| matplotlib/matplotlib | 12 | 3 | 3 | True | 66.700 | 58.300 | 1 | 4 | 1 | 53 | 2 | 268384.800 | 106762 |
+| pallets/flask | 3 | 1 | 0 | False | 100 | 100 | 0 | 0 | 0 | 0 | 0 | 43387 | 18215 |
+| psf/requests | 12 | 3 | 3 | True | 75 | 58.300 | 3 | 3 | 1 | 5 | 2 | 26089.200 | 4505 |
+| pydata/xarray | 12 | 3 | 3 | True | 100 | 75 | 3 | 0 | 4 | 26 | 3 | 128138.100 | 114688 |
+| pylint-dev/pylint | 12 | 3 | 3 | True | 33.300 | 33.300 | 0 | 8 | 0 | 0 | 0 | 21680.400 | 39199 |
+| pytest-dev/pytest | 14 | 3 | 3 | True | 71.400 | 71.400 | 0 | 4 | 0 | 0 | 0 | 35607.800 | 30731.500 |
+| scikit-learn/scikit-learn | 15 | 4 | 3 | True | 100 | 93.300 | 1 | 0 | 0 | 1 | 1 | 120737.700 | 65029 |
+| sphinx-doc/sphinx | 12 | 3 | 3 | True | 100 | 100 | 0 | 0 | 0 | 0 | 0 | 133110.200 | 104198 |
+| sympy/sympy | 12 | 3 | 3 | True | 100 | 83.300 | 2 | 0 | 1 | 9 | 2 | 251572.100 | 157609.500 |

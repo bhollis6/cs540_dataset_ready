@@ -1,0 +1,122 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "django__django-16631",
+  "repo": "django/django",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 6,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 0.306,
+    "changed_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py",
+      "tests/auth_tests/test_basic.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 7,
+    "exploration_efficiency": 0.4286,
+    "total_duration_seconds": 0.306,
+    "changed_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py",
+      "docs/_theme/djangodocs-epub/static/docicons-behindscenes.png",
+      "docs/_theme/djangodocs-epub/static/docicons-note.png",
+      "docs/_theme/djangodocs-epub/static/docicons-philosophy.png",
+      "docs/_theme/djangodocs-epub/static/docicons-warning.png",
+      "tests/auth_tests/test_basic.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 1,
+    "exploration_efficiency_delta": -0.07140000000000002,
+    "total_duration_seconds_delta": 0.0
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 6,
+      "opened_files_before_first_edit": [
+        "django/contrib/auth/base_user.py",
+        "django/contrib/auth/__init__.py",
+        "tests/auth_tests/test_basic.py",
+        "tests/auth_tests/test_views.py",
+        "django/contrib/auth/tokens.py",
+        "tests/auth_tests/test_tokens.py"
+      ],
+      "relevant_files_opened": 3,
+      "relevant_opened_files": [
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_basic.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        "django/contrib/auth/tokens.py",
+        "tests/auth_tests/test_tokens.py",
+        "tests/auth_tests/test_views.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 653551,
+      "cached_input_tokens": 611456,
+      "output_tokens": 6283,
+      "total_tokens": 659834
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 7,
+      "opened_files_before_first_edit": [
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_basic.py",
+        "django/contrib/auth/tokens.py",
+        "tests/auth_tests/test_tokens.py",
+        "tests/auth_tests/settings.py",
+        "tests/auth_tests/test_views.py"
+      ],
+      "relevant_files_opened": 3,
+      "relevant_opened_files": [
+        "django/contrib/auth/__init__.py",
+        "django/contrib/auth/base_user.py",
+        "tests/auth_tests/test_basic.py"
+      ],
+      "dead_end_file_opens": 4,
+      "dead_end_opened_files": [
+        "django/contrib/auth/tokens.py",
+        "tests/auth_tests/settings.py",
+        "tests/auth_tests/test_tokens.py",
+        "tests/auth_tests/test_views.py"
+      ],
+      "exploration_efficiency": 0.4286,
+      "first_edit_detected": true,
+      "input_tokens": 451573,
+      "cached_input_tokens": 390528,
+      "output_tokens": 5779,
+      "total_tokens": 457352
+    }
+  }
+}

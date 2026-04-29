@@ -1,0 +1,14 @@
+{
+  "instance_id": "pylint-dev__pylint-4970",
+  "repo": "pylint-dev/pylint",
+  "base_commit": "40cc2ffd7887959157aaf469e09585ec2be7f528",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/clean/rep_0/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/codex-cli/naming/rep_0/workspace",
+  "degraded_condition": "naming",
+  "degraded_targets": {
+    "target_files": [
+      "pylint/checkers/similar.py",
+      "tests/checkers/unittest_similar.py"
+    ]
+  }
+}

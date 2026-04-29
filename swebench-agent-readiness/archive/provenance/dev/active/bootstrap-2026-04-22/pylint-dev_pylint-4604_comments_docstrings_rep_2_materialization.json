@@ -1,0 +1,15 @@
+{
+  "instance_id": "pylint-dev__pylint-4604",
+  "repo": "pylint-dev/pylint",
+  "base_commit": "1e55ae64624d28c5fe8b63ad7979880ee2e6ef3f",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4604/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4604/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "pylint/checkers/variables.py",
+      "pylint/constants.py",
+      "tests/checkers/unittest_variables.py"
+    ]
+  }
+}

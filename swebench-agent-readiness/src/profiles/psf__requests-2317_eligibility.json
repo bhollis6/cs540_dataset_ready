@@ -1,0 +1,115 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "psf__requests-2317",
+  "repo": "psf/requests",
+  "base_commit": "164e0a3f20260311f62c6fb89bbf58d0f94a51a9",
+  "changed_source_files": [
+    "requests/sessions.py"
+  ],
+  "changed_test_files": [
+    "test_requests.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "The Verified row exposes eight FAIL_TO_PASS targets and 133 PASS_TO_PASS tests, which is strong enough for both target-success and broader-regression analysis on the second task.",
+    "evidence": [
+      "The official snapshot records 8 FAIL_TO_PASS tests.",
+      "The official snapshot records 133 PASS_TO_PASS tests."
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "NO_GO",
+      "signal": {
+        "level": "low",
+        "rationale": "The historical Requests source and test surfaces for this task are effectively untyped, so stripping type hints would remove almost no useful information.",
+        "evidence": [
+          "The changed Session.request surface uses unannotated Python signatures.",
+          "The changed test file is also untyped."
+        ]
+      },
+      "fairness_notes": [
+        "Do not add a type-hint condition where the historical code has negligible typed surface."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "REVIEW",
+      "signal": {
+        "level": "medium",
+        "rationale": "Identifiers like method, request, and to_native_string matter, but this fix is still compact enough that aggressive renaming could become unfair without a dry run.",
+        "evidence": [
+          "The changed source logic hinges on the conversion of method into a native string before request construction.",
+          "The issue is semantically meaningful but still localized to a single high-traffic helper."
+        ]
+      },
+      "fairness_notes": [
+        "Any naming degradation should preserve API-facing identifiers and avoid introducing unfair ambiguity in HTTP method literals."
+      ],
+      "blockers": [
+        "Need a naming dry-run before using this condition on Requests."
+      ]
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The changed source region sits inside Session.request(), which has API-facing docstrings and nearby explanatory comments, making this a clean non-test-removal condition for task two.",
+        "evidence": [
+          "requests/sessions.py contains a large request() docstring immediately around the changed line.",
+          "The same region includes explanatory comments such as the request-construction note following the changed conversion."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve string literals such as HTTP methods and URLs; only remove actual comments and docstrings."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The changed Requests test gives direct behavioral guidance for encoded HTTP methods while the oracle still preserves a broad PASS_TO_PASS slice.",
+        "evidence": [
+          "The changed test adds a focused encoded-method regression in test_requests.py.",
+          "The official snapshot records 133 PASS_TO_PASS tests beyond the direct target tests."
+        ]
+      },
+      "fairness_notes": [
+        "Removing the visible test remains fair because the hidden oracle still checks multiple request behaviors."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": "comments_docstrings",
+  "decision_summary": "Choose psf__requests-2317 as the second task because it widens repo coverage beyond pytest, stays runnable on Python 3.9 in this environment, and supports both comments_docstrings and remove_tests cleanly.",
+  "evidence_sources": [
+    {
+      "type": "official_task_snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/second_task_candidate_psf__requests-2317_snapshot.json",
+      "note": "Local snapshot fetched from the official SWE-bench Verified dataset."
+    }
+  ],
+  "open_questions": [
+    "Decide whether to keep Requests only as a visible-run harness trial or to revisit it later with an intentionally network-enabled oracle policy.",
+    "Choose whether the oracle-backed second task should come from astropy, scikit-learn, or a pytest fallback."
+  ],
+  "notes": [
+    "This record replaces the earlier Django second-task plan because both Django and the sklearn backup require Python 3.6, which is unavailable in this host environment.",
+    "The Django inspection artifacts are retained as blocked-candidate evidence, not as the current task-two plan.",
+    "Requests rep_2 completed clean and comments_docstrings visible runs successfully, but the official oracle replay path was blocked by the full `pytest -rA test_requests.py` command hanging for several minutes."
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sphinx-doc__sphinx-10449",
+  "repo": "sphinx-doc/sphinx",
+  "harness": "codex-cli",
+  "chosen_condition": "type_hints",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 8.475,
+    "changed_files": [
+      "sphinx/ext/autodoc/typehints.py",
+      "tests/test_ext_autodoc_configs.py",
+      "tox.ini"
+    ]
+  },
+  "degraded": {
+    "condition": "type_hints",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 4,
+    "exploration_efficiency": 0.5,
+    "total_duration_seconds": 8.713,
+    "changed_files": [
+      "sphinx/ext/autodoc/typehints.py",
+      "tests/test_ext_autodoc_configs.py",
+      "tox.ini"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 0.23799999999999955
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Recovered from paused clean-side run by executing the missing degraded side."
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 1,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/clean/rep_1/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-10449/codex-cli/type_hints/rep_1/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "sphinx/ext/autodoc/typehints.py",
+        "tests/test_ext_autodoc_configs.py",
+        "tests/roots/test-ext-autodoc/target/typehints.py",
+        "sphinx/ext/autodoc/__init__.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sphinx/ext/autodoc/typehints.py",
+        "tests/test_ext_autodoc_configs.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "sphinx/ext/autodoc/__init__.py",
+        "tests/roots/test-ext-autodoc/target/typehints.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 550491,
+      "cached_input_tokens": 505600,
+      "output_tokens": 4152,
+      "total_tokens": 554643
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 4,
+      "opened_files_before_first_edit": [
+        "sphinx/ext/autodoc/typehints.py",
+        "sphinx/ext/autodoc/__init__.py",
+        "tests/test_ext_autodoc_configs.py",
+        "tests/roots/test-ext-autodoc/target/typehints.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "sphinx/ext/autodoc/typehints.py",
+        "tests/test_ext_autodoc_configs.py"
+      ],
+      "dead_end_file_opens": 2,
+      "dead_end_opened_files": [
+        "sphinx/ext/autodoc/__init__.py",
+        "tests/roots/test-ext-autodoc/target/typehints.py"
+      ],
+      "exploration_efficiency": 0.5,
+      "first_edit_detected": true,
+      "input_tokens": 859651,
+      "cached_input_tokens": 706304,
+      "output_tokens": 4888,
+      "total_tokens": 864539
+    }
+  }
+}

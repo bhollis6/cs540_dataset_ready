@@ -1,0 +1,28 @@
+{
+  "candidate_id": "uvicorn_pr_2907",
+  "repo": "encode/uvicorn",
+  "pr_number": 2907,
+  "title": "Accept `log_level` strings case-insensitively",
+  "description": "## Summary\n\n- Lowercase the `log_level` string before the `LOG_LEVELS` lookup so `\"INFO\"`, `\"Info\"`, and `\"info\"` are all accepted.\n- Previously anything other than lowercase raised `KeyError` from the programmatic API (the CLI `click.Choice` already enforced lowercase).\n\nSplit out from #2786.\n\nCo-authored-by: Nuno Andr\u00e9 <mail@nunoand.re>\n\n## Test plan\n\n- [x] New parametrized `test_config_log_level_case_insensitive` covers `\"INFO\"`, `\"Info\"`, `\"info\"`.\n\n## AI Disclaimer\n\nThis PR was developed with the assistance of either Claude or Codex. I take full ownership of it.",
+  "patch_diff": "diff --git a/uvicorn/config.py b/uvicorn/config.py\nindex d70ba642b..6d25051a6 100644\n--- a/uvicorn/config.py\n+++ b/uvicorn/config.py\n@@ -389,7 +389,7 @@ def configure_logging(self) -> None:\n \n         if self.log_level is not None:\n             if isinstance(self.log_level, str):\n-                log_level = LOG_LEVELS[self.log_level]\n+                log_level = LOG_LEVELS[self.log_level.lower()]\n             else:\n                 log_level = self.log_level\n             logging.getLogger(\"uvicorn.error\").setLevel(log_level)\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex 2e94ba178..84e0c2e08 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -462,6 +462,13 @@ def test_config_log_effective_level(log_level: int, uvicorn_logger_level: int) -\n     assert logging.getLogger(\"uvicorn.asgi\").getEffectiveLevel() == effective_level\n \n \n+@pytest.mark.parametrize(\"log_level\", [\"INFO\", \"Info\", \"info\"])\n+def test_config_log_level_case_insensitive(log_level: str) -> None:\n+    config = Config(app=asgi_app, log_level=log_level)\n+    config.load()\n+    assert logging.getLogger(\"uvicorn.error\").level == logging.INFO\n+\n+\n def test_ws_max_size() -> None:\n     config = Config(app=asgi_app, ws_max_size=1000)\n     config.load()\n",
+  "files_changed": [
+    "tests/test_config.py",
+    "uvicorn/config.py"
+  ],
+  "source_files": [
+    "uvicorn/config.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 8,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "fdcacb4b83bc686ea1ba9e50ffe5b8cfe49b3e00",
+  "base_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+  "env_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+  "head_commit_sha": "eb811cac3c5a3f7fed6e00bdb9ee33153ea0291e",
+  "merged_at": "2026-04-19T10:00:23Z"
+}

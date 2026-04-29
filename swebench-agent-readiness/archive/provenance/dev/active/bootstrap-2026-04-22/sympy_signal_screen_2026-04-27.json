@@ -1,0 +1,157 @@
+[
+  {
+    "instance_id": "sympy__sympy-11618",
+    "repo": "sympy/sympy",
+    "base_commit": "360290c4c401e386db60723ddb0109ed499c9f6e",
+    "version": "1.0",
+    "source_files": [
+      "sympy/geometry/point.py"
+    ],
+    "test_files": [
+      "sympy/geometry/tests/test_point.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 4,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 42,
+      "comments": 36,
+      "name_candidates": 213,
+      "classes": 3,
+      "functions": 50,
+      "variables": 160,
+      "total": 213
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.693,
+      "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/geometry/tests/test_point.py"
+    }
+  },
+  {
+    "instance_id": "sympy__sympy-12096",
+    "repo": "sympy/sympy",
+    "base_commit": "d7c3045115693e887bcd03599b7ca4650ac5f2cb",
+    "version": "1.0",
+    "source_files": [
+      "sympy/core/function.py"
+    ],
+    "test_files": [
+      "sympy/utilities/tests/test_lambdify.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 43,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 45,
+      "comments": 238,
+      "name_candidates": 651,
+      "classes": 13,
+      "functions": 100,
+      "variables": 538,
+      "total": 651
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.919,
+      "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/utilities/tests/test_lambdify.py"
+    }
+  },
+  {
+    "instance_id": "sympy__sympy-12419",
+    "repo": "sympy/sympy",
+    "base_commit": "479939f8c65c8c2908bbedc959549a257a7c0b0b",
+    "version": "1.0",
+    "source_files": [
+      "sympy/matrices/expressions/matexpr.py"
+    ],
+    "test_files": [
+      "sympy/matrices/expressions/tests/test_matexpr.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 25,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 7,
+      "comments": 9,
+      "name_candidates": 204,
+      "classes": 5,
+      "functions": 76,
+      "variables": 123,
+      "total": 204
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.875,
+      "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/matrices/expressions/tests/test_matexpr.py"
+    }
+  },
+  {
+    "instance_id": "sympy__sympy-12481",
+    "repo": "sympy/sympy",
+    "base_commit": "c807dfe7569692cad24f02a08477b70c1679a4dd",
+    "version": "1.0",
+    "source_files": [
+      "sympy/combinatorics/permutations.py"
+    ],
+    "test_files": [
+      "sympy/combinatorics/tests/test_permutations.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 7,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 78,
+      "comments": 59,
+      "name_candidates": 559,
+      "classes": 2,
+      "functions": 83,
+      "variables": 474,
+      "total": 559
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 2.097,
+      "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/combinatorics/tests/test_permutations.py"
+    }
+  },
+  {
+    "instance_id": "sympy__sympy-12489",
+    "repo": "sympy/sympy",
+    "base_commit": "aa9780761ad8c3c0f68beeef3a0ce5caac9e100b",
+    "version": "1.0",
+    "source_files": [
+      "sympy/combinatorics/permutations.py"
+    ],
+    "test_files": [
+      "sympy/combinatorics/tests/test_permutations.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 8,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 78,
+      "comments": 59,
+      "name_candidates": 558,
+      "classes": 2,
+      "functions": 83,
+      "variables": 473,
+      "total": 558
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.566,
+      "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/combinatorics/tests/test_permutations.py"
+    }
+  }
+]

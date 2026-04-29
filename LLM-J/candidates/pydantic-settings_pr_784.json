@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_784",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 784,
+  "title": "Fix regression for bool fields since 2.13.0",
+  "description": "Fixes https://github.com/pydantic/pydantic-settings/issues/782",
+  "patch_diff": "diff --git a/pydantic_settings/sources/providers/cli.py b/pydantic_settings/sources/providers/cli.py\nindex 8e041679..417f44d8 100644\n--- a/pydantic_settings/sources/providers/cli.py\n+++ b/pydantic_settings/sources/providers/cli.py\n@@ -1086,7 +1086,9 @@ def _convert_append_action(self, kwargs: dict[str, Any], field_info: FieldInfo,\n     def _convert_bool_flag(self, kwargs: dict[str, Any], field_info: FieldInfo, model_default: Any) -> None:\n         if kwargs['metavar'] == 'bool':\n             meta_bool_flags = [\n-                meta for meta in field_info.metadata if issubclass(meta, _CliImplicitFlag | _CliExplicitFlag)\n+                meta\n+                for meta in field_info.metadata\n+                if isinstance(meta, type) and issubclass(meta, _CliImplicitFlag | _CliExplicitFlag)\n             ]\n             if not meta_bool_flags and self.cli_implicit_flags:\n                 meta_bool_flags = [_CliImplicitFlag]\n",
+  "test_diff": "diff --git a/tests/test_source_cli.py b/tests/test_source_cli.py\nindex 96868719..bb2945c9 100644\n--- a/tests/test_source_cli.py\n+++ b/tests/test_source_cli.py\n@@ -2532,6 +2532,19 @@ class WithUnion(BaseSettings):\n     assert CliApp.run(WithUnion, ['--poly.type=a']).model_dump() == {'poly': {'a': 1, 'type': 'a'}}\n \n \n+def test_cli_bool_with_non_type_metadata():\n+    \"\"\"https://github.com/pydantic/pydantic-settings/issues/782.\n+\n+    Bool fields with non-type metadata (e.g. CliSuppress) should not crash issubclass.\n+    \"\"\"\n+\n+    class Settings(BaseSettings):\n+        field: CliSuppress[bool] = True\n+\n+    s = CliApp.run(Settings, cli_args=[])\n+    assert s.field is True\n+\n+\n def test_cli_kebab_case(capsys, monkeypatch):\n     class DeepSubModel(BaseModel):\n         deep_pos_arg: CliPositionalArg[str]\n",
+  "files_changed": [
+    "pydantic_settings/sources/providers/cli.py",
+    "tests/test_source_cli.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/providers/cli.py"
+  ],
+  "test_files": [
+    "tests/test_source_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 16,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "eb7840e9f59a7969b23afdbcc4e5081e037736d8",
+  "base_commit_sha": "198e71cf0cd570501535de7ae93a70953150f073",
+  "env_commit_sha": "198e71cf0cd570501535de7ae93a70953150f073",
+  "head_commit_sha": "fc9f59a747ea07167b8b16718b436d7791a0b57c",
+  "merged_at": "2026-02-17T11:11:42Z"
+}

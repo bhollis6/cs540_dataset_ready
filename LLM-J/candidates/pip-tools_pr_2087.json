@@ -1,0 +1,31 @@
+{
+  "candidate_id": "pip-tools_pr_2087",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 2087,
+  "title": "Preserve relative paths for editable dependencies in output",
+  "description": "Accomplishes preservation of relative dependency paths by reverting back to input requirements definition for editable dependencies.\r\n\r\nThere are a couple prior attempts of this. The two I read through treated this like a formatting problem, I'm not sure it is. The issue, as has been pointed out in #204 is that paths are converted into urls in the form of absolute paths within pip.\r\n\r\nIf we maintain knowledge of the original relative paths within pip-tools, the values will be maintained more faithfully, and the complexity should be lower.\r\n\r\nThis PR accomplishes it by forcing the return value from `parse_requirements()` to give the values we need elsewhere. A better approach may be to return something different than `InstallRequirement` or preserve the relationship with the parsed requirement and provide both where it makes sense.\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Included tests for the changes.\r\n- [x] PR title is short, clear, and ready to be included in the user-facing changelog.\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Verified one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/_compat/pip_compat.py b/piptools/_compat/pip_compat.py\nindex 6409fbc2a..a5f843ad9 100644\n--- a/piptools/_compat/pip_compat.py\n+++ b/piptools/_compat/pip_compat.py\n@@ -10,6 +10,7 @@\n from pip._internal.metadata import BaseDistribution\n from pip._internal.metadata.pkg_resources import Distribution as _PkgResourcesDist\n from pip._internal.models.direct_url import DirectUrl\n+from pip._internal.models.link import Link\n from pip._internal.network.session import PipSession\n from pip._internal.req import InstallRequirement\n from pip._internal.req import parse_requirements as _parse_requirements\n@@ -63,6 +64,14 @@ def _from_importlib(cls, dist: _ImportLibDist) -> Distribution:\n         return cls(dist._dist.name, dist._dist.version, requires, dist.direct_url)\n \n \n+class FileLink(Link):\n+\n+    @property\n+    def file_path(self) -> str:\n+        # overriding the actual property to bypass some validation\n+        return self._url\n+\n+\n def parse_requirements(\n     filename: str,\n     session: PipSession,\n@@ -74,7 +83,14 @@ def parse_requirements(\n     for parsed_req in _parse_requirements(\n         filename, session, finder=finder, options=options, constraint=constraint\n     ):\n-        yield install_req_from_parsed_requirement(parsed_req, isolated=isolated)\n+        install_req = install_req_from_parsed_requirement(parsed_req, isolated=isolated)\n+        if install_req.editable and not parsed_req.requirement.startswith(\"file://\"):\n+            # ``Link.url`` is what is saved to the output file\n+            # we set the url directly to undo the transformation in pip's Link class\n+            file_link = FileLink(install_req.link.url)\n+            file_link._url = parsed_req.requirement\n+            install_req.link = file_link\n+        yield install_req\n \n \n def create_wheel_cache(cache_dir: str, format_control: str | None = None) -> WheelCache:\n",
+  "test_diff": "diff --git a/tests/constants.py b/tests/constants.py\nindex 0a33a278a..3bbfa0bf8 100644\n--- a/tests/constants.py\n+++ b/tests/constants.py\n@@ -5,3 +5,6 @@\n TEST_DATA_PATH = os.path.join(os.path.dirname(__file__), \"test_data\")\n MINIMAL_WHEELS_PATH = os.path.join(TEST_DATA_PATH, \"minimal_wheels\")\n PACKAGES_PATH = os.path.join(TEST_DATA_PATH, \"packages\")\n+PACKAGES_RELATIVE_PATH = os.path.relpath(\n+    PACKAGES_PATH, os.path.commonpath([os.getcwd(), PACKAGES_PATH])\n+)\ndiff --git a/tests/test_pip_compat.py b/tests/test_pip_compat.py\nnew file mode 100644\nindex 000000000..583addfb9\n--- /dev/null\n+++ b/tests/test_pip_compat.py\n@@ -0,0 +1,29 @@\n+from __future__ import annotations\n+\n+import os\n+import tempfile\n+from pathlib import Path, PurePosixPath\n+\n+import pytest\n+\n+from piptools._compat.pip_compat import parse_requirements\n+from piptools.repositories import PyPIRepository\n+\n+from .constants import PACKAGES_RELATIVE_PATH\n+\n+\n+def test_parse_requirements_preserve_editable_relative_path(tmp_path, repository):\n+    test_package_path = str(\n+        PurePosixPath(Path(PACKAGES_RELATIVE_PATH)) / \"small_fake_a\"\n+    )\n+    requirements_in_path = str(tmp_path / \"requirements.in\")\n+\n+    with open(requirements_in_path, \"w\") as requirements_in_file:\n+        requirements_in_file.write(f\"-e {test_package_path}\")\n+\n+    [install_requirement] = parse_requirements(\n+        requirements_in_path, session=repository.session\n+    )\n+\n+    assert install_requirement.link.url == test_package_path\n+    assert install_requirement.link.file_path == test_package_path\n",
+  "files_changed": [
+    "piptools/_compat/pip_compat.py",
+    "tests/constants.py",
+    "tests/test_pip_compat.py"
+  ],
+  "source_files": [
+    "piptools/_compat/pip_compat.py"
+  ],
+  "test_files": [
+    "tests/test_pip_compat.py"
+  ],
+  "test_support_files": [
+    "tests/constants.py"
+  ],
+  "lines_added": 49,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "fb7d14afd69ae2176f8981335d684539e6e1a2cb",
+  "base_commit_sha": "6209efdad6464b275d93279ccb190c7a7c320c52",
+  "env_commit_sha": "6209efdad6464b275d93279ccb190c7a7c320c52",
+  "head_commit_sha": "322afa731bb950027087db4b0bb0d53b7d9dabbe",
+  "merged_at": "2024-05-10T23:36:57Z"
+}

@@ -1,0 +1,1131 @@
+{
+  "astropy/astropy": [
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-13033",
+      "source_files": [
+        "astropy/timeseries/core.py"
+      ],
+      "test_files": [
+        "astropy/timeseries/tests/test_sampled.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 20,
+      "command": "pytest -rA astropy/timeseries/tests/test_sampled.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 1,
+        "comments": 32,
+        "name_candidates": 29
+      },
+      "missing": [],
+      "problem_head": "TimeSeries: misleading exception when required column check fails."
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-13579",
+      "source_files": [
+        "astropy/wcs/wcsapi/wrappers/sliced_wcs.py"
+      ],
+      "test_files": [
+        "astropy/wcs/wcsapi/wrappers/tests/test_sliced_wcs.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 40,
+      "command": "pytest -rA astropy/wcs/wcsapi/wrappers/tests/test_sliced_wcs.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 4,
+        "comments": 22,
+        "name_candidates": 105
+      },
+      "missing": [],
+      "problem_head": "Inconsistent behavior of `world_to_pixel` in `SlicedLowLevelWCS` "
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-14309",
+      "source_files": [
+        "astropy/io/fits/connect.py"
+      ],
+      "test_files": [
+        "astropy/io/fits/tests/test_connect.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 141,
+      "command": "pytest -rA astropy/io/fits/tests/test_connect.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 16,
+        "comments": 104,
+        "name_candidates": 141
+      },
+      "missing": [],
+      "problem_head": "IndexError: tuple index out of range in identify_format (io.registry)"
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-14508",
+      "source_files": [
+        "astropy/io/fits/card.py"
+      ],
+      "test_files": [
+        "astropy/io/fits/tests/test_header.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 174,
+      "command": "pytest -rA astropy/io/fits/tests/test_header.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 129,
+        "comments": 409,
+        "name_candidates": 451
+      },
+      "missing": [],
+      "problem_head": "`io.fits.Card` may use a string representation of floats that is larger than necessary"
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-14539",
+      "source_files": [
+        "astropy/io/fits/diff.py"
+      ],
+      "test_files": [
+        "astropy/io/fits/tests/test_diff.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 46,
+      "command": "pytest -rA astropy/io/fits/tests/test_diff.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 35,
+        "comments": 149,
+        "name_candidates": 306
+      },
+      "missing": [],
+      "problem_head": "`io.fits.FITSDiff` may sometimes report differences between identical files"
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-14598",
+      "source_files": [
+        "astropy/io/fits/card.py"
+      ],
+      "test_files": [
+        "astropy/io/fits/tests/test_header.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 175,
+      "command": "pytest -rA astropy/io/fits/tests/test_header.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 130,
+        "comments": 408,
+        "name_candidates": 447
+      },
+      "missing": [],
+      "problem_head": "Inconsistency in double single-quote ('') management in FITS Card"
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-14995",
+      "source_files": [
+        "astropy/nddata/mixins/ndarithmetic.py"
+      ],
+      "test_files": [
+        "astropy/nddata/mixins/tests/test_ndarithmetic.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 179,
+      "command": "pytest -rA astropy/nddata/mixins/tests/test_ndarithmetic.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 9,
+        "comments": 256,
+        "name_candidates": 258
+      },
+      "missing": [],
+      "problem_head": "In v5.3, NDDataRef mask propagation fails when one of the operand does not have a mask"
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-7606",
+      "source_files": [
+        "astropy/units/core.py"
+      ],
+      "test_files": [
+        "astropy/units/tests/test_units.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 241,
+      "command": "pytest -rA -vv -o console_output_style=classic --tb=no astropy/units/tests/test_units.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 92,
+        "comments": 158,
+        "name_candidates": 377
+      },
+      "missing": [],
+      "problem_head": "Unit equality comparison with None raises TypeError for UnrecognizedUnit"
+    },
+    {
+      "score": 28,
+      "instance_id": "astropy__astropy-8872",
+      "source_files": [
+        "astropy/units/quantity.py"
+      ],
+      "test_files": [
+        "astropy/units/tests/test_quantity.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 80,
+      "command": "pytest -rA astropy/units/tests/test_quantity.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 66,
+        "comments": 312,
+        "name_candidates": 337
+      },
+      "missing": [],
+      "problem_head": "float16 quantities get upgraded to float64 automatically"
+    },
+    {
+      "score": 26,
+      "instance_id": "astropy__astropy-13977",
+      "source_files": [
+        "astropy/units/quantity.py"
+      ],
+      "test_files": [
+        "astropy/units/tests/test_quantity.py",
+        "astropy/units/tests/test_quantity_ufuncs.py"
+      ],
+      "fail_to_pass_count": 20,
+      "pass_to_pass_count": 322,
+      "command": "pytest -rA astropy/units/tests/test_quantity.py astropy/units/tests/test_quantity_ufuncs.py",
+      "signals": {
+        "annotations": 1,
+        "docstrings": 84,
+        "comments": 477,
+        "name_candidates": 509
+      },
+      "missing": [],
+      "problem_head": "Should `Quantity.__array_ufunc__()` return `NotImplemented` instead of raising `ValueError` if the inputs are incompatib"
+    },
+    {
+      "score": 25,
+      "instance_id": "astropy__astropy-12907",
+      "source_files": [
+        "astropy/modeling/separable.py"
+      ],
+      "test_files": [
+        "astropy/modeling/tests/test_separable.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 13,
+      "command": "pytest -rA astropy/modeling/tests/test_separable.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 11,
+        "comments": 10,
+        "name_candidates": 67
+      },
+      "missing": [],
+      "problem_head": "Modeling's `separability_matrix` does not compute separability correctly for nested CompoundModels"
+    },
+    {
+      "score": 25,
+      "instance_id": "astropy__astropy-13236",
+      "source_files": [
+        "astropy/table/table.py"
+      ],
+      "test_files": [
+        "astropy/table/tests/test_mixin.py",
+        "astropy/table/tests/test_table.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 644,
+      "command": "pytest -rA astropy/table/tests/test_mixin.py astropy/table/tests/test_table.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 183,
+        "comments": 560,
+        "name_candidates": 668
+      },
+      "missing": [],
+      "problem_head": "Consider removing auto-transform of structured column into NdarrayMixin"
+    },
+    {
+      "score": 25,
+      "instance_id": "astropy__astropy-13453",
+      "source_files": [
+        "astropy/io/ascii/html.py"
+      ],
+      "test_files": [
+        "astropy/io/ascii/tests/test_html.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 9,
+      "command": "pytest -rA astropy/io/ascii/tests/test_html.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 45,
+        "comments": 59,
+        "name_candidates": 162
+      },
+      "missing": [],
+      "problem_head": "ASCII table output to HTML does not support supplied \"formats\""
+    },
+    {
+      "score": 25,
+      "instance_id": "astropy__astropy-14096",
+      "source_files": [
+        "astropy/coordinates/sky_coordinate.py"
+      ],
+      "test_files": [
+        "astropy/coordinates/tests/test_sky_coord.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 426,
+      "command": "pytest -rA astropy/coordinates/tests/test_sky_coord.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 70,
+        "comments": 308,
+        "name_candidates": 383
+      },
+      "missing": [],
+      "problem_head": "Subclassed SkyCoord gives misleading attribute access message"
+    },
+    {
+      "score": 25,
+      "instance_id": "astropy__astropy-14182",
+      "source_files": [
+        "astropy/io/ascii/rst.py"
+      ],
+      "test_files": [
+        "astropy/io/ascii/tests/test_rst.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 9,
+      "command": "pytest -rA astropy/io/ascii/tests/test_rst.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 11,
+        "comments": 5,
+        "name_candidates": 39
+      },
+      "missing": [],
+      "problem_head": "Please support header rows in RestructuredText output"
+    }
+  ],
+  "psf/requests": [
+    {
+      "score": 28,
+      "instance_id": "psf__requests-2931",
+      "source_files": [
+        "requests/models.py"
+      ],
+      "test_files": [
+        "test_requests.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 84,
+      "command": "pytest -rA test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 67,
+        "comments": 132,
+        "name_candidates": 324
+      },
+      "missing": [],
+      "problem_head": "Request with binary payload fails due to calling to_native_string"
+    },
+    {
+      "score": 28,
+      "instance_id": "psf__requests-5414",
+      "source_files": [
+        "requests/models.py"
+      ],
+      "test_files": [
+        "tests/test_requests.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 130,
+      "command": "pytest -rA tests/test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 69,
+        "comments": 198,
+        "name_candidates": 453
+      },
+      "missing": [],
+      "problem_head": "Getting http://.example.com raises UnicodeError"
+    },
+    {
+      "score": 28,
+      "instance_id": "psf__requests-6028",
+      "source_files": [
+        "requests/utils.py"
+      ],
+      "test_files": [
+        "tests/test_utils.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 185,
+      "command": "pytest -rA tests/test_utils.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 55,
+        "comments": 111,
+        "name_candidates": 249
+      },
+      "missing": [],
+      "problem_head": "Proxy authentication bug"
+    },
+    {
+      "score": 25,
+      "instance_id": "psf__requests-1142",
+      "source_files": [
+        "requests/models.py"
+      ],
+      "test_files": [
+        "test_requests.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 5,
+      "command": "pytest -rA test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 31,
+        "comments": 62,
+        "name_candidates": 133
+      },
+      "missing": [],
+      "problem_head": "requests.get is ALWAYS sending content length"
+    },
+    {
+      "score": 25,
+      "instance_id": "psf__requests-1724",
+      "source_files": [
+        "requests/sessions.py"
+      ],
+      "test_files": [
+        "test_requests.py"
+      ],
+      "fail_to_pass_count": 6,
+      "pass_to_pass_count": 79,
+      "command": "pytest -rA test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 29,
+        "comments": 90,
+        "name_candidates": 154
+      },
+      "missing": [],
+      "problem_head": "Unicode method names cause UnicodeDecodeError for some requests in Python 2.7.2"
+    },
+    {
+      "score": 25,
+      "instance_id": "psf__requests-1766",
+      "source_files": [
+        "requests/auth.py"
+      ],
+      "test_files": [
+        "test_requests.py"
+      ],
+      "fail_to_pass_count": 6,
+      "pass_to_pass_count": 79,
+      "command": "pytest -rA test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 18,
+        "comments": 32,
+        "name_candidates": 129
+      },
+      "missing": [],
+      "problem_head": "quote qop options in Digest Auth"
+    },
+    {
+      "score": 25,
+      "instance_id": "psf__requests-1921",
+      "source_files": [
+        "requests/sessions.py"
+      ],
+      "test_files": [
+        "test_requests.py"
+      ],
+      "fail_to_pass_count": 6,
+      "pass_to_pass_count": 107,
+      "command": "pytest -rA test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 41,
+        "comments": 98,
+        "name_candidates": 198
+      },
+      "missing": [],
+      "problem_head": "Removing a default header of a session"
+    },
+    {
+      "score": 25,
+      "instance_id": "psf__requests-2317",
+      "source_files": [
+        "requests/sessions.py"
+      ],
+      "test_files": [
+        "test_requests.py"
+      ],
+      "fail_to_pass_count": 8,
+      "pass_to_pass_count": 133,
+      "command": "pytest -rA test_requests.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 50,
+        "comments": 110,
+        "name_candidates": 252
+      },
+      "missing": [],
+      "problem_head": "method = builtin_str(method) problem"
+    }
+  ],
+  "pytest-dev/pytest": [
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-10081",
+      "source_files": [
+        "src/_pytest/unittest.py"
+      ],
+      "test_files": [
+        "testing/test_unittest.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 63,
+      "command": "pytest -rA testing/test_unittest.py",
+      "signals": {
+        "annotations": 191,
+        "docstrings": 14,
+        "comments": 52,
+        "name_candidates": 184
+      },
+      "missing": [],
+      "problem_head": "unittest.TestCase.tearDown executed for classes marked with `unittest.skip` when running --pdb"
+    },
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-10356",
+      "source_files": [
+        "src/_pytest/mark/structures.py"
+      ],
+      "test_files": [
+        "testing/test_mark.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 79,
+      "command": "pytest -rA testing/test_mark.py",
+      "signals": {
+        "annotations": 230,
+        "docstrings": 28,
+        "comments": 73,
+        "name_candidates": 202
+      },
+      "missing": [],
+      "problem_head": "Consider MRO when obtaining marks for classes"
+    },
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-7432",
+      "source_files": [
+        "src/_pytest/skipping.py"
+      ],
+      "test_files": [
+        "testing/test_skipping.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 77,
+      "command": "pytest -rA testing/test_skipping.py",
+      "signals": {
+        "annotations": 23,
+        "docstrings": 12,
+        "comments": 23,
+        "name_candidates": 163
+      },
+      "missing": [],
+      "problem_head": "skipping: --runxfail breaks pytest.mark.skip location reporting"
+    },
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-7490",
+      "source_files": [
+        "src/_pytest/skipping.py"
+      ],
+      "test_files": [
+        "testing/test_skipping.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 78,
+      "command": "pytest -rA testing/test_skipping.py",
+      "signals": {
+        "annotations": 23,
+        "docstrings": 12,
+        "comments": 23,
+        "name_candidates": 165
+      },
+      "missing": [],
+      "problem_head": "Pytest 6: Dynamically adding xfail marker in test no longer ignores failure"
+    },
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-7521",
+      "source_files": [
+        "src/_pytest/capture.py"
+      ],
+      "test_files": [
+        "testing/test_capture.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 125,
+      "command": "pytest -rA testing/test_capture.py",
+      "signals": {
+        "annotations": 120,
+        "docstrings": 36,
+        "comments": 66,
+        "name_candidates": 239
+      },
+      "missing": [],
+      "problem_head": "pytest 6.0.0rc1: capfd.readouterr() converts \\r to \\n"
+    },
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-7982",
+      "source_files": [
+        "src/_pytest/pathlib.py"
+      ],
+      "test_files": [
+        "testing/test_collection.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 78,
+      "command": "pytest -rA testing/test_collection.py",
+      "signals": {
+        "annotations": 88,
+        "docstrings": 55,
+        "comments": 76,
+        "name_candidates": 265
+      },
+      "missing": [],
+      "problem_head": "Symlinked directories not collected since pytest 6.1.0"
+    },
+    {
+      "score": 33,
+      "instance_id": "pytest-dev__pytest-8399",
+      "source_files": [
+        "src/_pytest/python.py",
+        "src/_pytest/unittest.py"
+      ],
+      "test_files": [
+        "testing/test_nose.py",
+        "testing/test_unittest.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 59,
+      "command": "pytest -rA testing/test_nose.py testing/test_unittest.py",
+      "signals": {
+        "annotations": 427,
+        "docstrings": 45,
+        "comments": 163,
+        "name_candidates": 477
+      },
+      "missing": [],
+      "problem_head": "Starting v6.2.0, unittest setUpClass fixtures are no longer \"private\""
+    },
+    {
+      "score": 32,
+      "instance_id": "pytest-dev__pytest-7324",
+      "source_files": [
+        "src/_pytest/mark/expression.py"
+      ],
+      "test_files": [
+        "testing/test_mark_expression.py"
+      ],
+      "fail_to_pass_count": 3,
+      "pass_to_pass_count": 58,
+      "command": "pytest -rA testing/test_mark_expression.py",
+      "signals": {
+        "annotations": 51,
+        "docstrings": 6,
+        "comments": 3,
+        "name_candidates": 34
+      },
+      "missing": [],
+      "problem_head": "Pytest crashes the interpreter on debug build for 3.8+"
+    },
+    {
+      "score": 31,
+      "instance_id": "pytest-dev__pytest-5840",
+      "source_files": [
+        "src/_pytest/config/__init__.py",
+        "src/_pytest/pathlib.py"
+      ],
+      "test_files": [
+        "testing/test_conftest.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 51,
+      "command": "pytest -rA testing/test_conftest.py",
+      "signals": {
+        "annotations": 3,
+        "docstrings": 50,
+        "comments": 95,
+        "name_candidates": 315
+      },
+      "missing": [],
+      "problem_head": "5.1.2 ImportError while loading conftest (windows import folder casing issues)"
+    },
+    {
+      "score": 30,
+      "instance_id": "pytest-dev__pytest-10051",
+      "source_files": [
+        "src/_pytest/logging.py"
+      ],
+      "test_files": [
+        "testing/logging/test_fixture.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 15,
+      "command": "pytest -rA testing/logging/test_fixture.py",
+      "signals": {
+        "annotations": 117,
+        "docstrings": 35,
+        "comments": 37,
+        "name_candidates": 129
+      },
+      "missing": [],
+      "problem_head": "caplog.get_records and caplog.clear conflict"
+    },
+    {
+      "score": 30,
+      "instance_id": "pytest-dev__pytest-7571",
+      "source_files": [
+        "src/_pytest/logging.py"
+      ],
+      "test_files": [
+        "testing/logging/test_fixture.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 14,
+      "command": "pytest -rA testing/logging/test_fixture.py",
+      "signals": {
+        "annotations": 92,
+        "docstrings": 36,
+        "comments": 43,
+        "name_candidates": 128
+      },
+      "missing": [],
+      "problem_head": "caplog fixture doesn't restore log level after test"
+    },
+    {
+      "score": 29,
+      "instance_id": "pytest-dev__pytest-7236",
+      "source_files": [
+        "src/_pytest/unittest.py"
+      ],
+      "test_files": [
+        "testing/test_unittest.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 51,
+      "command": "pytest -rA testing/test_unittest.py",
+      "signals": {
+        "annotations": 1,
+        "docstrings": 11,
+        "comments": 25,
+        "name_candidates": 135
+      },
+      "missing": [],
+      "problem_head": "unittest.TestCase.tearDown executed on skipped tests when running --pdb"
+    },
+    {
+      "score": 28,
+      "instance_id": "pytest-dev__pytest-5262",
+      "source_files": [
+        "src/_pytest/capture.py"
+      ],
+      "test_files": [
+        "testing/test_capture.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 108,
+      "command": "pytest -rA testing/test_capture.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 38,
+        "comments": 48,
+        "name_candidates": 253
+      },
+      "missing": [],
+      "problem_head": "_pytest.capture.EncodedFile mode should not include `b` (binary)"
+    },
+    {
+      "score": 28,
+      "instance_id": "pytest-dev__pytest-6197",
+      "source_files": [
+        "src/_pytest/python.py"
+      ],
+      "test_files": [
+        "testing/test_collection.py",
+        "testing/test_skipping.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 145,
+      "command": "pytest -rA testing/test_collection.py testing/test_skipping.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 51,
+        "comments": 114,
+        "name_candidates": 518
+      },
+      "missing": [],
+      "problem_head": "Regression in 5.2.3: pytest tries to collect random __init__.py files"
+    },
+    {
+      "score": 28,
+      "instance_id": "pytest-dev__pytest-6202",
+      "source_files": [
+        "src/_pytest/python.py"
+      ],
+      "test_files": [
+        "testing/test_collection.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 72,
+      "command": "pytest -rA testing/test_collection.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 45,
+        "comments": 109,
+        "name_candidates": 421
+      },
+      "missing": [],
+      "problem_head": "'.['  replaced with '[' in the headline shown of the test report"
+    }
+  ],
+  "scikit-learn/scikit-learn": [
+    {
+      "score": 29,
+      "instance_id": "scikit-learn__scikit-learn-25232",
+      "source_files": [
+        "sklearn/impute/_iterative.py"
+      ],
+      "test_files": [
+        "sklearn/impute/tests/test_impute.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 214,
+      "command": "pytest -rA sklearn/impute/tests/test_impute.py",
+      "signals": {
+        "annotations": 1,
+        "docstrings": 20,
+        "comments": 146,
+        "name_candidates": 336
+      },
+      "missing": [],
+      "problem_head": "IterativeImputer has no parameter \"fill_value\""
+    },
+    {
+      "score": 29,
+      "instance_id": "scikit-learn__scikit-learn-25931",
+      "source_files": [
+        "sklearn/ensemble/_iforest.py"
+      ],
+      "test_files": [
+        "sklearn/ensemble/tests/test_iforest.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 21,
+      "command": "pytest -rA sklearn/ensemble/tests/test_iforest.py",
+      "signals": {
+        "annotations": 1,
+        "docstrings": 17,
+        "comments": 69,
+        "name_candidates": 92
+      },
+      "missing": [],
+      "problem_head": "X does not have valid feature names, but IsolationForest was fitted with feature names"
+    },
+    {
+      "score": 29,
+      "instance_id": "scikit-learn__scikit-learn-25973",
+      "source_files": [
+        "sklearn/feature_selection/_sequential.py"
+      ],
+      "test_files": [
+        "sklearn/feature_selection/tests/test_sequential.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 72,
+      "command": "pytest -rA sklearn/feature_selection/tests/test_sequential.py",
+      "signals": {
+        "annotations": 1,
+        "docstrings": 8,
+        "comments": 31,
+        "name_candidates": 53
+      },
+      "missing": [],
+      "problem_head": "Unable to pass splits to SequentialFeatureSelector"
+    },
+    {
+      "score": 29,
+      "instance_id": "scikit-learn__scikit-learn-26323",
+      "source_files": [
+        "sklearn/compose/_column_transformer.py"
+      ],
+      "test_files": [
+        "sklearn/compose/tests/test_column_transformer.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 188,
+      "command": "pytest -rA sklearn/compose/tests/test_column_transformer.py",
+      "signals": {
+        "annotations": 1,
+        "docstrings": 40,
+        "comments": 149,
+        "name_candidates": 353
+      },
+      "missing": [],
+      "problem_head": "`ColumnTransformer.set_output` ignores the `remainder` if it's an estimator"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-10297",
+      "source_files": [
+        "sklearn/linear_model/ridge.py"
+      ],
+      "test_files": [
+        "sklearn/linear_model/tests/test_ridge.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 28,
+      "command": "pytest -rA sklearn/linear_model/tests/test_ridge.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 15,
+        "comments": 131,
+        "name_candidates": 372
+      },
+      "missing": [],
+      "problem_head": "linear_model.RidgeClassifierCV's Parameter store_cv_values issue"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-10908",
+      "source_files": [
+        "sklearn/feature_extraction/text.py"
+      ],
+      "test_files": [
+        "sklearn/feature_extraction/tests/test_text.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 47,
+      "command": "pytest -rA sklearn/feature_extraction/tests/test_text.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 37,
+        "comments": 167,
+        "name_candidates": 333
+      },
+      "missing": [],
+      "problem_head": "CountVectorizer's get_feature_names raise not NotFittedError when the vocabulary parameter is provided"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-11310",
+      "source_files": [
+        "sklearn/model_selection/_search.py"
+      ],
+      "test_files": [
+        "sklearn/model_selection/tests/test_search.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 50,
+      "command": "pytest -rA sklearn/model_selection/tests/test_search.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 30,
+        "comments": 227,
+        "name_candidates": 374
+      },
+      "missing": [],
+      "problem_head": "Retrieving time to refit the estimator in BaseSearchCV"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-11578",
+      "source_files": [
+        "sklearn/linear_model/logistic.py"
+      ],
+      "test_files": [
+        "sklearn/linear_model/tests/test_logistic.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 93,
+      "command": "pytest -rA sklearn/linear_model/tests/test_logistic.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 18,
+        "comments": 200,
+        "name_candidates": 443
+      },
+      "missing": [],
+      "problem_head": "For probabilistic scorers, LogisticRegressionCV(multi_class='multinomial') uses OvR to calculate scores"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-12585",
+      "source_files": [
+        "sklearn/base.py"
+      ],
+      "test_files": [
+        "sklearn/tests/test_base.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 22,
+      "command": "pytest -rA sklearn/tests/test_base.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 33,
+        "comments": 78,
+        "name_candidates": 151
+      },
+      "missing": [],
+      "problem_head": "clone fails for parameters that are estimator types"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-12682",
+      "source_files": [
+        "examples/decomposition/plot_sparse_coding.py",
+        "sklearn/decomposition/dict_learning.py"
+      ],
+      "test_files": [
+        "sklearn/decomposition/tests/test_dict_learning.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 66,
+      "command": "pytest -rA sklearn/decomposition/tests/test_dict_learning.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 18,
+        "comments": 78,
+        "name_candidates": 241
+      },
+      "missing": [],
+      "problem_head": "`SparseCoder` doesn't expose `max_iter` for `Lasso`"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-12973",
+      "source_files": [
+        "sklearn/linear_model/least_angle.py"
+      ],
+      "test_files": [
+        "sklearn/linear_model/tests/test_least_angle.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 32,
+      "command": "pytest -rA sklearn/linear_model/tests/test_least_angle.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 12,
+        "comments": 239,
+        "name_candidates": 312
+      },
+      "missing": [],
+      "problem_head": "LassoLarsIC: unintuitive copy_X behaviour"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-13124",
+      "source_files": [
+        "sklearn/model_selection/_split.py"
+      ],
+      "test_files": [
+        "sklearn/model_selection/tests/test_split.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 60,
+      "command": "pytest -rA sklearn/model_selection/tests/test_split.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 55,
+        "comments": 245,
+        "name_candidates": 549
+      },
+      "missing": [],
+      "problem_head": "sklearn.model_selection.StratifiedKFold either shuffling is wrong or documentation is misleading"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-13135",
+      "source_files": [
+        "sklearn/preprocessing/_discretization.py"
+      ],
+      "test_files": [
+        "sklearn/preprocessing/tests/test_discretization.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 33,
+      "command": "pytest -rA sklearn/preprocessing/tests/test_discretization.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 5,
+        "comments": 22,
+        "name_candidates": 46
+      },
+      "missing": [],
+      "problem_head": "KBinsDiscretizer: kmeans fails due to unsorted bin_edges"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-13142",
+      "source_files": [
+        "sklearn/mixture/base.py"
+      ],
+      "test_files": [
+        "sklearn/mixture/tests/test_bayesian_mixture.py",
+        "sklearn/mixture/tests/test_gaussian_mixture.py"
+      ],
+      "fail_to_pass_count": 2,
+      "pass_to_pass_count": 54,
+      "command": "pytest -rA sklearn/mixture/tests/test_bayesian_mixture.py sklearn/mixture/tests/test_gaussian_mixture.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 24,
+        "comments": 126,
+        "name_candidates": 417
+      },
+      "missing": [],
+      "problem_head": "GaussianMixture predict and fit_predict disagree when n_init>1"
+    },
+    {
+      "score": 28,
+      "instance_id": "scikit-learn__scikit-learn-13439",
+      "source_files": [
+        "sklearn/pipeline.py"
+      ],
+      "test_files": [
+        "sklearn/tests/test_pipeline.py"
+      ],
+      "fail_to_pass_count": 1,
+      "pass_to_pass_count": 40,
+      "command": "pytest -rA sklearn/tests/test_pipeline.py",
+      "signals": {
+        "annotations": 0,
+        "docstrings": 32,
+        "comments": 151,
+        "name_candidates": 296
+      },
+      "missing": [],
+      "problem_head": "Pipeline should implement __len__"
+    }
+  ]
+}

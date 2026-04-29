@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pip-tools_pr_2092",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 2092,
+  "title": "Fixes for failing linting checks",
+  "description": "This fixes lint failures introduced in #2087\r\n\r\n##### Contributor checklist\r\n\r\n- [ ] Included tests for the changes.\r\n- [ ] PR title is short, clear, and ready to be included in the user-facing changelog.\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] Verified one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/_compat/pip_compat.py b/piptools/_compat/pip_compat.py\nindex a5f843ad9..1d346bdfb 100644\n--- a/piptools/_compat/pip_compat.py\n+++ b/piptools/_compat/pip_compat.py\n@@ -64,7 +64,8 @@ def _from_importlib(cls, dist: _ImportLibDist) -> Distribution:\n         return cls(dist._dist.name, dist._dist.version, requires, dist.direct_url)\n \n \n-class FileLink(Link):\n+class FileLink(Link):  # type: ignore[misc]\n+    _url: str\n \n     @property\n     def file_path(self) -> str:\n",
+  "test_diff": "diff --git a/tests/test_pip_compat.py b/tests/test_pip_compat.py\nindex 583addfb9..be5751544 100644\n--- a/tests/test_pip_compat.py\n+++ b/tests/test_pip_compat.py\n@@ -1,13 +1,8 @@\n from __future__ import annotations\n \n-import os\n-import tempfile\n from pathlib import Path, PurePosixPath\n \n-import pytest\n-\n from piptools._compat.pip_compat import parse_requirements\n-from piptools.repositories import PyPIRepository\n \n from .constants import PACKAGES_RELATIVE_PATH\n \n",
+  "files_changed": [
+    "piptools/_compat/pip_compat.py",
+    "tests/test_pip_compat.py"
+  ],
+  "source_files": [
+    "piptools/_compat/pip_compat.py"
+  ],
+  "test_files": [
+    "tests/test_pip_compat.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 2,
+  "lines_removed": 6,
+  "has_test_changes": true,
+  "merge_commit_sha": "347fec59b418b6239e47dee8429e8401ac4330e6",
+  "base_commit_sha": "fb7d14afd69ae2176f8981335d684539e6e1a2cb",
+  "env_commit_sha": "fb7d14afd69ae2176f8981335d684539e6e1a2cb",
+  "head_commit_sha": "903ca2292d17a8d3fefca0e7d5be6d0be2ae6ae8",
+  "merged_at": "2024-05-11T19:08:20Z"
+}

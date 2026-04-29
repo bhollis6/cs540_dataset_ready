@@ -1,0 +1,118 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "django__django-16667",
+  "repo": "django/django",
+  "base_commit": "02c356f2f3945b8075735d485c3cf48cad991011",
+  "changed_source_files": [
+    "django/forms/widgets.py"
+  ],
+  "changed_test_files": [
+    "tests/forms_tests/field_tests/test_datefield.py",
+    "tests/forms_tests/widget_tests/test_selectdatewidget.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 2 FAIL_TO_PASS and 24 PASS_TO_PASS.",
+    "evidence": [
+      "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 forms_tests.field_tests.test_datefield forms_tests.widget_tests.test_selectdatewidget"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "low",
+        "rationale": "Target surface has 0 annotation nodes.",
+        "evidence": [
+          "django/forms/widgets.py",
+          "tests/forms_tests/field_tests/test_datefield.py",
+          "tests/forms_tests/widget_tests/test_selectdatewidget.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 443 local rename candidates before safety filtering.",
+        "evidence": [
+          "django/forms/widgets.py",
+          "tests/forms_tests/field_tests/test_datefield.py",
+          "tests/forms_tests/widget_tests/test_selectdatewidget.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve public/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 39 docstrings and 64 comments.",
+        "evidence": [
+          "django/forms/widgets.py",
+          "tests/forms_tests/field_tests/test_datefield.py",
+          "tests/forms_tests/widget_tests/test_selectdatewidget.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Gold preflight passed 2 FAIL_TO_PASS and 24 PASS_TO_PASS targets.",
+        "evidence": [
+          "tests/forms_tests/field_tests/test_datefield.py",
+          "tests/forms_tests/widget_tests/test_selectdatewidget.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as a django/django task for the next Phase 1 repo after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/django_signal_screen_2026-04-27.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/django__django-16667_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/django__django-16667_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": []
+}

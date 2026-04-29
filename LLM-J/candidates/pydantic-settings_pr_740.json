@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_740",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 740,
+  "title": "Remove `(default: \u2026)` in the help message for `CliToggleFlag`",
+  "description": "Fix #737\r\n\r\nStopped showing `(default: True)` for `CliToggleFlag`.\r\nIf no description is provided, it displays `(toggle)` instead.",
+  "patch_diff": "diff --git a/pydantic_settings/sources/providers/cli.py b/pydantic_settings/sources/providers/cli.py\nindex 04c14f28..dbaa4c68 100644\n--- a/pydantic_settings/sources/providers/cli.py\n+++ b/pydantic_settings/sources/providers/cli.py\n@@ -1301,7 +1301,9 @@ def _help_format(\n                 default = f'(default: {field_info.default if enum_name is None else enum_name})'\n             elif field_info.default_factory is not None:\n                 default = f'(default factory: {self._metavar_format(field_info.default_factory)})'\n-            _help += f' {default}' if _help else default\n+\n+            if _CliToggleFlag not in field_info.metadata:\n+                _help += f' {default}' if _help else default\n         return _help.replace('%', '%%') if issubclass(type(self._root_parser), ArgumentParser) else _help\n \n     def _is_field_suppressed(self, field_info: FieldInfo) -> bool:\n",
+  "test_diff": "diff --git a/tests/test_source_cli.py b/tests/test_source_cli.py\nindex 99d41ca7..96e4c493 100644\n--- a/tests/test_source_cli.py\n+++ b/tests/test_source_cli.py\n@@ -590,6 +590,8 @@ class SubModel(BaseModel):\n \n     class Settings(BaseSettings, cli_parse_args=True, cli_prog_name='example.py'):\n         flag: bool = True\n+        toggle: CliToggleFlag[bool] = True\n+        toggle_description: CliToggleFlag[bool] = Field(False, description='Bool Toggle')\n         sub_model: SubModel = SubModel(flag=False)\n         opt_model: DeepSubModel | None = Field(None, description='Group Doc')\n         fact_model: SubModel = Field(default_factory=lambda: SubModel(flag=True))\n@@ -601,9 +603,9 @@ class Settings(BaseSettings, cli_parse_args=True, cli_prog_name='example.py'):\n             Settings()\n         assert (\n             capsys.readouterr().out\n-            == f\"\"\"usage: example.py [-h] [--flag bool] [--sub_model [JSON]]\n-                  [--sub_model.flag bool] [--sub_model.deep [JSON]]\n-                  [--sub_model.deep.flag bool]\n+            == f\"\"\"usage: example.py [-h] [--flag bool] [--no-toggle] [--toggle_description]\n+                  [--sub_model [JSON]] [--sub_model.flag bool]\n+                  [--sub_model.deep [JSON]] [--sub_model.deep.flag bool]\n                   [--sub_model.deep.deeper [{{JSON,null}}]]\n                   [--sub_model.deep.deeper.flag bool]\n                   [--opt_model [{{JSON,null}}]] [--opt_model.flag bool]\n@@ -617,6 +619,8 @@ class Settings(BaseSettings, cli_parse_args=True, cli_prog_name='example.py'):\n {ARGPARSE_OPTIONS_TEXT}:\n   -h, --help            show this help message and exit\n   --flag bool           (default: True)\n+  --no-toggle\n+  --toggle_description  Bool Toggle\n \n sub_model options:\n   --sub_model [JSON]    set sub_model from JSON string (default: {{}})\n",
+  "files_changed": [
+    "pydantic_settings/sources/providers/cli.py",
+    "tests/test_source_cli.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/providers/cli.py"
+  ],
+  "test_files": [
+    "tests/test_source_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 10,
+  "lines_removed": 4,
+  "has_test_changes": true,
+  "merge_commit_sha": "c28091ed46e14594ad318d350f576eb97f72f020",
+  "base_commit_sha": "4b4fb72abc2e69c29fcfec180e5a5a0cb6cedbd1",
+  "env_commit_sha": "4b4fb72abc2e69c29fcfec180e5a5a0cb6cedbd1",
+  "head_commit_sha": "326d1c21a8a1302d1b8f7cfa5860e3e166b46348",
+  "merged_at": "2026-01-18T15:35:53Z"
+}

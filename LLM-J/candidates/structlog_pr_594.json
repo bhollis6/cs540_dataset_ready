@@ -1,0 +1,29 @@
+{
+  "candidate_id": "structlog_pr_594",
+  "repo": "hynek/structlog",
+  "pr_number": 594,
+  "title": "Fix Logfmt escaping",
+  "description": "Fixes #511, closes #513\r\n\r\n@davellas and @madjar \u2013 how does this look?",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex fd810dea..9d3b8d5a 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -20,6 +20,9 @@ You can find our backwards-compatibility policy [here](https://github.com/hynek/\n - `structlog.processors.LogfmtRenderer` now escapes newlines.\n   [#592](https://github.com/hynek/structlog/pull/592)\n \n+- `structlog.processors.LogfmtRenderer` now escapes backslashes and double quotes.\n+  [#594](https://github.com/hynek/structlog/pull/594)\n+\n \n ## [24.1.0](https://github.com/hynek/structlog/compare/23.3.0...24.1.0) - 2024-01-08\n \ndiff --git a/src/structlog/processors.py b/src/structlog/processors.py\nindex ba87eb35..e597eae4 100644\n--- a/src/structlog/processors.py\n+++ b/src/structlog/processors.py\n@@ -170,9 +170,16 @@ def __call__(\n                     continue\n                 value = \"true\" if value else \"false\"\n \n-            value = f\"{value}\".replace('\"', '\\\\\"').replace(\"\\n\", \"\\\\n\")\n+            value = str(value)\n+            backslashes_need_escaping = (\n+                \" \" in value or \"=\" in value or '\"' in value\n+            )\n+            if backslashes_need_escaping and \"\\\\\" in value:\n+                value = value.replace(\"\\\\\", \"\\\\\\\\\")\n+\n+            value = value.replace('\"', '\\\\\"').replace(\"\\n\", \"\\\\n\")\n \n-            if \" \" in value or \"=\" in value:\n+            if backslashes_need_escaping:\n                 value = f'\"{value}\"'\n \n             elements.append(f\"{key}={value}\")\n",
+  "test_diff": "diff --git a/tests/processors/test_renderers.py b/tests/processors/test_renderers.py\nindex b3d6e51a..8f225c80 100644\n--- a/tests/processors/test_renderers.py\n+++ b/tests/processors/test_renderers.py\n@@ -275,6 +275,33 @@ def test_newline_in_value(self):\n \n         assert r\"with_newline=some\\nvalue\" == rv\n \n+    @pytest.mark.parametrize(\n+        (\"raw\", \"escaped\"),\n+        [\n+            # Slash by itself does not need to be escaped.\n+            (r\"a\\slash\", r\"a\\slash\"),\n+            # A quote requires quoting, and escaping the quote.\n+            ('a\"quote', r'\"a\\\"quote\"'),\n+            # If anything triggers quoting of the string, then the slash must\n+            # be escaped.\n+            (\n+                r'a\\slash with space or a\"quote',\n+                r'\"a\\\\slash with space or a\\\"quote\"',\n+            ),\n+            (\n+                r\"I want to render this \\\"string\\\" with logfmtrenderer\",\n+                r'\"I want to render this \\\\\\\"string\\\\\\\" with logfmtrenderer\"',\n+            ),\n+        ],\n+    )\n+    def test_escaping(self, raw, escaped):\n+        \"\"\"\n+        Backslashes and quotes are escaped.\n+        \"\"\"\n+        rv = LogfmtRenderer()(None, None, {\"key\": raw})\n+\n+        assert f\"key={escaped}\" == rv\n+\n \n class TestJSONRenderer:\n     def test_renders_json(self, event_dict):\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "src/structlog/processors.py",
+    "tests/processors/test_renderers.py"
+  ],
+  "source_files": [
+    "src/structlog/processors.py"
+  ],
+  "test_files": [
+    "tests/processors/test_renderers.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 39,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "354ef534459cc3c1a12a21e402fffbaa3697a017",
+  "base_commit_sha": "db834f532618e28d3fb68349a6d76af8493de541",
+  "env_commit_sha": "db834f532618e28d3fb68349a6d76af8493de541",
+  "head_commit_sha": "60b324659914b6a2a192a7df86e6d30c6094f0f9",
+  "merged_at": "2024-02-07T10:08:39Z"
+}

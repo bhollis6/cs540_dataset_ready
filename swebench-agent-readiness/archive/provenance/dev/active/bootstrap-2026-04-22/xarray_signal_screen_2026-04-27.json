@@ -1,0 +1,126 @@
+[
+  {
+    "instance_id": "pydata__xarray-3677",
+    "repo": "pydata/xarray",
+    "base_commit": "ef6e6a7b86f8479b9a1fecf15ad5b88a2326b31e",
+    "version": "0.12",
+    "source_files": [
+      "xarray/core/dataset.py"
+    ],
+    "test_files": [
+      "xarray/tests/test_merge.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 21,
+    "signals": {
+      "annotations": 366,
+      "docstrings": 108,
+      "comments": 128,
+      "name_candidates": 195,
+      "classes": 2,
+      "functions": 47,
+      "variables": 146,
+      "total": 195
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 2.039,
+      "test_command": "pytest -rA xarray/tests/test_merge.py"
+    }
+  },
+  {
+    "instance_id": "pydata__xarray-4629",
+    "repo": "pydata/xarray",
+    "base_commit": "a41edc7bf5302f2ea327943c0c48c532b12009bc",
+    "version": "0.12",
+    "source_files": [
+      "xarray/core/merge.py"
+    ],
+    "test_files": [
+      "xarray/tests/test_merge.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 32,
+    "signals": {
+      "annotations": 76,
+      "docstrings": 19,
+      "comments": 20,
+      "name_candidates": 110,
+      "classes": 1,
+      "functions": 7,
+      "variables": 102,
+      "total": 110
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 2.144,
+      "test_command": "pytest -rA xarray/tests/test_merge.py"
+    }
+  },
+  {
+    "instance_id": "pydata__xarray-4966",
+    "repo": "pydata/xarray",
+    "base_commit": "37522e991a32ee3c0ad1a5ff8afe8e3eb1885550",
+    "version": "0.12",
+    "source_files": [
+      "xarray/coding/variables.py"
+    ],
+    "test_files": [
+      "xarray/tests/test_coding.py"
+    ],
+    "fail_to_pass_count": 4,
+    "pass_to_pass_count": 21,
+    "signals": {
+      "annotations": 11,
+      "docstrings": 12,
+      "comments": 20,
+      "name_candidates": 51,
+      "classes": 4,
+      "functions": 10,
+      "variables": 37,
+      "total": 51
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 2.232,
+      "test_command": "pytest -rA xarray/tests/test_coding.py"
+    }
+  },
+  {
+    "instance_id": "pydata__xarray-7393",
+    "repo": "pydata/xarray",
+    "base_commit": "41fef6f1352be994cd90056d47440fe9aa4c068f",
+    "version": "2022.09",
+    "source_files": [
+      "xarray/core/indexing.py"
+    ],
+    "test_files": [
+      "xarray/tests/test_indexes.py"
+    ],
+    "fail_to_pass_count": 2,
+    "pass_to_pass_count": 71,
+    "signals": {
+      "annotations": 123,
+      "docstrings": 38,
+      "comments": 110,
+      "name_candidates": 149,
+      "classes": 8,
+      "functions": 26,
+      "variables": 115,
+      "total": 149
+    },
+    "gold_preflight": {
+      "task_success": false,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 2,
+      "duration_seconds": 1.552,
+      "test_command": "pytest -rA xarray/tests/test_indexes.py"
+    }
+  }
+]

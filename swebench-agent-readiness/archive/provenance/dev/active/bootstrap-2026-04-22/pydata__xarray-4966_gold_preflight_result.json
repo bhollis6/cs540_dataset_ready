@@ -1,0 +1,52 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pydata__xarray-4966",
+  "repo": "pydata/xarray",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "pytest -rA xarray/tests/test_coding.py",
+  "command_returncode": 0,
+  "duration_seconds": 2.232,
+  "task_success": true,
+  "fail_to_pass_total": 4,
+  "fail_to_pass_passed": [
+    "xarray/tests/test_coding.py::test_decode_signed_from_unsigned[1]",
+    "xarray/tests/test_coding.py::test_decode_signed_from_unsigned[2]",
+    "xarray/tests/test_coding.py::test_decode_signed_from_unsigned[4]",
+    "xarray/tests/test_coding.py::test_decode_signed_from_unsigned[8]"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 21,
+  "pass_to_pass_passed": [
+    "xarray/tests/test_coding.py::test_CFMaskCoder_decode",
+    "xarray/tests/test_coding.py::test_CFMaskCoder_encode_missing_fill_values_conflict[numeric-with-dtype]",
+    "xarray/tests/test_coding.py::test_CFMaskCoder_encode_missing_fill_values_conflict[numeric-without-dtype]",
+    "xarray/tests/test_coding.py::test_CFMaskCoder_encode_missing_fill_values_conflict[times-with-dtype]",
+    "xarray/tests/test_coding.py::test_CFMaskCoder_missing_value",
+    "xarray/tests/test_coding.py::test_CFMaskCoder_decode_dask",
+    "xarray/tests/test_coding.py::test_coder_roundtrip",
+    "xarray/tests/test_coding.py::test_scaling_converts_to_float32[u1]",
+    "xarray/tests/test_coding.py::test_scaling_converts_to_float32[u2]",
+    "xarray/tests/test_coding.py::test_scaling_converts_to_float32[i1]",
+    "xarray/tests/test_coding.py::test_scaling_converts_to_float32[i2]",
+    "xarray/tests/test_coding.py::test_scaling_converts_to_float32[f2]",
+    "xarray/tests/test_coding.py::test_scaling_converts_to_float32[f4]",
+    "xarray/tests/test_coding.py::test_scaling_offset_as_list[0.1-10]",
+    "xarray/tests/test_coding.py::test_scaling_offset_as_list[0.1-scale_factor1]",
+    "xarray/tests/test_coding.py::test_scaling_offset_as_list[add_offset1-10]",
+    "xarray/tests/test_coding.py::test_scaling_offset_as_list[add_offset1-scale_factor1]",
+    "xarray/tests/test_coding.py::test_decode_unsigned_from_signed[1]",
+    "xarray/tests/test_coding.py::test_decode_unsigned_from_signed[2]",
+    "xarray/tests/test_coding.py::test_decode_unsigned_from_signed[4]",
+    "xarray/tests/test_coding.py::test_decode_unsigned_from_signed[8]"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "xarray/coding/variables.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

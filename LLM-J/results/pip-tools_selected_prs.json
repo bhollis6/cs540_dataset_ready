@@ -1,0 +1,906 @@
+{
+  "repo": "jazzband/pip-tools",
+  "selection_timestamp": "2026-04-28T01:01:22.367379+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 20,
+  "accepted": 15,
+  "review": 3,
+  "rejected": 2,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "pip-tools_pr_1822",
+      "pr_number": 1822,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A high-quality, well-scoped candidate. The problem is clearly described, the fix is non-trivial but not over-engineered, tests directly validate the behavior, and the code touches real application logic with meaningful naming. Strong signal potential for measuring how codebase degradation (variable names, comments, test context) affects agent performance on a focused feature addition.",
+      "merge_commit_sha": "41f4b666785f101987ef3d97de24b0fb099b73cb",
+      "base_commit_sha": "244ac038556d3f15bf40e237d93bff08df62343a",
+      "env_commit_sha": "244ac038556d3f15bf40e237d93bff08df62343a",
+      "head_commit_sha": "6bd95b9ea54c9f6b01615d15034c2430e20b45bf",
+      "source_files": [
+        "piptools/scripts/compile.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1885",
+      "pr_number": 1885,
+      "total_score": 22,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, clearly motivated bug fix that addresses incorrect reinstall behavior for URL requirements with hashes. The PR unifies a compat layer, introduces a new key derivation function using direct URL hashes, and adds three targeted tests that serve as clear pass/fail signals. Core application code with type annotations, descriptive naming, and docstrings makes it ideal for mutation experiments. Complexity is in the sweet spot \u2014 requires understanding pip internals but is tractable for an AI agent.",
+      "merge_commit_sha": "e5434022016b96d3b49cd5e2fbdf0032b097563d",
+      "base_commit_sha": "7958a718bd10884dac48872bfcb69cdf12e63350",
+      "env_commit_sha": "7958a718bd10884dac48872bfcb69cdf12e63350",
+      "head_commit_sha": "d2377ea0749d0ffccf1cc59d28f2bb4eefb73ca1",
+      "source_files": [
+        "piptools/_compat/__init__.py",
+        "piptools/_compat/pip_compat.py",
+        "piptools/scripts/sync.py",
+        "piptools/sync.py",
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_sync.py"
+      ],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/_compat/__init__.py",
+            "piptools/_compat/pip_compat.py",
+            "piptools/scripts/sync.py",
+            "piptools/sync.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_sync.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/_compat/__init__.py",
+            "piptools/_compat/pip_compat.py",
+            "piptools/scripts/sync.py",
+            "piptools/sync.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_sync.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/_compat/__init__.py",
+            "piptools/_compat/pip_compat.py",
+            "piptools/scripts/sync.py",
+            "piptools/sync.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_sync.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_sync.py"
+          ],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1890",
+      "pr_number": 1890,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality candidate PR. It fixes a focused, clearly described bug in core resolver logic with a well-reasoned implementation and a directly validating parametrized test. The code touches typed, well-named application logic with meaningful comments \u2014 ideal for mutation experiments. Complexity is moderate (understanding the constraint pipeline is needed, but the fix itself is concise). Recommended for inclusion.",
+      "merge_commit_sha": "7958a718bd10884dac48872bfcb69cdf12e63350",
+      "base_commit_sha": "51d9e1ce16b1e3995ac12c13e887ee58ee2e62e6",
+      "env_commit_sha": "51d9e1ce16b1e3995ac12c13e887ee58ee2e62e6",
+      "head_commit_sha": "61515e0c511c9a68b4da7aeda6f35ddb9363034f",
+      "source_files": [
+        "piptools/resolver.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/resolver.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/resolver.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/resolver.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1896",
+      "pr_number": 1896,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality candidate PR. It adds a well-scoped, non-trivial CLI feature (`--no-config`) with direct, verifiable tests that clearly distinguish the before/after behavior. The code touches typed, well-named application logic in a real Python CLI project. The clarity is good though slightly reliant on the linked issue. Complexity is in the ideal range \u2014 requires understanding click's eager callback evaluation order but is not overwhelming. Strong candidate for the experiment.",
+      "merge_commit_sha": "407f00822f16e52cd8bbc8f9ccde3d8dab0c7979",
+      "base_commit_sha": "e5434022016b96d3b49cd5e2fbdf0032b097563d",
+      "env_commit_sha": "e5434022016b96d3b49cd5e2fbdf0032b097563d",
+      "head_commit_sha": "f920857a7fe2ba80c95301b4f0b05e8462e32ba6",
+      "source_files": [
+        "piptools/scripts/compile.py",
+        "piptools/scripts/sync.py",
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py",
+        "tests/test_cli_sync.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "piptools/scripts/sync.py",
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "piptools/scripts/sync.py",
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "piptools/scripts/sync.py",
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1910",
+      "pr_number": 1910,
+      "total_score": 21,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, clearly described feature addition that validates config file keys and values against click CLI parameters. Strong test coverage directly verifies both error paths. Core application code with good type annotations and docstrings makes it mutation-relevant. Moderate complexity (requires click internals knowledge) places it in the ideal range for the experiment \u2014 not trivial, not overwhelming.",
+      "merge_commit_sha": "963642811c93a32cdaf730e8226d0fe091391882",
+      "base_commit_sha": "4b1f6af78683d4531447cefc80e6e24b483a2fd3",
+      "env_commit_sha": "4b1f6af78683d4531447cefc80e6e24b483a2fd3",
+      "head_commit_sha": "b2cb8633fc36cafeddad06104e81951f711d81b8",
+      "source_files": [
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py",
+        "tests/test_cli_sync.py",
+        "tests/test_utils.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_2087",
+      "pr_number": 2087,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A high-quality, well-scoped bug fix with a direct and meaningful test that serves as a clear pass/fail signal. The fix touches real application logic with type hints, meaningful comments, and descriptive naming \u2014 all properties that degrade well experimentally. Complexity is in the sweet spot: requires understanding pip internals but the solution is concise. Strong candidate for the experiment.",
+      "merge_commit_sha": "fb7d14afd69ae2176f8981335d684539e6e1a2cb",
+      "base_commit_sha": "6209efdad6464b275d93279ccb190c7a7c320c52",
+      "env_commit_sha": "6209efdad6464b275d93279ccb190c7a7c320c52",
+      "head_commit_sha": "322afa731bb950027087db4b0bb0d53b7d9dabbe",
+      "source_files": [
+        "piptools/_compat/pip_compat.py"
+      ],
+      "test_files": [
+        "tests/test_pip_compat.py"
+      ],
+      "test_support_files": [
+        "tests/constants.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/_compat/pip_compat.py",
+            "tests/constants.py",
+            "tests/test_pip_compat.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/_compat/pip_compat.py",
+            "tests/constants.py",
+            "tests/test_pip_compat.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/_compat/pip_compat.py",
+            "tests/constants.py",
+            "tests/test_pip_compat.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_pip_compat.py"
+          ],
+          "preserve_files": [
+            "tests/constants.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1582",
+      "pr_number": 1582,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A high-quality, well-scoped bug fix PR. The single-function change, directly-validating tests, and clear domain-specific complexity make it an excellent experimental candidate. The only weakness is a sparse PR description that requires code reading to fully contextualize the task. Overall a strong pick for the experiment pipeline.",
+      "merge_commit_sha": "19db87553e3cfc8ed32d2220ef8df3f8367033b2",
+      "base_commit_sha": "9e4aeff8f3b5518586091700bec9bbb570154a38",
+      "env_commit_sha": "9e4aeff8f3b5518586091700bec9bbb570154a38",
+      "head_commit_sha": "3b19f6d656ec76eb5b0d0318f4296ccd85391ff3",
+      "source_files": [
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py",
+        "tests/test_utils.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/test_cli_compile.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py",
+            "tests/test_utils.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1893",
+      "pr_number": 1893,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, cleanly tested bug fix that targets a specific UX issue in pip-compile header generation. The source code has good mutation surface (type hints, descriptive names, comments), tests directly validate the fix with parametrized cases, and the complexity is in the sweet spot for experimental use. The only weakness is the sparse PR description requiring inference from the title and linked comment, which would make crafting an agent task prompt slightly harder but still feasible.",
+      "merge_commit_sha": "e8b8ce71268f1f5dd193eac8d38071e02ad7b91f",
+      "base_commit_sha": "64859e3d50f45edaf8be5ac7c8057b6b7b382c1c",
+      "env_commit_sha": "64859e3d50f45edaf8be5ac7c8057b6b7b382c1c",
+      "head_commit_sha": "2680f3f86c648667c17c3e267ce6ea2568ce2e0d",
+      "source_files": [
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_utils.py"
+      ],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_utils.py"
+          ],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1919",
+      "pr_number": 1919,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, cleanly implemented bug fix for package name canonicalization in pip-sync. The core change is small but requires genuine understanding of the packaging ecosystem and the diff logic. Tests are exemplary \u2014 parametrized directly against the two failure scenarios with clear assertions. The main weakness is a sparse PR description (issue links only), but the test names and code are self-documenting enough for an agent to reconstruct the task. Good experimental candidate: moderate complexity, excellent test signal, real application code with type hints and descriptive naming.",
+      "merge_commit_sha": "6b162acefee9df6449ddb7dd595dbaa7ff188197",
+      "base_commit_sha": "963642811c93a32cdaf730e8226d0fe091391882",
+      "env_commit_sha": "963642811c93a32cdaf730e8226d0fe091391882",
+      "head_commit_sha": "99133cb0ee267e465322a9e33784a22790cf0fe0",
+      "source_files": [
+        "piptools/sync.py"
+      ],
+      "test_files": [
+        "tests/test_sync.py"
+      ],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/sync.py",
+            "tests/conftest.py",
+            "tests/test_sync.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/sync.py",
+            "tests/conftest.py",
+            "tests/test_sync.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/sync.py",
+            "tests/conftest.py",
+            "tests/test_sync.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_sync.py"
+          ],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1954",
+      "pr_number": 1954,
+      "total_score": 20,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-scoped deprecation-warning PR with excellent test coverage that directly validates the feature. The code touches real application logic with type annotations and proper Click CLI idioms, making it a good candidate for mutation experiments. Moderate complexity (score 3) puts it in the sweet spot \u2014 non-trivial enough to require navigating the codebase and understanding Click patterns, but not so large that an agent would fail regardless of codebase quality. High test coverage means clear pass/fail signal. Good overall candidate.",
+      "merge_commit_sha": "b6193fdefbde24d979d14570af2f49169d4fb8fb",
+      "base_commit_sha": "d1e92150c229d08e6975bffdf5bca9037a55e697",
+      "env_commit_sha": "d1e92150c229d08e6975bffdf5bca9037a55e697",
+      "head_commit_sha": "adfd994a348287976f25064c6040eadfac3ca9e7",
+      "source_files": [
+        "piptools/scripts/compile.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_2082",
+      "pr_number": 2082,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, well-tested bug fix that corrects output ordering in pip-tools' format control writer to preserve pip's CLI parsing semantics. The fix touches real application code with type hints, descriptive naming, and explanatory comments, and comes with parametrized tests that directly validate the fix. The only weakness is a sparse PR description \u2014 the reasoning lives in the code comment rather than the PR body. Overall a strong experimental candidate.",
+      "merge_commit_sha": "ad79078db63db6a251ff38b06105e0c1df4ff65a",
+      "base_commit_sha": "f83aed38ea139768973392e87b3f6f8b9bde2fd1",
+      "env_commit_sha": "f83aed38ea139768973392e87b3f6f8b9bde2fd1",
+      "head_commit_sha": "d4d5fd42f0c0ed7aaa186720594d0e7c2ab31aaf",
+      "source_files": [
+        "piptools/writer.py"
+      ],
+      "test_files": [
+        "tests/test_writer.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/writer.py",
+            "tests/test_writer.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/writer.py",
+            "tests/test_writer.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/writer.py",
+            "tests/test_writer.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_writer.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1904",
+      "pr_number": 1904,
+      "total_score": 19,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A solid, well-scoped bug fix for a specific config-path-in-header regression (GH-1903). The changes are cohesive, tests are thorough and directly validate the regression, and the code touches real application logic with type hints and descriptive naming. The only weakness is the brief PR description that would require an agent to look up the linked issue or read the code to understand the user-visible symptom. Overall a good candidate for the experiment, hitting the sweet spot in complexity and having clear pass/fail test signals.",
+      "merge_commit_sha": "d1e92150c229d08e6975bffdf5bca9037a55e697",
+      "base_commit_sha": "19db87553e3cfc8ed32d2220ef8df3f8367033b2",
+      "env_commit_sha": "19db87553e3cfc8ed32d2220ef8df3f8367033b2",
+      "head_commit_sha": "a5cb44447c96f769a85b9062f70c333836515566",
+      "source_files": [
+        "piptools/locations.py",
+        "piptools/scripts/compile.py",
+        "piptools/scripts/sync.py",
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py",
+        "tests/test_cli_sync.py",
+        "tests/test_utils.py"
+      ],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/locations.py",
+            "piptools/scripts/compile.py",
+            "piptools/scripts/sync.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/locations.py",
+            "piptools/scripts/compile.py",
+            "piptools/scripts/sync.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/locations.py",
+            "piptools/scripts/compile.py",
+            "piptools/scripts/sync.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py",
+            "tests/test_cli_sync.py",
+            "tests/test_utils.py"
+          ],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_2013",
+      "pr_number": 2013,
+      "total_score": 19,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped bug fix for consistent extras canonicalization with a direct integration test. The core logic change is small (4 lines) but requires meaningful architectural understanding to implement correctly, including navigating circular import constraints and identifying the right interception point (`copy_install_requirement`). The test provides a clear pass/fail signal. Good experimental candidate \u2014 moderate complexity, rich code context for mutation, and a verifiable behavioral outcome.",
+      "merge_commit_sha": "53309647980e2a4981db54c0033f98c61142de0b",
+      "base_commit_sha": "347fec59b418b6239e47dee8429e8401ac4330e6",
+      "env_commit_sha": "347fec59b418b6239e47dee8429e8401ac4330e6",
+      "head_commit_sha": "7a1fadadf655c7be402352ad714341a12aa3c5e3",
+      "source_files": [
+        "piptools/_compat/__init__.py",
+        "piptools/_compat/pip_compat.py",
+        "piptools/build.py",
+        "piptools/resolver.py",
+        "piptools/scripts/compile.py",
+        "piptools/utils.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py"
+      ],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/_compat/__init__.py",
+            "piptools/_compat/pip_compat.py",
+            "piptools/build.py",
+            "piptools/resolver.py",
+            "piptools/scripts/compile.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/_compat/__init__.py",
+            "piptools/_compat/pip_compat.py",
+            "piptools/build.py",
+            "piptools/resolver.py",
+            "piptools/scripts/compile.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/_compat/__init__.py",
+            "piptools/_compat/pip_compat.py",
+            "piptools/build.py",
+            "piptools/resolver.py",
+            "piptools/scripts/compile.py",
+            "piptools/utils.py",
+            "tests/conftest.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py"
+          ],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1745",
+      "pr_number": 1745,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 3,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is clean, well-scoped, and has a clear description, but it is too simple to be a strong experimental candidate. The change is a mechanical flag addition that follows an obvious existing pattern in the codebase. The mutation surface (type hints, naming, logic) is minimal given the small code footprint, and an AI agent could likely solve this correctly even under significant codebase degradation, limiting the experiment's ability to distinguish between clean and degraded conditions.",
+      "merge_commit_sha": "9aed54fc0fefd8bd1065bbbf10d80c7e53e46fcd",
+      "base_commit_sha": "faa37ddefef74c5f3ac3eaef45287539b7df71da",
+      "env_commit_sha": "faa37ddefef74c5f3ac3eaef45287539b7df71da",
+      "head_commit_sha": "3a38370a3298079a809644ccf3ebab12b298d70a",
+      "source_files": [
+        "piptools/scripts/compile.py"
+      ],
+      "test_files": [
+        "tests/test_cli_compile.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/scripts/compile.py",
+            "tests/test_cli_compile.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_cli_compile.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pip-tools_pr_1761",
+      "pr_number": 1761,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 3,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is clean, tightly scoped, and well-described, but it's too simple to serve as a strong experimental candidate. The fix follows a well-known pattern (store initial state \u2192 add reset \u2192 autouse fixture) that an AI agent would likely solve correctly regardless of codebase quality degradation. The touched code has good mutation targets (type hints, descriptive naming, docstrings), but the small surface area and low complexity mean this PR would produce weak differentiation signals between clean and degraded conditions. Marginal candidate at best.",
+      "merge_commit_sha": "2531b9f4ba82164c018efd93dc9bab256067ab8a",
+      "base_commit_sha": "cd1baaa613cd77c0a02b46b818ecd762653dfce0",
+      "env_commit_sha": "cd1baaa613cd77c0a02b46b818ecd762653dfce0",
+      "head_commit_sha": "779b0ea86c51a2e9894adde700b181115aa6dab6",
+      "source_files": [
+        "piptools/logging.py"
+      ],
+      "test_files": [],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "piptools/logging.py",
+            "tests/conftest.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "piptools/logging.py",
+            "tests/conftest.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "piptools/logging.py",
+            "tests/conftest.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    }
+  ]
+}

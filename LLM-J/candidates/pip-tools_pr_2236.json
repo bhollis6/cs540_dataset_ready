@@ -1,0 +1,29 @@
+{
+  "candidate_id": "pip-tools_pr_2236",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 2236,
+  "title": "Update to support click >= 8.3",
+  "description": "Resolves #2235\r\n\r\nThe latest `click` release makes two changes which are visible in `pip-tools`, one of which is only seen in the testsuite.\r\n\r\n1.  The default for `Parameter.default` is now an internal `UNSET` sentinel.\r\n\r\n    Because `UNSET` isn't in the public API, checking `Option.default` is not the right way to check if an option has no explicit default value. We could use `Option.to_info_dict()`, but we're *also* checking for a falsy value right now -- the simple fix is to check for a parsed value of `None`.\r\n\r\n2.  Changes to EOF handling in `CliRunner.isolation()` result in the stream being closed on exit.\r\n\r\n    Between pallets/click#2934 and pallets/click#2940, we now get the intended behavior for `CliRunner.isolation()`, in that it outputs an EOF when the context manager exits. To solve, update a test to read stderr before exiting the context manager.\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Included tests for the changes.\r\n- [x] A change note is created in `changelog.d/` (see [`changelog.d/README.md`](https://github.com/jazzband/pip-tools/blob/main/changelog.d/#readme) for instructions) or the PR text says \"no changelog needed\".\r\n\r\n##### Maintainer checklist\r\n\r\n- [x] If no changelog is needed, apply the `skip-changelog` label.\r\n- [x] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/changelog.d/2235.bugfix.md b/changelog.d/2235.bugfix.md\nnew file mode 100644\nindex 000000000..310cc2cbe\n--- /dev/null\n+++ b/changelog.d/2235.bugfix.md\n@@ -0,0 +1,2 @@\n+Fix an incompatibility with ``click >= 8.3`` which made ``pip-compile`` display incorrect\n+options in the compile command in output headers -- by :user:`sirosen`.\ndiff --git a/piptools/utils.py b/piptools/utils.py\nindex b501fac01..56ad6ddd7 100644\n--- a/piptools/utils.py\n+++ b/piptools/utils.py\n@@ -399,7 +399,7 @@ def get_compile_command(click_ctx: click.Context) -> str:\n                 continue\n \n         # Skip options without a value\n-        if option.default is None and not value:\n+        if value is None:\n             continue\n \n         # Skip options with a default value\n",
+  "test_diff": "diff --git a/tests/test_logging.py b/tests/test_logging.py\nindex 60c4cbf70..29201ced7 100644\n--- a/tests/test_logging.py\n+++ b/tests/test_logging.py\n@@ -10,7 +10,6 @@ def test_indentation(runner):\n     log = LogContext(indent_width=2)\n \n     with runner.isolation() as streams:\n-        stderr = streams[1]\n         log.log(\"Test message 1\")\n         with log.indentation():\n             log.log(\"Test message 2\")\n@@ -19,7 +18,9 @@ def test_indentation(runner):\n             log.log(\"Test message 4\")\n         log.log(\"Test message 5\")\n \n-    assert stderr.getvalue().decode().splitlines() == [\n+        stderr_bytes = streams[1].getvalue()\n+\n+    assert stderr_bytes.decode().splitlines() == [\n         \"Test message 1\",\n         \"  Test message 2\",\n         \"    Test message 3\",\n",
+  "files_changed": [
+    "changelog.d/2235.bugfix.md",
+    "piptools/utils.py",
+    "tests/test_logging.py"
+  ],
+  "source_files": [
+    "piptools/utils.py"
+  ],
+  "test_files": [
+    "tests/test_logging.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 6,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "68f167ce91b7b795892159f55afd8ab33b6bcf8e",
+  "base_commit_sha": "b97a0d4be0ecf597b250c520ad5fb011cfcbfd27",
+  "env_commit_sha": "b97a0d4be0ecf597b250c520ad5fb011cfcbfd27",
+  "head_commit_sha": "61db0caba957e1f22667013b7b8a8ee47cff34e1",
+  "merged_at": "2025-09-22T18:03:40Z"
+}

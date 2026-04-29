@@ -1,0 +1,29 @@
+{
+  "candidate_id": "structlog_pr_747",
+  "repo": "hynek/structlog",
+  "pr_number": 747,
+  "title": "MaybeTimeStamper: Fix custom keys always being overwritten",
+  "description": "# Summary\r\n\r\nPreviously, the conditional always checked specifically for `timestamp`, which caused `MaybeTimeStamper` to always behave like `TimeStamper` when a custom key is used.\r\n\r\n# Pull Request Check List\r\n\r\n- [x] Do **not** open pull requests from your `main` branch \u2013 **use a separate branch**!\r\n  - There's a ton of footguns waiting if you don't heed this warning. You can still go back to your project, create a branch from your main branch, push it, and open the pull request from the new branch.\r\n  - This is not a pre-requisite for your pull request to be accepted, but **you have been warned**.\r\n- [x] Added **tests** for changed code.\r\n    - The CI fails with less than 100% coverage.\r\n- [x] **New APIs** are added to our typing tests in [`api.py`](https://github.com/hynek/structlog/blob/main/tests/typing/api.py).\r\n- [x] Updated **documentation** for changed code.\r\n    - [x] New functions/classes have to be added to `docs/api.rst` by hand.\r\n    - [x] Changed/added classes/methods/functions have appropriate `versionadded`, `versionchanged`, or `deprecated` [directives](http://www.sphinx-doc.org/en/stable/markup/para.html#directive-versionadded).\r\n      - The next version is the second number in the current release + 1. The first number represents the current year. So if the current version on PyPI is 23.1.0, the next version is gonna be 23.2.0. If the next version is the first in the new year, it'll be 24.1.0.\r\n- [x] Documentation in `.rst` and `.md` files is written using [**semantic newlines**](https://rhodesmill.org/brandon/2012/one-sentence-per-line/).\r\n- [x] Changes (and possible deprecations) are documented in the [**changelog**](https://github.com/hynek/structlog/blob/main/CHANGELOG.md).\r\n- [x] Consider granting [push permissions to the PR branch](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork), so maintainers can fix minor issues themselves without pestering you.",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 14e0dcc9..b5ecca31 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -32,6 +32,11 @@ You can find our backwards-compatibility policy [here](https://github.com/hynek/\n - `structlog.dev.rich_traceback()` now throws a more helpful error when Rich is missing.\n   [#735](https://github.com/hynek/structlog/pull/735)\n \n+### Fixed\n+\n+- `structlog.processors.MaybeTimeStamper` now respects the *key* argument when determining whether to overwrite the timestamp field.\n+  [#747](https://github.com/hynek/structlog/pull/747)\n+\n \n ## [25.4.0](https://github.com/hynek/structlog/compare/25.3.0...25.4.0) - 2025-06-02\n \ndiff --git a/src/structlog/processors.py b/src/structlog/processors.py\nindex ee70e509..804b8d0d 100644\n--- a/src/structlog/processors.py\n+++ b/src/structlog/processors.py\n@@ -592,7 +592,7 @@ def __init__(\n     def __call__(\n         self, logger: WrappedLogger, name: str, event_dict: EventDict\n     ) -> EventDict:\n-        if \"timestamp\" not in event_dict:\n+        if self.stamper.key not in event_dict:\n             return self.stamper(logger, name, event_dict)\n \n         return event_dict\n",
+  "test_diff": "diff --git a/tests/processors/test_renderers.py b/tests/processors/test_renderers.py\nindex 3cf27a58..791b18a4 100644\n--- a/tests/processors/test_renderers.py\n+++ b/tests/processors/test_renderers.py\n@@ -511,6 +511,14 @@ def test_overwrite(self):\n \n         assert {\"timestamp\": 42} == mts(None, None, {\"timestamp\": 42})\n \n+    def test_overwrite_custom_key(self):\n+        \"\"\"\n+        If there is a timestamp with a custom key, leave it.\n+        \"\"\"\n+        mts = MaybeTimeStamper(key=\"timestamp2\")\n+\n+        assert {\"timestamp2\": 42} == mts(None, None, {\"timestamp2\": 42})\n+\n     def test_none(self):\n         \"\"\"\n         If there is no timestamp, add one.\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "src/structlog/processors.py",
+    "tests/processors/test_renderers.py"
+  ],
+  "source_files": [
+    "src/structlog/processors.py"
+  ],
+  "test_files": [
+    "tests/processors/test_renderers.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 14,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "c44431c544095e61163598372737c1c76a91790f",
+  "base_commit_sha": "99bd5a909079c7e8966c2be74db9149b4f17d54c",
+  "env_commit_sha": "99bd5a909079c7e8966c2be74db9149b4f17d54c",
+  "head_commit_sha": "3f1ac13842f816f54b37d360de24aefe45fe5808",
+  "merged_at": "2025-09-11T06:22:00Z"
+}

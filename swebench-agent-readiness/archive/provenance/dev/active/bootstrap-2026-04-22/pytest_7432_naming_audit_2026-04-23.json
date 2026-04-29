@@ -1,0 +1,111 @@
+{
+  "candidate_symbol_count": 27,
+  "rename_counts": {
+    "classes": 2,
+    "functions": 2,
+    "variables": 23,
+    "total": 27
+  },
+  "sample_symbols": [
+    {
+      "name": "group",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "evaluate_condition",
+      "kind": "function",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "globals_",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "condition_code",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "msglines",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "msglines",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "msglines",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "Skip",
+      "kind": "class",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "conditions",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "conditions",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "condition",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "Xfail",
+      "kind": "class",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "conditions",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "conditions",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "condition",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "outcome",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "rep",
+      "kind": "variable",
+      "path": "src/_pytest/skipping.py"
+    },
+    {
+      "name": "callreport",
+      "kind": "variable",
+      "path": "testing/test_skipping.py"
+    },
+    {
+      "name": "callreport",
+      "kind": "variable",
+      "path": "testing/test_skipping.py"
+    },
+    {
+      "name": "callreport",
+      "kind": "variable",
+      "path": "testing/test_skipping.py"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "django__django-16502",
+  "repo": "django/django",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 servers.test_basehttp",
+  "command_returncode": 0,
+  "duration_seconds": 0.68,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "test_no_body_returned_for_head_requests (servers.test_basehttp.WSGIRequestHandlerTestCase.test_no_body_returned_for_head_requests)"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 4,
+  "pass_to_pass_passed": [
+    "test_https (servers.test_basehttp.WSGIRequestHandlerTestCase.test_https)",
+    "test_log_message (servers.test_basehttp.WSGIRequestHandlerTestCase.test_log_message)",
+    "WSGIRequestHandler ignores headers containing underscores.",
+    "WSGIServer handles broken pipe errors."
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "django/core/servers/basehttp.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

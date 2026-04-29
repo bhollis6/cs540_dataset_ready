@@ -1,0 +1,95 @@
+[
+  {
+    "instance_id": "matplotlib__matplotlib-20676",
+    "repo": "matplotlib/matplotlib",
+    "base_commit": "6786f437df54ca7780a047203cbcfaa1db8dc542",
+    "version": "3.4",
+    "source_files": [
+      "lib/matplotlib/widgets.py"
+    ],
+    "test_files": [
+      "lib/matplotlib/tests/test_widgets.py"
+    ],
+    "fail_to_pass_count": 2,
+    "pass_to_pass_count": 32,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 132,
+      "comments": 225,
+      "name_candidates": 746,
+      "classes": 22,
+      "functions": 181,
+      "variables": 543,
+      "total": 746
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 26.411,
+      "test_command": "pytest -rA lib/matplotlib/tests/test_widgets.py"
+    }
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-23412",
+    "repo": "matplotlib/matplotlib",
+    "base_commit": "f06c2c3abdaf4b90285ce5ca7fedbb8ace715911",
+    "version": "3.5",
+    "source_files": [
+      "lib/matplotlib/patches.py"
+    ],
+    "test_files": [
+      "lib/matplotlib/tests/test_patches.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 46,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 230,
+      "comments": 271,
+      "name_candidates": 1300,
+      "classes": 56,
+      "functions": 249,
+      "variables": 995,
+      "total": 1300
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 17.452,
+      "test_command": "pytest -rA lib/matplotlib/tests/test_patches.py"
+    }
+  },
+  {
+    "instance_id": "matplotlib__matplotlib-26291",
+    "repo": "matplotlib/matplotlib",
+    "base_commit": "fa68f46289adf4a8a4bc7ba97ded8258ec9d079c",
+    "version": "3.7",
+    "source_files": [
+      "lib/mpl_toolkits/axes_grid1/inset_locator.py"
+    ],
+    "test_files": [
+      "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 49,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 15,
+      "comments": 68,
+      "name_candidates": 304,
+      "classes": 8,
+      "functions": 24,
+      "variables": 272,
+      "total": 304
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 34.337,
+      "test_command": "pytest -rA lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+    }
+  }
+]

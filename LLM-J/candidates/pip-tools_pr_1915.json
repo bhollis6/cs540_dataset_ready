@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pip-tools_pr_1915",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 1915,
+  "title": "Refactor multi-value options validation",
+  "description": "Move multi-value options validation logic to `_validate_config()`.\r\n\r\n##### Contributor checklist\r\n\r\n- [ ] Provided the tests for the changes.\r\n- [ ] Assure PR title is short, clear, and good to be included in the user-oriented changelog\r\n\r\n##### Maintainer checklist\r\n\r\n- [ ] Assure one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n",
+  "patch_diff": "diff --git a/piptools/utils.py b/piptools/utils.py\nindex de2418473..a1711a507 100644\n--- a/piptools/utils.py\n+++ b/piptools/utils.py\n@@ -611,11 +611,14 @@ def _validate_config(\n         # Validate invalid values\n         param = cli_params[key]\n         try:\n-            param.type.convert(value=value, param=param, ctx=click_context)\n+            param.type_cast_value(value=value, ctx=click_context)\n         except Exception as e:\n             raise click.BadOptionUsage(\n                 option_name=key,\n-                message=f\"Invalid value for config key {key!r}: {value!r}.\",\n+                message=(\n+                    f\"Invalid value for config key {key!r}: {value!r}.{os.linesep}\"\n+                    f\"Details: {e}\"\n+                ),\n                 ctx=click_context,\n             ) from e\n \n@@ -662,17 +665,6 @@ def select_config_file(src_files: tuple[str, ...]) -> Path | None:\n }\n \n \n-# Ensure that any default overrides for these click options are lists, supporting multiple values\n-MULTIPLE_VALUE_OPTIONS = [\n-    \"extras\",\n-    \"upgrade_packages\",\n-    \"unsafe_package\",\n-    \"find_links\",\n-    \"extra_index_url\",\n-    \"trusted_host\",\n-]\n-\n-\n def get_cli_options(ctx: click.Context) -> dict[str, click.Parameter]:\n     cli_opts = {\n         opt: option\n@@ -701,20 +693,11 @@ def parse_config_file(\n \n     # In a TOML file, we expect the config to be under `[tool.pip-tools]`\n     piptools_config: dict[str, Any] = config.get(\"tool\", {}).get(\"pip-tools\", {})\n-\n     piptools_config = _normalize_keys_in_config(piptools_config)\n     piptools_config = _invert_negative_bool_options_in_config(\n         ctx=click_context,\n         config=piptools_config,\n     )\n-\n-    # Any option with multiple values needs to be a list in the pyproject.toml\n-    for mv_option in MULTIPLE_VALUE_OPTIONS:\n-        if not isinstance(piptools_config.get(mv_option), (list, type(None))):\n-            original_option = mv_option.replace(\"_\", \"-\")\n-            raise click.BadOptionUsage(\n-                original_option, f\"Config key '{original_option}' must be a list\"\n-            )\n     return piptools_config\n \n \n",
+  "test_diff": "diff --git a/tests/test_utils.py b/tests/test_utils.py\nindex 76ea0d612..7b3d7ead1 100644\n--- a/tests/test_utils.py\n+++ b/tests/test_utils.py\n@@ -624,21 +624,25 @@ def test_callback_config_file_defaults(pyproject_param, new_default, make_config\n \n \n @pytest.mark.parametrize(\n-    \"mv_option\",\n+    (\"param\", \"value\"),\n     (\n-        \"extra\",\n-        \"upgrade-package\",\n-        \"unsafe-package\",\n-        \"find-links\",\n-        \"extra-index-url\",\n-        \"trusted-host\",\n+        (\"extra\", \"not-a-list\"),\n+        (\"upgrade_package\", \"not-a-list\"),\n+        (\"unsafe_package\", \"not-a-list\"),\n+        (\"find_links\", \"not-a-list\"),\n+        (\"extra_index_url\", \"not-a-list\"),\n+        (\"trusted_host\", \"not-a-list\"),\n+        (\"annotate\", \"not-a-bool\"),\n+        (\"max_rounds\", \"not-an-int\"),\n     ),\n )\n-def test_callback_config_file_defaults_multi_value_options(mv_option, make_config_file):\n-    config_file = make_config_file(mv_option, \"not-a-list\")\n+def test_callback_config_file_defaults_multi_validate_value(\n+    param, value, make_config_file\n+):\n+    config_file = make_config_file(param, value)\n     ctx = Context(compile_cli)\n     ctx.params[\"src_files\"] = (str(config_file),)\n-    with pytest.raises(BadOptionUsage, match=\"must be a list\"):\n+    with pytest.raises(BadOptionUsage, match=\"Invalid value for config key\"):\n         override_defaults_from_config_file(ctx, \"config\", None)\n \n \n",
+  "files_changed": [
+    "piptools/utils.py",
+    "tests/test_utils.py"
+  ],
+  "source_files": [
+    "piptools/utils.py"
+  ],
+  "test_files": [
+    "tests/test_utils.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 19,
+  "lines_removed": 32,
+  "has_test_changes": true,
+  "merge_commit_sha": "7386d28997c64db18b21c86caafc291b98cdbda2",
+  "base_commit_sha": "9aa6ec4598ffb25f84874fc5fd61b5aea45e9fcb",
+  "env_commit_sha": "9aa6ec4598ffb25f84874fc5fd61b5aea45e9fcb",
+  "head_commit_sha": "8d13ed21ad6d7d9dc83b56272b808c12b4f11fd3",
+  "merged_at": "2023-07-25T20:09:36Z"
+}

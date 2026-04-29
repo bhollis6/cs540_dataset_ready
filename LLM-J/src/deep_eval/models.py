@@ -30,6 +30,8 @@ class PreflightResult:
             "reason": self.reason,
             "fail_to_pass_tests": self.fail_to_pass_tests,
             "pass_to_pass_tests": self.pass_to_pass_tests,
+            "base_test_output": self.base_test_output,
+            "fixed_test_output": self.fixed_test_output,
             "patch_apply_method": self.patch_apply_method,
             "install_success": self.install_success,
             "elapsed_seconds": self.elapsed_seconds,

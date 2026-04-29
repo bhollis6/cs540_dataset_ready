@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "matplotlib__matplotlib-26291",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "fa68f46289adf4a8a4bc7ba97ded8258ec9d079c",
+  "changed_source_files": [
+    "lib/mpl_toolkits/axes_grid1/inset_locator.py"
+  ],
+  "changed_test_files": [
+    "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 49 PASS_TO_PASS.",
+    "evidence": [
+      "pytest -rA lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "low",
+        "rationale": "Target surface has 0 annotation nodes.",
+        "evidence": [
+          "lib/mpl_toolkits/axes_grid1/inset_locator.py",
+          "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 304 local rename candidates before safety filtering.",
+        "evidence": [
+          "lib/mpl_toolkits/axes_grid1/inset_locator.py",
+          "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve public/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 15 docstrings and 68 comments.",
+        "evidence": [
+          "lib/mpl_toolkits/axes_grid1/inset_locator.py",
+          "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Gold preflight passed 1 FAIL_TO_PASS and 49 PASS_TO_PASS targets.",
+        "evidence": [
+          "lib/mpl_toolkits/axes_grid1/tests/test_axes_grid1.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as a matplotlib/matplotlib task for the next Phase 1 repo after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/matplotlib_matplotlib_signal_screen_2026-04-27.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/matplotlib__matplotlib-26291_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/matplotlib__matplotlib-26291_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": []
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "sphinx-doc__sphinx-9367",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "6918e69600810a4664e53653d6ff0290c3c4a788",
+  "changed_source_files": [
+    "sphinx/pycode/ast.py"
+  ],
+  "changed_test_files": [
+    "tests/test_pycode_ast.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 25 PASS_TO_PASS.",
+    "evidence": [
+      "tox --current-env -epy39 -v -- tests/test_pycode_ast.py"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 67 annotation nodes.",
+        "evidence": [
+          "sphinx/pycode/ast.py",
+          "tests/test_pycode_ast.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 49 local rename candidates before safety filtering.",
+        "evidence": [
+          "sphinx/pycode/ast.py",
+          "tests/test_pycode_ast.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve public/test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 5 docstrings and 59 comments.",
+        "evidence": [
+          "sphinx/pycode/ast.py",
+          "tests/test_pycode_ast.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Gold preflight passed 1 FAIL_TO_PASS and 25 PASS_TO_PASS targets.",
+        "evidence": [
+          "tests/test_pycode_ast.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as a Sphinx task for the proper RQ1 matrix after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/sphinx_signal_screen_2026-04-23.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/sphinx-doc__sphinx-9367_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/sphinx-doc__sphinx-9367_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": [
+    "Sphinx host-local preflight uses tox-current-env normalization and compatibility pins for setuptools/pkg_resources; older Sphinx 4.x tasks also require MarkupSafe 2.0.1."
+  ]
+}

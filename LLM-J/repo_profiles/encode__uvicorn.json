@@ -1,0 +1,68 @@
+{
+  "repo": "encode/uvicorn",
+  "profile_version": 1,
+  "runtime": {
+    "os": "ubuntu-22.04",
+    "arch": "x86_64",
+    "python": "3.11",
+    "package_manager": "uv"
+  },
+  "environment": {
+    "env_commit_strategy": "base_or_override",
+    "system_packages": [],
+    "env_vars": {},
+    "pre_install": [],
+    "install_commands": [
+      "uv pip install -e ."
+    ],
+    "install_fallbacks": [
+      "pip install -e ."
+    ],
+    "post_install": [
+      "python -m pip install pytest pytest-mock pytest-xdist \"pytest-asyncio<0.24\" pytest-cov pytest-benchmark coverage trustme cryptography websockets wsproto h11 httptools pyyaml watchfiles httpx a2wsgi"
+    ],
+    "dependency_pins": {}
+  },
+  "test": {
+    "command": "pytest -q -W ignore::pytest_benchmark.logger.PytestBenchmarkWarning",
+    "selection_mode": "explicit_nodeids",
+    "plugin_policy": {
+      "mode": "explicit_only",
+      "explicit_plugins": [
+        "xdist.plugin",
+        "pytest_asyncio.plugin",
+        "anyio.pytest_plugin",
+        "pytest_benchmark.plugin"
+      ]
+    },
+    "env_vars": {
+      "PYTEST_ADDOPTS": "-W ignore::pytest_benchmark.logger.PytestBenchmarkWarning"
+    }
+  },
+  "historical_quirks": {
+    "known_break_windows": [],
+    "notes": [
+      "Initial RQ1 scale-out profile.",
+      "Historical pyproject pytest options include xdist -n, so pytest-xdist is required.",
+      "Plugin autoload is disabled by the pipeline, so xdist.plugin must be explicitly loaded.",
+      "Pin pytest-asyncio below 0.24 to avoid newer collection-time deprecation warnings being promoted by historical warning policy.",
+      "Full collection at recent commits imports HTTP middleware/WSGI tests, so httpx and a2wsgi are required.",
+      "The test suite declares anyio-marked tests, so anyio.pytest_plugin must be explicit when plugin autoload is disabled.",
+      "Benchmark tests declare benchmark markers, so pytest-benchmark and pytest_benchmark.plugin are required for full collection.",
+      "Historical warning policy promotes the pytest-benchmark xdist warning to an error, so the profile ignores PytestBenchmarkWarning during probes and oracle runs."
+    ]
+  },
+  "degradation": {
+    "supported_conditions": [
+      "type_hints",
+      "naming",
+      "comments_docstrings",
+      "remove_tests"
+    ],
+    "test_support_globs": []
+  },
+  "admission": {
+    "pilot_probe_target": 3,
+    "pilot_min_verified_tasks": 2
+  }
+}

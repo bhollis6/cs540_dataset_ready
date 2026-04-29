@@ -1,0 +1,14 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-25232",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "f7eea978097085a6781a0e92fc14ba7712a52d75",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25232/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25232/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "sklearn/impute/_iterative.py",
+      "sklearn/impute/tests/test_impute.py"
+    ]
+  }
+}

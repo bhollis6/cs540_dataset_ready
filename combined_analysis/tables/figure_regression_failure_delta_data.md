@@ -1,0 +1,14 @@
+| backend | condition | regression_failed_delta_sum |
+| --- | --- | --- |
+| Custom repos | Naming | 539 |
+| Custom repos | Type hints | 0 |
+| Custom repos | Comments/docstrings | -3 |
+| Custom repos | Remove tests | -1 |
+| SWE-bench | Naming | 94 |
+| SWE-bench | Type hints | 0 |
+| SWE-bench | Comments/docstrings | 8 |
+| SWE-bench | Remove tests | 0 |
+| Combined | Naming | 633 |
+| Combined | Type hints | 0 |
+| Combined | Comments/docstrings | 5 |
+| Combined | Remove tests | -1 |

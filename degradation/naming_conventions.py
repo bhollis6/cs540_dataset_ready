@@ -5,26 +5,22 @@ import os
 import shutil
 import subprocess
 import sys
-from dataclasses import dataclass
+from collections import Counter
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Generator
-
-from rope.base.exceptions import RefactoringError, ResourceNotFoundError
-from rope.base.project import Project
-from rope.refactor.rename import Rename
-
+from typing import Any, Generator
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
 EXCLUDE_DIRS: set[str] = {
     ".git", ".ropeproject", "venv", "env", ".venv",
     "__pycache__", ".tox", ".nox", "build", "dist",
-    ".idea", ".vscode", "tests", "test", "testing",
+    ".idea", ".vscode",
 }
 
 # Single-letter and common callback/loop names that cause scope issues
 PROTECTED_NAMES: set[str] = {
-    "self", "cls", "True", "False", "None",
+    "self", "cls", "True", "False", "None", "_",
     # Single letters — no semantic signal, often used as callables
     "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
     "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
@@ -35,26 +31,62 @@ PROTECTED_NAMES: set[str] = {
     "pair", "match", "obj", "typ", "msg", "buf",
     # Common names for passed-around arguments / callables
     "func", "callback", "handler", "fn", "cb",
+    # Test lifecycle hooks that must keep their framework-visible names
+    "setUp", "tearDown", "setUpClass", "tearDownClass",
+    "asyncSetUp", "asyncTearDown",
+    "setup_method", "teardown_method",
+    "setup_class", "teardown_class",
+    "setup_module", "teardown_module",
+    "setup_function", "teardown_function",
 }
+
+PROTECTED_PREFIXES: tuple[str, ...] = ("pytest_",)
 
 
 def _is_protected(name: str) -> bool:
     if name in PROTECTED_NAMES:
+        return True
+    if any(name.startswith(prefix) for prefix in PROTECTED_PREFIXES):
         return True
     if name.startswith("__") and name.endswith("__"):
         return True
     return False
 
 
+def _is_executable_test_path(path: Path) -> bool:
+    name = path.name.lower()
+    return name.startswith("test_") or name.endswith("_test.py") or name == "tests.py"
+
+
+def _is_preserved_test_support_path(path: Path) -> bool:
+    parts = {part.lower() for part in path.parts}
+    return (
+        path.name.lower() == "conftest.py"
+        or "fixtures" in parts
+        or "test_data" in parts
+        or "__snapshots__" in parts
+    )
+
+
+def _decorator_name(decorator: ast.AST) -> str | None:
+    if isinstance(decorator, ast.Name):
+        return decorator.id
+    if isinstance(decorator, ast.Attribute):
+        return decorator.attr
+    if isinstance(decorator, ast.Call):
+        return _decorator_name(decorator.func)
+    return None
+
+
 # ── File discovery ────────────────────────────────────────────────────────────
 
 def _iter_py_files(repo_path: Path) -> Generator[Path, None, None]:
     for root, dirs, files in os.walk(repo_path):
-        dirs[:] = [
+        dirs[:] = sorted([
             d for d in dirs
             if d not in EXCLUDE_DIRS and not d.startswith(".")
-        ]
-        for fname in files:
+        ])
+        for fname in sorted(files):
             if fname.endswith(".py"):
                 yield Path(root) / fname
 
@@ -145,14 +177,18 @@ def _build_parent_map(tree: ast.Module) -> dict[int, ast.AST]:
     return parent
 
 
-def _inside_class(node: ast.AST, parent_map: dict[int, ast.AST]) -> bool:
-    """True if node is inside a class (possibly through method boundary)."""
+def _enclosing_class(node: ast.AST, parent_map: dict[int, ast.AST]) -> ast.ClassDef | None:
     current = parent_map.get(id(node))
     while current is not None:
         if isinstance(current, ast.ClassDef):
-            return True
+            return current
         current = parent_map.get(id(current))
-    return False
+    return None
+
+
+def _inside_class(node: ast.AST, parent_map: dict[int, ast.AST]) -> bool:
+    """True if node is inside a class (possibly through method boundary)."""
+    return _enclosing_class(node, parent_map) is not None
 
 
 def _inside_function(node: ast.AST, parent_map: dict[int, ast.AST]) -> bool:
@@ -164,15 +200,44 @@ def _inside_function(node: ast.AST, parent_map: dict[int, ast.AST]) -> bool:
     return False
 
 
-def _inside_generator(node: ast.AST, parent_map: dict[int, ast.AST]) -> bool:
-    """True if node is inside a genexp, comprehension, or lambda (own scope)."""
-    current = parent_map.get(id(node))
-    while current is not None:
-        if isinstance(current, (
-            ast.GeneratorExp, ast.ListComp, ast.SetComp, ast.DictComp, ast.Lambda,
-        )):
+def _is_discovery_critical_test_class(
+    node: ast.ClassDef,
+    py_file: Path,
+    parent_map: dict[int, ast.AST],
+) -> bool:
+    return (
+        _is_executable_test_path(py_file)
+        and not _inside_class(node, parent_map)
+        and node.name.startswith("Test")
+    )
+
+
+def _is_pytest_fixture(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    for decorator in node.decorator_list:
+        if _decorator_name(decorator) == "fixture":
             return True
-        current = parent_map.get(id(current))
+    return False
+
+
+def _is_discovery_critical_test_function(
+    node: ast.FunctionDef | ast.AsyncFunctionDef,
+    py_file: Path,
+    parent_map: dict[int, ast.AST],
+) -> bool:
+    if _is_protected(node.name):
+        return True
+
+    if _is_executable_test_path(py_file) and node.name.startswith("test_"):
+        return True
+
+    if _is_preserved_test_support_path(py_file) and _is_pytest_fixture(node):
+        return True
+
+    enclosing_class = _enclosing_class(node, parent_map)
+    if enclosing_class is not None and enclosing_class.name.startswith("Test"):
+        if node.name.startswith("test_") or node.name in PROTECTED_NAMES:
+            return True
+
     return False
 
 
@@ -206,14 +271,27 @@ def _collect_function_params(func: ast.AST) -> set[str]:
     return params
 
 
+def _iter_bound_names(target: ast.AST) -> Generator[tuple[str, int, int], None, None]:
+    if isinstance(target, ast.Name):
+        yield target.id, target.lineno, target.col_offset
+        return
+    if isinstance(target, (ast.Tuple, ast.List)):
+        for element in target.elts:
+            yield from _iter_bound_names(element)
+        return
+    if isinstance(target, ast.Starred):
+        yield from _iter_bound_names(target.value)
+
+
 def _collect_symbols(repo_path: Path, forbidden: set[str]) -> list[Symbol]:
     """
-    Narrow scope:
+    Scope-limited but repo-wide:
       1. Classes not exported via __all__ and not inside any class
-      2. Private functions (name starts with _, not dunder) that are
-         standalone (not methods) and have no scope hazards
-      3. Local variables inside standalone non-class functions
-         with no scope hazards, excluding parameters and except vars
+      2. Non-dunder functions and methods with no scope hazards,
+         excluding test-discovery/framework hook names
+      3. Local variables inside safe functions/methods, including
+         assignment targets, loop targets, with-as bindings, and walrus
+         bindings, excluding parameters and except vars
     """
     symbols: list[Symbol] = []
 
@@ -237,23 +315,27 @@ def _collect_symbols(repo_path: Path, forbidden: set[str]) -> list[Symbol]:
                     continue
                 if _inside_class(node, parent_map):
                     continue
+                if len(node.name) <= 1:
+                    continue
+                if _is_discovery_critical_test_class(node, py_file, parent_map):
+                    continue
                 offset = _offset_from_linecol(
                     source_bytes, node.lineno, node.col_offset
                 )
                 if offset is not None:
                     symbols.append(Symbol(node.name, "class", str(py_file), offset))
 
-            # ── Private functions (standalone only) ────────────────────
+            # ── Functions / methods ────────────────────────────────────
             elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                # Must be private
                 is_dunder = node.name.startswith("__") and node.name.endswith("__")
-                is_private = node.name.startswith("_") and not is_dunder
-                if not is_private:
+                if is_dunder:
                     pass  # Don't rename, but still look for local vars below
                 elif skip(node.name):
                     pass
-                elif _inside_class(node, parent_map):
-                    pass  # method, skip
+                elif _is_discovery_critical_test_function(node, py_file, parent_map):
+                    pass
+                elif _inside_function(node, parent_map):
+                    pass  # nested function, skip
                 elif _function_has_scope_hazards(node):
                     pass  # contains lambda / genexp / nested fn
                 else:
@@ -267,7 +349,7 @@ def _collect_symbols(repo_path: Path, forbidden: set[str]) -> list[Symbol]:
 
                 # ── Local variables inside this function ──────────────
                 # Only if function itself is safe
-                if _inside_class(node, parent_map):
+                if _inside_function(node, parent_map):
                     continue
                 if _function_has_scope_hazards(node):
                     continue
@@ -288,43 +370,136 @@ def _collect_symbols(repo_path: Path, forbidden: set[str]) -> list[Symbol]:
                     if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                         continue
 
-                    var_name: str | None = None
-                    line: int | None = None
-                    col: int | None = None
-
                     if isinstance(child, ast.Assign):
                         for target in child.targets:
-                            if isinstance(target, ast.Name):
-                                if target.id in params or target.id in except_names:
+                            for name, line, col in _iter_bound_names(target):
+                                if name in params or name in except_names:
                                     continue
-                                if skip(target.id):
+                                if skip(name):
                                     continue
                                 off = _offset_from_linecol(
-                                    source_bytes, target.lineno, target.col_offset
+                                    source_bytes, line, col
                                 )
                                 if off is not None:
                                     symbols.append(
-                                        Symbol(target.id, "variable", str(py_file), off)
+                                        Symbol(name, "variable", str(py_file), off)
                                     )
                     elif isinstance(child, ast.AnnAssign):
-                        if isinstance(child.target, ast.Name):
-                            if (child.target.id not in params
-                                    and child.target.id not in except_names
-                                    and not skip(child.target.id)):
+                        for name, line, col in _iter_bound_names(child.target):
+                            if (
+                                name not in params
+                                and name not in except_names
+                                and not skip(name)
+                            ):
                                 off = _offset_from_linecol(
                                     source_bytes,
-                                    child.target.lineno,
-                                    child.target.col_offset,
+                                    line,
+                                    col,
                                 )
                                 if off is not None:
                                     symbols.append(
-                                        Symbol(
-                                            child.target.id, "variable",
-                                            str(py_file), off,
-                                        )
+                                        Symbol(name, "variable", str(py_file), off)
                                     )
+                    elif isinstance(child, ast.AugAssign):
+                        for name, line, col in _iter_bound_names(child.target):
+                            if name in params or name in except_names or skip(name):
+                                continue
+                            off = _offset_from_linecol(source_bytes, line, col)
+                            if off is not None:
+                                symbols.append(
+                                    Symbol(name, "variable", str(py_file), off)
+                                )
+                    elif isinstance(child, (ast.For, ast.AsyncFor)):
+                        for name, line, col in _iter_bound_names(child.target):
+                            if name in params or name in except_names or skip(name):
+                                continue
+                            off = _offset_from_linecol(source_bytes, line, col)
+                            if off is not None:
+                                symbols.append(
+                                    Symbol(name, "variable", str(py_file), off)
+                                )
+                    elif isinstance(child, (ast.With, ast.AsyncWith)):
+                        for item in child.items:
+                            if item.optional_vars is None:
+                                continue
+                            for name, line, col in _iter_bound_names(item.optional_vars):
+                                if name in params or name in except_names or skip(name):
+                                    continue
+                                off = _offset_from_linecol(source_bytes, line, col)
+                                if off is not None:
+                                    symbols.append(
+                                        Symbol(name, "variable", str(py_file), off)
+                                    )
+                    elif isinstance(child, ast.NamedExpr):
+                        for name, line, col in _iter_bound_names(child.target):
+                            if name in params or name in except_names or skip(name):
+                                continue
+                            off = _offset_from_linecol(source_bytes, line, col)
+                            if off is not None:
+                                symbols.append(
+                                    Symbol(name, "variable", str(py_file), off)
+                                )
 
     return symbols
+
+
+def _dedupe_symbols(symbols: list[Symbol]) -> list[Symbol]:
+    seen: set[str] = set()
+    unique: list[Symbol] = []
+    for sym in symbols:
+        key = f"{sym.kind}::{sym.file_path}::{sym.offset}"
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(sym)
+    unique.sort(key=lambda sym: (sym.file_path, sym.offset, sym.kind, sym.name))
+    return unique
+
+
+def collect_naming_audit(repo_path: str | Path, sample_limit: int = 10) -> dict[str, Any]:
+    """Collect a structured dry-run audit for the naming degrader."""
+    path = Path(repo_path).resolve()
+    if not path.is_dir():
+        raise ValueError(f"Not a directory: {path}")
+
+    forbidden = _collect_forbidden(path)
+    unique = _dedupe_symbols(_collect_symbols(path, forbidden))
+
+    counts = Counter(sym.kind for sym in unique)
+    by_kind: dict[str, list[dict[str, Any]]] = {
+        "class": [],
+        "function": [],
+        "variable": [],
+    }
+    files_touched: set[str] = set()
+    for sym in unique:
+        files_touched.add(sym.file_path)
+        bucket = by_kind.setdefault(sym.kind, [])
+        if len(bucket) >= sample_limit:
+            continue
+        bucket.append({
+            "name": sym.name,
+            "file_path": sym.file_path,
+            "offset": sym.offset,
+        })
+
+    return {
+        "repo_path": str(path),
+        "forbidden_name_count": len(forbidden),
+        "candidate_symbol_count": len(unique),
+        "files_with_renames": len(files_touched),
+        "rename_counts": {
+            "classes": counts.get("class", 0),
+            "functions": counts.get("function", 0),
+            "variables": counts.get("variable", 0),
+            "total": len(unique),
+        },
+        "sample_symbols": {
+            "classes": by_kind.get("class", []),
+            "functions": by_kind.get("function", []),
+            "variables": by_kind.get("variable", []),
+        },
+    }
 
 
 # ── Rename application ────────────────────────────────────────────────────────
@@ -335,9 +510,59 @@ class RenameStats:
     functions: int = 0
     variables: int = 0
     skipped: int = 0
+    skipped_missing_resource: int = 0
+    skipped_offset_not_found: int = 0
+    skipped_refactoring_error: int = 0
+    skipped_other_error: int = 0
+    skip_name_counts: Counter[str] = field(default_factory=Counter)
 
     def total(self) -> int:
         return self.classes + self.functions + self.variables
+
+    def record_skip(self, reason: str, name: str | None = None) -> None:
+        self.skipped += 1
+        if reason == "missing_resource":
+            self.skipped_missing_resource += 1
+        elif reason == "offset_not_found":
+            self.skipped_offset_not_found += 1
+        elif reason == "refactoring_error":
+            self.skipped_refactoring_error += 1
+        else:
+            self.skipped_other_error += 1
+
+        if name:
+            self.skip_name_counts[name] += 1
+
+    def to_dict(self, top_n: int = 15) -> dict[str, Any]:
+        attempted = self.total() + self.skipped
+        return {
+            "renamed": {
+                "classes": self.classes,
+                "functions": self.functions,
+                "variables": self.variables,
+                "total": self.total(),
+            },
+            "skipped": {
+                "total": self.skipped,
+                "missing_resource": self.skipped_missing_resource,
+                "offset_not_found": self.skipped_offset_not_found,
+                "refactoring_error": self.skipped_refactoring_error,
+                "other_error": self.skipped_other_error,
+            },
+            "rates": {
+                "rename_success_rate": (self.total() / attempted) if attempted else 0.0,
+                "offset_not_found_rate": (
+                    self.skipped_offset_not_found / attempted if attempted else 0.0
+                ),
+                "refactoring_error_rate": (
+                    self.skipped_refactoring_error / attempted if attempted else 0.0
+                ),
+            },
+            "top_skipped_names": [
+                {"name": name, "count": count}
+                for name, count in self.skip_name_counts.most_common(top_n)
+            ],
+        }
 
     def __str__(self) -> str:
         return (
@@ -345,7 +570,11 @@ class RenameStats:
             f"  Functions renamed : {self.functions}\n"
             f"  Variables renamed : {self.variables}\n"
             f"  Total renamed     : {self.total()}\n"
-            f"  Skipped (errors)  : {self.skipped}"
+            f"  Skipped (errors)  : {self.skipped}\n"
+            f"    Missing resource: {self.skipped_missing_resource}\n"
+            f"    Offset not found: {self.skipped_offset_not_found}\n"
+            f"    Refactor errors : {self.skipped_refactoring_error}\n"
+            f"    Other errors    : {self.skipped_other_error}"
         )
 
 
@@ -371,22 +600,46 @@ def _find_near(source: str, name: str, offset: int) -> int | None:
     end = min(len(source), offset + len(name) + window)
     region = source[start:end]
 
-    i = 0
-    while True:
-        idx = region.find(name, i)
-        if idx == -1:
-            return None
-        abs_idx = start + idx
+    def is_identifier_match(abs_idx: int) -> bool:
         before = source[abs_idx - 1] if abs_idx > 0 else " "
         after = (
             source[abs_idx + len(name)]
             if abs_idx + len(name) < len(source) else " "
         )
-        if not (before.isalnum() or before == "_") and not (
+        return not (before.isalnum() or before == "_") and not (
             after.isalnum() or after == "_"
-        ):
-            return abs_idx
+        )
+
+    matches: list[int] = []
+    i = 0
+    while True:
+        idx = region.find(name, i)
+        if idx == -1:
+            break
+        abs_idx = start + idx
+        if is_identifier_match(abs_idx):
+            matches.append(abs_idx)
         i = idx + 1
+
+    if matches:
+        return min(matches, key=lambda found: abs(found - offset))
+
+    # Earlier renames in the same file can shift the target far outside the
+    # local window. Fall back to a whole-file search and choose the closest
+    # whole-identifier match to the original definition offset.
+    matches = []
+    i = 0
+    while True:
+        idx = source.find(name, i)
+        if idx == -1:
+            break
+        if is_identifier_match(idx):
+            matches.append(idx)
+        i = idx + 1
+
+    if matches:
+        return min(matches, key=lambda found: abs(found - offset))
+    return None
 
 
 def obfuscate_repo(repo_path: str, dry_run: bool = False) -> RenameStats:
@@ -401,24 +654,29 @@ def obfuscate_repo(repo_path: str, dry_run: bool = False) -> RenameStats:
 
     symbols = _collect_symbols(path, forbidden)
     print(f"  {len(symbols)} candidate symbols found")
-
-    # Dedupe by (kind, name) — rope propagates across all usages
-    seen: set[str] = set()
-    unique: list[Symbol] = []
-    for sym in symbols:
-        key = f"{sym.kind}::{sym.name}"
-        if key not in seen:
-            seen.add(key)
-            unique.append(sym)
+    unique = _dedupe_symbols(symbols)
     print(f"  {len(unique)} unique symbols to rename\n")
 
     if dry_run:
         counter = {"class": 0, "function": 0, "variable": 0}
-        for sym in unique:
-            new = _new_name(sym.kind, counter)
-            rel = Path(sym.file_path).relative_to(path)
-            print(f"  {sym.kind:9s}  {sym.name:40s} → {new}  ({rel})")
+        try:
+            for sym in unique:
+                new = _new_name(sym.kind, counter)
+                rel = Path(sym.file_path).relative_to(path)
+                print(f"  {sym.kind:9s}  {sym.name:40s} → {new}  ({rel})")
+        except BrokenPipeError:
+            return RenameStats()
         return RenameStats()
+
+    try:
+        from rope.base.exceptions import RefactoringError, ResourceNotFoundError
+        from rope.base.project import Project
+        from rope.refactor.rename import Rename
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "The 'rope' package is required for non-dry-run naming obfuscation. "
+            "Install it in the active environment before running this script."
+        ) from exc
 
     project = Project(str(path), ropefolder=None)
     project.prefs["ignored_resources"] = list(EXCLUDE_DIRS)
@@ -438,13 +696,13 @@ def obfuscate_repo(repo_path: str, dry_run: bool = False) -> RenameStats:
                 rel_path = Path(sym.file_path).relative_to(path)
                 resource = project.get_resource(str(rel_path))
             except (ResourceNotFoundError, ValueError):
-                stats.skipped += 1
+                stats.record_skip("missing_resource", sym.name)
                 continue
 
             current_source = resource.read()
             offset = _find_near(current_source, sym.name, sym.offset)
             if offset is None:
-                stats.skipped += 1
+                stats.record_skip("offset_not_found", sym.name)
                 continue
 
             try:
@@ -462,10 +720,10 @@ def obfuscate_repo(repo_path: str, dry_run: bool = False) -> RenameStats:
                 print(f"  ✓ {sym.kind:9s}  {sym.name:40s} → {new_name}")
 
             except RefactoringError as e:
-                stats.skipped += 1
+                stats.record_skip("refactoring_error", sym.name)
                 print(f"  ✗ {sym.kind:9s}  {sym.name}: {e}")
             except Exception as e:
-                stats.skipped += 1
+                stats.record_skip("other_error", sym.name)
                 print(f"  ✗ {sym.kind:9s}  {sym.name}: {type(e).__name__}: {e}")
 
     finally:

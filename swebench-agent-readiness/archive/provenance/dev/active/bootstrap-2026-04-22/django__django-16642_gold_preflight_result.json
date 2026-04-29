@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "django__django-16642",
+  "repo": "django/django",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16642/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16642/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16642/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16642/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16642/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 responses.test_fileresponse",
+  "command_returncode": 0,
+  "duration_seconds": 0.767,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "If compressed responses are served with the uncompressed Content-Type"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 21,
+  "pass_to_pass_passed": [
+    "Headers are set correctly with a buffer when an absolute filename is",
+    "test_content_disposition_buffer (responses.test_fileresponse.FileResponseTests.test_content_disposition_buffer)",
+    "test_content_disposition_buffer_attachment (responses.test_fileresponse.FileResponseTests.test_content_disposition_buffer_attachment)",
+    "test_content_disposition_buffer_explicit_filename (responses.test_fileresponse.FileResponseTests.test_content_disposition_buffer_explicit_filename)",
+    "test_content_disposition_escaping (responses.test_fileresponse.FileResponseTests.test_content_disposition_escaping)",
+    "test_content_disposition_file (responses.test_fileresponse.FileResponseTests.test_content_disposition_file)",
+    "test_content_length_buffer (responses.test_fileresponse.FileResponseTests.test_content_length_buffer)",
+    "test_content_length_file (responses.test_fileresponse.FileResponseTests.test_content_length_file)",
+    "test_content_length_nonzero_starting_position_buffer (responses.test_fileresponse.FileResponseTests.test_content_length_nonzero_starting_position_buffer)",
+    "test_content_length_nonzero_starting_position_file (responses.test_fileresponse.FileResponseTests.test_content_length_nonzero_starting_position_file)",
+    "test_content_length_nonzero_starting_position_file_seekable_no_tell (responses.test_fileresponse.FileResponseTests.test_content_length_nonzero_starting_position_file_seekable_no_tell)",
+    "test_content_type_buffer (responses.test_fileresponse.FileResponseTests.test_content_type_buffer)",
+    "test_content_type_buffer_explicit (responses.test_fileresponse.FileResponseTests.test_content_type_buffer_explicit)",
+    "test_content_type_buffer_explicit_default (responses.test_fileresponse.FileResponseTests.test_content_type_buffer_explicit_default)",
+    "test_content_type_buffer_named (responses.test_fileresponse.FileResponseTests.test_content_type_buffer_named)",
+    "test_content_type_file (responses.test_fileresponse.FileResponseTests.test_content_type_file)",
+    "test_file_from_named_pipe_response (responses.test_fileresponse.FileResponseTests.test_file_from_named_pipe_response)",
+    "test_repr (responses.test_fileresponse.FileResponseTests.test_repr)",
+    "test_response_buffer (responses.test_fileresponse.FileResponseTests.test_response_buffer)",
+    "test_response_nonzero_starting_position (responses.test_fileresponse.FileResponseTests.test_response_nonzero_starting_position)",
+    "test_unicode_attachment (responses.test_fileresponse.FileResponseTests.test_unicode_attachment)"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "django/http/response.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

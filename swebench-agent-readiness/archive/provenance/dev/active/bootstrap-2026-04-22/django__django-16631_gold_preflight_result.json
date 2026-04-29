@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "django__django-16631",
+  "repo": "django/django",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16631/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 auth_tests.test_basic",
+  "command_returncode": 0,
+  "duration_seconds": 0.829,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "test_get_user_fallback_secret (auth_tests.test_basic.TestGetUser.test_get_user_fallback_secret)"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 12,
+  "pass_to_pass_passed": [
+    "test_get_user (auth_tests.test_basic.TestGetUser.test_get_user)",
+    "test_get_user_anonymous (auth_tests.test_basic.TestGetUser.test_get_user_anonymous)",
+    "The current user model can be retrieved",
+    "Check the creation and properties of a superuser",
+    "test_superuser_no_email_or_password (auth_tests.test_basic.BasicTestCase.test_superuser_no_email_or_password)",
+    "The current user model can be swapped out for another",
+    "The alternate user setting must point to something in the format app.model",
+    "The current user model must point to an installed model",
+    "test_unicode_username (auth_tests.test_basic.BasicTestCase.test_unicode_username)",
+    "Users can be created and can set their password",
+    "Users can be created without an email",
+    "Default User model verbose names are translatable (#19945)"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "django/contrib/auth/__init__.py",
+    "django/contrib/auth/base_user.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

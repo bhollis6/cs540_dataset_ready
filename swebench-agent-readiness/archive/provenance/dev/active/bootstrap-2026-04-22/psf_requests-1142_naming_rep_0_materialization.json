@@ -1,0 +1,14 @@
+{
+  "instance_id": "psf__requests-1142",
+  "repo": "psf/requests",
+  "base_commit": "22623bd8c265b78b161542663ee980738441c307",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1142/codex-cli/clean/rep_0/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1142/codex-cli/naming/rep_0/workspace",
+  "degraded_condition": "naming",
+  "degraded_targets": {
+    "target_files": [
+      "requests/models.py",
+      "test_requests.py"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "instance_id": "astropy__astropy-14182",
+  "repo": "astropy/astropy",
+  "base_commit": "a5917978be39d13cd90b517e1de4e7a539ffaa48",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "astropy/io/ascii/rst.py",
+      "astropy/io/ascii/tests/test_rst.py"
+    ]
+  }
+}

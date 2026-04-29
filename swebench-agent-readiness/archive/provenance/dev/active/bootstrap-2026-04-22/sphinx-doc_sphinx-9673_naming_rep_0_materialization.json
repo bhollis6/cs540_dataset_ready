@@ -1,0 +1,14 @@
+{
+  "instance_id": "sphinx-doc__sphinx-9673",
+  "repo": "sphinx-doc/sphinx",
+  "base_commit": "5fb51fb1467dc5eea7505402c3c5d9b378d3b441",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-9673/codex-cli/clean/rep_0/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sphinx-doc__sphinx-9673/codex-cli/naming/rep_0/workspace",
+  "degraded_condition": "naming",
+  "degraded_targets": {
+    "target_files": [
+      "sphinx/ext/autodoc/typehints.py",
+      "tests/test_ext_autodoc_configs.py"
+    ]
+  }
+}

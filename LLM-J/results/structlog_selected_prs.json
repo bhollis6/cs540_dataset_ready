@@ -1,0 +1,599 @@
+{
+  "repo": "hynek/structlog",
+  "selection_timestamp": "2026-04-28T02:41:25.303993+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 12,
+  "accepted": 11,
+  "review": 1,
+  "rejected": 0,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "structlog_pr_713",
+      "pr_number": 713,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, clearly described single bug fix with direct test coverage and core application code changes. The UTC datetime handling bug is easy to specify to an agent, the fix requires genuine understanding of Python datetime semantics rather than trivial pattern matching, and the tests serve as reliable pass/fail signals. Strong experimental candidate across all dimensions.",
+      "merge_commit_sha": "1b8680ea843cfc594c50f6431038628569534115",
+      "base_commit_sha": "414047d9f699e168ce595e08c67253e9c0969247",
+      "env_commit_sha": "414047d9f699e168ce595e08c67253e9c0969247",
+      "head_commit_sha": "3a18666c39f05884eaf187ce5703ddced78a31ac",
+      "source_files": [
+        "src/structlog/processors.py"
+      ],
+      "test_files": [
+        "tests/processors/test_renderers.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/processors/test_renderers.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/processors/test_renderers.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/processors/test_renderers.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/processors/test_renderers.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_483",
+      "pr_number": 483,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-scoped bug fix that corrects inconsistent exc_info handling in ConsoleRenderer by reusing an existing helper function. The PR has excellent test coverage with three focused test cases that directly validate each exc_info variant (bool, tuple, Exception). The description clearly communicates both failure modes. Complexity is moderate \u2014 requires codebase navigation to find the right helper and understand the exc_info contract, but the solution is a one-liner. Strong candidate for the experiment: clear task description, strong test signal, meaningful application code with good typing and naming.",
+      "merge_commit_sha": "2eedf6d3f97f2b9eaf46dd8fe579fac2fa0f7c64",
+      "base_commit_sha": "ccd21e8b5d72bef849fbcbfe50d040d8496ea8e6",
+      "env_commit_sha": "ccd21e8b5d72bef849fbcbfe50d040d8496ea8e6",
+      "head_commit_sha": "a02fff316c6ad79d33058d53ddafcf824bce8e24",
+      "source_files": [
+        "src/structlog/dev.py"
+      ],
+      "test_files": [
+        "tests/test_dev.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/dev.py",
+            "tests/test_dev.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/dev.py",
+            "tests/test_dev.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/dev.py",
+            "tests/test_dev.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_dev.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_489",
+      "pr_number": 489,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "An excellent candidate PR: tightly scoped async bug fix with clear before/after test validation, core application code with type annotations and explanatory comments, and a moderately complex problem that requires understanding asyncio executor semantics. The tests serve as a clean pass/fail signal, and the CHANGELOG entry provides sufficient problem context for an agent task prompt.",
+      "merge_commit_sha": "48ee400699060ae5c6d1309c887c9c6d5c4524fe",
+      "base_commit_sha": "0614664ca0a5bbc88f8c5450641a3f1d96d216c5",
+      "env_commit_sha": "0614664ca0a5bbc88f8c5450641a3f1d96d216c5",
+      "head_commit_sha": "f2ecc3a33e45442ac86749f7e1df26dbd6f1c170",
+      "source_files": [
+        "src/structlog/_log_levels.py"
+      ],
+      "test_files": [
+        "tests/test_log_levels.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_log_levels.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_log_levels.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_log_levels.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_log_levels.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_502",
+      "pr_number": 502,
+      "total_score": 21,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped feature PR adding async variants of all log methods to `structlog.stdlib.BoundLogger` via a `run_in_executor` + `copy_context` dispatcher pattern. Strong test coverage directly validates both the happy path and `exc_info` edge cases, the code is rich with type hints, docstrings, and descriptive names that make it a good mutation target, and the intent is clear enough to hand to an agent as a task. Complexity sits in the sweet spot: non-trivial (asyncio + contextvars + existing class) but not unwieldy. A high-quality candidate for the experiment.",
+      "merge_commit_sha": "776864bd934c1ae43219b6993a54fe4629b30d13",
+      "base_commit_sha": "88a39b54eceaf34c44ef6270542c659da9695470",
+      "env_commit_sha": "88a39b54eceaf34c44ef6270542c659da9695470",
+      "head_commit_sha": "33958e67e5980387952ba5aa4ac431b237435009",
+      "source_files": [
+        "src/structlog/stdlib.py",
+        "typing_examples.py"
+      ],
+      "test_files": [
+        "tests/test_log_levels.py",
+        "tests/test_stdlib.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/stdlib.py",
+            "tests/test_log_levels.py",
+            "tests/test_stdlib.py",
+            "typing_examples.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/stdlib.py",
+            "tests/test_log_levels.py",
+            "tests/test_stdlib.py",
+            "typing_examples.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/stdlib.py",
+            "tests/test_log_levels.py",
+            "tests/test_stdlib.py",
+            "typing_examples.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_log_levels.py",
+            "tests/test_stdlib.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_550",
+      "pr_number": 550,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-scoped feature addition to structlog's ProcessorFormatter with a direct test that serves as a clear pass/fail signal. The code touches real application logic with type hints, docstrings, and descriptive naming \u2014 good mutation surface. Complexity is in the sweet spot: non-trivial (requires understanding stdlib logging internals) but implementable without extensive codebase navigation. Strong candidate for the experiment.",
+      "merge_commit_sha": "448f1800ecb2f5b293b977b08fafe97b1ddb2fc5",
+      "base_commit_sha": "6323d5fc54a5e5ff09eca7d8b912ab6ef9256992",
+      "env_commit_sha": "6323d5fc54a5e5ff09eca7d8b912ab6ef9256992",
+      "head_commit_sha": "c2c694b1a5d532410ddc8be9cc147cf28ac56b5d",
+      "source_files": [
+        "src/structlog/stdlib.py"
+      ],
+      "test_files": [
+        "tests/test_stdlib.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/stdlib.py",
+            "tests/test_stdlib.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/stdlib.py",
+            "tests/test_stdlib.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/stdlib.py",
+            "tests/test_stdlib.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_stdlib.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_586",
+      "pr_number": 586,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 5,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality, well-documented regression fix with excellent test coverage and crystal-clear description. However, it's too simple (a 2-line elif addition) to serve as a meaningful experimental subject \u2014 an agent would solve it correctly regardless of codebase quality degradation. The small code surface also limits mutation relevance. Best suited for validating basic agent functionality rather than measuring degradation effects.",
+      "merge_commit_sha": "0b7da2847cfe398a450a7f34c5f4586904e9df4e",
+      "base_commit_sha": "ac37281c66efe82f4dfc8f812ab91f391548fd6b",
+      "env_commit_sha": "ac37281c66efe82f4dfc8f812ab91f391548fd6b",
+      "head_commit_sha": "14e0321b487287fd4af564e53a3029bf3bff07e4",
+      "source_files": [
+        "src/structlog/_log_levels.py"
+      ],
+      "test_files": [
+        "tests/test_stdlib.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_stdlib.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_stdlib.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_stdlib.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_stdlib.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_592",
+      "pr_number": 592,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 5,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is tightly scoped, clearly described, and has excellent test coverage for its fix. However, the actual code change is extremely simple (one chained .replace() call), making it borderline too trivial for the experiment. The low complexity means degrading naming, type hints, or comments in surrounding code is unlikely to meaningfully differentiate agent performance \u2014 the fix is too obvious regardless of codebase quality.",
+      "merge_commit_sha": "b93037f2812e896fdd497e69ca854e42a39048f3",
+      "base_commit_sha": "5c3bc79e77e589884ac18b4b21aaf0bf7e4502ba",
+      "env_commit_sha": "5c3bc79e77e589884ac18b4b21aaf0bf7e4502ba",
+      "head_commit_sha": "7a0f77b3fbadeb500fcba06f1998591c47c0da19",
+      "source_files": [
+        "src/structlog/processors.py"
+      ],
+      "test_files": [
+        "tests/test_processors.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/test_processors.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/test_processors.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/test_processors.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_processors.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_594",
+      "pr_number": 594,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A tight, well-tested bug fix for logfmt escaping logic in structlog. The scope is ideal (single file, clear change), test coverage is excellent with parametrized cases that directly validate the fix, and the complexity is at the sweet spot for experimentation. The main weakness is the sparse PR description requiring code reading to understand the task, which could make it harder to hand directly to an agent without augmentation from the referenced issues.",
+      "merge_commit_sha": "354ef534459cc3c1a12a21e402fffbaa3697a017",
+      "base_commit_sha": "db834f532618e28d3fb68349a6d76af8493de541",
+      "env_commit_sha": "db834f532618e28d3fb68349a6d76af8493de541",
+      "head_commit_sha": "60b324659914b6a2a192a7df86e6d30c6094f0f9",
+      "source_files": [
+        "src/structlog/processors.py"
+      ],
+      "test_files": [
+        "tests/processors/test_renderers.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/processors/test_renderers.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/processors/test_renderers.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/processors.py",
+            "tests/processors/test_renderers.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/processors/test_renderers.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_565",
+      "pr_number": 565,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, moderately complex bug fix for a genuine async callsite detection issue in structlog. The fix is conceptually non-trivial (requires understanding asyncio, thread pool executors, contextvars, and stack frames) but once understood, is implemented consistently and cleanly across all affected async methods. Test coverage directly validates the fix by converting a previously-xfail test to a passing one. The main weakness for experimental use is the sparse PR description \u2014 an agent would need to infer the root cause from the code diff rather than from any written explanation. Overall a solid candidate.",
+      "merge_commit_sha": "7883d045e466b6b9b343938b22d882a49e959d5f",
+      "base_commit_sha": "ede65fedac97439dffc79ed6d307a9bbe21283c5",
+      "env_commit_sha": "ede65fedac97439dffc79ed6d307a9bbe21283c5",
+      "head_commit_sha": "a0ab81967174456d83fe3ec0e6e71e142a812dee",
+      "source_files": [
+        "src/structlog/_frames.py",
+        "src/structlog/_log_levels.py",
+        "src/structlog/contextvars.py",
+        "src/structlog/processors.py",
+        "src/structlog/stdlib.py"
+      ],
+      "test_files": [
+        "tests/test_processors.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/_frames.py",
+            "src/structlog/_log_levels.py",
+            "src/structlog/contextvars.py",
+            "src/structlog/processors.py",
+            "src/structlog/stdlib.py",
+            "tests/test_processors.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/_frames.py",
+            "src/structlog/_log_levels.py",
+            "src/structlog/contextvars.py",
+            "src/structlog/processors.py",
+            "src/structlog/stdlib.py",
+            "tests/test_processors.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/_frames.py",
+            "src/structlog/_log_levels.py",
+            "src/structlog/contextvars.py",
+            "src/structlog/processors.py",
+            "src/structlog/stdlib.py",
+            "tests/test_processors.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_processors.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_531",
+      "pr_number": 531,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 2,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A tightly scoped, well-tested, single-concern PR that is mechanically clean and correct. However, it scores poorly on clarity (nearly empty description) and complexity (a trivially obvious signature change). The fix is too simple to serve as a meaningful differentiator in a degraded-codebase experiment \u2014 agents would likely produce it correctly regardless of naming or type-hint quality.",
+      "merge_commit_sha": "ea950f6638daf332d5bc1c29a25f20e032798351",
+      "base_commit_sha": "ec810c50e124a58ec5ecfc07bd119c7e4c87950f",
+      "env_commit_sha": "ec810c50e124a58ec5ecfc07bd119c7e4c87950f",
+      "head_commit_sha": "7a12eae6d0edafcb88b02c81a5bea01bfec2f148",
+      "source_files": [
+        "src/structlog/_log_levels.py"
+      ],
+      "test_files": [
+        "tests/test_log_levels.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_log_levels.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_log_levels.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/_log_levels.py",
+            "tests/test_log_levels.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_log_levels.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "structlog_pr_549",
+      "pr_number": 549,
+      "total_score": 18,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped feature addition that converts a plain function into a configurable dataclass with clear type annotations, descriptive field names, and a targeted test for the key new behavior. Sits in the sweet spot for complexity. The sparse PR description slightly reduces clarity, but the code changes are self-documenting. Good experimental candidate: mutations to type hints, field names, or docstrings would plausibly affect agent performance, and the width=-1 test provides a clear pass/fail signal.",
+      "merge_commit_sha": "91047b20a0d1f7651005ba4de7720de4d0daba43",
+      "base_commit_sha": "25c361c71763df0e7f39d0d36cca08ff4b46e924",
+      "env_commit_sha": "25c361c71763df0e7f39d0d36cca08ff4b46e924",
+      "head_commit_sha": "8861ade93160dbc4e1e9c0385be410b7d8f1a017",
+      "source_files": [
+        "src/structlog/dev.py"
+      ],
+      "test_files": [
+        "tests/test_dev.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/structlog/dev.py",
+            "tests/test_dev.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/structlog/dev.py",
+            "tests/test_dev.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/structlog/dev.py",
+            "tests/test_dev.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_dev.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

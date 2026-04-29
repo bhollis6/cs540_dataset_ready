@@ -1,0 +1,15 @@
+repo,candidate_id,condition,degraded_failure_mode,hidden_bug_fix_tests_failed,previously_passing_tests_failed,total_duration_seconds,total_tokens_including_cache
+copier,copier_pr_2432,naming,hidden_bug_fix_and_regression_failure,1,51,190.61493015289307,824969
+copier,copier_pr_2605,naming,hidden_bug_fix_and_regression_failure,4,58,346.827342748642,1137689
+httpx,httpx_pr_2423,naming,regression_only_failure,0,26,312.16074681282043,813446
+marshmallow,marshmallow_pr_2772,naming,regression_only_failure,0,165,350.1322109699249,1437174
+pydantic-settings,pydantic-settings_pr_780,naming,hidden_bug_fix_and_regression_failure,1,184,464.9599528312683,1890931
+starlette,starlette_pr_2400,naming,regression_only_failure,0,8,299.3827180862427,1160862
+uvicorn,uvicorn_pr_2183,naming,hidden_bug_fix_only_failure,1,0,311.53631377220154,1159601
+uvicorn,uvicorn_pr_2561,naming,hidden_bug_fix_only_failure,1,0,200.3474245071411,530344
+httpx,httpx_pr_2547,type_hints,hidden_bug_fix_only_failure,3,0,310.12426948547363,797255
+uvicorn,uvicorn_pr_2829,type_hints,hidden_bug_fix_only_failure,4,0,236.90457153320312,888998
+cattrs,cattrs_pr_108,comments_docstrings,hidden_bug_fix_only_failure,1,0,283.4684262275696,684082
+httpx,httpx_pr_2547,comments_docstrings,hidden_bug_fix_only_failure,1,0,344.3958468437195,1096856
+structlog,structlog_pr_489,comments_docstrings,hidden_bug_fix_only_failure,2,0,565.5801804065704,1245190
+httpx,httpx_pr_2547,remove_tests,hidden_bug_fix_only_failure,3,0,503.37622809410095,1699182

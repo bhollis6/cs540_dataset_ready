@@ -1,0 +1,124 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "e6e300e729dd33956e5448d8be9a0b1540b4e53a",
+  "changed_source_files": [
+    "src/_pytest/skipping.py"
+  ],
+  "changed_test_files": [
+    "testing/test_skipping.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "medium",
+  "test_signal": {
+    "level": "high",
+    "rationale": "The official Verified row exposes one direct FAIL_TO_PASS target and 77 PASS_TO_PASS tests, which is enough surface for target success and broader-regression reporting.",
+    "evidence": [
+      "The official snapshot records 1 FAIL_TO_PASS test.",
+      "The official snapshot records 77 PASS_TO_PASS tests."
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "medium",
+        "rationale": "The historical source file contains function annotations and typed imports, so removing type hints would produce a real but not overwhelming information loss.",
+        "evidence": [
+          "The clean historical src/_pytest/skipping.py contains annotated hooks such as pytest_addoption(parser: Parser) -> None and evaluate_condition(... ) -> Tuple[bool, str]."
+        ]
+      },
+      "fairness_notes": [
+        "The source surface is typed, but type-hint removal is still a secondary condition behind comments_docstrings for the first pilot."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "REVIEW",
+      "signal": {
+        "level": "medium",
+        "rationale": "The bug sits in skip/xfail control-flow logic where semantic names likely matter, but this should be audited against the exact base commit before using naming first.",
+        "evidence": [
+          "The task description references runxfail, skip, skipif, and pytest_runtest_makereport semantics."
+        ]
+      },
+      "fairness_notes": [
+        "Naming should preserve pytest hook names and framework-discovery identifiers."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The historical source and changed test file both contain explanatory comments/docstrings, making this the cleanest first information-removal condition for the pilot.",
+        "evidence": [
+          "The clean historical src/_pytest/skipping.py contains a module docstring plus explanatory inline comments.",
+          "The changed test file also contains inline commentary and string-doc examples that are removed by the degradation."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve shebang and encoding comments only.",
+        "Do not remove ordinary string literals that are not docstrings."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The changed test file provides direct behavioral guidance while the repo still has a broad regression surface.",
+        "evidence": [
+          "The official snapshot lists testing/test_skipping.py as the changed test file.",
+          "The official snapshot lists 77 PASS_TO_PASS tests for broader regression scoring."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve any test-support files if the official row reveals them."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": "comments_docstrings",
+  "decision_summary": "Choose pytest-dev__pytest-7432 as the first pilot task and run comments_docstrings first because it is a non-test-removal condition we can implement cleanly now without importing Rope or LibCST.",
+  "evidence_sources": [
+    {
+      "type": "official_dataset_docs",
+      "url": "https://www.swebench.com/SWE-bench/guides/datasets/",
+      "note": "Confirms Verified dataset fields and loading path."
+    },
+    {
+      "type": "official_task_snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/first_pilot_task_snapshot.json",
+      "note": "Local snapshot fetched from the official SWE-bench Verified dataset."
+    },
+    {
+      "type": "materialized_clean_workspace",
+      "path": "runs/pytest-dev__pytest-7432/codex-cli/clean/rep_0/workspace",
+      "note": "Historical checkout used to verify typed and commented source surfaces."
+    }
+  ],
+  "open_questions": [
+    "Run Codex on the clean workspace and confirm the current prompt contract is sufficient.",
+    "Implement oracle replay so clean and degraded runs can be scored with the broader regression split."
+  ],
+  "notes": [
+    "This record is intentionally narrow and pilot-oriented.",
+    "The chosen task and condition are now backed by the official dataset row and a real historical checkout.",
+    "Updated on 2026-04-23 after wiring type_hints and naming in the pivot. Naming audit found 27 candidate symbols across src/_pytest/skipping.py and testing/test_skipping.py, with pytest hook/test discovery names preserved."
+  ]
+}

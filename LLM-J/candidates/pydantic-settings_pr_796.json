@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_796",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 796,
+  "title": "Fix env_file from model_config ignored in CliApp.run() (#795)",
+  "description": "The _env_file default in _settings_init_sources was None instead of ENV_FILE_SENTINEL, causing the model_config env_file to be skipped when CliApp.run() calls _settings_init_sources without _env_file.",
+  "patch_diff": "diff --git a/pydantic_settings/main.py b/pydantic_settings/main.py\nindex 50901c0c..8e0270dc 100644\n--- a/pydantic_settings/main.py\n+++ b/pydantic_settings/main.py\n@@ -272,7 +272,7 @@ def _settings_init_sources(\n         _nested_model_default_partial_update: bool | None = None,\n         _env_prefix: str | None = None,\n         _env_prefix_target: EnvPrefixTarget | None = None,\n-        _env_file: DotenvType | None = None,\n+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,\n         _env_file_encoding: str | None = None,\n         _env_ignore_empty: bool | None = None,\n         _env_nested_delimiter: str | None = None,\n",
+  "test_diff": "diff --git a/tests/test_source_cli.py b/tests/test_source_cli.py\nindex ea968a73..75e1198e 100644\n--- a/tests/test_source_cli.py\n+++ b/tests/test_source_cli.py\n@@ -3244,3 +3244,24 @@ class Html(BaseSettings, cli_prog_name='example.py'):\n                         (default: null)\n \"\"\"\n     )\n+\n+\n+def test_cli_app_run_env_file_from_model_config(tmp_path):\n+    \"\"\"Regression test for https://github.com/pydantic/pydantic-settings/issues/795\n+\n+    CliApp.run() should respect env_file set in model_config even when _env_file\n+    is not explicitly passed.\n+    \"\"\"\n+    env_file = tmp_path / '.env'\n+    env_file.write_text('TEST=from dotenv\\n')\n+\n+    class Settings(BaseSettings):\n+        model_config = SettingsConfigDict(env_file=str(env_file), env_file_encoding='utf-8')\n+\n+        test: str = 'default'\n+\n+        def cli_cmd(self) -> None:\n+            pass\n+\n+    result = CliApp.run(Settings, cli_args=[])\n+    assert result.test == 'from dotenv'\n",
+  "files_changed": [
+    "pydantic_settings/main.py",
+    "tests/test_source_cli.py"
+  ],
+  "source_files": [
+    "pydantic_settings/main.py"
+  ],
+  "test_files": [
+    "tests/test_source_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 22,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "46ddff3a0f219dac47e7a9c79226d5853457c3d3",
+  "base_commit_sha": "2dde0cbc52e7b25c6d6c938c5ff3b3745684d922",
+  "env_commit_sha": "2dde0cbc52e7b25c6d6c938c5ff3b3745684d922",
+  "head_commit_sha": "6eb3c9c1d2d69ff9651211aa1735a821d0060487",
+  "merged_at": "2026-03-02T10:52:32Z"
+}

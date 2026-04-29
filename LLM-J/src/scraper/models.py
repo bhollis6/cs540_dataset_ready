@@ -30,15 +30,22 @@ class PRMetadata:
 
     @property
     def test_files(self) -> list[str]:
-        return [p for p in self.file_paths if _is_test_file(p)]
+        return [p for p in self.file_paths if _is_executable_test_file(p)]
+
+    @property
+    def test_support_files(self) -> list[str]:
+        return [p for p in self.file_paths if _is_test_support_file(p)]
 
     @property
     def source_files(self) -> list[str]:
-        return [p for p in self.file_paths if not _is_test_file(p) and not _is_non_code_file(p)]
+        return [
+            p for p in self.file_paths
+            if not _is_test_related_file(p) and not _is_non_code_file(p)
+        ]
 
     @property
     def has_test_changes(self) -> bool:
-        return len(self.test_files) > 0
+        return len(self.test_files) > 0 or len(self.test_support_files) > 0
 
     @property
     def has_source_changes(self) -> bool:
@@ -59,11 +66,13 @@ class CandidatePR:
     files_changed: list[str]
     source_files: list[str]
     test_files: list[str]
+    test_support_files: list[str]
     lines_added: int
     lines_removed: int
     has_test_changes: bool
     merge_commit_sha: str | None
     base_commit_sha: str | None
+    env_commit_sha: str | None
     head_commit_sha: str | None
     merged_at: str | None
 
@@ -79,11 +88,13 @@ class CandidatePR:
             "files_changed": self.files_changed,
             "source_files": self.source_files,
             "test_files": self.test_files,
+            "test_support_files": self.test_support_files,
             "lines_added": self.lines_added,
             "lines_removed": self.lines_removed,
             "has_test_changes": self.has_test_changes,
             "merge_commit_sha": self.merge_commit_sha,
             "base_commit_sha": self.base_commit_sha,
+            "env_commit_sha": self.env_commit_sha,
             "head_commit_sha": self.head_commit_sha,
             "merged_at": self.merged_at,
         }
@@ -101,27 +112,60 @@ class CandidatePR:
             files_changed=data["files_changed"],
             source_files=data.get("source_files", []),
             test_files=data.get("test_files", []),
+            test_support_files=data.get("test_support_files", []),
             lines_added=data["lines_added"],
             lines_removed=data["lines_removed"],
             has_test_changes=data["has_test_changes"],
             merge_commit_sha=data.get("merge_commit_sha"),
             base_commit_sha=data.get("base_commit_sha"),
+            env_commit_sha=data.get("env_commit_sha", data.get("base_commit_sha")),
             head_commit_sha=data.get("head_commit_sha"),
             merged_at=data.get("merged_at"),
         )
 
 
-def _is_test_file(path: str) -> bool:
-    """Check if a file path looks like a test file."""
+def _is_test_dir_path(path: str) -> bool:
+    path_lower = path.lower()
+    return (
+        "tests/" in path_lower
+        or "test/" in path_lower
+        or "testing/" in path_lower
+    )
+
+
+def _is_executable_test_file(path: str) -> bool:
+    """Check if a file path is a removable/executable test file."""
     parts = path.lower().split("/")
     filename = parts[-1] if parts else ""
     return (
-        "tests/" in path.lower()
-        or "test/" in path.lower()
-        or filename.startswith("test_")
+        filename.startswith("test_")
         or filename.endswith("_test.py")
-        or filename == "conftest.py"
+        or filename == "tests.py"
     )
+
+
+def _is_test_support_file(path: str) -> bool:
+    """Check if a path is test infrastructure that should be preserved."""
+    parts = [part.lower() for part in path.split("/")]
+    filename = parts[-1] if parts else ""
+    support_dirs = {"fixtures", "test_data", "__snapshots__"}
+
+    if filename == "conftest.py":
+        return True
+    if any(part in support_dirs for part in parts):
+        return True
+    if _is_test_dir_path(path) and not _is_executable_test_file(path):
+        return True
+    return False
+
+
+def _is_test_related_file(path: str) -> bool:
+    return _is_executable_test_file(path) or _is_test_support_file(path)
+
+
+def _is_test_file(path: str) -> bool:
+    """Backward-compatible alias for any test-related path."""
+    return _is_test_related_file(path)
 
 
 def _is_non_code_file(path: str) -> bool:

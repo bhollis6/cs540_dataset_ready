@@ -1,0 +1,29 @@
+{
+  "candidate_id": "click_pr_2972",
+  "repo": "pallets/click",
+  "pr_number": 2972,
+  "title": "Don't include envvar in error hint when envvar not configured",
+  "description": "Add a check for if `envvar` is `None` before appending to the error hint text.\r\n\r\nfixes #2971",
+  "patch_diff": "diff --git a/CHANGES.rst b/CHANGES.rst\nindex 6021a5640b..d6baa2b095 100644\n--- a/CHANGES.rst\n+++ b/CHANGES.rst\n@@ -15,6 +15,7 @@ Unreleased\n     screen. Refs :issue:`2911` :pr:`3004`\n -   Fix completion for the Z shell (``zsh``) for completion items containing\n     colons. :issue:`2703` :pr:`2846`\n+-   Don't include envvar in error hint when not configured. :issue:`2971` :pr:`2972`\n -   Fix a rare race in ``click.testing.StreamMixer``'s finalization that manifested\n     as a ``ValueError`` on close in a multi-threaded test session.\n     :issue:`2993` :pr:`2991`\ndiff --git a/src/click/core.py b/src/click/core.py\nindex 4bebb77891..583cc895d9 100644\n--- a/src/click/core.py\n+++ b/src/click/core.py\n@@ -2682,7 +2682,7 @@ def to_info_dict(self) -> dict[str, t.Any]:\n \n     def get_error_hint(self, ctx: Context) -> str:\n         result = super().get_error_hint(ctx)\n-        if self.show_envvar:\n+        if self.show_envvar and self.envvar is not None:\n             result += f\" (env var: '{self.envvar}')\"\n         return result\n \n",
+  "test_diff": "diff --git a/tests/test_options.py b/tests/test_options.py\nindex 1e7826d82a..c5f2d49c7c 100644\n--- a/tests/test_options.py\n+++ b/tests/test_options.py\n@@ -677,6 +677,13 @@ def test_missing_envvar(runner):\n     assert result.exit_code == 2\n     assert \"Error: Missing option '--foo' (env var: 'bar').\" in result.output\n \n+    cli = click.Command(\n+        \"cli\", params=[click.Option([\"--foo\"], show_envvar=True, required=True)]\n+    )\n+    result = runner.invoke(cli)\n+    assert result.exit_code == 2\n+    assert \"Error: Missing option '--foo'.\" in result.output\n+\n \n def test_case_insensitive_choice(runner):\n     @click.command()\n",
+  "files_changed": [
+    "CHANGES.rst",
+    "src/click/core.py",
+    "tests/test_options.py"
+  ],
+  "source_files": [
+    "src/click/core.py"
+  ],
+  "test_files": [
+    "tests/test_options.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 9,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "0be2bd385064053bb75f92db317de128db729d52",
+  "base_commit_sha": "c88f333de440c5066ff563f784a6561f4713cf78",
+  "env_commit_sha": "c88f333de440c5066ff563f784a6561f4713cf78",
+  "head_commit_sha": "d1f865142812584b9a1630106cce3f2309751e71",
+  "merged_at": "2025-07-23T04:29:00Z"
+}

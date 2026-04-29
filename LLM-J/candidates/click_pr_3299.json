@@ -1,0 +1,28 @@
+{
+  "candidate_id": "click_pr_3299",
+  "repo": "pallets/click",
+  "pr_number": 3299,
+  "title": "Fix speculative empty string check",
+  "description": "Fix #3298 by checking against a speculative empty string.\r\n\r\nThat not unreasonable given the hard-coded nature of the empty string.",
+  "patch_diff": "diff --git a/src/click/core.py b/src/click/core.py\nindex f0a624be3..6dc44f399 100644\n--- a/src/click/core.py\n+++ b/src/click/core.py\n@@ -3110,7 +3110,7 @@ def get_help_extra(self, ctx: Context) -> types.OptionHelpExtra:\n                 )[1]\n             elif self.is_bool_flag and not self.secondary_opts and not default_value:\n                 default_string = \"\"\n-            elif default_value == \"\":\n+            elif isinstance(default_value, str) and default_value == \"\":\n                 default_string = '\"\"'\n             else:\n                 default_string = str(default_value)\n",
+  "test_diff": "diff --git a/tests/test_options.py b/tests/test_options.py\nindex e335f3c1a..85f622459 100644\n--- a/tests/test_options.py\n+++ b/tests/test_options.py\n@@ -1259,12 +1259,36 @@ def test_show_default_string(runner):\n     assert \"[default: (unlimited)]\" in message\n \n \n-def test_show_default_with_empty_string(runner):\n-    \"\"\"When show_default is True and default is set to an empty string.\"\"\"\n-    opt = click.Option([\"--limit\"], default=\"\", show_default=True)\n+class _StrictEq:\n+    \"\"\"Object whose ``__eq__`` raises on string comparison (like semver.Version).\"\"\"\n+\n+    def __eq__(self, other):\n+        if isinstance(other, str):\n+            raise ValueError(\"cannot compare to string\")\n+        return NotImplemented\n+\n+    def __str__(self):\n+        return \"strict\"\n+\n+\n+@pytest.mark.parametrize(\n+    (\"default\", \"expected\"),\n+    [\n+        (\"\", '[default: \"\"]'),\n+        (_StrictEq(), \"[default: strict]\"),\n+    ],\n+    ids=[\"empty-string\", \"non-string-comparable-object\"],\n+)\n+def test_show_default_with_empty_string(runner, default, expected):\n+    \"\"\"The empty-string check in help rendering must not break on objects\n+    whose ``__eq__`` raises for string operands.\n+\n+    Regression test for https://github.com/pallets/click/issues/3298.\n+    \"\"\"\n+    opt = click.Option([\"--limit\"], default=default, show_default=True)\n     ctx = click.Context(click.Command(\"cli\"))\n     message = opt.get_help_record(ctx)[1]\n-    assert '[default: \"\"]' in message\n+    assert expected in message\n \n \n def test_do_not_show_no_default(runner):\n",
+  "files_changed": [
+    "src/click/core.py",
+    "tests/test_options.py"
+  ],
+  "source_files": [
+    "src/click/core.py"
+  ],
+  "test_files": [
+    "tests/test_options.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 29,
+  "lines_removed": 5,
+  "has_test_changes": true,
+  "merge_commit_sha": "1458800409ed12076f18451889b0857db36aa522",
+  "base_commit_sha": "04ef3a6f473deb2499721a8d11f92a7d2c0912f2",
+  "env_commit_sha": "04ef3a6f473deb2499721a8d11f92a7d2c0912f2",
+  "head_commit_sha": "d340b0c1202284a1b9d0ca892549208527d586ce",
+  "merged_at": "2026-04-08T21:30:46Z"
+}

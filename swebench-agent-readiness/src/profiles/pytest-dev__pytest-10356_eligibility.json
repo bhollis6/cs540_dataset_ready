@@ -1,0 +1,115 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "pytest-dev__pytest-10356",
+  "repo": "pytest-dev/pytest",
+  "base_commit": "3c1534944cbd34e8a41bc9e76818018fadefc9a1",
+  "changed_source_files": [
+    "src/_pytest/mark/structures.py"
+  ],
+  "changed_test_files": [
+    "testing/test_mark.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "Gold preflight passed the official target split: 1 FAIL_TO_PASS and 79 PASS_TO_PASS.",
+    "evidence": [
+      "pytest -rA testing/test_mark.py"
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 230 annotation nodes across source/test files.",
+        "evidence": [
+          "src/_pytest/mark/structures.py",
+          "testing/test_mark.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only target Python files; preserve runtime behavior and test discovery names."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 202 local rename candidates before safety filtering.",
+        "evidence": [
+          "src/_pytest/mark/structures.py",
+          "testing/test_mark.py"
+        ]
+      },
+      "fairness_notes": [
+        "Use scope-limited Rope renames and preserve pytest hooks, dunders, and test discovery names."
+      ],
+      "blockers": []
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Target surface has 28 docstrings and 73 comments.",
+        "evidence": [
+          "src/_pytest/mark/structures.py",
+          "testing/test_mark.py"
+        ]
+      },
+      "fairness_notes": [
+        "Strip only comments/docstrings in source-like target files."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "Official oracle has 1 FAIL_TO_PASS and 79 PASS_TO_PASS targets in compact changed test files.",
+        "evidence": [
+          "testing/test_mark.py"
+        ]
+      },
+      "fairness_notes": [
+        "Delete changed test files only; official oracle restores tests during replay."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "type_hints",
+    "naming",
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": null,
+  "decision_summary": "Selected as one of the two additional pytest tasks for the proper RQ1 matrix after signal screening and successful host-local gold preflight.",
+  "evidence_sources": [
+    {
+      "type": "signal_screen",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/rq1_all_degradations_signal_screen_2026-04-23.json"
+    },
+    {
+      "type": "gold_preflight",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/pytest-dev__pytest-10356_gold_preflight_result.json"
+    },
+    {
+      "type": "snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/pytest-dev__pytest-10356_snapshot.json"
+    }
+  ],
+  "open_questions": [],
+  "notes": [
+    "Use this profile for proper-matrix Codex runs; all four current degradation families are eligible."
+  ]
+}

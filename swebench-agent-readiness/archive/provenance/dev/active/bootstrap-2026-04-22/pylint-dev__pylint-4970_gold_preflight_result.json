@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pylint-dev__pylint-4970",
+  "repo": "pylint-dev/pylint",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pylint-dev__pylint-4970/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "pytest -rA tests/checkers/unittest_similar.py",
+  "command_returncode": 0,
+  "duration_seconds": 1.029,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "tests/checkers/unittest_similar.py::test_set_duplicate_lines_to_zero"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 17,
+  "pass_to_pass_passed": [
+    "tests/checkers/unittest_similar.py::test_ignore_comments",
+    "tests/checkers/unittest_similar.py::test_ignore_docstrings",
+    "tests/checkers/unittest_similar.py::test_ignore_imports",
+    "tests/checkers/unittest_similar.py::test_multiline_imports",
+    "tests/checkers/unittest_similar.py::test_ignore_multiline_imports",
+    "tests/checkers/unittest_similar.py::test_ignore_signatures_fail",
+    "tests/checkers/unittest_similar.py::test_ignore_signatures_pass",
+    "tests/checkers/unittest_similar.py::test_ignore_signatures_class_methods_fail",
+    "tests/checkers/unittest_similar.py::test_ignore_signatures_class_methods_pass",
+    "tests/checkers/unittest_similar.py::test_ignore_signatures_empty_functions_fail",
+    "tests/checkers/unittest_similar.py::test_ignore_signatures_empty_functions_pass",
+    "tests/checkers/unittest_similar.py::test_no_hide_code_with_imports",
+    "tests/checkers/unittest_similar.py::test_ignore_nothing",
+    "tests/checkers/unittest_similar.py::test_lines_without_meaningful_content_do_not_trigger_similarity",
+    "tests/checkers/unittest_similar.py::test_help",
+    "tests/checkers/unittest_similar.py::test_no_args",
+    "tests/checkers/unittest_similar.py::test_get_map_data"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "pylint/checkers/similar.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

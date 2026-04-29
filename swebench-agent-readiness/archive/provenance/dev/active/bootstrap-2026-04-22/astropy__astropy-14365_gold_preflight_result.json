@@ -1,0 +1,37 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "astropy__astropy-14365",
+  "repo": "astropy/astropy",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14365/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "pytest -rA astropy/io/ascii/tests/test_qdp.py",
+  "command_returncode": 0,
+  "duration_seconds": 1.545,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip[True]"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 8,
+  "pass_to_pass_passed": [
+    "astropy/io/ascii/tests/test_qdp.py::test_get_tables_from_qdp_file",
+    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip[False]",
+    "astropy/io/ascii/tests/test_qdp.py::test_read_example",
+    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip_example",
+    "astropy/io/ascii/tests/test_qdp.py::test_roundtrip_example_comma",
+    "astropy/io/ascii/tests/test_qdp.py::test_read_write_simple",
+    "astropy/io/ascii/tests/test_qdp.py::test_read_write_simple_specify_name",
+    "astropy/io/ascii/tests/test_qdp.py::test_get_lines_from_qdp"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "astropy/io/ascii/qdp.py",
+    "pyproject.toml"
+  ],
+  "completion_reason": "oracle_pass"
+}

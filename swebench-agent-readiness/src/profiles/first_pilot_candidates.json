@@ -1,0 +1,26 @@
+{
+  "integration_strategy": {
+    "decision": "pypi_dependency",
+    "rejected_options": {
+      "submodule": "Too much workspace weight and couples the pivot to upstream internals too early.",
+      "sibling_clone": "Adds extra local state outside the pivot and complicates reproducibility for the pilot."
+    },
+    "notes": [
+      "Treat SWE-bench as a black-box substrate.",
+      "Pin the package version in environment setup and fetch official dataset rows through the documented loading API."
+    ]
+  },
+  "first_degradation": {
+    "condition": "comments_docstrings",
+    "why_now": "This is the smallest non-test-removal degradation that can be implemented with the Python standard library and reasoned about cleanly.",
+    "next_condition": "naming"
+  },
+  "task_choices": {
+    "primary": "pytest-dev__pytest-7432",
+    "backups": [
+      "django__django-11728",
+      "scikit-learn__scikit-learn-10297"
+    ],
+    "selection_rule": "Prefer the smallest Python Verified task with clear source/test surfaces and a fair non-test-removal degradation."
+  }
+}

@@ -1,0 +1,190 @@
+[
+  {
+    "instance_id": "django__django-16502",
+    "repo": "django/django",
+    "base_commit": "246eb4836a6fb967880f838aa0d22ecfdca8b6f1",
+    "version": "5.0",
+    "source_files": [
+      "django/core/servers/basehttp.py"
+    ],
+    "test_files": [
+      "tests/servers/test_basehttp.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 4,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 9,
+      "comments": 31,
+      "name_candidates": 85,
+      "classes": 8,
+      "functions": 21,
+      "variables": 56,
+      "total": 85
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 0.68,
+      "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 servers.test_basehttp"
+    }
+  },
+  {
+    "instance_id": "django__django-16527",
+    "repo": "django/django",
+    "base_commit": "bd366ca2aeffa869b7dbc0b0aa01caea75e6dc31",
+    "version": "5.0",
+    "source_files": [
+      "django/contrib/admin/templatetags/admin_modify.py"
+    ],
+    "test_files": [
+      "tests/admin_views/test_templatetags.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 6,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 7,
+      "comments": 4,
+      "name_candidates": 96,
+      "classes": 2,
+      "functions": 7,
+      "variables": 87,
+      "total": 96
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 1.614,
+      "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 admin_views.test_templatetags"
+    }
+  },
+  {
+    "instance_id": "django__django-16631",
+    "repo": "django/django",
+    "base_commit": "9b224579875e30203d079cc2fee83b116d98eb78",
+    "version": "5.0",
+    "source_files": [
+      "django/contrib/auth/__init__.py",
+      "django/contrib/auth/base_user.py"
+    ],
+    "test_files": [
+      "tests/auth_tests/test_basic.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 12,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 25,
+      "comments": 25,
+      "name_candidates": 96,
+      "classes": 4,
+      "functions": 30,
+      "variables": 62,
+      "total": 96
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 0.829,
+      "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 auth_tests.test_basic"
+    }
+  },
+  {
+    "instance_id": "django__django-16642",
+    "repo": "django/django",
+    "base_commit": "fbe850106b2e4b85f838219cb9e1df95fba6c164",
+    "version": "5.0",
+    "source_files": [
+      "django/http/response.py"
+    ],
+    "test_files": [
+      "tests/responses/test_fileresponse.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 21,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 16,
+      "comments": 61,
+      "name_candidates": 219,
+      "classes": 20,
+      "functions": 74,
+      "variables": 125,
+      "total": 219
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 0.767,
+      "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 responses.test_fileresponse"
+    }
+  },
+  {
+    "instance_id": "django__django-16667",
+    "repo": "django/django",
+    "base_commit": "02c356f2f3945b8075735d485c3cf48cad991011",
+    "version": "5.0",
+    "source_files": [
+      "django/forms/widgets.py"
+    ],
+    "test_files": [
+      "tests/forms_tests/field_tests/test_datefield.py",
+      "tests/forms_tests/widget_tests/test_selectdatewidget.py"
+    ],
+    "fail_to_pass_count": 2,
+    "pass_to_pass_count": 24,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 39,
+      "comments": 64,
+      "name_candidates": 443,
+      "classes": 36,
+      "functions": 96,
+      "variables": 311,
+      "total": 443
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 0.796,
+      "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 forms_tests.field_tests.test_datefield forms_tests.widget_tests.test_selectdatewidget"
+    }
+  },
+  {
+    "instance_id": "django__django-17029",
+    "repo": "django/django",
+    "base_commit": "953f29f700a60fc09b08b2c2270c12c447490c6a",
+    "version": "5.0",
+    "source_files": [
+      "django/apps/registry.py"
+    ],
+    "test_files": [
+      "tests/apps/tests.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 43,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 54,
+      "comments": 85,
+      "name_candidates": 128,
+      "classes": 11,
+      "functions": 22,
+      "variables": 95,
+      "total": 128
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 0.711,
+      "test_command": "./tests/runtests.py --verbosity 2 --settings=test_sqlite --parallel 1 apps.tests"
+    }
+  }
+]

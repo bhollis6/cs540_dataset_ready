@@ -1,0 +1,11 @@
+| audit_bucket | unique_comparisons | individual_runs |
+| --- | --- | --- |
+| Clean passed, degraded failed | 11 | 22 |
+| Regression-test damage | 11 | 22 |
+| Top 12 absolute token deltas | 12 | 24 |
+| Top 8 degraded-cheaper cases | 8 | 16 |
+| Remove-tests patch-target shift | 25 | 50 |
+| Low/zero type-hints surface | 19 | 38 |
+| Clean already failed | 27 | 54 |
+| Astropy build-compatibility-sensitive | 12 | 24 |
+| Deduplicated total | 79 | 158 |

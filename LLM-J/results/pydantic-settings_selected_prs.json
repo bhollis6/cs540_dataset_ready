@@ -1,0 +1,648 @@
+{
+  "repo": "pydantic/pydantic-settings",
+  "selection_timestamp": "2026-04-28T03:36:57.513802+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 12,
+  "accepted": 12,
+  "review": 0,
+  "rejected": 0,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "pydantic-settings_pr_788",
+      "pr_number": 788,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "An excellent experimental candidate: tightly scoped one-line bug fix with a clear root cause, a directly validating test, meaningful application code with type annotations and descriptive names, and a crystal-clear problem description. The fix requires real reasoning about Python type semantics without being overly complex.",
+      "merge_commit_sha": "4933f06402ed55e32bcdcefd6c8f59ffe1fefd24",
+      "base_commit_sha": "bd0ebe6215cf215d716e33d833cc2589a1d00a17",
+      "env_commit_sha": "bd0ebe6215cf215d716e33d833cc2589a1d00a17",
+      "head_commit_sha": "7475ae5dd4fc36db9c70ef4d6fbb63b3e37535fd",
+      "source_files": [
+        "pydantic_settings/sources/providers/cli.py"
+      ],
+      "test_files": [
+        "tests/test_source_cli.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_cli.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_730",
+      "pr_number": 730,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate. This is a focused, well-tested bug fix with clear scope and a meaningful implementation challenge. The code uses type hints, descriptive naming, and inline comments throughout \u2014 all properties that degrade cleanly in the experiment. The parametrized tests provide direct pass/fail signals for case-insensitive lookup and collision handling. Complexity sits at the right level: non-trivial enough to differentiate agent performance, but not so large that even a capable agent would fail regardless of codebase quality.",
+      "merge_commit_sha": "cab6fc0f176e5cc095cf143c47b0f6d70a07cb88",
+      "base_commit_sha": "7b3dbdd3aaf92d153618a0e2ef125326ac0ff5cf",
+      "env_commit_sha": "7b3dbdd3aaf92d153618a0e2ef125326ac0ff5cf",
+      "head_commit_sha": "33db21f9ec07c391858e6f50443ba233bba1647d",
+      "source_files": [
+        "pydantic_settings/sources/providers/gcp.py"
+      ],
+      "test_files": [
+        "tests/test_source_gcp_secret_manager.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/gcp.py",
+            "tests/test_source_gcp_secret_manager.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/gcp.py",
+            "tests/test_source_gcp_secret_manager.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/gcp.py",
+            "tests/test_source_gcp_secret_manager.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_gcp_secret_manager.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_773",
+      "pr_number": 773,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality experimental candidate. It's a tightly scoped feature addition with excellent test coverage that directly validates the new behavior, well-annotated application code susceptible to degradation mutations, a clear enough description to hand to an agent, and moderate complexity that would meaningfully differentiate agent performance under clean vs. degraded conditions.",
+      "merge_commit_sha": "de71e84057b63b251ec84883b5e2ae886f82084f",
+      "base_commit_sha": "0f8f951b89b137bd563ce74dac016ba2c4cdc7a2",
+      "env_commit_sha": "0f8f951b89b137bd563ce74dac016ba2c4cdc7a2",
+      "head_commit_sha": "3dc4e0651adafb3645769349237461347708f96f",
+      "source_files": [
+        "pydantic_settings/main.py",
+        "pydantic_settings/sources/providers/yaml.py"
+      ],
+      "test_files": [
+        "tests/test_source_yaml.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/main.py",
+            "pydantic_settings/sources/providers/yaml.py",
+            "tests/test_source_yaml.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/main.py",
+            "pydantic_settings/sources/providers/yaml.py",
+            "tests/test_source_yaml.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/main.py",
+            "pydantic_settings/sources/providers/yaml.py",
+            "tests/test_source_yaml.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_yaml.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_780",
+      "pr_number": 780,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality candidate PR: tightly scoped bug fix for a specific edge case in Python type handling, with direct and unambiguous test coverage that serves as a clear pass/fail signal. The code is well-typed and descriptively named, making it suitable for degradation experiments. Complexity sits in the sweet spot \u2014 requires genuine understanding of Python's type system internals but the change is self-contained within a utility module.",
+      "merge_commit_sha": "acf8c14f5ec314799f5bd0d3f6a1591c4ed2ec97",
+      "base_commit_sha": "58b236a36473e01bfe42e5f75d39d46721e0593d",
+      "env_commit_sha": "58b236a36473e01bfe42e5f75d39d46721e0593d",
+      "head_commit_sha": "2b531eb9d5a02053d2be586335a632fe595fc7b7",
+      "source_files": [
+        "pydantic_settings/sources/base.py",
+        "pydantic_settings/sources/utils.py"
+      ],
+      "test_files": [
+        "tests/test_settings.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/base.py",
+            "pydantic_settings/sources/utils.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/base.py",
+            "pydantic_settings/sources/utils.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/base.py",
+            "pydantic_settings/sources/utils.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_settings.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_786",
+      "pr_number": 786,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a strong candidate PR. It is a tightly scoped bug fix for a specific `AttributeError` when using nested env vars with `dict[str, T]` fields in pydantic-settings. The fix modifies a small section of core env-parsing logic, the tests directly validate the regression case with clear pass/fail semantics, and the code involves type annotations and descriptive naming that make it suitable for mutation experiments. Complexity is moderate \u2014 enough to require contextual understanding but not overwhelming for an AI agent.",
+      "merge_commit_sha": "58b236a36473e01bfe42e5f75d39d46721e0593d",
+      "base_commit_sha": "4933f06402ed55e32bcdcefd6c8f59ffe1fefd24",
+      "env_commit_sha": "4933f06402ed55e32bcdcefd6c8f59ffe1fefd24",
+      "head_commit_sha": "eb6254b0af36b93f1b565c6d77fd28972c916418",
+      "source_files": [
+        "pydantic_settings/sources/providers/env.py"
+      ],
+      "test_files": [
+        "tests/test_settings.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/env.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/env.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/env.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_settings.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_767",
+      "pr_number": 767,
+      "total_score": 20,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate for the experiment. The PR is a focused regression fix with a directly validating test that can serve as a clean pass/fail signal. The fix touches real application logic with type hints, meaningful names, and explanatory comments \u2014 good mutation surface. Complexity is in the sweet spot: requires understanding alias resolution internals but is not sprawling. The description is clear enough to hand to an agent as a task prompt.",
+      "merge_commit_sha": "a04b03450e62f583cdaee2d93df693b991aeb319",
+      "base_commit_sha": "f6ddaee324a6f35e418505a0222bd26f1894446e",
+      "env_commit_sha": "f6ddaee324a6f35e418505a0222bd26f1894446e",
+      "head_commit_sha": "05f6de1b6c33de860d5fbb4730d2448d4a1ff0f4",
+      "source_files": [
+        "pydantic_settings/sources/base.py",
+        "pydantic_settings/sources/providers/gcp.py"
+      ],
+      "test_files": [
+        "tests/test_settings.py"
+      ],
+      "test_support_files": [
+        "tests/conftest.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/base.py",
+            "pydantic_settings/sources/providers/gcp.py",
+            "tests/conftest.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/base.py",
+            "pydantic_settings/sources/providers/gcp.py",
+            "tests/conftest.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/base.py",
+            "pydantic_settings/sources/providers/gcp.py",
+            "tests/conftest.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_settings.py"
+          ],
+          "preserve_files": [
+            "tests/conftest.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_776",
+      "pr_number": 776,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 5,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Well-scoped, clearly described, and well-tested PR, but the actual implementation change is a single method call on one line. The fix is too trivial (score 2 on complexity) to produce meaningful differentiation between clean and degraded codebase conditions in a controlled experiment. The test is high quality but the signal from degrading naming/types/docs in the surrounding code would be minimal given how little reasoning the fix requires.",
+      "merge_commit_sha": "04d2cd60fe309ad22f15a4054193cfff5dd33ee0",
+      "base_commit_sha": "43348a9e605b8dcd5748f2cc7d675296f3ea21ac",
+      "env_commit_sha": "43348a9e605b8dcd5748f2cc7d675296f3ea21ac",
+      "head_commit_sha": "38a7b56889f5b7ac007094f1e99c3522219ed994",
+      "source_files": [
+        "pydantic_settings/sources/providers/dotenv.py"
+      ],
+      "test_files": [
+        "tests/test_settings.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/dotenv.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/dotenv.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/dotenv.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_settings.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_783",
+      "pr_number": 783,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a clean, well-tested bug fix with excellent scope and test coverage. The main weakness for experimental purposes is that the fix is too simple (one list comprehension) \u2014 an AI agent is likely to reproduce it correctly even under degraded codebase conditions, which limits the signal we can extract from the experiment. The test is excellent as a pass/fail oracle. The minor description-vs-implementation discrepancy adds slight noise but doesn't disqualify the PR. Overall a marginal candidate: strong on signal quality, weak on complexity threshold.",
+      "merge_commit_sha": "bd0ebe6215cf215d716e33d833cc2589a1d00a17",
+      "base_commit_sha": "eb7840e9f59a7969b23afdbcc4e5081e037736d8",
+      "env_commit_sha": "eb7840e9f59a7969b23afdbcc4e5081e037736d8",
+      "head_commit_sha": "329c799a0d3ba6e9cc5acac6d7a855c31e245900",
+      "source_files": [
+        "pydantic_settings/sources/providers/cli.py"
+      ],
+      "test_files": [
+        "tests/test_source_cli.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_cli.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_792",
+      "pr_number": 792,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, clearly described bug fix for Optional[Strict*] env var parsing in pydantic-settings. It touches real application logic with good type annotations, docstrings, and directly validating tests. Complexity is in the sweet spot \u2014 requires understanding pydantic internals but is contained to a small surface area. Strong candidate for the experiment.",
+      "merge_commit_sha": "d9a88abf7c3373e6d6c6c4961e30603d592dc660",
+      "base_commit_sha": "e87d12df0f42f7f72a3eb6d830cfbfb1d68b4496",
+      "env_commit_sha": "e87d12df0f42f7f72a3eb6d830cfbfb1d68b4496",
+      "head_commit_sha": "64d15596ae8aa3e6483d0616bcb7b1e7d830eedc",
+      "source_files": [
+        "pydantic_settings/sources/providers/env.py",
+        "pydantic_settings/sources/utils.py"
+      ],
+      "test_files": [
+        "tests/test_settings.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/env.py",
+            "pydantic_settings/sources/utils.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/env.py",
+            "pydantic_settings/sources/utils.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/env.py",
+            "pydantic_settings/sources/utils.py",
+            "tests/test_settings.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_settings.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_740",
+      "pr_number": 740,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-scoped bug fix with directly validating tests and core application code. The main weakness for experimental purposes is low complexity: the fix is a 2-line conditional that is nearly obvious once the right location is found, meaning even a heavily degraded codebase might not meaningfully impair an agent's ability to produce the same patch. Good on scope, clarity, and test coverage; borderline too simple to produce rich performance signals across degradation conditions.",
+      "merge_commit_sha": "c28091ed46e14594ad318d350f576eb97f72f020",
+      "base_commit_sha": "4b4fb72abc2e69c29fcfec180e5a5a0cb6cedbd1",
+      "env_commit_sha": "4b4fb72abc2e69c29fcfec180e5a5a0cb6cedbd1",
+      "head_commit_sha": "326d1c21a8a1302d1b8f7cfa5860e3e166b46348",
+      "source_files": [
+        "pydantic_settings/sources/providers/cli.py"
+      ],
+      "test_files": [
+        "tests/test_source_cli.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_cli.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_762",
+      "pr_number": 762,
+      "total_score": 19,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a good experimental candidate. It is tightly scoped to a real, non-trivial bug in core application code with strong type annotations and descriptive naming. The tests directly validate the fix across multiple parameterized cases and include a negative-case test, providing a clear pass/fail signal. The description is clear enough to serve as an agent task prompt. Complexity sits at the desirable 3 level \u2014 requires contextual understanding but is not large enough to obscure the degradation signal.",
+      "merge_commit_sha": "f6ddaee324a6f35e418505a0222bd26f1894446e",
+      "base_commit_sha": "6ce78bcfb737ddc552b077dcfcc3586f153bcaeb",
+      "env_commit_sha": "6ce78bcfb737ddc552b077dcfcc3586f153bcaeb",
+      "head_commit_sha": "476260e8e0ab6f3b1f7ffecff159155bff718a7e",
+      "source_files": [
+        "pydantic_settings/sources/providers/azure.py"
+      ],
+      "test_files": [
+        "tests/test_source_azure_key_vault.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/azure.py",
+            "tests/test_source_azure_key_vault.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/azure.py",
+            "tests/test_source_azure_key_vault.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/azure.py",
+            "tests/test_source_azure_key_vault.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_azure_key_vault.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "pydantic-settings_pr_784",
+      "pr_number": 784,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 3,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is a clean, well-tested, laser-focused regression fix, but it is too simple to be a useful experimental candidate. The entire fix is two source words (`isinstance(meta, type) and`), and the test directly encodes the bug. While the structure is ideal in form, the lack of meaningful complexity means agents would likely solve it trivially regardless of codebase degradation level, providing no useful signal for the experiment.",
+      "merge_commit_sha": "eb7840e9f59a7969b23afdbcc4e5081e037736d8",
+      "base_commit_sha": "198e71cf0cd570501535de7ae93a70953150f073",
+      "env_commit_sha": "198e71cf0cd570501535de7ae93a70953150f073",
+      "head_commit_sha": "fc9f59a747ea07167b8b16718b436d7791a0b57c",
+      "source_files": [
+        "pydantic_settings/sources/providers/cli.py"
+      ],
+      "test_files": [
+        "tests/test_source_cli.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "pydantic_settings/sources/providers/cli.py",
+            "tests/test_source_cli.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_source_cli.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

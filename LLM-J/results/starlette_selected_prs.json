@@ -1,0 +1,352 @@
+{
+  "repo": "encode/starlette",
+  "selection_timestamp": "2026-04-23T06:11:44.550430+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 8,
+  "accepted": 6,
+  "review": 1,
+  "rejected": 1,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "starlette_pr_1177",
+      "pr_number": 1177,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Excellent experimental candidate. Tight scope, crystal-clear description, direct test validation, and a moderate-complexity fix in core routing logic. The PR exemplifies exactly the kind of focused, well-described, well-tested change that produces meaningful signal in a degradation experiment. The test match strings are precise enough to serve as unambiguous pass/fail criteria.",
+      "merge_commit_sha": "b7aeae70fd24d568553d83b5acfa5b6c4cfbc179",
+      "base_commit_sha": "1a51dfabf7575278c89857de053447f2ca936efc",
+      "env_commit_sha": "1a51dfabf7575278c89857de053447f2ca936efc",
+      "head_commit_sha": "efd7f01c292b8b99164bc7010c19da38cadb2d08",
+      "source_files": [
+        "starlette/routing.py"
+      ],
+      "test_files": [
+        "tests/test_routing.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "starlette/routing.py",
+            "tests/test_routing.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "starlette/routing.py",
+            "tests/test_routing.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "starlette/routing.py",
+            "tests/test_routing.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_routing.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "starlette_pr_2041",
+      "pr_number": 2041,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality candidate PR. It implements a single, well-scoped ASGI protocol extension with comprehensive tests that provide direct pass/fail signal, touches core application code with type hints and descriptive naming, has a clear-enough description to hand to an AI agent, and sits at the ideal complexity level \u2014 requires multi-file reasoning and protocol knowledge but is not overwhelming. The minor naming inconsistency in the PR description (WebSocketReject vs WebSocketDenialResponse) is the only notable issue.",
+      "merge_commit_sha": "93e74a4d2f171bc48c66133d04b071c28ea63562",
+      "base_commit_sha": "043c800210e4d694263d3fece6ff1f1d2e65a80a",
+      "env_commit_sha": "043c800210e4d694263d3fece6ff1f1d2e65a80a",
+      "head_commit_sha": "094f0809f03efd218c6d10ae92d076332c2c0926",
+      "source_files": [
+        "starlette/responses.py",
+        "starlette/testclient.py",
+        "starlette/websockets.py"
+      ],
+      "test_files": [
+        "tests/test_websockets.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "starlette/responses.py",
+            "starlette/testclient.py",
+            "starlette/websockets.py",
+            "tests/test_websockets.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "starlette/responses.py",
+            "starlette/testclient.py",
+            "starlette/websockets.py",
+            "tests/test_websockets.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "starlette/responses.py",
+            "starlette/testclient.py",
+            "starlette/websockets.py",
+            "tests/test_websockets.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_websockets.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "starlette_pr_2194",
+      "pr_number": 2194,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate PR. The fix is minimal (2 lines) but non-trivial to arrive at without understanding ASGI streaming semantics and async generator behavior. The test is exemplary \u2014 precise, concurrent, and directly validates the ordering invariant that the fix enforces, providing an unambiguous pass/fail signal. The code touches core middleware with good type annotations and descriptive naming throughout the test, making it mutation-relevant. The description is clear enough to hand to an agent with some ASGI background. Overall a high-quality, well-scoped, well-tested fix at the right complexity level for the experiment.",
+      "merge_commit_sha": "11a3f1227e69a29fc9dc56f348f982cb5372a1d1",
+      "base_commit_sha": "d6007d7198c35c1a7ed81e678a81c3bca86bee5e",
+      "env_commit_sha": "d6007d7198c35c1a7ed81e678a81c3bca86bee5e",
+      "head_commit_sha": "82ddb561d0adbf7f546b7177dd4adbf346a4e149",
+      "source_files": [
+        "starlette/middleware/base.py"
+      ],
+      "test_files": [
+        "tests/middleware/test_base.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "starlette/middleware/base.py",
+            "tests/middleware/test_base.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "starlette/middleware/base.py",
+            "tests/middleware/test_base.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "starlette/middleware/base.py",
+            "tests/middleware/test_base.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/middleware/test_base.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "starlette_pr_2400",
+      "pr_number": 2400,
+      "total_score": 20,
+      "scores": {
+        "scope": 3,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 5,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a strong experimental candidate. The PR addresses a real, well-documented ASGI compliance bug with a coherent refactor across core Starlette subsystems. The description is detailed enough to serve as a standalone task prompt. Tests directly validate the key behavioral fix (mounted pure ASGI apps receiving correct root_path). The code is rich in type hints, descriptive names, and explanatory comments \u2014 ideal for degradation experiments. The main weakness is breadth: 6 source files across distinct subsystems makes it a wide refactor, which could challenge agents even in clean conditions. Complexity is in the desired 3-4 range.",
+      "merge_commit_sha": "c3c6314759b8356df185857c6001de6c8575708d",
+      "base_commit_sha": "8f2307d31f80971428ef4df53ce3c606d4166ce7",
+      "env_commit_sha": "8f2307d31f80971428ef4df53ce3c606d4166ce7",
+      "head_commit_sha": "7f893a9f726dcaafe6f873c2bbd777f1e1e887fc",
+      "source_files": [
+        "starlette/_utils.py",
+        "starlette/datastructures.py",
+        "starlette/middleware/wsgi.py",
+        "starlette/requests.py",
+        "starlette/routing.py",
+        "starlette/staticfiles.py"
+      ],
+      "test_files": [
+        "tests/middleware/test_wsgi.py",
+        "tests/test_routing.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "starlette/_utils.py",
+            "starlette/datastructures.py",
+            "starlette/middleware/wsgi.py",
+            "starlette/requests.py",
+            "starlette/routing.py",
+            "starlette/staticfiles.py",
+            "tests/middleware/test_wsgi.py",
+            "tests/test_routing.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "starlette/_utils.py",
+            "starlette/datastructures.py",
+            "starlette/middleware/wsgi.py",
+            "starlette/requests.py",
+            "starlette/routing.py",
+            "starlette/staticfiles.py",
+            "tests/middleware/test_wsgi.py",
+            "tests/test_routing.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "starlette/_utils.py",
+            "starlette/datastructures.py",
+            "starlette/middleware/wsgi.py",
+            "starlette/requests.py",
+            "starlette/routing.py",
+            "starlette/staticfiles.py",
+            "tests/middleware/test_wsgi.py",
+            "tests/test_routing.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/middleware/test_wsgi.py",
+            "tests/test_routing.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "starlette_pr_2422",
+      "pr_number": 2422,
+      "total_score": 19,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 4,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, atomic, well-tested PR with perfect scope and test coverage. The fatal weakness for our experiment is complexity: the fix is trivially simple (one additional condition + raise), meaning an AI agent would solve it correctly regardless of whether the codebase is degraded or pristine. There's insufficient cognitive load to produce a meaningful signal difference across conditions. Not recommended as an experimental candidate.",
+      "merge_commit_sha": "13c66c929428424daeb711b46623f47fb9ca36ee",
+      "base_commit_sha": "d2d9192966a7719747c04ce992b4a7df098cf82f",
+      "env_commit_sha": "d2d9192966a7719747c04ce992b4a7df098cf82f",
+      "head_commit_sha": "56a3df51e312636985d1d0c7defd4bbc00c74541",
+      "source_files": [
+        "starlette/config.py"
+      ],
+      "test_files": [
+        "tests/test_config.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "starlette/config.py",
+            "tests/test_config.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "starlette/config.py",
+            "tests/test_config.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "starlette/config.py",
+            "tests/test_config.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_config.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "starlette_pr_2485",
+      "pr_number": 2485,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 3,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This PR is extremely well-scoped and has excellent test coverage with a clear pass/fail signal. However, it is too simple for the experiment's purposes \u2014 the fix is a 3-line mechanical substitution (raise \u2192 warn + else clause) that requires no architectural reasoning or navigation. An agent would likely solve this correctly regardless of codebase quality degradation, making it a poor candidate for measuring the effect of naming, type hints, or docstring degradation. Recommend rejecting on complexity grounds.",
+      "merge_commit_sha": "7ec763c48be6a321dbd465777d5fac4f33f2ac42",
+      "base_commit_sha": "0e4da0aea238f4a75b189c0b7f8dd2f7d310db71",
+      "env_commit_sha": "0e4da0aea238f4a75b189c0b7f8dd2f7d310db71",
+      "head_commit_sha": "0de696720eb60d328c337ee0076631875be59388",
+      "source_files": [
+        "starlette/config.py"
+      ],
+      "test_files": [
+        "tests/test_config.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "starlette/config.py",
+            "tests/test_config.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "starlette/config.py",
+            "tests/test_config.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "starlette/config.py",
+            "tests/test_config.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_config.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

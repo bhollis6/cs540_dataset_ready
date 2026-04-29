@@ -1,0 +1,14 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-25931",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "e3d1f9ac39e4bf0f31430e779acc50fb05fe1b64",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "sklearn/ensemble/_iforest.py",
+      "sklearn/ensemble/tests/test_iforest.py"
+    ]
+  }
+}

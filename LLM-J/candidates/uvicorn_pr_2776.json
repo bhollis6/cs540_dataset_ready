@@ -1,0 +1,28 @@
+{
+  "candidate_id": "uvicorn_pr_2776",
+  "repo": "encode/uvicorn",
+  "pr_number": 2776,
+  "title": "Fix typo: error_occured -> error_occurred",
+  "description": "<!-- Thanks for contributing to Uvicorn! \ud83d\udc9a\r\nGiven this is a project maintained by volunteers, please read this template to not waste your time, or ours! \ud83e\udd72 -->\r\n\r\n# Summary\r\n\r\nFix typo in variable name: `error_occured` \u2192 `error_occurred` in `LifespanOn` class.\r\n\r\n## Changes\r\n- `uvicorn/lifespan/on.py`: Fixed attribute name\r\n- `tests/test_lifespan.py`: Updated test assertions\r\n\r\n## Note\r\nThis changes a public attribute name on `LifespanOn` class.\r\nI searched for external usage but couldn't find any code outside of uvicorn that accesses this attribute. However, please let me know if you have any concerns about backward compatibility.\r\n\r\n# Checklist\r\n\r\n- [x] I understand that this PR may be closed in case there was no previous discussion. (This doesn't apply to typos!)\r\n- [x] I've added a test for each change that was introduced, and I tried as much as possible to make a single atomic change.\r\n- [x] I've updated the documentation accordingly.",
+  "patch_diff": "diff --git a/uvicorn/lifespan/on.py b/uvicorn/lifespan/on.py\nindex 766790a39..71ac39472 100644\n--- a/uvicorn/lifespan/on.py\n+++ b/uvicorn/lifespan/on.py\n@@ -38,7 +38,7 @@ def __init__(self, config: Config) -> None:\n         self.startup_event = asyncio.Event()\n         self.shutdown_event = asyncio.Event()\n         self.receive_queue: Queue[LifespanReceiveMessage] = asyncio.Queue()\n-        self.error_occured = False\n+        self.error_occurred = False\n         self.startup_failed = False\n         self.shutdown_failed = False\n         self.should_exit = False\n@@ -55,21 +55,21 @@ async def startup(self) -> None:\n         await self.receive_queue.put(startup_event)\n         await self.startup_event.wait()\n \n-        if self.startup_failed or (self.error_occured and self.config.lifespan == \"on\"):\n+        if self.startup_failed or (self.error_occurred and self.config.lifespan == \"on\"):\n             self.logger.error(\"Application startup failed. Exiting.\")\n             self.should_exit = True\n         else:\n             self.logger.info(\"Application startup complete.\")\n \n     async def shutdown(self) -> None:\n-        if self.error_occured:\n+        if self.error_occurred:\n             return\n         self.logger.info(\"Waiting for application shutdown.\")\n         shutdown_event: LifespanShutdownEvent = {\"type\": \"lifespan.shutdown\"}\n         await self.receive_queue.put(shutdown_event)\n         await self.shutdown_event.wait()\n \n-        if self.shutdown_failed or (self.error_occured and self.config.lifespan == \"on\"):\n+        if self.shutdown_failed or (self.error_occurred and self.config.lifespan == \"on\"):\n             self.logger.error(\"Application shutdown failed. Exiting.\")\n             self.should_exit = True\n         else:\n@@ -86,7 +86,7 @@ async def main(self) -> None:\n             await app(scope, self.receive, self.send)\n         except BaseException as exc:\n             self.asgi = None\n-            self.error_occured = True\n+            self.error_occurred = True\n             if self.startup_failed or self.shutdown_failed:\n                 return\n             if self.config.lifespan == \"auto\":\n",
+  "test_diff": "diff --git a/tests/test_lifespan.py b/tests/test_lifespan.py\nindex 89368fa98..f656a8813 100644\n--- a/tests/test_lifespan.py\n+++ b/tests/test_lifespan.py\n@@ -98,7 +98,7 @@ async def test():\n         lifespan = LifespanOn(config)\n \n         await lifespan.startup()\n-        assert lifespan.error_occured\n+        assert lifespan.error_occurred\n         assert not lifespan.should_exit\n         await lifespan.shutdown()\n \n@@ -117,7 +117,7 @@ async def test():\n         lifespan = LifespanOn(config)\n \n         await lifespan.startup()\n-        assert lifespan.error_occured\n+        assert lifespan.error_occurred\n         assert lifespan.should_exit\n         await lifespan.shutdown()\n \n@@ -143,7 +143,7 @@ async def test():\n \n         await lifespan.startup()\n         assert lifespan.startup_failed\n-        assert lifespan.error_occured is raise_exception\n+        assert lifespan.error_occurred is raise_exception\n         assert lifespan.should_exit\n         await lifespan.shutdown()\n \n@@ -171,7 +171,7 @@ async def test():\n \n         await lifespan.startup()\n         assert not lifespan.startup_failed\n-        assert not lifespan.error_occured\n+        assert not lifespan.error_occurred\n         assert not lifespan.should_exit\n         await lifespan.shutdown()\n \n@@ -228,7 +228,7 @@ async def test():\n         assert not lifespan.startup_failed\n         await lifespan.shutdown()\n         assert lifespan.shutdown_failed\n-        assert lifespan.error_occured is raise_exception\n+        assert lifespan.error_occurred is raise_exception\n         assert lifespan.should_exit\n \n     loop = asyncio.new_event_loop()\n",
+  "files_changed": [
+    "tests/test_lifespan.py",
+    "uvicorn/lifespan/on.py"
+  ],
+  "source_files": [
+    "uvicorn/lifespan/on.py"
+  ],
+  "test_files": [
+    "tests/test_lifespan.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 10,
+  "lines_removed": 10,
+  "has_test_changes": true,
+  "merge_commit_sha": "ae56d07af7cec7d5faad28d1716099a1007524c9",
+  "base_commit_sha": "9ff60042a53cd1bbfd5580ab0a91ea2d1d8f2f8c",
+  "env_commit_sha": "9ff60042a53cd1bbfd5580ab0a91ea2d1d8f2f8c",
+  "head_commit_sha": "38d70721fc0cb2a07894053e88b1b12542ee5865",
+  "merged_at": "2025-12-25T08:26:05Z"
+}

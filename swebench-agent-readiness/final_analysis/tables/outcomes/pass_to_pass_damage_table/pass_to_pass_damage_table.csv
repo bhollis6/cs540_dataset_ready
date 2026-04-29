@@ -1,0 +1,12 @@
+repo,instance_id,condition,clean_success,degraded_success,fail_to_pass_failed_count_delta,pass_to_pass_failed_count_delta,total_tokens_corrected_delta,changed_file_count_delta,comparison_path
+astropy/astropy,astropy__astropy-14365,comments_docstrings,False,False,0,8,126758,0,archive/provenance/dev/active/bootstrap-2026-04-22/astropy_astropy-14365_comments_docstrings_rep_2_oracle_comparison.json
+matplotlib/matplotlib,matplotlib__matplotlib-20676,naming,False,False,0,32,426868,20,archive/provenance/dev/active/bootstrap-2026-04-22/matplotlib_matplotlib-20676_naming_rep_0_oracle_comparison.json
+matplotlib/matplotlib,matplotlib__matplotlib-23412,naming,True,False,1,21,1302387,34,archive/provenance/dev/active/bootstrap-2026-04-22/matplotlib_matplotlib-23412_naming_rep_0_oracle_comparison.json
+psf/requests,psf__requests-1724,naming,True,False,0,1,170381,1,archive/provenance/dev/active/bootstrap-2026-04-22/psf_requests-1724_naming_rep_0_oracle_comparison.json
+psf/requests,psf__requests-1921,naming,True,False,1,4,87581,0,archive/provenance/dev/active/bootstrap-2026-04-22/psf_requests-1921_naming_rep_0_oracle_comparison.json
+pydata/xarray,pydata__xarray-3677,naming,True,False,0,8,271338,14,archive/provenance/dev/active/bootstrap-2026-04-22/pydata_xarray-3677_naming_rep_0_oracle_comparison.json
+pydata/xarray,pydata__xarray-4629,naming,True,False,0,1,194022,0,archive/provenance/dev/active/bootstrap-2026-04-22/pydata_xarray-4629_naming_rep_0_oracle_comparison.json
+pydata/xarray,pydata__xarray-4966,naming,True,False,4,17,471093,2,archive/provenance/dev/active/bootstrap-2026-04-22/pydata_xarray-4966_naming_rep_0_oracle_comparison.json
+scikit-learn/scikit-learn,scikit-learn__scikit-learn-25931,naming,True,False,0,1,244183,0,archive/provenance/dev/active/bootstrap-2026-04-22/scikit-learn_scikit-learn-25931_naming_rep_0_oracle_comparison.json
+sympy/sympy,sympy__sympy-11618,naming,True,False,0,2,-5543,3,archive/provenance/dev/active/bootstrap-2026-04-22/sympy_sympy-11618_naming_rep_0_oracle_comparison.json
+sympy/sympy,sympy__sympy-12419,naming,True,False,1,7,202821,4,archive/provenance/dev/active/bootstrap-2026-04-22/sympy_sympy-12419_naming_rep_0_oracle_comparison.json

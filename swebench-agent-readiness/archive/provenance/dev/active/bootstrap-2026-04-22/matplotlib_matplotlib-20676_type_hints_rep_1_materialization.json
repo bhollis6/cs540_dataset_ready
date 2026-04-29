@@ -1,0 +1,14 @@
+{
+  "instance_id": "matplotlib__matplotlib-20676",
+  "repo": "matplotlib/matplotlib",
+  "base_commit": "6786f437df54ca7780a047203cbcfaa1db8dc542",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "lib/matplotlib/widgets.py",
+      "lib/matplotlib/tests/test_widgets.py"
+    ]
+  }
+}

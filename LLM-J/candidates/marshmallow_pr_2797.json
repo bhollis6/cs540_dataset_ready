@@ -1,0 +1,29 @@
+{
+  "candidate_id": "marshmallow_pr_2797",
+  "repo": "marshmallow-code/marshmallow",
+  "pr_number": 2797,
+  "title": "Handle case with multiple post_load methods where one appends to data",
+  "description": "closes https://github.com/marshmallow-code/marshmallow/issues/1755",
+  "patch_diff": "diff --git a/CHANGELOG.rst b/CHANGELOG.rst\nindex f9544f046..3037a01c6 100644\n--- a/CHANGELOG.rst\n+++ b/CHANGELOG.rst\n@@ -14,6 +14,9 @@ Bug fixes:\n \n - Respect ``data_key`` when schema validators raise a `ValidationError <marshmallow.exceptions.ValidationError>` \n   with a ``field_name`` argument (:issue:`2170`). Thanks :user:`matejsp` for reporting.\n+- Correctly handle multiple `@post_load <marshmallow.post_load>` methods where one method appends to\n+  the data and another passes ``pass_original=True`` (:issue:`1755`).\n+  Thanks :user:`ghostwheel42` for reporting.\n \n Documentation:\n \ndiff --git a/src/marshmallow/schema.py b/src/marshmallow/schema.py\nindex 44c15d5b6..828bb1f01 100644\n--- a/src/marshmallow/schema.py\n+++ b/src/marshmallow/schema.py\n@@ -15,6 +15,7 @@\n from abc import ABCMeta\n from collections import OrderedDict, defaultdict\n from collections.abc import Mapping\n+from itertools import zip_longest\n \n from marshmallow import base, class_registry, types\n from marshmallow import fields as ma_fields\n@@ -1291,7 +1292,7 @@ def _invoke_processors(\n                 if pass_original:\n                     data = [\n                         processor(item, original, many=many, **kwargs)\n-                        for item, original in zip(data, original_data)\n+                        for item, original in zip_longest(data, original_data)\n                     ]\n                 else:\n                     data = [processor(item, many=many, **kwargs) for item in data]\n",
+  "test_diff": "diff --git a/tests/test_decorators.py b/tests/test_decorators.py\nindex 0a3054051..ca5d2e29a 100644\n--- a/tests/test_decorators.py\n+++ b/tests/test_decorators.py\n@@ -925,3 +925,26 @@ class ExampleSchema(Schema):\n \n     schema = ExampleSchema()\n     assert schema.load(data) == data\n+\n+\n+# https://github.com/marshmallow-code/marshmallow/issues/1755\n+def test_post_load_method_that_appends_to_data():\n+    class MySchema(Schema):\n+        foo = fields.Int()\n+\n+        @post_load(pass_many=True)\n+        def append_to_data(self, data, **kwargs):\n+            data.append({\"foo\": 42})\n+            return data\n+\n+        @post_load(pass_many=False, pass_original=True)\n+        def noop(self, data, original_data, **kwargs):\n+            if original_data is None:  # added item\n+                assert data == {\"foo\": 42}\n+            else:\n+                assert original_data == {\"foo\": 24}\n+                assert data == {\"foo\": 24}\n+            return data\n+\n+    schema = MySchema(many=True)\n+    assert schema.load([{\"foo\": 24}]) == [{\"foo\": 24}, {\"foo\": 42}]\n",
+  "files_changed": [
+    "CHANGELOG.rst",
+    "src/marshmallow/schema.py",
+    "tests/test_decorators.py"
+  ],
+  "source_files": [
+    "src/marshmallow/schema.py"
+  ],
+  "test_files": [
+    "tests/test_decorators.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 28,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "94234acd1a98e5fd8b21ba3e8f78ac87a4996949",
+  "base_commit_sha": "0f073e6413f3ace8d44e3c7be55df02b696eb30f",
+  "env_commit_sha": "0f073e6413f3ace8d44e3c7be55df02b696eb30f",
+  "head_commit_sha": "843113e9ee77dcc5f8cd2fb202b98ced420ce447",
+  "merged_at": "2025-01-20T02:01:35Z"
+}

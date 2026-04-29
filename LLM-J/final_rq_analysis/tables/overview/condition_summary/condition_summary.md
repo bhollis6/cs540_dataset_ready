@@ -1,0 +1,7 @@
+| condition | n | success | fail | success_rate | wilson_ci_low | wilson_ci_high | risk_difference_vs_clean | risk_ratio_vs_clean | odds_ratio_vs_clean | hidden_bug_fix_only_failures | regression_only_failures | hidden_bug_fix_and_regression_failures | uncategorized_scoring_failures | hidden_bug_fix_test_failures_total | previously_passing_test_failures_total | mean_total_duration_seconds | median_total_duration_seconds | mean_total_tokens_including_cache | median_total_tokens_including_cache | mean_edits_applied | mean_files_opened_before_first_edit | mean_exploration_efficiency |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| clean | 30 | 21 | 9 | 0.7 | 0.5212 | 0.8334 | 0.0 | 1.0 | 1.0 | 7 | 2 | 0 | 0 | 48 | 3 | 296.94 | 256.99 | 975795.83 | 837174.0 | 3.3 | 5.23 | 0.6725 |
+| naming | 30 | 14 | 16 | 0.4667 | 0.3023 | 0.6386 | -0.2333 | 0.6667 | 0.3883 | 7 | 5 | 4 | 0 | 60 | 542 | 332.18 | 305.46 | 1290318.3 | 1148217.0 | 3.07 | 4.83 | 0.655 |
+| type_hints | 30 | 21 | 9 | 0.7 | 0.5212 | 0.8334 | 0.0 | 1.0 | 1.0 | 7 | 2 | 0 | 0 | 55 | 3 | 281.29 | 253.38 | 1019786.63 | 905692.5 | 3.13 | 4.93 | 0.6863 |
+| comments_docstrings | 30 | 21 | 9 | 0.7 | 0.5212 | 0.8334 | 0.0 | 1.0 | 1.0 | 9 | 0 | 0 | 0 | 55 | 0 | 274.63 | 269.64 | 1017549.7 | 792728.5 | 2.77 | 4.93 | 0.6957 |
+| remove_tests | 30 | 24 | 6 | 0.8 | 0.6269 | 0.905 | 0.1 | 1.1429 | 1.6655 | 5 | 1 | 0 | 0 | 51 | 2 | 277.87 | 235.76 | 909275.1 | 779354.0 | 2.67 | 5.1 | 0.5336 |

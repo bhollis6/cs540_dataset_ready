@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "sympy__sympy-12419",
+  "repo": "sympy/sympy",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "PYTHONWARNINGS='ignore::UserWarning,ignore::SyntaxWarning' bin/test -C --verbose sympy/matrices/expressions/tests/test_matexpr.py",
+  "command_returncode": 0,
+  "duration_seconds": 1.875,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "test_Identity"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 25,
+  "pass_to_pass_passed": [
+    "test_shape",
+    "test_matexpr",
+    "test_subs",
+    "test_ZeroMatrix",
+    "test_ZeroMatrix_doit",
+    "test_Identity_doit",
+    "test_addition",
+    "test_multiplication",
+    "test_MatPow",
+    "test_MatrixSymbol",
+    "test_dense_conversion",
+    "test_free_symbols",
+    "test_zero_matmul",
+    "test_matadd_simplify",
+    "test_matmul_simplify",
+    "test_invariants",
+    "test_indexing",
+    "test_single_indexing",
+    "test_MatrixElement_commutative",
+    "test_MatrixSymbol_determinant",
+    "test_MatrixElement_diff",
+    "test_MatrixElement_doit",
+    "test_identity_powers",
+    "test_Zero_power",
+    "test_matrixelement_diff"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "sympy/matrices/expressions/matexpr.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

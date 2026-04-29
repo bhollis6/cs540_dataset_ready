@@ -1,0 +1,390 @@
+{
+  "repo": "encode/uvicorn",
+  "selection_timestamp": "2026-04-27T05:12:03.997422+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 10,
+  "accepted": 7,
+  "review": 3,
+  "rejected": 0,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "uvicorn_pr_2829",
+      "pr_number": 2829,
+      "total_score": 24,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 5,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Excellent experimental candidate. The PR fixes a genuine, well-documented protocol bug with a focused, symmetric change across two parallel implementations, accompanied by directly-validating tests that serve as clear pass/fail signals. The code is core ASGI protocol logic rich in type hints, descriptive naming, and meaningful state variables \u2014 all high-value mutation targets. The description is comprehensive enough to serve as a standalone agent task prompt. Complexity is in the ideal sweet spot: requires real protocol understanding but the solution is contained and verifiable.",
+      "merge_commit_sha": "587042d68ff6c813ec0d8cfafaa820ebe7229d23",
+      "base_commit_sha": "c9a75fb67b2e969253a41ef4ad447e013eee879e",
+      "env_commit_sha": "c9a75fb67b2e969253a41ef4ad447e013eee879e",
+      "head_commit_sha": "76200e8610030a1847973157d68657384e2b2bf9",
+      "source_files": [
+        "uvicorn/protocols/http/h11_impl.py",
+        "uvicorn/protocols/http/httptools_impl.py"
+      ],
+      "test_files": [
+        "tests/protocols/test_http.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/protocols/test_http.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2888",
+      "pr_number": 2888,
+      "total_score": 24,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 5,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Excellent experiment candidate. The PR is a single, clearly-bounded feature addition to a specific protocol implementation, backed by targeted integration tests that produce clear pass/fail signals. The source code is rich with type annotations, descriptive identifiers, and explanatory comments \u2014 all properties the experiment plans to degrade. The description is detailed enough to serve directly as an agent task prompt. Complexity sits squarely in the 3-4 sweet spot: non-trivial asyncio state machine work, but tightly scoped enough that codebase quality degradation should produce measurable differences in agent performance.",
+      "merge_commit_sha": "029be08867fe899cde6fd31a3ba75fffca7bd9ae",
+      "base_commit_sha": "8d397c73191b49c6d5280098d7c09dbe474e00bf",
+      "env_commit_sha": "8d397c73191b49c6d5280098d7c09dbe474e00bf",
+      "head_commit_sha": "30599593274c5abf472b1b0cba8cf8162f7f7813",
+      "source_files": [
+        "uvicorn/protocols/websockets/websockets_sansio_impl.py"
+      ],
+      "test_files": [
+        "tests/protocols/test_websocket.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/protocols/test_websocket.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/protocols/test_websocket.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/protocols/test_websocket.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/protocols/test_websocket.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2903",
+      "pr_number": 2903,
+      "total_score": 22,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality experimental candidate. It is tightly scoped to a single middleware file, contains rich test coverage with parametrized edge-case matrices, is built on core application code with type hints and descriptive names that degrade meaningfully, has a sufficiently clear description, and sits at moderate complexity \u2014 requiring real understanding of proxy trust models and address parsing without being overwhelming. Strong 5/5 on three dimensions; slight deductions only for clarity (bug not stated explicitly) and complexity (not as deep as possible, but that's appropriate).",
+      "merge_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+      "base_commit_sha": "77843e06dce51c3718292bc14737307d8f4433c0",
+      "env_commit_sha": "77843e06dce51c3718292bc14737307d8f4433c0",
+      "head_commit_sha": "67842ad8163bb9c6ce121ced4d6227d3acc37a81",
+      "source_files": [
+        "uvicorn/middleware/proxy_headers.py"
+      ],
+      "test_files": [
+        "tests/middleware/test_proxy_headers.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/middleware/test_proxy_headers.py",
+            "uvicorn/middleware/proxy_headers.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/middleware/test_proxy_headers.py",
+            "uvicorn/middleware/proxy_headers.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/middleware/test_proxy_headers.py",
+            "uvicorn/middleware/proxy_headers.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/middleware/test_proxy_headers.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2742",
+      "pr_number": 2742,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A high-quality, tightly scoped bug fix for asyncio context variable pollution across ASGI runs. The test is exemplary \u2014 it directly exercises the triggering condition (HIGH_WATER_LIMIT body pause) and would serve as a clean pass/fail signal. The main weakness is the sparse PR description, but the inline comments and test docstring provide enough context for reconstruction. Well-suited for the experiment: focused scope, meaningful code surface, non-trivial but not overwhelming complexity.",
+      "merge_commit_sha": "d94bf28743de545d2d4b150f022203a5178cb705",
+      "base_commit_sha": "8ae0bcbecb0a655789abf0c2dd4200848fc68a30",
+      "env_commit_sha": "8ae0bcbecb0a655789abf0c2dd4200848fc68a30",
+      "head_commit_sha": "3a280197f331bd7a9343052b7f34fefaa6a05b38",
+      "source_files": [
+        "uvicorn/protocols/http/h11_impl.py",
+        "uvicorn/protocols/http/httptools_impl.py"
+      ],
+      "test_files": [
+        "tests/test_server.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/test_server.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/test_server.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/test_server.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_server.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2769",
+      "pr_number": 2769,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A clean, well-scoped bug fix ensuring WebSocket transports are always closed after ASGI application return, applied consistently across three protocol implementations. Strong test coverage with a direct pass/fail signal. The main weakness is the sparse PR description requiring code reading to fully understand. Overall a good experimental candidate: focused, testable, in core application code with type annotations and descriptive naming that would expose meaningful signals under mutation.",
+      "merge_commit_sha": "5692dfc416f9e65aee5028e55d119313d8d3ab0f",
+      "base_commit_sha": "4194764a26824e5d8ddd1fa673df78dff82966e0",
+      "env_commit_sha": "4194764a26824e5d8ddd1fa673df78dff82966e0",
+      "head_commit_sha": "1804aee354fbc059087b7afc6cf8ef24e73a559b",
+      "source_files": [
+        "uvicorn/protocols/websockets/websockets_impl.py",
+        "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+        "uvicorn/protocols/websockets/wsproto_impl.py"
+      ],
+      "test_files": [
+        "tests/protocols/test_websocket.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/protocols/test_websocket.py",
+            "uvicorn/protocols/websockets/websockets_impl.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+            "uvicorn/protocols/websockets/wsproto_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/protocols/test_websocket.py",
+            "uvicorn/protocols/websockets/websockets_impl.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+            "uvicorn/protocols/websockets/wsproto_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/protocols/test_websocket.py",
+            "uvicorn/protocols/websockets/websockets_impl.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+            "uvicorn/protocols/websockets/wsproto_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/protocols/test_websocket.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2824",
+      "pr_number": 2824,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 3,
+        "clarity": 5,
+        "complexity": 2
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a well-described, tightly scoped bug fix with excellent test coverage. The description is clear enough to serve as a direct agent prompt, and the tests provide strong pass/fail signal. However, the actual fix is a one-line regex edit with essentially no meaningful mutation surface (no type hints, no named variables, no docstrings on the changed line), and the implementation complexity is very low \u2014 an agent that understands regex escaping will solve it trivially. The PR is high quality but too simple and too thin on mutation-relevant code to produce meaningful experimental signal across degradation conditions.",
+      "merge_commit_sha": "1fa697651bacf10d72f74de104ead814ce6fcdc0",
+      "base_commit_sha": "59ec1de7a4f07afbd139812f033f3af8b784de74",
+      "env_commit_sha": "59ec1de7a4f07afbd139812f033f3af8b784de74",
+      "head_commit_sha": "0fa82bdd97b01c7d9b3eef5bc84c94f5b94f1e99",
+      "source_files": [
+        "uvicorn/protocols/http/httptools_impl.py"
+      ],
+      "test_files": [
+        "tests/protocols/test_http.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/protocols/test_http.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2905",
+      "pr_number": 2905,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A tightly scoped, well-tested feature addition that broadens `log_config` to accept `pathlib.Path` objects. The PR is clear, focused, and contains meaningful Python application code with type annotations and a direct test, making it a solid candidate for the degradation experiment. Complexity is in the desirable moderate range.",
+      "merge_commit_sha": "70f247f9ee67f488f3ebf22f2fb391b9e3d69d78",
+      "base_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+      "env_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+      "head_commit_sha": "8a415f76ec179264db0fdae03628c57ca0a56d95",
+      "source_files": [
+        "uvicorn/config.py",
+        "uvicorn/main.py"
+      ],
+      "test_files": [
+        "tests/test_config.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/test_config.py",
+            "uvicorn/config.py",
+            "uvicorn/main.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/test_config.py",
+            "uvicorn/config.py",
+            "uvicorn/main.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/test_config.py",
+            "uvicorn/config.py",
+            "uvicorn/main.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_config.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

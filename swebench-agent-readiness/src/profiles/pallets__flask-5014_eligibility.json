@@ -1,0 +1,114 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "pallets__flask-5014",
+  "repo": "pallets/flask",
+  "base_commit": "7ee9ceb71e868944a46e1ff00b506772a53a4f1d",
+  "changed_source_files": [
+    "src/flask/blueprints.py"
+  ],
+  "changed_test_files": [
+    "tests/test_blueprints.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "The official Verified row exposes a bounded single-file oracle with one direct FAIL_TO_PASS target and 59 PASS_TO_PASS checks in the same blueprint test module.",
+    "evidence": [
+      "The official snapshot records 1 FAIL_TO_PASS target: tests/test_blueprints.py::test_empty_name_not_allowed.",
+      "The official snapshot records 59 PASS_TO_PASS tests in tests/test_blueprints.py.",
+      "The official eval command is `pytest -rA tests/test_blueprints.py`."
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "NO_GO",
+      "signal": {
+        "level": "low",
+        "rationale": "The touched historical Flask surface is largely untyped, so a type-hint degradation would remove little useful information.",
+        "evidence": [
+          "The changed `Blueprint.__init__` region in src/flask/blueprints.py does not rely on type annotations.",
+          "The changed test file is also untyped."
+        ]
+      },
+      "fairness_notes": [
+        "Do not force a type-hint degradation onto an untyped historical Flask surface."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "REVIEW",
+      "signal": {
+        "level": "medium",
+        "rationale": "Naming matters because the issue is explicitly about the `name` argument, but aggressive renaming could become unfair by obscuring the core problem statement itself.",
+        "evidence": [
+          "The bug fix adds a ValueError specifically guarding the `name` parameter.",
+          "The target regression test is literally named test_empty_name_not_allowed."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve public Blueprint API names if a naming condition is tried later."
+      ],
+      "blockers": [
+        "Need a conservative renaming policy before using naming on a task whose semantics hinge directly on the `name` argument."
+      ]
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "medium",
+        "rationale": "The changed file is documentation-rich overall, so removing comments and docstrings still strips meaningful local guidance even though the exact fix is a short guard in Blueprint initialization.",
+        "evidence": [
+          "src/flask/blueprints.py contains class and method docstrings around Blueprint behavior and initialization semantics.",
+          "The fix lives in the Blueprint constructor, where parameter and behavior documentation remain relevant context for the non-empty-name constraint."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve executable strings and literals; remove only actual comments and docstrings."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The changed blueprint test file contains the direct empty-name regression while the oracle still replays the full official patch and bounded blueprint suite, making remove_tests a fair stronger-information condition.",
+        "evidence": [
+          "The official test patch adds tests/test_blueprints.py::test_empty_name_not_allowed.",
+          "The official oracle stays bounded to tests/test_blueprints.py with 59 PASS_TO_PASS checks."
+        ]
+      },
+      "fairness_notes": [
+        "If remove_tests is used, delete only tests/test_blueprints.py from the degraded workspace."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": "comments_docstrings",
+  "decision_summary": "Choose pallets__flask-5014 as the fastest credible third oracle-backed repo because it has a lightweight Python 3.11 environment, a bounded single-file pytest oracle, and a compact Blueprint source/test surface that supports both comments_docstrings and remove_tests.",
+  "evidence_sources": [
+    {
+      "type": "official_task_snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/third_task_candidate_pallets__flask-5014_snapshot.json",
+      "note": "Local snapshot fetched from the official SWE-bench Verified dataset."
+    }
+  ],
+  "open_questions": [
+    "Confirm that the Flask host-local env prep is materially lighter than the scientific-stack tasks.",
+    "Decide whether to run remove_tests on Flask immediately after the first comments_docstrings pair if time allows."
+  ],
+  "notes": [
+    "This task is selected to reach a third oracle-backed repo result quickly for the initial RQ1 readout."
+  ]
+}

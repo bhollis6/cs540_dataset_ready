@@ -1,0 +1,7 @@
+| metric_x | metric_y | pearson_r | spearman_r | n |
+| --- | --- | --- | --- | --- |
+| bootstrap_command_count_delta | execution_command_count_delta | 0.041 | 0.117 | 128 |
+| first_edit_event_index_delta | total_tokens_corrected_delta | 0.376 | 0.459 | 128 |
+| bootstrap_command_count_delta | total_tokens_corrected_delta | 0.371 | 0.447 | 128 |
+| execution_test_command_count_delta | total_failed_test_command_count_delta | 0.607 | 0.553 | 128 |
+| changed_file_count_delta | total_tokens_corrected_delta | 0.299 | 0.098 | 128 |

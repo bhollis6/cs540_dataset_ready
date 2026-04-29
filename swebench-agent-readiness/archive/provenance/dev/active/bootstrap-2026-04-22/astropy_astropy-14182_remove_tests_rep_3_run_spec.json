@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "astropy__astropy-14182",
+  "repo": "astropy/astropy",
+  "harness": "codex-cli",
+  "integration_strategy": "pypi_dependency",
+  "eligibility_path": "<LOCAL_SWEBENCH_RUN_ROOT>/src/profiles/astropy__astropy-14182_eligibility.json",
+  "chosen_condition": "remove_tests",
+  "clean": {
+    "condition": "clean",
+    "replication_index": 3,
+    "run_root": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3",
+    "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/workspace",
+    "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/oracle_workspace",
+    "logs_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/logs",
+    "metadata_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/metadata.json",
+    "prompt_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/issue_prompt.md",
+    "result_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/result.json",
+    "metrics_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/clean/rep_3/metrics.json",
+    "degradation_targets": {}
+  },
+  "degraded": {
+    "condition": "remove_tests",
+    "replication_index": 3,
+    "run_root": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3",
+    "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/workspace",
+    "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/oracle_workspace",
+    "logs_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/logs",
+    "metadata_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/metadata.json",
+    "prompt_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/issue_prompt.md",
+    "result_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/result.json",
+    "metrics_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/remove_tests/rep_3/metrics.json",
+    "degradation_targets": {
+      "delete_files": [
+        "astropy/io/ascii/tests/test_rst.py"
+      ],
+      "preserve_files": []
+    }
+  },
+  "comparison_artifact_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/astropy__astropy-14182/codex-cli/comparison.json"
+}

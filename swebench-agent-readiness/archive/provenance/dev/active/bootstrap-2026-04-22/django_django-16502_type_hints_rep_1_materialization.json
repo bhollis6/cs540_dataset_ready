@@ -1,0 +1,14 @@
+{
+  "instance_id": "django__django-16502",
+  "repo": "django/django",
+  "base_commit": "246eb4836a6fb967880f838aa0d22ecfdca8b6f1",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "django/core/servers/basehttp.py",
+      "tests/servers/test_basehttp.py"
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pytest-dev__pytest-7432",
+  "repo": "pytest-dev/pytest",
+  "harness": "codex-cli",
+  "chosen_condition": "remove_tests",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 8.378,
+    "changed_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_skipping.py"
+    ]
+  },
+  "degraded": {
+    "condition": "remove_tests",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 8.505,
+    "changed_files": [
+      "src/_pytest/skipping.py",
+      "testing/test_skipping.py",
+      "testing/test_terminal.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 0.12700000000000067
+  },
+  "notes": [
+    "remove_tests deleted testing/test_skipping.py from the degraded workspace before the Codex run.",
+    "Rep 4 again split the regression surface: clean used testing/test_skipping.py while degraded used testing/test_terminal.py."
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 4,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/clean/rep_4/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pytest-dev__pytest-7432/codex-cli/remove_tests/rep_4/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py",
+        "testing/test_terminal.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/_pytest/skipping.py",
+        "testing/test_skipping.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "testing/test_terminal.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 279337,
+      "cached_input_tokens": 254080,
+      "output_tokens": 3720,
+      "total_tokens": 283057
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "src/_pytest/skipping.py",
+        "testing/test_terminal.py",
+        "testing/test_reports.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "src/_pytest/skipping.py",
+        "testing/test_terminal.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "testing/test_reports.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 294214,
+      "cached_input_tokens": 273024,
+      "output_tokens": 4905,
+      "total_tokens": 299119
+    }
+  }
+}

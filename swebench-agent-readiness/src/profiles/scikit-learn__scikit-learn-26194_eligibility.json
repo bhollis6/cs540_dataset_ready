@@ -1,0 +1,120 @@
+{
+  "schema_version": "0.1.0",
+  "dataset_name": "SWE-bench/SWE-bench_Verified",
+  "dataset_split": "test",
+  "instance_id": "scikit-learn__scikit-learn-26194",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "e886ce4e1444c61b865e7839c9cff5464ee20ace",
+  "changed_source_files": [
+    "sklearn/metrics/_ranking.py"
+  ],
+  "changed_test_files": [
+    "sklearn/metrics/tests/test_ranking.py"
+  ],
+  "changed_test_support_files": [],
+  "regression_surface_strength": "high",
+  "test_signal": {
+    "level": "high",
+    "rationale": "The official Verified row exposes 2 FAIL_TO_PASS targets and 186 PASS_TO_PASS tests behind a bounded file-scoped oracle, which is stronger than the Astropy option while preserving a compact task surface.",
+    "evidence": [
+      "The official snapshot records 2 FAIL_TO_PASS tests.",
+      "The official snapshot records 186 PASS_TO_PASS tests.",
+      "The official eval command is `pytest -rA sklearn/metrics/tests/test_ranking.py`."
+    ]
+  },
+  "conditions": {
+    "type_hints": {
+      "condition": "type_hints",
+      "status": "NO_GO",
+      "signal": {
+        "level": "low",
+        "rationale": "The touched ranking logic is effectively untyped, so a type-hint condition would remove little useful information.",
+        "evidence": [
+          "The historical `roc_curve` signature in `_ranking.py` has no type annotations.",
+          "The changed test file is also untyped."
+        ]
+      },
+      "fairness_notes": [
+        "Do not add a type-hint condition to a mostly untyped historical surface."
+      ],
+      "blockers": []
+    },
+    "naming": {
+      "condition": "naming",
+      "status": "REVIEW",
+      "signal": {
+        "level": "medium",
+        "rationale": "Threshold semantics matter here, but aggressive renaming could become unfair because the task hinges on numerically meaningful identifiers such as `thresholds`, `fpr`, and `tpr`.",
+        "evidence": [
+          "The issue changes the meaning of `thresholds[0]` from `max(y_score) + 1` to `np.inf`.",
+          "The new regression test is explicitly about probability-estimate thresholds exceeding 1."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve public metric names and mathematical abbreviations if naming is tried later."
+      ],
+      "blockers": [
+        "Need a naming dry-run before using this condition on scikit-learn."
+      ]
+    },
+    "comments_docstrings": {
+      "condition": "comments_docstrings",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The touched source diff sits directly inside the `roc_curve` docstring and adjacent explanatory notes, making comments_docstrings a strong and very fair information-removal condition.",
+        "evidence": [
+          "The historical `roc_curve` docstring documents the meaning of `thresholds[0]` immediately around the changed lines.",
+          "The source file also contains nearby explanatory comments about dropping thresholds and score ordering."
+        ]
+      },
+      "fairness_notes": [
+        "Preserve numeric literals and array expressions; remove only actual docstrings and comments."
+      ],
+      "blockers": []
+    },
+    "remove_tests": {
+      "condition": "remove_tests",
+      "status": "GO",
+      "signal": {
+        "level": "high",
+        "rationale": "The changed ranking tests provide direct guidance on the threshold semantics while the oracle still keeps a broad PASS_TO_PASS slice in the same file.",
+        "evidence": [
+          "The official test patch updates existing threshold assertions and adds a focused non-regression test for probability estimates.",
+          "The official snapshot records 186 PASS_TO_PASS tests in the bounded ranking-test file."
+        ]
+      },
+      "fairness_notes": [
+        "If remove-tests is used later, only remove the changed visible ranking test file."
+      ],
+      "blockers": []
+    }
+  },
+  "overall_status": "GO",
+  "eligible_conditions": [
+    "comments_docstrings",
+    "remove_tests"
+  ],
+  "chosen_pilot_condition": "comments_docstrings",
+  "decision_summary": "Choose scikit-learn__scikit-learn-26194 as the new oracle-backed second task because it keeps the bounded file-scoped oracle, improves PASS_TO_PASS coverage, and has a very strong comments_docstrings surface in the touched roc_curve documentation.",
+  "evidence_sources": [
+    {
+      "type": "official_task_snapshot",
+      "path": "archive/provenance/archive/provenance/dev/active/bootstrap-2026-04-22/second_task_candidate_scikit-learn__scikit-learn-26194_snapshot.json",
+      "note": "Local snapshot fetched from the official SWE-bench Verified dataset."
+    },
+    {
+      "type": "inspection_checkout",
+      "path": "runs/scikit-learn__scikit-learn-26194/inspection/clean",
+      "note": "Historical checkout used to verify the touched roc_curve docstring and nearby explanatory comments."
+    }
+  ],
+  "open_questions": [
+    "Confirm that the host-local scikit-learn editable install is materially lighter than the blocked Astropy path in this environment.",
+    "Decide whether the second sklearn point should be a replication or remove_tests once the first comments_docstrings pair is scored."
+  ],
+  "notes": [
+    "This record replaces the earlier Astropy task-two plan for the oracle-backed matrix.",
+    "Astropy is retained as a blocked candidate because its historical editable build failed inside compiled extensions on this host."
+  ]
+}

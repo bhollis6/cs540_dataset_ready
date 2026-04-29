@@ -1,0 +1,108 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "django__django-16502",
+  "repo": "django/django",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 0.231,
+    "changed_files": [
+      "django/core/servers/basehttp.py",
+      "tests/servers/test_basehttp.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 1,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 0.229,
+    "changed_files": [
+      "django/core/servers/basehttp.py",
+      "django/middleware/http.py",
+      "docs/_theme/djangodocs-epub/static/docicons-behindscenes.png",
+      "docs/_theme/djangodocs-epub/static/docicons-note.png",
+      "docs/_theme/djangodocs-epub/static/docicons-philosophy.png",
+      "docs/_theme/djangodocs-epub/static/docicons-warning.png",
+      "tests/middleware/tests.py",
+      "tests/servers/test_basehttp.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": -0.0020000000000000018
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16502/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "django/core/servers/basehttp.py",
+        "tests/servers/test_basehttp.py",
+        "tests/builtin_server/tests.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "django/core/servers/basehttp.py",
+        "tests/servers/test_basehttp.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "tests/builtin_server/tests.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 639781,
+      "cached_input_tokens": 585984,
+      "output_tokens": 5291,
+      "total_tokens": 645072
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "tests/builtin_server/tests.py",
+        "django/core/servers/basehttp.py",
+        "tests/servers/test_basehttp.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "django/core/servers/basehttp.py",
+        "tests/servers/test_basehttp.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "tests/builtin_server/tests.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 1421160,
+      "cached_input_tokens": 1350656,
+      "output_tokens": 7903,
+      "total_tokens": 1429063
+    }
+  }
+}

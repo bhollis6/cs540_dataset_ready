@@ -1,0 +1,308 @@
+{
+  "repo": "python-attrs/cattrs",
+  "selection_timestamp": "2026-04-23T17:32:50.921985+00:00",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 8,
+  "accepted": 5,
+  "review": 2,
+  "rejected": 1,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "cattrs_pr_139",
+      "pr_number": 139,
+      "total_score": 22,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 4,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a high-quality experimental candidate. It implements a coherent, moderately complex feature (attrib converter fallback/preference) with excellent test coverage that directly validates both behavioral modes, touches core application code dense with type hints and descriptive naming, and has a clear enough description to hand to an AI agent. The StructureHandlerNotFoundError refactor is an integral part of the feature rather than noise. All four criteria we plan to degrade (type hints, naming, comments, test surface) are richly represented, making it well-suited for measuring degradation effects.",
+      "merge_commit_sha": "9f53896379b1b8959de5a4572344c4e611d9ade7",
+      "base_commit_sha": "e77272545781beb71cee6adc617949aa2f4fe0fe",
+      "env_commit_sha": "e77272545781beb71cee6adc617949aa2f4fe0fe",
+      "head_commit_sha": "82d4ffd487b8a6b7d7c259ad9fd4451c5aeed2b5",
+      "source_files": [
+        "src/cattr/converters.py",
+        "src/cattr/dispatch.py",
+        "src/cattr/errors.py",
+        "src/cattr/gen.py"
+      ],
+      "test_files": [
+        "tests/test_function_dispatch.py",
+        "tests/test_generics.py",
+        "tests/test_structure.py",
+        "tests/test_structure_attrs.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/dispatch.py",
+            "src/cattr/errors.py",
+            "src/cattr/gen.py",
+            "tests/test_function_dispatch.py",
+            "tests/test_generics.py",
+            "tests/test_structure.py",
+            "tests/test_structure_attrs.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/dispatch.py",
+            "src/cattr/errors.py",
+            "src/cattr/gen.py",
+            "tests/test_function_dispatch.py",
+            "tests/test_generics.py",
+            "tests/test_structure.py",
+            "tests/test_structure_attrs.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/dispatch.py",
+            "src/cattr/errors.py",
+            "src/cattr/gen.py",
+            "tests/test_function_dispatch.py",
+            "tests/test_generics.py",
+            "tests/test_structure.py",
+            "tests/test_structure_attrs.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_function_dispatch.py",
+            "tests/test_generics.py",
+            "tests/test_structure.py",
+            "tests/test_structure_attrs.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "cattrs_pr_108",
+      "pr_number": 108,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate. This is a tightly-scoped, well-tested bug fix in core cattrs disambiguation logic. The tests are layered (unit, property-based, integration) and directly validate the fix with a clear pass/fail signal. The code contains type hints, descriptive naming, and a meaningful comment\u2014rich signals for mutation experiments. Complexity is in the sweet spot: requires library knowledge and understanding of Python idioms, but the actual change is modest. The problem description is clear enough to serve as a task prompt for an AI agent.",
+      "merge_commit_sha": "25ffce7e000ad27485982732214b4181ec0e6116",
+      "base_commit_sha": "1ab1cb27b0ee76d34ad8310d300329fba97a8f3a",
+      "env_commit_sha": "1ab1cb27b0ee76d34ad8310d300329fba97a8f3a",
+      "head_commit_sha": "ba9cd71530783974f98bc0948d1641a280a4cb8e",
+      "source_files": [
+        "src/cattr/disambiguators.py"
+      ],
+      "test_files": [
+        "tests/test_disambigutors.py",
+        "tests/test_structure.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/cattr/disambiguators.py",
+            "tests/test_disambigutors.py",
+            "tests/test_structure.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/cattr/disambiguators.py",
+            "tests/test_disambigutors.py",
+            "tests/test_structure.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/cattr/disambiguators.py",
+            "tests/test_disambigutors.py",
+            "tests/test_structure.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_disambigutors.py",
+            "tests/test_structure.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "cattrs_pr_117",
+      "pr_number": 117,
+      "total_score": 21,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 4,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-focused bug fix with a clear test oracle, meaningful application code with type hints and docstrings, and just the right complexity level. The inheritance/singledispatch interaction is subtle enough to require genuine reasoning, but the fix is compact enough to be solvable. Strong experimental candidate.",
+      "merge_commit_sha": "e54fa1713b39fa3c944415bbe61aabd7e8bb428a",
+      "base_commit_sha": "61c944584b3a5472b5733beac79134c77580274d",
+      "env_commit_sha": "61c944584b3a5472b5733beac79134c77580274d",
+      "head_commit_sha": "a8f28df1f80b739f10069f9d1d948ac633985022",
+      "source_files": [
+        "src/cattr/converters.py",
+        "src/cattr/multistrategy_dispatch.py"
+      ],
+      "test_files": [
+        "tests/test_genconverter_inheritance.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/multistrategy_dispatch.py",
+            "tests/test_genconverter_inheritance.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/multistrategy_dispatch.py",
+            "tests/test_genconverter_inheritance.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/multistrategy_dispatch.py",
+            "tests/test_genconverter_inheritance.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_genconverter_inheritance.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "cattrs_pr_134",
+      "pr_number": 134,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A high-quality candidate: tightly scoped, with tests that provide clean FAIL_TO_PASS signals directly on the patched code paths, core application code with good type annotations and naming, and moderate complexity (API knowledge + multi-site fix). The main weakness is a sparse PR description that requires inferring the full task from the diff. Overall well-suited for the experiment.",
+      "merge_commit_sha": "9ba20d4876f212c58fe6d9706b138c01ecd9316e",
+      "base_commit_sha": "97560f2fbcfff05dcd9a58f753fd3a95482e1022",
+      "env_commit_sha": "97560f2fbcfff05dcd9a58f753fd3a95482e1022",
+      "head_commit_sha": "f798473ad571a9389cfb6b922a5e5af9ef9dd808",
+      "source_files": [
+        "src/cattr/converters.py"
+      ],
+      "test_files": [
+        "tests/test_dataclasses.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "tests/test_dataclasses.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "tests/test_dataclasses.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "tests/test_dataclasses.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/test_dataclasses.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "cattrs_pr_142",
+      "pr_number": 142,
+      "total_score": 20,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 4,
+        "clarity": 3,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "A well-scoped, single-feature PR with excellent test coverage and clear pass/fail signals. The main weakness is a sparse PR description that would require an agent to infer the task from title and code. There is a notable parameter-name inconsistency between tests/docs (`_cattr_forbid_extra_keys`) and implementation (`_cattrs_forbid_extra_keys`) that makes this a more realistic and interesting candidate. The code touches type-annotated, well-named application logic that would expose meaningful signals under mutation. Overall a strong candidate for the experiment.",
+      "merge_commit_sha": "38505393adf40411f9278d37df521166048525c9",
+      "base_commit_sha": "387ba5d9ac856d0520e96100ebbbe94f744493e7",
+      "env_commit_sha": "387ba5d9ac856d0520e96100ebbbe94f744493e7",
+      "head_commit_sha": "fea3292497756776d5f6bb1fb485bc43b2d561b9",
+      "source_files": [
+        "src/cattr/converters.py",
+        "src/cattr/gen.py"
+      ],
+      "test_files": [
+        "tests/metadata/test_genconverter.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/gen.py",
+            "tests/metadata/test_genconverter.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/gen.py",
+            "tests/metadata/test_genconverter.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "src/cattr/converters.py",
+            "src/cattr/gen.py",
+            "tests/metadata/test_genconverter.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/metadata/test_genconverter.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

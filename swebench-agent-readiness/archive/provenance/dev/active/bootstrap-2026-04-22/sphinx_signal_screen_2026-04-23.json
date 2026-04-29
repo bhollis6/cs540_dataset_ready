@@ -1,0 +1,406 @@
+[
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-10323",
+    "signals": {
+      "annotations": 51,
+      "docstrings": 4,
+      "comments": 33,
+      "name_candidates": 295
+    },
+    "ftp": 1,
+    "ptp": 40,
+    "command": "tox --current-env -epy39 -v -- tests/test_directive_code.py",
+    "source_files": [
+      "sphinx/directives/code.py"
+    ],
+    "test_files": [
+      "tests/test_directive_code.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-10435",
+    "signals": {
+      "annotations": 513,
+      "docstrings": 18,
+      "comments": 207,
+      "name_candidates": 613
+    },
+    "ftp": 1,
+    "ptp": 74,
+    "command": "tox --current-env -epy39 -v -- tests/test_build_latex.py",
+    "source_files": [
+      "sphinx/writers/latex.py"
+    ],
+    "test_files": [
+      "tests/test_build_latex.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-10449",
+    "signals": {
+      "annotations": 25,
+      "docstrings": 3,
+      "comments": 48,
+      "name_candidates": 129
+    },
+    "ftp": 1,
+    "ptp": 30,
+    "command": "tox --current-env -epy39 -v -- tests/test_ext_autodoc_configs.py",
+    "source_files": [
+      "sphinx/ext/autodoc/typehints.py"
+    ],
+    "test_files": [
+      "tests/test_ext_autodoc_configs.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-7454",
+    "signals": {
+      "annotations": 189,
+      "docstrings": 35,
+      "comments": 105,
+      "name_candidates": 451
+    },
+    "ftp": 1,
+    "ptp": 27,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-7462",
+    "signals": {
+      "annotations": 196,
+      "docstrings": 40,
+      "comments": 156,
+      "name_candidates": 473
+    },
+    "ftp": 2,
+    "ptp": 49,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py tests/test_pycode_ast.py",
+    "source_files": [
+      "sphinx/domains/python.py",
+      "sphinx/pycode/ast.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py",
+      "tests/test_pycode_ast.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-7757",
+    "signals": {
+      "annotations": 88,
+      "docstrings": 35,
+      "comments": 155,
+      "name_candidates": 150
+    },
+    "ftp": 1,
+    "ptp": 33,
+    "command": "tox --current-env -epy39 -v -- tests/test_util_inspect.py",
+    "source_files": [
+      "sphinx/util/inspect.py"
+    ],
+    "test_files": [
+      "tests/test_util_inspect.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-8056",
+    "signals": {
+      "annotations": 153,
+      "docstrings": 9,
+      "comments": 62,
+      "name_candidates": 566
+    },
+    "ftp": 1,
+    "ptp": 40,
+    "command": "tox --current-env -epy39 -v -- tests/test_ext_napoleon_docstring.py",
+    "source_files": [
+      "sphinx/ext/napoleon/docstring.py"
+    ],
+    "test_files": [
+      "tests/test_ext_napoleon_docstring.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-8120",
+    "signals": {
+      "annotations": 236,
+      "docstrings": 55,
+      "comments": 190,
+      "name_candidates": 303
+    },
+    "ftp": 1,
+    "ptp": 44,
+    "command": "tox --current-env -epy39 -v -- tests/test_intl.py",
+    "source_files": [
+      "sphinx/application.py",
+      "sphinx/locale/__init__.py"
+    ],
+    "test_files": [
+      "tests/test_intl.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-8265",
+    "signals": {
+      "annotations": 52,
+      "docstrings": 5,
+      "comments": 52,
+      "name_candidates": 46
+    },
+    "ftp": 1,
+    "ptp": 22,
+    "command": "tox --current-env -epy39 -v -- tests/test_pycode_ast.py",
+    "source_files": [
+      "sphinx/pycode/ast.py"
+    ],
+    "test_files": [
+      "tests/test_pycode_ast.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-8551",
+    "signals": {
+      "annotations": 258,
+      "docstrings": 44,
+      "comments": 138,
+      "name_candidates": 559
+    },
+    "ftp": 1,
+    "ptp": 32,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py",
+      "sphinx/util/docfields.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-8638",
+    "signals": {
+      "annotations": 190,
+      "docstrings": 34,
+      "comments": 111,
+      "name_candidates": 459
+    },
+    "ftp": 1,
+    "ptp": 34,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9230",
+    "signals": {
+      "annotations": 69,
+      "docstrings": 10,
+      "comments": 50,
+      "name_candidates": 213
+    },
+    "ftp": 1,
+    "ptp": 44,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/util/docfields.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9258",
+    "signals": {
+      "annotations": 218,
+      "docstrings": 35,
+      "comments": 121,
+      "name_candidates": 504
+    },
+    "ftp": 1,
+    "ptp": 45,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9281",
+    "signals": {
+      "annotations": 122,
+      "docstrings": 47,
+      "comments": 164,
+      "name_candidates": 198
+    },
+    "ftp": 1,
+    "ptp": 38,
+    "command": "tox --current-env -epy39 -v -- tests/test_util_inspect.py",
+    "source_files": [
+      "sphinx/util/inspect.py"
+    ],
+    "test_files": [
+      "tests/test_util_inspect.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9367",
+    "signals": {
+      "annotations": 67,
+      "docstrings": 5,
+      "comments": 59,
+      "name_candidates": 49
+    },
+    "ftp": 1,
+    "ptp": 25,
+    "command": "tox --current-env -epy39 -v -- tests/test_pycode_ast.py",
+    "source_files": [
+      "sphinx/pycode/ast.py"
+    ],
+    "test_files": [
+      "tests/test_pycode_ast.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9591",
+    "signals": {
+      "annotations": 226,
+      "docstrings": 35,
+      "comments": 123,
+      "name_candidates": 507
+    },
+    "ftp": 1,
+    "ptp": 44,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9602",
+    "signals": {
+      "annotations": 226,
+      "docstrings": 35,
+      "comments": 123,
+      "name_candidates": 508
+    },
+    "ftp": 1,
+    "ptp": 45,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9658",
+    "signals": {
+      "annotations": 54,
+      "docstrings": 10,
+      "comments": 21,
+      "name_candidates": 40
+    },
+    "ftp": 1,
+    "ptp": 24,
+    "command": "tox --current-env -epy39 -v -- tests/test_util_typing.py",
+    "source_files": [
+      "sphinx/ext/autodoc/mock.py"
+    ],
+    "test_files": [
+      "tests/test_util_typing.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9673",
+    "signals": {
+      "annotations": 24,
+      "docstrings": 3,
+      "comments": 40,
+      "name_candidates": 115
+    },
+    "ftp": 1,
+    "ptp": 24,
+    "command": "tox --current-env -epy39 -v -- tests/test_ext_autodoc_configs.py",
+    "source_files": [
+      "sphinx/ext/autodoc/typehints.py"
+    ],
+    "test_files": [
+      "tests/test_ext_autodoc_configs.py"
+    ],
+    "missing": []
+  },
+  {
+    "score": 33,
+    "instance_id": "sphinx-doc__sphinx-9698",
+    "signals": {
+      "annotations": 228,
+      "docstrings": 35,
+      "comments": 126,
+      "name_candidates": 511
+    },
+    "ftp": 1,
+    "ptp": 45,
+    "command": "tox --current-env -epy39 -v -- tests/test_domain_py.py",
+    "source_files": [
+      "sphinx/domains/python.py"
+    ],
+    "test_files": [
+      "tests/test_domain_py.py"
+    ],
+    "missing": []
+  }
+]

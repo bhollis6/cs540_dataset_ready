@@ -1,0 +1,14 @@
+{
+  "instance_id": "psf__requests-1724",
+  "repo": "psf/requests",
+  "base_commit": "1ba83c47ce7b177efe90d5f51f7760680f72eda0",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1724/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/psf__requests-1724/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "requests/sessions.py",
+      "test_requests.py"
+    ]
+  }
+}

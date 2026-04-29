@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "scikit-learn__scikit-learn-25931",
+  "repo": "scikit-learn/scikit-learn",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25931/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "pytest -rA sklearn/ensemble/tests/test_iforest.py",
+  "command_returncode": 0,
+  "duration_seconds": 7.732,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_preserve_feature_names"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 21,
+  "pass_to_pass_passed": [
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest[42]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_sparse[42]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_error",
+    "sklearn/ensemble/tests/test_iforest.py::test_recalculate_max_depth",
+    "sklearn/ensemble/tests/test_iforest.py::test_max_samples_attribute",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_parallel_regression[42]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_performance[42]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_works[42-0.25]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_works[42-auto]",
+    "sklearn/ensemble/tests/test_iforest.py::test_max_samples_consistency",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_subsampled_features",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_average_path_length",
+    "sklearn/ensemble/tests/test_iforest.py::test_score_samples",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_warm_start",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_chunks_works1[42-0.25-3]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_chunks_works1[42-auto-2]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_chunks_works2[42-0.25-3]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_chunks_works2[42-auto-2]",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_with_uniform_data",
+    "sklearn/ensemble/tests/test_iforest.py::test_iforest_with_n_jobs_does_not_segfault",
+    "sklearn/ensemble/tests/test_iforest.py::test_base_estimator_property_deprecated"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "sklearn/ensemble/_iforest.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

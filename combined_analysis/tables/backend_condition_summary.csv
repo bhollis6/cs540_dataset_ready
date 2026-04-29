@@ -1,0 +1,9 @@
+backend,condition,paired_comparisons,clean_success,degraded_success,clean_success_rate,degraded_success_rate,success_rate_delta_degraded_minus_clean,clean_success_to_degraded_failure,clean_failure_to_degraded_success,baseline_hard_pairs,hidden_bug_fix_failed_delta_sum,regression_failed_delta_sum,regression_damage_pairs,mean_token_delta,median_token_delta,token_delta_definition
+Custom repos,Naming,30,21,14,0.7,0.4667,-0.2333,8,1,9,12,539,8,18624.9,10556.0,input_plus_output_tokens_excludes_cached_input
+Custom repos,Type hints,30,21,21,0.7,0.7,0.0,2,2,9,7,0,0,18241.5,16162.5,input_plus_output_tokens_excludes_cached_input
+Custom repos,Comments/docstrings,30,21,21,0.7,0.7,0.0,3,3,9,7,-3,0,16320.3,13005.5,input_plus_output_tokens_excludes_cached_input
+Custom repos,Remove tests,30,21,24,0.7,0.8,0.1,1,4,9,3,-1,0,4988.6,4219.0,input_plus_output_tokens_excludes_cached_input
+SWE-bench,Naming,30,24,13,0.8,0.4333,-0.3667,11,0,6,9,94,10,304500.7,220810.0,input_plus_output_tokens_excludes_cached_input
+SWE-bench,Type hints,30,22,23,0.7333,0.7667,0.0333,0,1,8,-1,0,0,-28337.0,-29116.0,input_plus_output_tokens_excludes_cached_input
+SWE-bench,Comments/docstrings,33,26,26,0.7879,0.7879,0.0,0,0,7,0,8,1,160468.0,79840.0,input_plus_output_tokens_excludes_cached_input
+SWE-bench,Remove tests,32,26,26,0.8125,0.8125,0.0,0,0,6,0,0,0,53561.6,58239.5,input_plus_output_tokens_excludes_cached_input

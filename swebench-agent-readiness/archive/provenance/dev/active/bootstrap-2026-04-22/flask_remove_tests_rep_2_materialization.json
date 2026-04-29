@@ -1,0 +1,14 @@
+{
+  "instance_id": "pallets__flask-5014",
+  "repo": "pallets/flask",
+  "base_commit": "7ee9ceb71e868944a46e1ff00b506772a53a4f1d",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pallets__flask-5014/codex-cli/remove_tests/rep_2/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "tests/test_blueprints.py"
+    ],
+    "preserve_files": []
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "candidate_id": "uvicorn_pr_2905",
+  "repo": "encode/uvicorn",
+  "pr_number": 2905,
+  "title": "Accept `os.PathLike` for `log_config`",
+  "description": "## Summary\n\n- Accept `os.PathLike` (e.g. `pathlib.Path`) as the `log_config` argument to `Config` and `run()`, in addition to `str`.\n- Normalize via `os.fspath` at the top of `configure_logging` so the existing `.json` / `.yaml` / `.ini` string branches keep working.\n\nSplit out from #2786.\n\nCo-authored-by: Nuno Andr\u00e9 <mail@nunoand.re>\n\n## Test plan\n\n- [x] New `test_log_config_pathlike` covers loading a JSON log config via `pathlib.Path`.\n\n## AI Disclaimer\n\nThis PR was developed with the assistance of either Claude or Codex. I take full ownership of it.",
+  "patch_diff": "diff --git a/uvicorn/config.py b/uvicorn/config.py\nindex d70ba642b..3815c7c07 100644\n--- a/uvicorn/config.py\n+++ b/uvicorn/config.py\n@@ -193,7 +193,7 @@ def __init__(\n         ws_per_message_deflate: bool = True,\n         lifespan: LifespanType = \"auto\",\n         env_file: str | os.PathLike[str] | None = None,\n-        log_config: dict[str, Any] | str | RawConfigParser | IO[Any] | None = LOGGING_CONFIG,\n+        log_config: dict[str, Any] | str | os.PathLike[str] | RawConfigParser | IO[Any] | None = LOGGING_CONFIG,\n         log_level: str | int | None = None,\n         access_log: bool = True,\n         use_colors: bool | None = None,\n@@ -365,6 +365,9 @@ def configure_logging(self) -> None:\n         logging.addLevelName(TRACE_LOG_LEVEL, \"TRACE\")\n \n         if self.log_config is not None:\n+            if isinstance(self.log_config, os.PathLike):\n+                self.log_config = os.fspath(self.log_config)\n+\n             if isinstance(self.log_config, dict):\n                 if self.use_colors in (True, False):\n                     self.log_config[\"formatters\"][\"default\"][\"use_colors\"] = self.use_colors\ndiff --git a/uvicorn/main.py b/uvicorn/main.py\nindex 93c85cb76..951f97af0 100644\n--- a/uvicorn/main.py\n+++ b/uvicorn/main.py\n@@ -507,7 +507,7 @@ def run(\n     reload_delay: float = 0.25,\n     workers: int | None = None,\n     env_file: str | os.PathLike[str] | None = None,\n-    log_config: dict[str, Any] | str | RawConfigParser | IO[Any] | None = LOGGING_CONFIG,\n+    log_config: dict[str, Any] | str | os.PathLike[str] | RawConfigParser | IO[Any] | None = LOGGING_CONFIG,\n     log_level: str | int | None = None,\n     access_log: bool = True,\n     proxy_headers: bool = True,\n",
+  "test_diff": "diff --git a/tests/test_config.py b/tests/test_config.py\nindex 2e94ba178..cae3868ca 100644\n--- a/tests/test_config.py\n+++ b/tests/test_config.py\n@@ -366,6 +366,26 @@ def test_log_config_yaml(\n     mocked_logging_config_module.dictConfig.assert_called_once_with(logging_config)\n \n \n+def test_log_config_pathlike(\n+    mocked_logging_config_module: MagicMock,\n+    logging_config: dict[str, Any],\n+    json_logging_config: str,\n+    mocker: MockerFixture,\n+    tmp_path: Path,\n+) -> None:\n+    \"\"\"\n+    Test that one can pass a `os.PathLike` (e.g. `pathlib.Path`) as the log config path.\n+    \"\"\"\n+    path = tmp_path / \"log_config.json\"\n+    mocked_open = mocker.patch(\"uvicorn.config.open\", mocker.mock_open(read_data=json_logging_config))\n+\n+    config = Config(app=asgi_app, log_config=path)\n+    config.load()\n+\n+    mocked_open.assert_called_once_with(os.fspath(path))\n+    mocked_logging_config_module.dictConfig.assert_called_once_with(logging_config)\n+\n+\n @pytest.mark.parametrize(\"config_file\", [\"log_config.ini\", configparser.ConfigParser(), io.StringIO()])\n def test_log_config_file(\n     mocked_logging_config_module: MagicMock,\n",
+  "files_changed": [
+    "tests/test_config.py",
+    "uvicorn/config.py",
+    "uvicorn/main.py"
+  ],
+  "source_files": [
+    "uvicorn/config.py",
+    "uvicorn/main.py"
+  ],
+  "test_files": [
+    "tests/test_config.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 25,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "70f247f9ee67f488f3ebf22f2fb391b9e3d69d78",
+  "base_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+  "env_commit_sha": "18edfa7012672c10fd28300c748a426cdb295a5e",
+  "head_commit_sha": "8a415f76ec179264db0fdae03628c57ca0a56d95",
+  "merged_at": "2026-04-19T09:57:19Z"
+}

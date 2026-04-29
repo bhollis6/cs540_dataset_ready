@@ -1,0 +1,126 @@
+[
+  {
+    "instance_id": "psf__requests-1142",
+    "repo": "psf/requests",
+    "base_commit": "22623bd8c265b78b161542663ee980738441c307",
+    "version": "1.1",
+    "source_files": [
+      "requests/models.py"
+    ],
+    "test_files": [
+      "test_requests.py"
+    ],
+    "fail_to_pass_count": 1,
+    "pass_to_pass_count": 5,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 31,
+      "comments": 62,
+      "name_candidates": 217,
+      "classes": 6,
+      "functions": 37,
+      "variables": 174,
+      "total": 217
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 0.634,
+      "test_command": "pytest -rA test_requests.py"
+    }
+  },
+  {
+    "instance_id": "psf__requests-1724",
+    "repo": "psf/requests",
+    "base_commit": "1ba83c47ce7b177efe90d5f51f7760680f72eda0",
+    "version": "2.0",
+    "source_files": [
+      "requests/sessions.py"
+    ],
+    "test_files": [
+      "test_requests.py"
+    ],
+    "fail_to_pass_count": 6,
+    "pass_to_pass_count": 79,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 29,
+      "comments": 90,
+      "name_candidates": 317,
+      "classes": 5,
+      "functions": 29,
+      "variables": 283,
+      "total": 317
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 15.508,
+      "test_command": "pytest -rA test_requests.py"
+    }
+  },
+  {
+    "instance_id": "psf__requests-1766",
+    "repo": "psf/requests",
+    "base_commit": "847735553aeda6e6633f2b32e14ba14ba86887a4",
+    "version": "2.0",
+    "source_files": [
+      "requests/auth.py"
+    ],
+    "test_files": [
+      "test_requests.py"
+    ],
+    "fail_to_pass_count": 6,
+    "pass_to_pass_count": 79,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 18,
+      "comments": 32,
+      "name_candidates": 293,
+      "classes": 7,
+      "functions": 19,
+      "variables": 267,
+      "total": 293
+    },
+    "gold_preflight": {
+      "task_success": false,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 1,
+      "duration_seconds": 36.8,
+      "test_command": "pytest -rA test_requests.py"
+    }
+  },
+  {
+    "instance_id": "psf__requests-1921",
+    "repo": "psf/requests",
+    "base_commit": "3c88e520da24ae6f736929a750876e7654accc3d",
+    "version": "2.3",
+    "source_files": [
+      "requests/sessions.py"
+    ],
+    "test_files": [
+      "test_requests.py"
+    ],
+    "fail_to_pass_count": 6,
+    "pass_to_pass_count": 107,
+    "signals": {
+      "annotations": 0,
+      "docstrings": 41,
+      "comments": 98,
+      "name_candidates": 396,
+      "classes": 5,
+      "functions": 30,
+      "variables": 361,
+      "total": 396
+    },
+    "gold_preflight": {
+      "task_success": true,
+      "fail_to_pass_failed_count": 0,
+      "pass_to_pass_failed_count": 0,
+      "duration_seconds": 23.869,
+      "test_command": "pytest -rA test_requests.py"
+    }
+  }
+]

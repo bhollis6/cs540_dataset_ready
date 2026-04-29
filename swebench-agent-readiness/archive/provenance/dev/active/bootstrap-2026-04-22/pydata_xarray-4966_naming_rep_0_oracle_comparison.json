@@ -1,0 +1,112 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pydata__xarray-4966",
+  "repo": "pydata/xarray",
+  "harness": "codex-cli",
+  "chosen_condition": "naming",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_pass",
+    "target_success": true,
+    "fail_to_pass_failed_count": 0,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 5,
+    "exploration_efficiency": 0.4,
+    "total_duration_seconds": 0.712,
+    "changed_files": [
+      "xarray/coding/variables.py",
+      "xarray/tests/test_coding.py"
+    ]
+  },
+  "degraded": {
+    "condition": "naming",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 4,
+    "pass_to_pass_failed_count": 17,
+    "files_opened_before_first_edit": 5,
+    "exploration_efficiency": 0.4,
+    "total_duration_seconds": 0.804,
+    "changed_files": [
+      "properties/test_encode_decode.py",
+      "xarray/coding/variables.py",
+      "xarray/conventions.py",
+      "xarray/tests/test_coding.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": true,
+    "fail_to_pass_failed_count_delta": 4,
+    "pass_to_pass_failed_count_delta": 17,
+    "files_opened_before_first_edit_delta": 0,
+    "exploration_efficiency_delta": 0.0,
+    "total_duration_seconds_delta": 0.09200000000000008
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 0,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/codex-cli/clean/rep_0/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-4966/codex-cli/naming/rep_0/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 5,
+      "opened_files_before_first_edit": [
+        "xarray/coding/variables.py",
+        "xarray/tests/test_coding.py",
+        "xarray/tests/test_backends.py",
+        "xarray/tests/test_conventions.py",
+        "xarray/conventions.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "xarray/coding/variables.py",
+        "xarray/tests/test_coding.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        "xarray/conventions.py",
+        "xarray/tests/test_backends.py",
+        "xarray/tests/test_conventions.py"
+      ],
+      "exploration_efficiency": 0.4,
+      "first_edit_detected": true,
+      "input_tokens": 484475,
+      "cached_input_tokens": 445056,
+      "output_tokens": 4991,
+      "total_tokens": 489466
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 5,
+      "opened_files_before_first_edit": [
+        "xarray/tests/test_coding.py",
+        "xarray/tests/test_backends.py",
+        "xarray/tests/test_conventions.py",
+        "xarray/coding/variables.py",
+        "xarray/conventions.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "xarray/coding/variables.py",
+        "xarray/tests/test_coding.py"
+      ],
+      "dead_end_file_opens": 3,
+      "dead_end_opened_files": [
+        "xarray/conventions.py",
+        "xarray/tests/test_backends.py",
+        "xarray/tests/test_conventions.py"
+      ],
+      "exploration_efficiency": 0.4,
+      "first_edit_detected": true,
+      "input_tokens": 953277,
+      "cached_input_tokens": 849792,
+      "output_tokens": 7282,
+      "total_tokens": 960559
+    }
+  }
+}

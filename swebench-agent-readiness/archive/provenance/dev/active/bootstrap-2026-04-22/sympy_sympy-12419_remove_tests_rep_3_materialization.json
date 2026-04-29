@@ -1,0 +1,14 @@
+{
+  "instance_id": "sympy__sympy-12419",
+  "repo": "sympy/sympy",
+  "base_commit": "479939f8c65c8c2908bbedc959549a257a7c0b0b",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/codex-cli/clean/rep_3/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12419/codex-cli/remove_tests/rep_3/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "sympy/matrices/expressions/tests/test_matexpr.py"
+    ],
+    "preserve_files": []
+  }
+}

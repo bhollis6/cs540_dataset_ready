@@ -1,0 +1,49 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "pydata__xarray-3677",
+  "repo": "pydata/xarray",
+  "condition": "gold_preflight",
+  "workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/gold_preflight/rep_0/workspace",
+  "oracle_workspace_dir": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/gold_preflight/rep_0/workspace",
+  "oracle_log_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/gold_preflight/rep_0/logs/oracle_test_output.txt",
+  "oracle_report_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/gold_preflight/rep_0/logs/oracle_report.json",
+  "oracle_env_path": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/pydata__xarray-3677/gold_preflight/rep_0/logs/oracle_env.json",
+  "test_command": "pytest -rA xarray/tests/test_merge.py",
+  "command_returncode": 0,
+  "duration_seconds": 2.039,
+  "task_success": true,
+  "fail_to_pass_total": 1,
+  "fail_to_pass_passed": [
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_dataarray"
+  ],
+  "fail_to_pass_failed": [],
+  "pass_to_pass_total": 21,
+  "pass_to_pass_passed": [
+    "xarray/tests/test_merge.py::TestMergeInternals::test_broadcast_dimension_size",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_arrays",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_datasets",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_dataarray_unnamed",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_dicts_simple",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_dicts_dims",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_error",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_alignment_error",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_wrong_input_error",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_single_var",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_multi_var",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_preserve_attrs",
+    "xarray/tests/test_merge.py::TestMergeFunction::test_merge_no_conflicts_broadcast",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_broadcast_equals",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_compat",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_auto_align",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_fill_value[fill_value0]",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_fill_value[2]",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_fill_value[2.0]",
+    "xarray/tests/test_merge.py::TestMergeMethod::test_merge_no_conflicts"
+  ],
+  "pass_to_pass_failed": [],
+  "changed_files": [
+    "xarray/core/dataset.py"
+  ],
+  "completion_reason": "oracle_pass"
+}

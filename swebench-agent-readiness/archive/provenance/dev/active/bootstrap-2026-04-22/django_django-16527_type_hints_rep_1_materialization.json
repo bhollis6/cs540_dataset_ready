@@ -1,0 +1,14 @@
+{
+  "instance_id": "django__django-16527",
+  "repo": "django/django",
+  "base_commit": "bd366ca2aeffa869b7dbc0b0aa01caea75e6dc31",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16527/codex-cli/clean/rep_1/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/django__django-16527/codex-cli/type_hints/rep_1/workspace",
+  "degraded_condition": "type_hints",
+  "degraded_targets": {
+    "target_files": [
+      "django/contrib/admin/templatetags/admin_modify.py",
+      "tests/admin_views/test_templatetags.py"
+    ]
+  }
+}

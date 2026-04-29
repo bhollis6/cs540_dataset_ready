@@ -1,0 +1,32 @@
+{
+  "candidate_id": "uvicorn_pr_2581",
+  "repo": "encode/uvicorn",
+  "pr_number": 2581,
+  "title": "Deprecate `ServerState` in the main module",
+  "description": "This is mainly to not worry about it in the future.",
+  "patch_diff": "diff --git a/uvicorn/main.py b/uvicorn/main.py\nindex d9625fb03..afa4be0f1 100644\n--- a/uvicorn/main.py\n+++ b/uvicorn/main.py\n@@ -6,6 +6,7 @@\n import platform\n import ssl\n import sys\n+import warnings\n from configparser import RawConfigParser\n from typing import IO, Any, Callable\n \n@@ -29,7 +30,7 @@\n     LoopSetupType,\n     WSProtocolType,\n )\n-from uvicorn.server import Server, ServerState  # noqa: F401  # Used to be defined here.\n+from uvicorn.server import Server\n from uvicorn.supervisors import ChangeReload, Multiprocess\n \n LEVEL_CHOICES = click.Choice(list(LOG_LEVELS.keys()))\n@@ -587,5 +588,17 @@ def run(\n         sys.exit(STARTUP_FAILURE)\n \n \n+def __getattr__(name: str) -> Any:\n+    if name == \"ServerState\":\n+        warnings.warn(\n+            \"uvicorn.main.ServerState is deprecated, use uvicorn.server.ServerState instead.\",\n+            DeprecationWarning,\n+        )\n+        from uvicorn.server import ServerState\n+\n+        return ServerState\n+    raise AttributeError(f\"module {__name__} has no attribute {name}\")\n+\n+\n if __name__ == \"__main__\":\n     main()  # pragma: no cover\n",
+  "test_diff": "diff --git a/tests/protocols/test_http.py b/tests/protocols/test_http.py\nindex 364b66100..57804e799 100644\n--- a/tests/protocols/test_http.py\n+++ b/tests/protocols/test_http.py\n@@ -14,8 +14,8 @@\n from uvicorn.config import WS_PROTOCOLS, Config\n from uvicorn.lifespan.off import LifespanOff\n from uvicorn.lifespan.on import LifespanOn\n-from uvicorn.main import ServerState\n from uvicorn.protocols.http.h11_impl import H11Protocol\n+from uvicorn.server import ServerState\n \n try:\n     from uvicorn.protocols.http.httptools_impl import HttpToolsProtocol\ndiff --git a/tests/test_auto_detection.py b/tests/test_auto_detection.py\nindex 1f79b3786..2e0830f0d 100644\n--- a/tests/test_auto_detection.py\n+++ b/tests/test_auto_detection.py\n@@ -5,9 +5,9 @@\n \n from uvicorn.config import Config\n from uvicorn.loops.auto import auto_loop_setup\n-from uvicorn.main import ServerState\n from uvicorn.protocols.http.auto import AutoHTTPProtocol\n from uvicorn.protocols.websockets.auto import AutoWebSocketsProtocol\n+from uvicorn.server import ServerState\n \n try:\n     importlib.import_module(\"uvloop\")\ndiff --git a/tests/test_main.py b/tests/test_main.py\nindex 4db3c2ce3..a69aa937f 100644\n--- a/tests/test_main.py\n+++ b/tests/test_main.py\n@@ -1,3 +1,4 @@\n+import importlib\n import inspect\n import socket\n from logging import WARNING\n@@ -5,6 +6,7 @@\n import httpx\n import pytest\n \n+import uvicorn.server\n from tests.utils import run_server\n from uvicorn import Server\n from uvicorn._types import ASGIReceiveCallable, ASGISendCallable, Scope\n@@ -113,3 +115,12 @@ async def test_exit_on_create_server_with_invalid_host() -> None:\n         server = Server(config=config)\n         await server.serve()\n     assert exc_info.value.code == 1\n+\n+\n+def test_deprecated_server_state_from_main() -> None:\n+    with pytest.deprecated_call(\n+        match=\"uvicorn.main.ServerState is deprecated, use uvicorn.server.ServerState instead.\"\n+    ):\n+        main = importlib.import_module(\"uvicorn.main\")\n+        server_state_cls = getattr(main, \"ServerState\")\n+    assert server_state_cls is uvicorn.server.ServerState\n",
+  "files_changed": [
+    "tests/protocols/test_http.py",
+    "tests/test_auto_detection.py",
+    "tests/test_main.py",
+    "uvicorn/main.py"
+  ],
+  "source_files": [
+    "uvicorn/main.py"
+  ],
+  "test_files": [
+    "tests/protocols/test_http.py",
+    "tests/test_auto_detection.py",
+    "tests/test_main.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 27,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "aaf201669cef8f6c3a2b7d8e1113c31bea80c7bc",
+  "base_commit_sha": "54d9575e75cd821cadef0eff64677ebd2fda4885",
+  "env_commit_sha": "54d9575e75cd821cadef0eff64677ebd2fda4885",
+  "head_commit_sha": "38e96329f7d7ae76d5338c774a80d37351035a72",
+  "merged_at": "2025-02-21T09:55:37Z"
+}

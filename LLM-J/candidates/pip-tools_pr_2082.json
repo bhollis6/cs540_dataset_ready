@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pip-tools_pr_2082",
+  "repo": "jazzband/pip-tools",
+  "pr_number": 2082,
+  "title": "Fix ordering of format controls to preserve behavior of pip",
+  "description": "<!--- Describe the changes here. --->\r\n\r\n##### Contributor checklist\r\n\r\n- [x] Included tests for the changes.\r\n- [x] PR title is short, clear, and ready to be included in the user-facing changelog.\r\n\r\n##### Maintainer checklist\r\n\r\n- [ ] Verified one of these labels is present: `backwards incompatible`, `feature`, `enhancement`, `deprecation`, `bug`, `dependency`, `docs` or `skip-changelog` as they determine changelog listing.\r\n- [ ] Assign the PR to an existing or new milestone for the target version (following [Semantic Versioning](https://blog.versioneye.com/2014/01/16/semantic-versioning/)).\r\n\r\nCloses #2081 ",
+  "patch_diff": "diff --git a/piptools/writer.py b/piptools/writer.py\nindex bcb70f02f..da603f1f7 100644\n--- a/piptools/writer.py\n+++ b/piptools/writer.py\n@@ -148,9 +148,27 @@ def write_trusted_hosts(self) -> Iterator[str]:\n                 yield f\"--trusted-host {trusted_host}\"\n \n     def write_format_controls(self) -> Iterator[str]:\n-        for nb in dedup(sorted(self.format_control.no_binary)):\n+        # The ordering of output needs to preserve the behavior of pip's\n+        # FormatControl.get_allowed_formats(). The behavior is the following:\n+        #\n+        #   * Parsing of CLI options happens first to last.\n+        #   * --only-binary takes precedence over --no-binary\n+        #   * Package names take precedence over :all:\n+        #   * We'll never see :all: in both due to mutual exclusion.\n+        #\n+        # So in summary, we want to emit :all: first and then package names later.\n+        no_binary = self.format_control.no_binary.copy()\n+        only_binary = self.format_control.only_binary.copy()\n+\n+        if \":all:\" in no_binary:\n+            yield \"--no-binary :all:\"\n+            no_binary.remove(\":all:\")\n+        if \":all:\" in only_binary:\n+            yield \"--only-binary :all:\"\n+            only_binary.remove(\":all:\")\n+        for nb in dedup(sorted(no_binary)):\n             yield f\"--no-binary {nb}\"\n-        for ob in dedup(sorted(self.format_control.only_binary)):\n+        for ob in dedup(sorted(only_binary)):\n             yield f\"--only-binary {ob}\"\n \n     def write_find_links(self) -> Iterator[str]:\n",
+  "test_diff": "diff --git a/tests/test_writer.py b/tests/test_writer.py\nindex 8a59269c7..dd4354485 100644\n--- a/tests/test_writer.py\n+++ b/tests/test_writer.py\n@@ -301,6 +301,41 @@ def test_write_format_controls(writer):\n     assert lines == expected_lines\n \n \n+@pytest.mark.parametrize(\n+    (\"no_binary\", \"only_binary\", \"expected_lines\"),\n+    (\n+        (\n+            [\":all:\"],\n+            [\"django\"],\n+            [\n+                \"--no-binary :all:\",\n+                \"--only-binary django\",\n+            ],\n+        ),\n+        (\n+            [\"django\"],\n+            [\":all:\"],\n+            [\n+                \"--only-binary :all:\",\n+                \"--no-binary django\",\n+            ],\n+        ),\n+    ),\n+)\n+def test_write_format_controls_all(writer, no_binary, only_binary, expected_lines):\n+    \"\"\"\n+    Tests --no-binary/--only-binary options\n+    with the value of :all:. We want to preserve\n+    the FormatControl behavior so we emit :all:\n+    first before packages.\n+    \"\"\"\n+\n+    writer.format_control = FormatControl(no_binary=no_binary, only_binary=only_binary)\n+    lines = list(writer.write_format_controls())\n+\n+    assert lines == expected_lines\n+\n+\n @pytest.mark.parametrize(\n     (\"index_urls\", \"expected_lines\"),\n     (\n",
+  "files_changed": [
+    "piptools/writer.py",
+    "tests/test_writer.py"
+  ],
+  "source_files": [
+    "piptools/writer.py"
+  ],
+  "test_files": [
+    "tests/test_writer.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 55,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "ad79078db63db6a251ff38b06105e0c1df4ff65a",
+  "base_commit_sha": "f83aed38ea139768973392e87b3f6f8b9bde2fd1",
+  "env_commit_sha": "f83aed38ea139768973392e87b3f6f8b9bde2fd1",
+  "head_commit_sha": "d4d5fd42f0c0ed7aaa186720594d0e7c2ab31aaf",
+  "merged_at": "2024-05-02T01:33:06Z"
+}

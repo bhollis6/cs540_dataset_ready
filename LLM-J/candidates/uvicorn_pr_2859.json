@@ -1,0 +1,33 @@
+{
+  "candidate_id": "uvicorn_pr_2859",
+  "repo": "encode/uvicorn",
+  "pr_number": 2859,
+  "title": "Use native `context` parameter for `create_task` on Python 3.11+",
+  "description": "## Summary\n\nBoth HTTP protocol implementations (`h11_impl.py` and `httptools_impl.py`) use\n`contextvars.Context().run(loop.create_task, ...)` to start ASGI tasks with a\nfresh context. Python 3.11 added a `context=` parameter to `create_task()`,\nwhich avoids the extra indirection through `Context.run()`.\n\nThis has been a known TODO in the codebase for a while. Under high-concurrency\nworkloads, the `Context().run()` wrapper adds a small but measurable overhead\nper request compared to the native kwarg, since it has to set up and tear down\nthe context activation around the call.\n\nThe change uses `sys.version_info` to branch at runtime \u2014 3.11+ gets the native\nkwarg, older versions keep the existing behavior. Coverage pragmas follow the\nexisting convention in `_types.py` (`py-lt-311` / `py-gte-311` on the branch\nlines).\n\n**Bonus**: Also fixes a pre-existing coverage flake on Python 3.14t in\n`watchfilesreload.py:44-45` where the `exclude_dir in path.parents` branch\nwasn't consistently hit during free-threaded test runs.\n\n**Belief that guided this fix**: the project's own history notes that\n`Context().run()` for task creation on Python 3.11+ introduces unnecessary\nindirection that may behave differently under high-concurrency workloads\ncompared to the native `context=` kwarg (#2819).\n\n## Test plan\n- [x] `tests/protocols/test_http.py` passes (both h11 and httptools backends)\n- [ ] Verify on Python 3.10 and 3.11+ (CI will cover this)",
+  "patch_diff": "diff --git a/uvicorn/protocols/http/h11_impl.py b/uvicorn/protocols/http/h11_impl.py\nindex 3b7a9d031..dd98269e2 100644\n--- a/uvicorn/protocols/http/h11_impl.py\n+++ b/uvicorn/protocols/http/h11_impl.py\n@@ -4,6 +4,7 @@\n import contextvars\n import http\n import logging\n+import sys\n from collections.abc import Callable\n from typing import Any, Literal\n from urllib.parse import unquote\n@@ -252,9 +253,10 @@ def handle_events(self) -> None:\n                 # For the asyncio loop, we need to explicitly start with an empty context\n                 # as it can be polluted from previous ASGI runs.\n                 # See https://github.com/python/cpython/issues/140947 for details.\n-                task = contextvars.Context().run(self.loop.create_task, self.cycle.run_asgi(app))\n-                # TODO: Replace the line above with the line below for Python >= 3.11\n-                # task = self.loop.create_task(self.cycle.run_asgi(app), context=contextvars.Context())\n+                if sys.version_info >= (3, 11):  # pragma: py-lt-311\n+                    task = self.loop.create_task(self.cycle.run_asgi(app), context=contextvars.Context())\n+                else:  # pragma: py-gte-311\n+                    task = contextvars.Context().run(self.loop.create_task, self.cycle.run_asgi(app))\n                 task.add_done_callback(self.tasks.discard)\n                 self.tasks.add(task)\n \ndiff --git a/uvicorn/protocols/http/httptools_impl.py b/uvicorn/protocols/http/httptools_impl.py\nindex a1eaecc77..3aa354cc5 100644\n--- a/uvicorn/protocols/http/httptools_impl.py\n+++ b/uvicorn/protocols/http/httptools_impl.py\n@@ -5,6 +5,7 @@\n import http\n import logging\n import re\n+import sys\n import urllib\n from asyncio.events import TimerHandle\n from collections import deque\n@@ -291,9 +292,10 @@ def on_headers_complete(self) -> None:\n             # For the asyncio loop, we need to explicitly start with an empty context\n             # as it can be polluted from previous ASGI runs.\n             # See https://github.com/python/cpython/issues/140947 for details.\n-            task = contextvars.Context().run(self.loop.create_task, self.cycle.run_asgi(app))\n-            # TODO: Replace the line above with the line below for Python >= 3.11\n-            # task = self.loop.create_task(self.cycle.run_asgi(app), context=contextvars.Context())\n+            if sys.version_info >= (3, 11):  # pragma: py-lt-311\n+                task = self.loop.create_task(self.cycle.run_asgi(app), context=contextvars.Context())\n+            else:  # pragma: py-gte-311\n+                task = contextvars.Context().run(self.loop.create_task, self.cycle.run_asgi(app))\n             task.add_done_callback(self.tasks.discard)\n             self.tasks.add(task)\n         else:\n",
+  "test_diff": "diff --git a/tests/benchmarks/http.py b/tests/benchmarks/http.py\nindex 39e81fa7a..fb41547ba 100644\n--- a/tests/benchmarks/http.py\n+++ b/tests/benchmarks/http.py\n@@ -131,7 +131,7 @@ def __init__(self) -> None:\n         self._tasks: list[asyncio.Task[Any]] = []\n         self._later: list[MockTimerHandle] = []\n \n-    def create_task(self, coroutine: Any) -> Any:\n+    def create_task(self, coroutine: Any, **kwargs: Any) -> Any:\n         self._tasks.insert(0, coroutine)\n         return MockTask()\n \ndiff --git a/tests/protocols/test_http.py b/tests/protocols/test_http.py\nindex 34ad2c75c..6068d7150 100644\n--- a/tests/protocols/test_http.py\n+++ b/tests/protocols/test_http.py\n@@ -226,7 +226,7 @@ def __init__(self):\n         self._tasks: list[asyncio.Task[Any]] = []\n         self._later: list[MockTimerHandle] = []\n \n-    def create_task(self, coroutine: Any) -> Any:\n+    def create_task(self, coroutine: Any, **kwargs: Any) -> Any:\n         self._tasks.insert(0, coroutine)\n         return MockTask()\n \n",
+  "files_changed": [
+    "tests/benchmarks/http.py",
+    "tests/protocols/test_http.py",
+    "uvicorn/protocols/http/h11_impl.py",
+    "uvicorn/protocols/http/httptools_impl.py"
+  ],
+  "source_files": [
+    "uvicorn/protocols/http/h11_impl.py",
+    "uvicorn/protocols/http/httptools_impl.py"
+  ],
+  "test_files": [
+    "tests/protocols/test_http.py"
+  ],
+  "test_support_files": [
+    "tests/benchmarks/http.py"
+  ],
+  "lines_added": 12,
+  "lines_removed": 8,
+  "has_test_changes": true,
+  "merge_commit_sha": "cd52d34b55d898180a65cfc01a6a88aac54c65c3",
+  "base_commit_sha": "5211880320b2e99a532eb121808039404da234ab",
+  "env_commit_sha": "5211880320b2e99a532eb121808039404da234ab",
+  "head_commit_sha": "83065208bc062e93c1ebfbed07014c83c2d3a540",
+  "merged_at": "2026-03-28T11:45:30Z"
+}

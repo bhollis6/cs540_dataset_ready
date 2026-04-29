@@ -1,0 +1,41 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "psf__requests-2317",
+  "repo": "psf/requests",
+  "harness": "codex-cli",
+  "integration_strategy": "pypi_dependency",
+  "eligibility_path": "src/profiles/psf__requests-2317_eligibility.json",
+  "chosen_condition": "comments_docstrings",
+  "clean": {
+    "condition": "clean",
+    "replication_index": 1,
+    "run_root": "runs/psf__requests-2317/codex-cli/clean/rep_1",
+    "workspace_dir": "runs/psf__requests-2317/codex-cli/clean/rep_1/workspace",
+    "oracle_workspace_dir": "runs/psf__requests-2317/codex-cli/clean/rep_1/oracle_workspace",
+    "logs_dir": "runs/psf__requests-2317/codex-cli/clean/rep_1/logs",
+    "metadata_path": "runs/psf__requests-2317/codex-cli/clean/rep_1/metadata.json",
+    "prompt_path": "runs/psf__requests-2317/codex-cli/clean/rep_1/issue_prompt.md",
+    "result_path": "runs/psf__requests-2317/codex-cli/clean/rep_1/result.json",
+    "metrics_path": "runs/psf__requests-2317/codex-cli/clean/rep_1/metrics.json",
+    "degradation_targets": {}
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "replication_index": 1,
+    "run_root": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1",
+    "workspace_dir": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/workspace",
+    "oracle_workspace_dir": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/oracle_workspace",
+    "logs_dir": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/logs",
+    "metadata_path": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/metadata.json",
+    "prompt_path": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/issue_prompt.md",
+    "result_path": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/result.json",
+    "metrics_path": "runs/psf__requests-2317/codex-cli/comments_docstrings/rep_1/metrics.json",
+    "degradation_targets": {
+      "target_files": [
+        "requests/sessions.py",
+        "test_requests.py"
+      ]
+    }
+  },
+  "comparison_artifact_path": "runs/psf__requests-2317/codex-cli/comparison.json"
+}

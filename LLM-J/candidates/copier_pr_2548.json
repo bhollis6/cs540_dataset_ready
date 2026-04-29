@@ -1,0 +1,32 @@
+{
+  "candidate_id": "copier_pr_2548",
+  "repo": "copier-org/copier",
+  "pr_number": 2548,
+  "title": "feat(cli): add `--answers-file` flag to `check-update` command",
+  "description": "I've added the `-a, --answers-file` flag to the `check-update` command.\r\n\r\nCloses #2544.",
+  "patch_diff": "diff --git a/copier/_cli.py b/copier/_cli.py\nindex 4e6ef1bbb..3d5f65a3e 100644\n--- a/copier/_cli.py\n+++ b/copier/_cli.py\n@@ -459,6 +459,14 @@ class CopierCheckUpdateSubApp(cli.Application):  # type: ignore[misc]\n         \"\"\"\n     )\n \n+    answers_file = cli.SwitchAttr(\n+        [\"-a\", \"--answers-file\"],\n+        default=None,\n+        help=(\n+            \"Check for updates using this path (relative to `destination_path`) \"\n+            \"to find the answers file\"\n+        ),\n+    )\n     quiet = cli.Flag(\n         [\"-q\", \"--quiet\"],\n         help=(\n@@ -492,6 +500,7 @@ def main(self, destination_path: cli.ExistingDirectory = \".\") -> int:\n         def inner() -> int:\n             update_available, current_version, latest_version = get_update_data(\n                 dst_path=destination_path,\n+                answers_file=self.answers_file,\n                 use_prereleases=self.prereleases,\n             )\n \ndiff --git a/copier/_main.py b/copier/_main.py\nindex 94b5bdcb4..d11a47637 100644\n--- a/copier/_main.py\n+++ b/copier/_main.py\n@@ -1664,7 +1664,9 @@ def run_update(\n \n \n def get_update_data(\n-    dst_path: Path | str = \".\", use_prereleases: bool = False\n+    dst_path: Path | str = \".\",\n+    answers_file: Path | str | None = None,\n+    use_prereleases: bool = False,\n ) -> tuple[bool, str, str]:\n     \"\"\"Gets data regarding if a subproject has updates.\n \n@@ -1674,7 +1676,15 @@ def get_update_data(\n \n     See [checking a project][checking-a-project].\n     \"\"\"\n-    with Worker(dst_path=Path(dst_path), use_prereleases=use_prereleases) as worker:\n+    with Worker(\n+        dst_path=Path(dst_path),\n+        answers_file=(\n+            RelativePath(answers_file)\n+            if isinstance(answers_file, str)\n+            else answers_file\n+        ),\n+        use_prereleases=use_prereleases,\n+    ) as worker:\n         if worker.subproject.template is None or worker.subproject.template.ref is None:\n             raise UserMessageError(\n                 \"Cannot check because cannot obtain old template references \"\n",
+  "test_diff": "diff --git a/tests/test_check_update.py b/tests/test_check_update.py\nindex 9dfae021c..4703a4b52 100644\n--- a/tests/test_check_update.py\n+++ b/tests/test_check_update.py\n@@ -494,3 +494,57 @@ def test_with_prerelease_template_prereleases_and_quiet_opts(\n     assert run_result[1] == 2\n     captured = capsys.readouterr()\n     assert captured.out == \"\"\n+\n+\n+def test_with_custom_answers_file_path_opt(\n+    capsys: pytest.CaptureFixture[str],\n+    tmp_path_factory: pytest.TempPathFactory,\n+    template_path: str,\n+) -> None:\n+    src = template_path\n+    dst = tmp_path_factory.mktemp(\"dst\")\n+    answers_file = \".my-answers.yml\"\n+\n+    CopierApp.run(\n+        [\n+            \"copier\",\n+            \"copy\",\n+            src,\n+            str(dst),\n+            \"--quiet\",\n+            \"--overwrite\",\n+            \"--vcs-ref=v1.0.0\",\n+            \"--answers-file\",\n+            answers_file,\n+        ],\n+        exit=False,\n+    )\n+    assert (dst / \".my-answers.yml\").exists()\n+\n+    run_result = CopierApp.run(\n+        [\n+            \"copier\",\n+            \"check-update\",\n+            str(dst),\n+        ],\n+        exit=False,\n+    )\n+    assert run_result[1] == 1\n+    capsys.readouterr()\n+\n+    run_result = CopierApp.run(\n+        [\n+            \"copier\",\n+            \"check-update\",\n+            str(dst),\n+            \"--answers-file\",\n+            answers_file,\n+        ],\n+        exit=False,\n+    )\n+    assert run_result[1] == 0\n+    captured = capsys.readouterr()\n+    assert (\n+        \"New template version available.\\nCurrent version is 1.0.0, latest version is 2.0.0.\"\n+        in captured.out\n+    )\ndiff --git a/tests/test_cli.py b/tests/test_cli.py\nindex 2038d7dd9..466721b5d 100644\n--- a/tests/test_cli.py\n+++ b/tests/test_cli.py\n@@ -406,6 +406,9 @@ def test_check_update_help(capsys: pytest.CaptureFixture[str]) -> None:\n     -v, --version                   Prints the program's version and quits\n \n Switches:\n+    -a, --answers-file VALUE:str    Check for updates using this path (relative\n+                                    to `destination_path`) to find the answers\n+                                    file\n     -g, --prereleases               Use prereleases to compare template VCS\n                                     tags.\n     --output-format VALUE:{plain, json} Output format, either 'plain' (the default)\n",
+  "files_changed": [
+    "copier/_cli.py",
+    "copier/_main.py",
+    "tests/test_check_update.py",
+    "tests/test_cli.py"
+  ],
+  "source_files": [
+    "copier/_cli.py",
+    "copier/_main.py"
+  ],
+  "test_files": [
+    "tests/test_check_update.py",
+    "tests/test_cli.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 78,
+  "lines_removed": 2,
+  "has_test_changes": true,
+  "merge_commit_sha": "7ac0ca45d20aa69b5a6ce0f1922838f3b9a8d58f",
+  "base_commit_sha": "4c419a823b7262ca8c4c4378938fbf5cd08fc8f3",
+  "env_commit_sha": "4c419a823b7262ca8c4c4378938fbf5cd08fc8f3",
+  "head_commit_sha": "94e7162ceb2fdd905f3f1fa0eb30e08e5f25a813",
+  "merged_at": "2026-03-12T16:16:11Z"
+}

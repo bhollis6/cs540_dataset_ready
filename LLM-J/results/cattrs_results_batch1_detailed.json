@@ -1,0 +1,266 @@
+[
+  {
+    "candidate_id": "cattrs_pr_108",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 108,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 21,
+    "recommendation": "ACCEPT",
+    "summary": "Strong candidate. This is a tightly-scoped, well-tested bug fix in core cattrs disambiguation logic. The tests are layered (unit, property-based, integration) and directly validate the fix with a clear pass/fail signal. The code contains type hints, descriptive naming, and a meaningful comment\u2014rich signals for mutation experiments. Complexity is in the sweet spot: requires library knowledge and understanding of Python idioms, but the actual change is modest. The problem description is clear enough to serve as a task prompt for an AI agent.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR is extremely focused: one bug fix in `src/cattr/disambiguators.py` (selecting a non-default unique field for disambiguation), accompanied by corresponding tests and a changelog entry. No unrelated cleanup or bundled changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The PR adds three distinct layers of test coverage: (1) a direct unit test in `test_disambigutors.py` verifying `ValueError` is raised when only default unique fields exist (classes E and F), (2) updated hypothesis property-based test constraints to enforce the new non-default requirement via `assume(... .default is NOTHING)`, and (3) an integration test `test_structure_union_edge_case` in `test_structure.py` that directly reproduces the original bug\u2014structuring `List[Union[A, B]]` where both classes have a required field and an optional default field. The integration test is a clear, deterministic pass/fail signal."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The core fix is in `src/cattr/disambiguators.py`, real application logic with type annotations (`*classes: Type`, `-> Callable`), meaningful variable names (`uniq_attrs_dict`, `cl_fields`, `attr_name`), and a deliberate comment ('# We need a unique attribute with no default.'). Tests use typed attrs classes (`a1: Any`, `a2: Optional[Any] = None`) and hypothesis. The for/else Python idiom is also non-trivial to reason about. Solid signals for degradation experiments on naming, type hints, and docstrings."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The description clearly identifies the bug (disambiguator picks fields with defaults, leading to non-deterministic union structuring), explains the root cause (default fields are optional in `__init__`, so absent keys don't distinguish the class), and notes a deterministic test was provided. Reproduction steps aren't spelled out explicitly, but the integration test essentially serves that purpose. Clear enough to hand to an agent with code context."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The fix is ~10 lines: import `NOTHING`, iterate unique field names checking for no default using Python's for/else pattern, raise if none found. It requires understanding attrs' `NOTHING` sentinel, how `uniq` is computed from set differences, and the for/else idiom. Moderate complexity\u2014not a one-liner, but also not architecturally deep. An agent needs to understand the attrs library and the existing disambiguation logic context, which is a reasonable challenge without being excessive."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_115",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 115,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 17,
+    "recommendation": "REVIEW",
+    "summary": "This is a solid PR candidate for the experiment. It touches core application code across multiple modules with real type annotations, descriptive naming, and clear tests that serve as pass/fail signals. The complexity is in the sweet spot\u2014requires understanding the dispatch architecture but is not overwhelming. The main weakness is the extremely sparse PR description, which would make it harder to hand to an agent as a standalone task prompt without supplementing with changelog/diff context.",
+    "scores": {
+      "scope": {
+        "score": 3,
+        "reasoning": "The PR is primarily focused on improving union support (new `unstructure_as` parameter, union hook registration, `_unstructure_union` method), but also includes tangential changes: fixing bare type handling in `_compat.py` (list/dict/set/frozenset), upgrading lru_cache size in `function_dispatch.py`, and moving documentation. These are related enough to union support to be coherent, but the scope extends beyond a single minimal change."
+      },
+      "test_coverage": {
+        "score": 4,
+        "reasoning": "The PR adds a dedicated `tests/test_unions.py` with two hypothesis-based tests (`test_custom_union_toplevel_roundtrip` and `test_custom_union_clsfield_roundtrip`) that directly validate the core feature: custom union hooks, the `unstructure_as` parameter, and roundtrip correctness for both top-level and embedded union fields. Both `Converter` and `GenConverter` are tested. Existing tests are updated to use the public API instead of internal `_union_registry`. These serve as clear pass/fail signals."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The PR touches core application code in `converters.py`, `_compat.py`, `gen.py`, `function_dispatch.py`, and `multistrategy_dispatch.py`. There are explicit type annotations (`def is_sequence(type: Any) -> bool:`, `_union_struct_registry: Dict[Any, Callable[[Any, Type[T]], T]]`), descriptive naming throughout, a docstring on `_unstructure_union`, and the new tests expose rich behavioral context. Degrading naming, type hints, or docstrings here would meaningfully affect an agent's ability to understand the dispatch pipeline."
+      },
+      "clarity": {
+        "score": 2,
+        "reasoning": "The PR description is a single sentence: 'Flesh out our union support, for a start.' The HISTORY.rst entry adds slightly more context (new `unstructure_as` parameter, improved union hooks), but there is no problem statement, no reproduction steps, no description of what was broken or what behavior changed. An AI agent would need to read through the diff carefully to understand what feature to implement."
+      },
+      "complexity": {
+        "score": 4,
+        "reasoning": "The change requires understanding how the multi-layered dispatch system works (FunctionDispatch, MultiStrategyDispatch, singledispatch), how union types differ from regular classes in the dispatch pipeline, how code generation in `gen.py` calls back into the converter, and why `a.type` should be used for dispatch rather than `v.__class__`. Multiple interconnected modules must be modified consistently. This is a solid engineering task\u2014not a one-liner, not unreasonably large\u2014that requires genuine architectural reasoning."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_117",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 117,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 21,
+    "recommendation": "ACCEPT",
+    "summary": "A well-focused bug fix with a clear test oracle, meaningful application code with type hints and docstrings, and just the right complexity level. The inheritance/singledispatch interaction is subtle enough to require genuine reasoning, but the fix is compact enough to be solvable. Strong experimental candidate.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "The PR is tightly scoped to a single bug: GenConverter's incompatibility with attrs inheritance hierarchies due to singledispatch MRO behavior. Changes span exactly two source files (multistrategy_dispatch.py and converters.py), one new test file, and a changelog entry. Every change directly serves the same fix \u2014 no unrelated cleanup or bundled features."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "A new test file `tests/test_genconverter_inheritance.py` is added that exactly reproduces the reported failure scenario: define a base attrs class A, a subclass B(A), structure both with GenConverter. The test has a clear pass/fail signal \u2014 the second assert (`B(1, 2) == converter.structure(...)`) would fail on the pre-fix code. This is exactly the kind of targeted regression test that works as an experimental oracle."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The changes touch core application logic in `multistrategy_dispatch.py` (type-annotated parameter `no_singledispatch: bool = False`, descriptive slot names `_direct_dispatch`/`_function_dispatch`/`_single_dispatch`, docstring explaining the three-tier dispatch strategy) and `converters.py` (meaningful inline comment explaining *why* direct dispatch is used). There are meaningful names, type hints, and docstrings throughout \u2014 good degradation surface. Loses one point because the overall changeset is fairly small and the surrounding code in these files isn't enormously rich in comments/docs."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description clearly explains the root cause (singledispatch MRO causing subclasses to reuse the base class's generated hook), why it happens specifically with GenConverter (it registers hooks outside function dispatch), and what the fix does (introduce a direct-dispatch layer that bypasses singledispatch). References issue #116. Missing explicit reproduction steps, but the new test file effectively serves that role. An AI agent could understand the task from the description alone with minor code reading."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The fix requires understanding Python's singledispatch MRO semantics, how GenConverter lazily generates and caches hooks, and why sharing dispatch across subclasses is wrong for code-generated hooks. The actual code change is modest (~30 lines added), but reasoning about it demands real conceptual understanding of the three-tier dispatch design. Not trivial at all, but also not sprawling \u2014 firmly in the sweet spot for an experimental task."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_134",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 134,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "A high-quality candidate: tightly scoped, with tests that provide clean FAIL_TO_PASS signals directly on the patched code paths, core application code with good type annotations and naming, and moderate complexity (API knowledge + multi-site fix). The main weakness is a sparse PR description that requires inferring the full task from the diff. Overall well-suited for the experiment.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely focused change: exactly 3 one-line substitutions in converters.py (replacing direct `__attrs_attrs__` attribute access with public `fields()`/`has()` API calls) plus a single new test file. All changes address one coherent issue: stdlib dataclass compatibility via the public attrs API."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The new test file `tests/test_dataclasses.py` adds 3 parameterized test functions covering both `Converter` and `GenConverter`, testing dataclasses standalone, nested inside an attrs class, and inside a `List`. Each test round-trips through structure/unstructure. These tests would fail on the pre-fix code and pass after \u2014 a clean FAIL_TO_PASS signal directly exercising all three patched code paths."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The changed code is core application logic in `converters.py` \u2014 the library's heart. The surrounding context includes type hints (`obj: Any`, `cl: Type[T]`, `-> Dict[str, Any]`), descriptive function names (`unstructure_attrs_asdict`, `structure_attrs_fromdict`, `_get_dis_func`), and docstrings. The test file uses clear, readable class names and well-named test functions. Slightly below 5 because the actual diff is only 3 lines, so the richness of surrounding mutable properties depends on broader converters.py context not shown in the patch."
+      },
+      "clarity": {
+        "score": 3,
+        "reasoning": "The PR title ('Add smoke tests for nested attrs-dataclasses') and description ('Minor fixes to converters.py for some basic conversion smoke tests' + issue link) are brief. The description tells you something was fixed but not *what* broke or *why* using `fields()`/`has()` instead of `__attrs_attrs__` matters. An agent would need to infer from the diff that the goal was stdlib dataclass support. Readable but requires code-reading to fully understand the task."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The fix requires understanding that attrs' public `fields()` and `has()` functions work with both attrs classes and stdlib dataclasses (unlike direct `__attrs_attrs__` attribute access), then finding the three call sites in converters.py. It's not a trivial typo fix \u2014 it involves API knowledge and multiple locations \u2014 but it's not deeply algorithmic either. Sweet-spot complexity for our experiment: requires navigation and reasoning about library semantics without being overwhelming."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_139",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 139,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 22,
+    "recommendation": "ACCEPT",
+    "summary": "This is a high-quality experimental candidate. It implements a coherent, moderately complex feature (attrib converter fallback/preference) with excellent test coverage that directly validates both behavioral modes, touches core application code dense with type hints and descriptive naming, and has a clear enough description to hand to an AI agent. The StructureHandlerNotFoundError refactor is an integral part of the feature rather than noise. All four criteria we plan to degrade (type hints, naming, comments, test surface) are richly represented, making it well-suited for measuring degradation effects.",
+    "scores": {
+      "scope": {
+        "score": 4,
+        "reasoning": "The PR is well-focused on a single feature: supporting attr.ib converters during structuring, with two modes (fallback and prefer). The introduction of StructureHandlerNotFoundError is tightly coupled to the feature\u2014it's needed so the fallback mechanism can catch specifically 'no handler found' errors rather than generic exceptions. Documentation updates, the new error class, and changes to gen.py's code generation path all serve the same feature. No unrelated cleanup is bundled in."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "The test diff adds two comprehensive parameterized tests (both Converter and GenConverter) in test_structure_attrs.py: test_structure_fallback_to_attrib_converters and test_structure_prefers_attrib_converters. These use Mock objects to verify the attrib converters are actually called, cover multiple attribute scenarios (no type, built-in type, custom type, default values), and directly validate the two feature modes. Existing tests are updated to assert exc.value.type_ on the new StructureHandlerNotFoundError, strengthening signal. These tests could serve directly as pass/fail signal for the experiment."
+      },
+      "mutation_relevance": {
+        "score": 5,
+        "reasoning": "The PR touches core application logic across multiple files: converters.py (the main Converter and GenConverter classes with typed method signatures), dispatch.py (the dispatch mechanism), gen.py (code generation logic with type annotations and descriptive naming), and a new errors.py. The code is rich in type annotations (Union[Attribute, Field], Any, bool, Type[T], Callable), descriptive variable names (prefer_attrib_converters, attrib_converter, _structure_attribute, _fallback_to_passthru), and inline comments explaining intent. The surrounding test suite provides strong behavioral context that would expose signal when code properties are degraded."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description concisely states both behaviors: (1) fallback to attrib converter if cattrs dispatch finds no handler, and (2) a prefer_attrib_converters=True option to invert priority. The issue reference (#138) provides additional context. The documentation changes in structuring.rst add doctest examples illustrating exact expected behavior with concrete input/output. An AI agent could understand the task well from the description plus docs diff. Missing reproduction steps or a fuller problem statement prevents a 5."
+      },
+      "complexity": {
+        "score": 4,
+        "reasoning": "This PR requires navigating multiple files and understanding two distinct code paths: the OOP converter path (converters.py _structure_attribute) and the code-generation path (gen.py make_dict_structure_fn). The developer must understand how attrs fields work, how cattrs dispatch hooks are registered, and how generated structuring functions are built dynamically. The fallback logic using exception-based control flow and the _fallback_to_passthru decorator add non-obvious reasoning requirements. It's comfortably within the sweet spot: clearly not trivial, but a solid engineer can reason through it in a focused session."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_142",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 142,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 20,
+    "recommendation": "ACCEPT",
+    "summary": "A well-scoped, single-feature PR with excellent test coverage and clear pass/fail signals. The main weakness is a sparse PR description that would require an agent to infer the task from title and code. There is a notable parameter-name inconsistency between tests/docs (`_cattr_forbid_extra_keys`) and implementation (`_cattrs_forbid_extra_keys`) that makes this a more realistic and interesting candidate. The code touches type-annotated, well-named application logic that would expose meaningful signals under mutation. Overall a strong candidate for the experiment.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "This PR adds a single cohesive feature: `forbid_extra_keys` support to `GenConverter` and `make_dict_structure_fn`. All changes (changelog, docs, `converters.py`, `gen.py`, and tests) serve this one feature. No unrelated cleanup or bundled changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "Four distinct test cases are added: a property-based round-trip test with the flag enabled, a property-based test that extra keys raise an exception, a test for the default-field/renamed-key edge case, and a concrete nested class test that also validates per-class override behavior. Together they provide direct happy-path and failure-path coverage and would serve clearly as pass/fail signals."
+      },
+      "mutation_relevance": {
+        "score": 4,
+        "reasoning": "The changed source files (`converters.py`, `gen.py`) are core application code with type annotations (`bool`, `Type[T]`, `Mapping[Type, AttributeOverride]`, `Callable`), descriptive variable names (`allowed_fields`, `unknown_fields`, `attrib_overrides`, `_cattrs_forbid_extra_keys`), and surrounding tests. The implementation is compact but touches the code-generation machinery meaningfully. Slightly below a 5 because the actual new lines in `gen.py` are mostly string interpolation for generated code rather than richly annotated logic."
+      },
+      "clarity": {
+        "score": 3,
+        "reasoning": "The PR description is sparse ('Would resolve #101... wanted to get it up for a first review to see if the approach is reasonable') with no explanation of the problem being solved. The title is clear, and the documentation added within the PR describes expected behavior well including a doctest example, but an agent handed only the PR description would need to read the code to understand the task. The referenced issue (#101) is not included here."
+      },
+      "complexity": {
+        "score": 3,
+        "reasoning": "The task requires understanding cattrs' code-generation pattern in `gen.py` (how structuring functions are built from string lines and `globs`), how `GenConverter` stores and propagates settings, and the kwargs-convention for private overrides (`_cattrs_*`). There is also a subtle inconsistency in the PR itself: the test and docs use `_cattr_forbid_extra_keys` (missing 't') while the implementation uses `_cattrs_forbid_extra_keys`, adding a small but realistic debugging challenge. Not trivial, but well within a single focused engineering session."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_15",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 15,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 17,
+    "recommendation": "REVIEW",
+    "summary": "A well-focused, cleanly tested bug fix for default value handling in cattrs structuring. The test coverage is strong and the scope is tight, but the PR description is too sparse to serve as a self-contained agent prompt, and the fix is conceptually simple enough (a one-line change at its core) that it may not produce meaningful signal differences between clean and degraded codebase conditions.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "Extremely tightly scoped: a single bug fix in one function (`_structure_attr_from_dict`) in one source file (`cattr/converters.py`). The entire change is about making attrs default values respected during structuring. No unrelated cleanup or bundled changes."
+      },
+      "test_coverage": {
+        "score": 5,
+        "reasoning": "Two new test functions added that directly validate the fix. Both use hypothesis for property-based testing and explicitly test structuring from an empty dict `{}` when defaults exist \u2014 a direct pass/fail signal for the exact behavior being fixed. `test_structure_simple_from_dict_default` and `test_simple_roundtrip_defaults` both verify the core scenario clearly."
+      },
+      "mutation_relevance": {
+        "score": 3,
+        "reasoning": "The changed code is real application logic in a type-dispatch library, which is relevant. There are some inline comments, and the tests have docstrings. However, the actual patch is small (~8 lines), the variable names (`val`, `mapping`, `type_`) are short/abbreviated, and the changed section itself doesn't have type annotations. The broader file likely has more richness, but the patch surface is thin."
+      },
+      "clarity": {
+        "score": 2,
+        "reasoning": "The description is sparse: 'fix #10 or #14' with a vague reference to 'creating the attr class without providing optional value.' No reproduction steps, no expected vs. actual behavior described, and it references external issues without summarizing them. An AI agent would need to read the diff and the referenced issues to understand the task."
+      },
+      "complexity": {
+        "score": 2,
+        "reasoning": "The core fix is essentially changing `mapping[name]` to `mapping.get(name, a.default)` and unifying a variable reference. Once you understand that attrs attributes can have defaults and that `NOTHING` is a sentinel, the solution is almost immediately obvious. This is a real fix but sits at the simple end \u2014 not enough complexity to distinguish agent performance across degraded vs. clean conditions meaningfully."
+      }
+    }
+  },
+  {
+    "candidate_id": "cattrs_pr_153",
+    "repo": "python-attrs/cattrs",
+    "pr_number": 153,
+    "run_number": 1,
+    "model": "claude-sonnet-4-6",
+    "provider": "claude-code",
+    "total_score": 12,
+    "recommendation": "REJECT",
+    "summary": "This PR is unsuitable for the experiment. It is a pure import-sorting cleanup with no functional changes, no meaningful application logic touched, no test coverage of any behavior, and trivial complexity. An agent asked to re-implement this would simply run `isort` \u2014 there is no meaningful coding task here, and degrading codebase properties (type hints, naming, docstrings) would have zero impact on an agent's ability to reproduce it.",
+    "scores": {
+      "scope": {
+        "score": 5,
+        "reasoning": "This PR is entirely focused on a single coherent task: adding isort to the linter configuration and running it across the codebase. Every file change is purely import reordering, with no functional changes mixed in."
+      },
+      "test_coverage": {
+        "score": 1,
+        "reasoning": "The test file changes are purely cosmetic import reordering (isort cleanup) \u2014 no new tests are added, no assertions changed, and no behavioral coverage is introduced. The changes to test files do not verify any fix."
+      },
+      "mutation_relevance": {
+        "score": 1,
+        "reasoning": "All changes are import statement reordering and configuration updates (tox.ini, pyproject.toml). There is no application logic touched, no type annotations added or modified, no docstrings or comments changed, and no meaningful variable naming affected. This is purely formatting/tooling configuration."
+      },
+      "clarity": {
+        "score": 4,
+        "reasoning": "The PR description is clear and concise: it explains exactly what was done (add isort to tox lint, update isort settings to black profile, run isort). The intent is unambiguous, though it's a trivial tooling task rather than a feature or bug fix."
+      },
+      "complexity": {
+        "score": 1,
+        "reasoning": "This is a pure formatting/tooling PR \u2014 running isort to reorder imports and updating configuration files. There is zero algorithmic complexity, no logic changes, and the entire change could be reproduced by running a single CLI command. This is about as trivial as a PR can get while still touching multiple files."
+      }
+    }
+  }
+]

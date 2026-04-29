@@ -1,0 +1,28 @@
+{
+  "candidate_id": "pydantic-settings_pr_786",
+  "repo": "pydantic/pydantic-settings",
+  "pr_number": 786,
+  "title": "Fix AttributeError with nested env vars for dict fields (#785)",
+  "description": "Fixes https://github.com/pydantic/pydantic-settings/issues/785",
+  "patch_diff": "diff --git a/pydantic_settings/sources/providers/env.py b/pydantic_settings/sources/providers/env.py\nindex f778049c..f1abb6fb 100644\n--- a/pydantic_settings/sources/providers/env.py\n+++ b/pydantic_settings/sources/providers/env.py\n@@ -21,6 +21,7 @@\n from ..utils import (\n     _annotation_contains_types,\n     _annotation_enum_name_to_val,\n+    _annotation_is_complex,\n     _get_model_fields,\n     _union_is_complex,\n     parse_env_vars,\n@@ -209,7 +210,7 @@ class Cfg(BaseSettings):\n                         return f\n         return None\n \n-    def explode_env_vars(self, field_name: str, field: FieldInfo, env_vars: Mapping[str, str | None]) -> dict[str, Any]:\n+    def explode_env_vars(self, field_name: str, field: FieldInfo, env_vars: Mapping[str, str | None]) -> dict[str, Any]:  # noqa: C901\n         \"\"\"\n         Process env_vars and extract the values of keys containing env_nested_delimiter into nested dictionaries.\n \n@@ -253,17 +254,22 @@ def explode_env_vars(self, field_name: str, field: FieldInfo, env_vars: Mapping[\n \n             # check if env_val maps to a complex field and if so, parse the env_val\n             if (target_field or is_dict) and env_val:\n-                if target_field:\n+                if isinstance(target_field, FieldInfo):\n                     is_complex, allow_json_failure = self._field_is_complex(target_field)\n                     if self.env_parse_enums:\n                         enum_val = _annotation_enum_name_to_val(target_field.annotation, env_val)\n                         env_val = env_val if enum_val is None else enum_val\n+                elif target_field:\n+                    # target_field is a raw type (e.g. from dict value type annotation)\n+                    is_complex = _annotation_is_complex(target_field, [])\n+                    allow_json_failure = True\n                 else:\n                     # nested field type is dict\n                     is_complex, allow_json_failure = True, True\n                 if is_complex:\n                     try:\n-                        env_val = self.decode_complex_value(last_key, target_field, env_val)  # type: ignore\n+                        field_info = target_field if isinstance(target_field, FieldInfo) else None\n+                        env_val = self.decode_complex_value(last_key, field_info, env_val)  # type: ignore\n                     except ValueError as e:\n                         if not allow_json_failure:\n                             raise e\n",
+  "test_diff": "diff --git a/tests/test_settings.py b/tests/test_settings.py\nindex 25f50a45..fda1ccd7 100644\n--- a/tests/test_settings.py\n+++ b/tests/test_settings.py\n@@ -2855,6 +2855,49 @@ class Settings(BaseSettings):\n     assert s.model_dump() == {'nested': {'foo': {'a': {'b': 'bar'}}}}\n \n \n+def test_env_nested_dict_simple_value_types(env):\n+    \"\"\"Test that nested env vars work for dict fields with simple value types (e.g. dict[str, str]).\n+\n+    Regression test for https://github.com/pydantic/pydantic-settings/issues/785\n+    \"\"\"\n+\n+    class Settings(BaseSettings):\n+        nested_field: dict[str, str]\n+\n+        model_config = SettingsConfigDict(env_nested_delimiter='__')\n+\n+    env.set('nested_field__key', 'some value')\n+    s = Settings()\n+    assert s.model_dump() == {'nested_field': {'key': 'some value'}}\n+\n+\n+def test_env_nested_dict_multiple_simple_keys(env):\n+    \"\"\"Test multiple nested env vars for dict[str, str].\"\"\"\n+\n+    class Settings(BaseSettings):\n+        nested_field: dict[str, str]\n+\n+        model_config = SettingsConfigDict(env_nested_delimiter='__')\n+\n+    env.set('nested_field__key1', 'value1')\n+    env.set('nested_field__key2', 'value2')\n+    s = Settings()\n+    assert s.model_dump() == {'nested_field': {'key1': 'value1', 'key2': 'value2'}}\n+\n+\n+def test_env_nested_dict_complex_value_type(env):\n+    \"\"\"Test nested env vars for dict with complex value types like list[str].\"\"\"\n+\n+    class Settings(BaseSettings):\n+        nested_field: dict[str, list[str]]\n+\n+        model_config = SettingsConfigDict(env_nested_delimiter='__')\n+\n+    env.set('nested_field__key', '[\"a\", \"b\"]')\n+    s = Settings()\n+    assert s.model_dump() == {'nested_field': {'key': ['a', 'b']}}\n+\n+\n def test_nested_models_leaf_vs_deeper_env_dict_assumed(env):\n     class NestedSettings(BaseModel):\n         foo: str\n",
+  "files_changed": [
+    "pydantic_settings/sources/providers/env.py",
+    "tests/test_settings.py"
+  ],
+  "source_files": [
+    "pydantic_settings/sources/providers/env.py"
+  ],
+  "test_files": [
+    "tests/test_settings.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 52,
+  "lines_removed": 3,
+  "has_test_changes": true,
+  "merge_commit_sha": "58b236a36473e01bfe42e5f75d39d46721e0593d",
+  "base_commit_sha": "4933f06402ed55e32bcdcefd6c8f59ffe1fefd24",
+  "env_commit_sha": "4933f06402ed55e32bcdcefd6c8f59ffe1fefd24",
+  "head_commit_sha": "eb6254b0af36b93f1b565c6d77fd28972c916418",
+  "merged_at": "2026-02-18T08:20:32Z"
+}

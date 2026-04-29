@@ -1,0 +1,14 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-25973",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "10dbc142bd17ccf7bd38eec2ac04b52ce0d1009e",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25973/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-25973/codex-cli/comments_docstrings/rep_2/workspace",
+  "degraded_condition": "comments_docstrings",
+  "degraded_targets": {
+    "target_files": [
+      "sklearn/feature_selection/_sequential.py",
+      "sklearn/feature_selection/tests/test_sequential.py"
+    ]
+  }
+}

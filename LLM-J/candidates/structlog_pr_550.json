@@ -1,0 +1,29 @@
+{
+  "candidate_id": "structlog_pr_550",
+  "repo": "hynek/structlog",
+  "pr_number": 550,
+  "title": "Add structlog.stdlib.ProcessorFormatter(use_get_message=True)",
+  "description": "Fixes #520\r\n\r\nneeds once confirmed;\r\n\r\n- [x] tests\r\n- [x] better docs",
+  "patch_diff": "diff --git a/CHANGELOG.md b/CHANGELOG.md\nindex 9a12c8fb..7a0e35cf 100644\n--- a/CHANGELOG.md\n+++ b/CHANGELOG.md\n@@ -28,6 +28,9 @@ You can find our backwards-compatibility policy [here](https://github.com/hynek/\n \n - `structlog.threadlocal.tmp_bind()` now also works with `BoundLoggerLazyProxy` (in other words: before anything is bound to a bound logger).\n \n+- stdlib: `ProcessorFormatter` can now be told to not render the log record message using `getMessage` and just `str(record.msg)` instead.\n+  [#550](https://github.com/hynek/structlog/issues/550)\n+\n - stdlib: `structlog.stdlib.BoundLogger.exception()`'s handling of`LogRecord.exc_info` is now set consistent with `logging`.\n   [#571](https://github.com/hynek/structlog/issues/571)\n   [#572](https://github.com/hynek/structlog/issues/572)\ndiff --git a/src/structlog/stdlib.py b/src/structlog/stdlib.py\nindex 9e82035e..5e05e9bd 100644\n--- a/src/structlog/stdlib.py\n+++ b/src/structlog/stdlib.py\n@@ -964,6 +964,10 @@ class ProcessorFormatter(logging.Formatter):\n             This parameter exists for historic reasons. Please use *processors*\n             instead.\n \n+        use_get_message:\n+            If True, use ``record.getMessage`` to get a fully rendered log\n+            message, otherwise use ``str(record.msg)``. (default: True)\n+\n     Raises:\n \n         TypeError: If both or neither *processor* and *processors* are passed.\n@@ -976,6 +980,7 @@ class ProcessorFormatter(logging.Formatter):\n     .. deprecated:: 21.3.0\n        *processor* (singular) in favor of *processors* (plural). Removal is not\n        planned.\n+    .. versionadded:: 23.3.0 *use_get_message*\n     \"\"\"\n \n     def __init__(\n@@ -987,6 +992,7 @@ def __init__(\n         keep_stack_info: bool = False,\n         logger: logging.Logger | None = None,\n         pass_foreign_args: bool = False,\n+        use_get_message: bool = True,\n         *args: Any,\n         **kwargs: Any,\n     ) -> None:\n@@ -1011,6 +1017,7 @@ def __init__(\n         self.keep_stack_info = keep_stack_info\n         self.logger = logger\n         self.pass_foreign_args = pass_foreign_args\n+        self.use_get_message = use_get_message\n \n     def format(self, record: logging.LogRecord) -> str:\n         \"\"\"\n@@ -1043,7 +1050,9 @@ def format(self, record: logging.LogRecord) -> str:\n             logger = self.logger\n             meth_name = record.levelname.lower()\n             ed = {\n-                \"event\": record.getMessage(),\n+                \"event\": record.getMessage()\n+                if self.use_get_message\n+                else str(record.msg),\n                 \"_record\": record,\n                 \"_from_structlog\": False,\n             }\n",
+  "test_diff": "diff --git a/tests/test_stdlib.py b/tests/test_stdlib.py\nindex 626b1a7c..569bbbd7 100644\n--- a/tests/test_stdlib.py\n+++ b/tests/test_stdlib.py\n@@ -1189,6 +1189,34 @@ def emit(self, record):\n \n         assert not records\n \n+    def test_use_get_message_false(self):\n+        \"\"\"\n+        If use_get_message_is False, the event is obtained using\n+        str(record.msg) instead of calling record.getMessage. That means\n+        positional formatting is not performed.\n+        \"\"\"\n+        event_dicts = []\n+\n+        def capture(_, __, ed):\n+            event_dicts.append(ed.copy())\n+\n+            return str(ed)\n+\n+        proc = ProcessorFormatter(processors=[capture], use_get_message=False)\n+\n+        record = logging.LogRecord(\n+            \"foo\",\n+            logging.INFO,\n+            \"path.py\",\n+            42,\n+            \"le msg: %s\",\n+            (\"keep separate\",),\n+            None,\n+        )\n+\n+        assert proc.format(record)\n+        assert \"le msg: %s\" == event_dicts[0][\"event\"]\n+\n \n @pytest_asyncio.fixture(name=\"abl\")\n async def _abl(cl):\n",
+  "files_changed": [
+    "CHANGELOG.md",
+    "src/structlog/stdlib.py",
+    "tests/test_stdlib.py"
+  ],
+  "source_files": [
+    "src/structlog/stdlib.py"
+  ],
+  "test_files": [
+    "tests/test_stdlib.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 41,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "448f1800ecb2f5b293b977b08fafe97b1ddb2fc5",
+  "base_commit_sha": "6323d5fc54a5e5ff09eca7d8b912ab6ef9256992",
+  "env_commit_sha": "6323d5fc54a5e5ff09eca7d8b912ab6ef9256992",
+  "head_commit_sha": "c2c694b1a5d532410ddc8be9cc147cf28ac56b5d",
+  "merged_at": "2023-11-21T07:29:38Z"
+}

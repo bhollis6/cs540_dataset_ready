@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1.0",
+  "instance_id": "matplotlib__matplotlib-20676",
+  "repo": "matplotlib/matplotlib",
+  "harness": "codex-cli",
+  "chosen_condition": "comments_docstrings",
+  "integration_strategy": "pypi_dependency",
+  "clean": {
+    "condition": "clean",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 2,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 3,
+    "exploration_efficiency": 0.6667,
+    "total_duration_seconds": 11.064,
+    "changed_files": [
+      "lib/matplotlib/tests/test_widgets.py",
+      "lib/matplotlib/widgets.py"
+    ]
+  },
+  "degraded": {
+    "condition": "comments_docstrings",
+    "completion_reason": "oracle_fail",
+    "target_success": false,
+    "fail_to_pass_failed_count": 2,
+    "pass_to_pass_failed_count": 0,
+    "files_opened_before_first_edit": 2,
+    "exploration_efficiency": 1.0,
+    "total_duration_seconds": 14.073,
+    "changed_files": [
+      "lib/matplotlib/mpl-data/images/back-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/filesave-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/forward-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/help-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/home-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/move-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/subplots-symbolic.svg",
+      "lib/matplotlib/mpl-data/images/zoom_to_rect-symbolic.svg",
+      "lib/matplotlib/tests/test_widgets.py",
+      "lib/matplotlib/widgets.py"
+    ]
+  },
+  "deltas": {
+    "target_success_changed": false,
+    "fail_to_pass_failed_count_delta": 0,
+    "pass_to_pass_failed_count_delta": 0,
+    "files_opened_before_first_edit_delta": -1,
+    "exploration_efficiency_delta": 0.33330000000000004,
+    "total_duration_seconds_delta": 3.0090000000000003
+  },
+  "notes": [
+    "Proper RQ1 matrix execution cell.",
+    "Active helper: dev/active/bootstrap-2026-04-22/run_codex_oracle_cell.py"
+  ],
+  "comparison_type": "pilot_oracle_replay",
+  "replication_index": 2,
+  "oracle_logs": {
+    "clean": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/clean/rep_2/logs/oracle_test_output.txt",
+    "degraded": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/matplotlib__matplotlib-20676/codex-cli/comments_docstrings/rep_2/logs/oracle_test_output.txt"
+  },
+  "agent_metrics": {
+    "clean": {
+      "files_opened_before_first_edit": 3,
+      "opened_files_before_first_edit": [
+        "lib/matplotlib/widgets.py",
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/axes/_axes.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/widgets.py"
+      ],
+      "dead_end_file_opens": 1,
+      "dead_end_opened_files": [
+        "lib/matplotlib/axes/_axes.py"
+      ],
+      "exploration_efficiency": 0.6667,
+      "first_edit_detected": true,
+      "input_tokens": 677338,
+      "cached_input_tokens": 634112,
+      "output_tokens": 4605,
+      "total_tokens": 681943
+    },
+    "degraded": {
+      "files_opened_before_first_edit": 2,
+      "opened_files_before_first_edit": [
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/widgets.py"
+      ],
+      "relevant_files_opened": 2,
+      "relevant_opened_files": [
+        "lib/matplotlib/tests/test_widgets.py",
+        "lib/matplotlib/widgets.py"
+      ],
+      "dead_end_file_opens": 0,
+      "dead_end_opened_files": [],
+      "exploration_efficiency": 1.0,
+      "first_edit_detected": true,
+      "input_tokens": 1786593,
+      "cached_input_tokens": 1658624,
+      "output_tokens": 7268,
+      "total_tokens": 1793861
+    }
+  }
+}

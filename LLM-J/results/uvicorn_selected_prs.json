@@ -1,0 +1,197 @@
+{
+  "repo": "encode/uvicorn",
+  "selection_timestamp": "2026-04-27T05:18:16Z",
+  "model_used": "claude-sonnet-4-6",
+  "provider_used": "claude-code",
+  "total_candidates": 22,
+  "accepted": 12,
+  "review": 7,
+  "rejected": 3,
+  "accept_threshold": 18,
+  "selected_prs": [
+    {
+      "candidate_id": "uvicorn_pr_2829",
+      "pr_number": 2829,
+      "total_score": 24,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 5,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Excellent experimental candidate. The PR fixes a genuine, well-documented protocol bug with a focused, symmetric change across two parallel implementations, accompanied by directly-validating tests that serve as clear pass/fail signals. The code is core ASGI protocol logic rich in type hints, descriptive naming, and meaningful state variables — all high-value mutation targets. The description is comprehensive enough to serve as a standalone agent task prompt. Complexity is in the ideal sweet spot: requires real protocol understanding but the solution is contained and verifiable.",
+      "merge_commit_sha": "587042d68ff6c813ec0d8cfafaa820ebe7229d23",
+      "base_commit_sha": "c9a75fb67b2e969253a41ef4ad447e013eee879e",
+      "env_commit_sha": "c9a75fb67b2e969253a41ef4ad447e013eee879e",
+      "head_commit_sha": "76200e8610030a1847973157d68657384e2b2bf9",
+      "source_files": [
+        "uvicorn/protocols/http/h11_impl.py",
+        "uvicorn/protocols/http/httptools_impl.py"
+      ],
+      "test_files": [
+        "tests/protocols/test_http.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/protocols/test_http.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/protocols/test_http.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2183",
+      "pr_number": 2183,
+      "total_score": 21,
+      "scores": {
+        "scope": 4,
+        "test_coverage": 5,
+        "mutation_relevance": 5,
+        "clarity": 3,
+        "complexity": 4
+      },
+      "recommendation": "ACCEPT",
+      "summary": "Strong candidate. This is a complete, focused rewrite of uvicorn's multiprocess supervisor with excellent test coverage, rich type-annotated application code, and complexity squarely in the experimental sweet spot. The new Process class and signal-dispatch pattern give agents meaningful behavioral logic to navigate. The only weaknesses are a thin PR description (requiring code reading to fully understand the task) and the cross-platform conditionals that could complicate degradation. Overall, this PR would produce meaningful signal differences between clean and degraded conditions.",
+      "merge_commit_sha": "53fa2738226c55738b315934621026af9708d0a0",
+      "base_commit_sha": "22873a99188413332df98c04a351e061672cb523",
+      "env_commit_sha": "22873a99188413332df98c04a351e061672cb523",
+      "head_commit_sha": "a1054e7751e13db8dac8a3a6177ce2f7301418df",
+      "source_files": [
+        "uvicorn/supervisors/multiprocess.py"
+      ],
+      "test_files": [
+        "tests/supervisors/test_multiprocess.py"
+      ],
+      "test_support_files": [
+        "tests/supervisors/__init__.py"
+      ],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/supervisors/__init__.py",
+            "tests/supervisors/test_multiprocess.py",
+            "uvicorn/supervisors/multiprocess.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/supervisors/__init__.py",
+            "tests/supervisors/test_multiprocess.py",
+            "uvicorn/supervisors/multiprocess.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/supervisors/__init__.py",
+            "tests/supervisors/test_multiprocess.py",
+            "uvicorn/supervisors/multiprocess.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/supervisors/test_multiprocess.py"
+          ],
+          "preserve_files": [
+            "tests/supervisors/__init__.py"
+          ]
+        }
+      }
+    },
+    {
+      "candidate_id": "uvicorn_pr_2561",
+      "pr_number": 2561,
+      "total_score": 18,
+      "scores": {
+        "scope": 5,
+        "test_coverage": 4,
+        "mutation_relevance": 4,
+        "clarity": 2,
+        "complexity": 3
+      },
+      "recommendation": "ACCEPT",
+      "summary": "This is a well-scoped, testable PR that fixes Unix domain socket path handling in uvicorn's `get_local_addr` utility. The core logic change is modest but non-trivial, touching typed application code across multiple protocol files. The main weakness for our experiment is the sparse PR description — agents would struggle to derive the task from the description alone without reading the linked discussion. The test coverage is solid and the mutation surface (type hints, branching logic) is meaningful. Overall a reasonable but not ideal candidate, primarily limited by the clarity score.",
+      "merge_commit_sha": "e377de40d0a2a1b1d9f55483ee4c1cceb2474502",
+      "base_commit_sha": "0779f7f8a4df1cc98433eb30d69027499a0cb7f8",
+      "env_commit_sha": "0779f7f8a4df1cc98433eb30d69027499a0cb7f8",
+      "head_commit_sha": "61fc2be06af76593a21de50af0a2e3918abee1c5",
+      "source_files": [
+        "uvicorn/protocols/http/h11_impl.py",
+        "uvicorn/protocols/http/httptools_impl.py",
+        "uvicorn/protocols/utils.py",
+        "uvicorn/protocols/websockets/websockets_impl.py",
+        "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+        "uvicorn/protocols/websockets/wsproto_impl.py"
+      ],
+      "test_files": [
+        "tests/protocols/test_utils.py"
+      ],
+      "test_support_files": [],
+      "degradation_targets": {
+        "type_hints": {
+          "target_files": [
+            "tests/protocols/test_utils.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py",
+            "uvicorn/protocols/utils.py",
+            "uvicorn/protocols/websockets/websockets_impl.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+            "uvicorn/protocols/websockets/wsproto_impl.py"
+          ]
+        },
+        "naming": {
+          "target_files": [
+            "tests/protocols/test_utils.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py",
+            "uvicorn/protocols/utils.py",
+            "uvicorn/protocols/websockets/websockets_impl.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+            "uvicorn/protocols/websockets/wsproto_impl.py"
+          ]
+        },
+        "comments_docstrings": {
+          "target_files": [
+            "tests/protocols/test_utils.py",
+            "uvicorn/protocols/http/h11_impl.py",
+            "uvicorn/protocols/http/httptools_impl.py",
+            "uvicorn/protocols/utils.py",
+            "uvicorn/protocols/websockets/websockets_impl.py",
+            "uvicorn/protocols/websockets/websockets_sansio_impl.py",
+            "uvicorn/protocols/websockets/wsproto_impl.py"
+          ]
+        },
+        "remove_tests": {
+          "delete_files": [
+            "tests/protocols/test_utils.py"
+          ],
+          "preserve_files": []
+        }
+      }
+    }
+  ]
+}

@@ -7,8 +7,8 @@ are suitable for a controlled experiment on AI coding agents.
 
 ## Context
 
-We are studying how degrading codebase properties (naming quality, type hints, directory structure, \
-test coverage) affects AI coding agent performance. Our experimental pipeline requires selecting \
+We are studying how degrading codebase properties (naming quality, type hints, comments/docstrings, \
+test surface) affects AI coding agent performance. Our experimental pipeline requires selecting \
 high-quality historical PRs that we revert and ask agents to re-solve. You are evaluating whether \
 each candidate PR is a good fit for this experiment.
 
@@ -37,12 +37,12 @@ Does this PR include or modify tests that verify the fix?
 
 ### 3. Mutation Relevance (1-5)
 Does this PR touch code that contains properties we plan to degrade (type hints, meaningful \
-variable names, structured directories, documented functions)?
+variable names, comments/docstrings, and test-readable behavioral context)?
 - 1: Touches only config files, CI scripts, or auto-generated code
 - 2: Mostly boilerplate or configuration code
 - 3: Some relevant code but mostly boilerplate
-- 4: Good amount of application code with some type annotations or descriptive naming
-- 5: Core application code with type annotations, descriptive naming, docstrings, clear module structure
+- 4: Good amount of application code with some type annotations, descriptive naming, or useful docs/tests
+- 5: Core application code with type annotations, descriptive naming, meaningful comments/docstrings, and surrounding tests that would expose rich signals before degradation
 
 ### 4. Clarity (1-5)
 Is the issue description clear enough to hand to an AI coding agent as a task prompt?
@@ -97,6 +97,7 @@ def build_user_prompt(candidate: dict) -> str:
 ### Files Changed ({candidate.get('lines_added', 0)} added, {candidate.get('lines_removed', 0)} removed)
 Source files: {', '.join(candidate.get('source_files', []))}
 Test files: {', '.join(candidate.get('test_files', []))}
+Test support files: {', '.join(candidate.get('test_support_files', []))}
 
 ### Patch Diff (source code changes)
 ```diff

@@ -1,0 +1,14 @@
+{
+  "instance_id": "scikit-learn__scikit-learn-26194",
+  "repo": "scikit-learn/scikit-learn",
+  "base_commit": "e886ce4e1444c61b865e7839c9cff5464ee20ace",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-26194/codex-cli/clean/rep_2/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/scikit-learn__scikit-learn-26194/codex-cli/remove_tests/rep_2/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "sklearn/metrics/tests/test_ranking.py"
+    ],
+    "preserve_files": []
+  }
+}

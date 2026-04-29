@@ -1,0 +1,14 @@
+{
+  "instance_id": "sympy__sympy-12096",
+  "repo": "sympy/sympy",
+  "base_commit": "d7c3045115693e887bcd03599b7ca4650ac5f2cb",
+  "clean_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12096/codex-cli/clean/rep_3/workspace",
+  "degraded_workspace": "<LOCAL_SWEBENCH_RUN_ROOT>/runs/sympy__sympy-12096/codex-cli/remove_tests/rep_3/workspace",
+  "degraded_condition": "remove_tests",
+  "degraded_targets": {
+    "delete_files": [
+      "sympy/utilities/tests/test_lambdify.py"
+    ],
+    "preserve_files": []
+  }
+}

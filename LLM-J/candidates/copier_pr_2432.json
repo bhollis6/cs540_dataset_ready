@@ -1,0 +1,28 @@
+{
+  "candidate_id": "copier_pr_2432",
+  "repo": "copier-org/copier",
+  "pr_number": 2432,
+  "title": "Insure git hooks are ignored on checkout during conflicts",
+  "description": "Issues arise when you have post-checkout hooks, and you have conflicts, and also updated `.pre-commit-hooks.yaml` file\r\n\r\n```console\r\nplumbum.commands.processes.ProcessExecutionError: Unexpected exit code: 1\r\nCommand line: | /usr/bin/git checkout -- .github/settings.yaml\r\nStderr:       | [ERROR] Your pre-commit configuration is unstaged.\r\n              | `git add .pre-commit-config.yaml` to fix this.\r\n```",
+  "patch_diff": "diff --git a/copier/_main.py b/copier/_main.py\nindex 96f5fac87..a17c63c39 100644\n--- a/copier/_main.py\n+++ b/copier/_main.py\n@@ -1335,7 +1335,15 @@ def _apply_update(self) -> None:  # noqa: C901\n                         # Remove \".rej\" suffix\n                         fname = fname[:-4]\n                         # Undo possible non-rejected chunks\n-                        git(\"checkout\", \"--\", fname)\n+                        git(\n+                            # Ignore hooks to avoid errors from them or\n+                            # issues when .pre-commit-config.yaml is changed\n+                            \"-c\",\n+                            f\"core.hooksPath={os.devnull}\",\n+                            \"checkout\",\n+                            \"--\",\n+                            fname,\n+                        )\n                         # 3-way-merge the file directly\n                         git(\n                             \"merge-file\",\n",
+  "test_diff": "diff --git a/tests/test_updatediff.py b/tests/test_updatediff.py\nindex 79ce29f05..7c01c207a 100644\n--- a/tests/test_updatediff.py\n+++ b/tests/test_updatediff.py\n@@ -1,6 +1,7 @@\n from __future__ import annotations\n \n import platform\n+import stat\n from pathlib import Path\n from shutil import rmtree\n from textwrap import dedent\n@@ -480,6 +481,67 @@ def test_commit_hooks_respected(tmp_path_factory: pytest.TempPathFactory) -> Non\n         assert Path(f\"{life}.rej\").is_file()\n \n \n+def test_post_checkout_hook_ignored(tmp_path_factory: pytest.TempPathFactory) -> None:\n+    \"\"\"Ignore post-checkout hook when conflicts are encountered.\"\"\"\n+    # Prepare source template v1\n+    src, dst = map(tmp_path_factory.mktemp, (\"src\", \"dst\"))\n+    with local.cwd(src):\n+        build_file_tree(\n+            {\n+                \"copier.yml\": (\n+                    f\"\"\"\n+                    _envops: {BRACKET_ENVOPS_JSON}\n+                    _templates_suffix: {SUFFIX_TMPL}\n+                    \"\"\"\n+                ),\n+                \"[[ _copier_conf.answers_file ]].tmpl\": (\n+                    \"\"\"\n+                    [[ _copier_answers|to_nice_yaml ]]\n+                    \"\"\"\n+                ),\n+                \"test.txt\": \"This is a file\",\n+            }\n+        )\n+        git(\"init\")\n+        git(\"add\", \".\")\n+        git(\"commit\", \"-m\", \"feat: commit 1\")\n+        git(\"tag\", \"v1\")\n+    # Copy source template\n+    run_copy(\n+        src_path=str(src),\n+        dst_path=dst,\n+    )\n+    with local.cwd(dst):\n+        git(\"init\")\n+        git(\"add\", \".\")\n+        # Commit initial copy\n+        git(\"commit\", \"-am\", \"feat: copied v1\")\n+        # Introduce conflict\n+        Path(\"test.txt\").write_text(\"This is a conflicting change\")\n+        git(\"add\", \".\")\n+        git(\"commit\", \"-am\", \"feat: edit test.txt\")\n+        # Add post-checkout hook that fails\n+        hook_file = Path(\".git\") / \"hooks\" / \"post-checkout\"\n+        hook_file.write_text(\"exit 1\")\n+        hook_file.chmod(hook_file.stat().st_mode | stat.S_IXUSR)\n+    # Evolve source template to v2\n+    with local.cwd(src):\n+        build_file_tree(\n+            {\n+                \"test.txt\": \"This is an edited file in v2\",\n+            }\n+        )\n+        git(\"add\", \".\")\n+        git(\"commit\", \"-m\", \"feat: Update post-checkout\")\n+        git(\"tag\", \"v2\")\n+    # Update subproject to v2\n+    # No errors should be raised due to post-checkout hook\n+    run_update(\n+        dst_path=dst,\n+        overwrite=True,\n+    )\n+\n+\n def test_update_from_tagged_to_head(tmp_path_factory: pytest.TempPathFactory) -> None:\n     src, dst = map(tmp_path_factory.mktemp, (\"src\", \"dst\"))\n     # Build a template\n",
+  "files_changed": [
+    "copier/_main.py",
+    "tests/test_updatediff.py"
+  ],
+  "source_files": [
+    "copier/_main.py"
+  ],
+  "test_files": [
+    "tests/test_updatediff.py"
+  ],
+  "test_support_files": [],
+  "lines_added": 71,
+  "lines_removed": 1,
+  "has_test_changes": true,
+  "merge_commit_sha": "b14f8bade6c1bdb3dc339e030f2809c7a743f726",
+  "base_commit_sha": "3abf23606408bae501457b84b4056bad504fd388",
+  "env_commit_sha": "3abf23606408bae501457b84b4056bad504fd388",
+  "head_commit_sha": "c847a56c515a1bce500e955b30d3071439bc6d37",
+  "merged_at": "2026-01-22T14:12:40Z"
+}
