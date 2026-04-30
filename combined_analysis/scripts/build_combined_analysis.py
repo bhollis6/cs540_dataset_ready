@@ -515,11 +515,15 @@ def plot_exploration_efficiency_delta(combined_metrics: pd.DataFrame) -> None:
         offset = 0.8 if value >= 0 else -0.8
         ax.text(bar.get_x() + bar.get_width() / 2, value + offset, f"{value:.1f} pp", ha="center", va=va, fontsize=8)
     ax.axhline(0, color="#333333", linewidth=0.8)
+    y_min, y_max = vals.min(), vals.max()
+    padding = max((y_max - y_min) * 0.15, 2.0)
+    ax.set_ylim(min(y_min, 0) - padding, max(y_max, 0) + padding)
     ax.set_xticks(x, plot["condition"], rotation=18, ha="right")
     ax.set_ylabel("Mean exploration-efficiency delta (percentage points)")
     ax.set_xlabel("Degradation")
     ax.set_title("Remove-Tests And Naming Reduced Search Focus")
     style_axis(ax)
+    plt.tight_layout()
     save_figure("exploration_efficiency_delta")
 
 
