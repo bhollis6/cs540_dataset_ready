@@ -1,0 +1,41 @@
+phase,metric,metric_key,condition,condition_key,n_pairs,n_nonzero,rank_biserial_r,p_value,p_value_holm
+bootstrap,Bootstrap events,bootstrap_event_count_delta,Naming,naming,30,29,0.5586206896551724,0.008484731045979015,0.30545031765524455
+bootstrap,Bootstrap events,bootstrap_event_count_delta,Type hints,type_hints,30,28,-0.312807881773399,0.14740511487800942,1.0
+bootstrap,Bootstrap events,bootstrap_event_count_delta,Comments/ docstrings,comments_docstrings,34,29,0.4,0.05954618652802077,1.0
+bootstrap,Bootstrap events,bootstrap_event_count_delta,Remove tests,remove_tests,34,33,0.2620320855614973,0.18842413777470035,1.0
+bootstrap,Bootstrap commands,bootstrap_command_count_delta,Naming,naming,30,27,0.5714285714285714,0.009099720856950707,0.31849022999327475
+bootstrap,Bootstrap commands,bootstrap_command_count_delta,Type hints,type_hints,30,23,-0.34782608695652173,0.1427090542634552,1.0
+bootstrap,Bootstrap commands,bootstrap_command_count_delta,Comments/ docstrings,comments_docstrings,34,26,0.4045584045584046,0.07007054497413016,1.0
+bootstrap,Bootstrap commands,bootstrap_command_count_delta,Remove tests,remove_tests,34,33,0.2531194295900178,0.20328385293632178,1.0
+bootstrap,Bootstrap failed cmds,bootstrap_failed_command_count_delta,Naming,naming,30,13,-0.054945054945054944,0.8509980104087645,1.0
+bootstrap,Bootstrap failed cmds,bootstrap_failed_command_count_delta,Type hints,type_hints,30,10,0.09090909090909091,0.7815112949987133,1.0
+bootstrap,Bootstrap failed cmds,bootstrap_failed_command_count_delta,Comments/ docstrings,comments_docstrings,34,6,0.0,1.0,1.0
+bootstrap,Bootstrap failed cmds,bootstrap_failed_command_count_delta,Remove tests,remove_tests,34,15,0.26666666666666666,0.34069844083463674,1.0
+bootstrap,Bootstrap test cmds,bootstrap_test_command_count_delta,Naming,naming,30,6,-0.5238095238095238,0.23419430487921455,1.0
+bootstrap,Bootstrap test cmds,bootstrap_test_command_count_delta,Type hints,type_hints,30,1,-1.0,0.31731050786291415,1.0
+bootstrap,Bootstrap test cmds,bootstrap_test_command_count_delta,Comments/ docstrings,comments_docstrings,34,7,-0.25,0.5270892568655381,1.0
+bootstrap,Bootstrap test cmds,bootstrap_test_command_count_delta,Remove tests,remove_tests,34,5,0.13333333333333333,0.7825279247400674,1.0
+bootstrap,Bootstrap failed test cmds,bootstrap_failed_test_command_count_delta,Naming,naming,30,2,1.0,0.15729920705028502,1.0
+bootstrap,Bootstrap failed test cmds,bootstrap_failed_test_command_count_delta,Type hints,type_hints,30,0,,,
+bootstrap,Bootstrap failed test cmds,bootstrap_failed_test_command_count_delta,Comments/ docstrings,comments_docstrings,34,1,1.0,0.31731050786291415,1.0
+bootstrap,Bootstrap failed test cmds,bootstrap_failed_test_command_count_delta,Remove tests,remove_tests,34,1,-1.0,0.31731050786291415,1.0
+execution,Execution events,execution_event_count_delta,Naming,naming,30,30,0.6731182795698925,0.0012676294638632704,0.048169919626804274
+execution,Execution events,execution_event_count_delta,Type hints,type_hints,30,28,0.0960591133004926,0.656636506457154,1.0
+execution,Execution events,execution_event_count_delta,Comments/ docstrings,comments_docstrings,34,30,0.3913978494623656,0.06108796932271622,1.0
+execution,Execution events,execution_event_count_delta,Remove tests,remove_tests,34,32,0.26136363636363635,0.19659000728341358,1.0
+execution,Execution commands,execution_command_count_delta,Naming,naming,30,25,0.7846153846153846,0.0005800697920759808,0.02262272189096325
+execution,Execution commands,execution_command_count_delta,Type hints,type_hints,30,27,-0.03968253968253968,0.8559997938666389,1.0
+execution,Execution commands,execution_command_count_delta,Comments/ docstrings,comments_docstrings,34,28,0.49261083743842365,0.02247010554271318,0.7639835884522481
+execution,Execution commands,execution_command_count_delta,Remove tests,remove_tests,34,30,0.3118279569892473,0.13325159564900887,1.0
+execution,Execution failed cmds,execution_failed_command_count_delta,Naming,naming,30,17,0.43790849673202614,0.09813911491933493,1.0
+execution,Execution failed cmds,execution_failed_command_count_delta,Type hints,type_hints,30,13,0.12087912087912088,0.6893025046267094,1.0
+execution,Execution failed cmds,execution_failed_command_count_delta,Comments/ docstrings,comments_docstrings,34,16,0.7352941176470589,0.0077094639376832025,0.28525016569427847
+execution,Execution failed cmds,execution_failed_command_count_delta,Remove tests,remove_tests,34,17,0.3333333333333333,0.17971249487899976,1.0
+execution,Execution test cmds,execution_test_command_count_delta,Naming,naming,30,19,0.30526315789473685,0.22509876809646834,1.0
+execution,Execution test cmds,execution_test_command_count_delta,Type hints,type_hints,30,17,0.0784313725490196,0.766779336584992,1.0
+execution,Execution test cmds,execution_test_command_count_delta,Comments/ docstrings,comments_docstrings,34,18,0.29239766081871343,0.2543888887001964,1.0
+execution,Execution test cmds,execution_test_command_count_delta,Remove tests,remove_tests,34,18,0.22807017543859648,0.38577253167004966,1.0
+execution,Execution failed test cmds,execution_failed_test_command_count_delta,Naming,naming,30,18,0.5321637426900585,0.033328030400648946,1.0
+execution,Execution failed test cmds,execution_failed_test_command_count_delta,Type hints,type_hints,30,9,0.4,0.24821307898992373,1.0
+execution,Execution failed test cmds,execution_failed_test_command_count_delta,Comments/ docstrings,comments_docstrings,34,11,0.5606060606060606,0.08517902784495152,1.0
+execution,Execution failed test cmds,execution_failed_test_command_count_delta,Remove tests,remove_tests,34,14,0.4666666666666667,0.08955507441364255,1.0

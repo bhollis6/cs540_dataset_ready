@@ -1,0 +1,25 @@
+metric,metric_key,condition,condition_key,n_pairs,n_nonzero,n_positive,n_negative,median_delta,mean_delta,wilcoxon_W,p_value,p_value_holm,significant_05_holm
+Corrected tokens (% of clean),token_delta_pct,Naming,naming,60,60,46,14,0.47920113158529865,0.6000738337724736,243.0,7.536705356504771e-07,3.0146821426019083e-06,True
+Corrected tokens (% of clean),token_delta_pct,Type hints,type_hints,60,60,32,28,0.0755436738901622,0.18836479690231023,575.0,0.012316467522287695,0.02463293504457539,True
+Corrected tokens (% of clean),token_delta_pct,Comments/docstrings,comments_docstrings,63,63,47,16,0.2075614095375634,0.3446583237452136,368.0,1.1786145976602071e-05,3.535843792980621e-05,True
+Corrected tokens (% of clean),token_delta_pct,Remove tests,remove_tests,62,62,36,26,0.09474615935816835,0.21774001776667568,675.0,0.03452906019399564,0.03452906019399564,True
+Corrected tokens (absolute),token_delta,Naming,naming,60,60,46,14,52852.0,161562.8,300.0,5.971784175651593e-06,2.388713670260637e-05,True
+Corrected tokens (absolute),token_delta,Type hints,type_hints,60,60,32,28,6875.0,-5047.766666666666,831.0,0.5363284027088389,0.5363284027088389,False
+Corrected tokens (absolute),token_delta,Comments/docstrings,comments_docstrings,63,63,47,16,33543.0,91826.20634920635,362.0,9.752775142996223e-06,2.925832542898867e-05,True
+Corrected tokens (absolute),token_delta,Remove tests,remove_tests,62,62,36,26,15328.0,30058.516129032258,747.0,0.10760731666874225,0.2152146333374845,False
+Files opened before first edit,files_opened_delta,Naming,naming,60,36,22,14,0.0,-0.05,327.0,0.9236592648444326,1.0,False
+Files opened before first edit,files_opened_delta,Type hints,type_hints,60,36,17,19,0.0,-0.13333333333333333,301.0,0.6063840664791478,1.0,False
+Files opened before first edit,files_opened_delta,Comments/docstrings,comments_docstrings,63,40,23,17,0.0,0.031746031746031744,400.0,0.8909500733965536,1.0,False
+Files opened before first edit,files_opened_delta,Remove tests,remove_tests,62,52,28,24,0.0,0.12903225806451613,625.0,0.5537447569829419,1.0,False
+Exploration efficiency,exploration_efficiency_delta,Naming,naming,60,38,16,22,0.0,-0.034413333333333324,270.5,0.146622926580893,0.43986877974267896,False
+Exploration efficiency,exploration_efficiency_delta,Type hints,type_hints,60,37,19,18,0.0,0.012661666666666672,315.0,0.5815567970478912,0.9437844828353423,False
+Exploration efficiency,exploration_efficiency_delta,Comments/docstrings,comments_docstrings,63,42,19,23,0.0,-0.014947619047619053,394.0,0.47189224141767117,0.9437844828353423,False
+Exploration efficiency,exploration_efficiency_delta,Remove tests,remove_tests,62,49,12,37,-0.09284999999999995,-0.16624032258064514,193.5,3.061821597384611e-05,0.00012247286389538444,True
+Hidden bug-fix failures,hidden_bug_fix_failed_delta,Naming,naming,60,15,14,1,0.0,0.35,6.0,0.0013079541774621958,0.005231816709848783,True
+Hidden bug-fix failures,hidden_bug_fix_failed_delta,Type hints,type_hints,60,6,3,3,0.0,0.1,6.0,0.3400846081830643,0.6801692163661286,False
+Hidden bug-fix failures,hidden_bug_fix_failed_delta,Comments/docstrings,comments_docstrings,63,8,6,2,0.0,0.1111111111111111,6.0,0.0832645166635504,0.24979354999065123,False
+Hidden bug-fix failures,hidden_bug_fix_failed_delta,Remove tests,remove_tests,62,6,3,3,0.0,0.04838709677419355,7.0,0.4568210578719689,0.6801692163661286,False
+Regression failures,regression_failed_delta,Naming,naming,60,19,18,1,0.0,10.55,2.5,0.0001938253322402876,0.0005814759967208628,True
+Regression failures,regression_failed_delta,Type hints,type_hints,60,0,0,0,0.0,0.0,,,,False
+Regression failures,regression_failed_delta,Comments/docstrings,comments_docstrings,63,3,1,2,0.0,0.07936507936507936,3.0,1.0,1.0,False
+Regression failures,regression_failed_delta,Remove tests,remove_tests,62,1,0,1,0.0,-0.016129032258064516,0.0,0.31731050786291415,0.6346210157258283,False
